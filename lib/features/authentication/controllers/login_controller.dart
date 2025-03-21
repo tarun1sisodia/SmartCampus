@@ -91,11 +91,12 @@ class LoginController extends GetxController {
         TSnackBar.showServerError(message: e.toString());
       }
     }
-    @override
-    void onClose() {
-      emailController.dispose();
-      passwordController.dispose();
-      super.onClose();
-    }
+  }
+
+  @override
+  void onClose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.onClose();
   }
 }

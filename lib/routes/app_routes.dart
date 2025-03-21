@@ -6,7 +6,7 @@ import 'package:attedance__/features/authentication/screens/login/login.dart';
 import 'package:attedance__/features/authentication/screens/onboarding/onboarding.dart';
 import 'package:attedance__/features/authentication/screens/signup/signup.dart';
 import 'package:attedance__/features/authentication/screens/signup/singup_widgets/verify_email_screen.dart';
-import 'package:attedance__/features/teacher/screens/teacher_home_screen.dart';
+import 'package:attedance__/navigation_menu.dart';
 import 'package:get/get.dart';
 
 /// A class that manages all routes for the app
@@ -68,7 +68,8 @@ class AppRoutes {
     ),
     GetPage(
       name: home,
-      page: () => TeacherHomeScreen(), // Replace with your home screen widget
+      page: () => NavigationMenu(),
+      binding: HomeBinding(),
       transition: Transition.fadeIn,
     ),
   ];

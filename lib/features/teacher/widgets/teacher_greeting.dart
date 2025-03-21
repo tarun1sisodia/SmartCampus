@@ -2,6 +2,8 @@ import 'package:attedance__/utils/constants/colors.dart';
 import 'package:attedance__/utils/constants/sized.dart';
 import 'package:attedance__/utils/helpers/helper_function.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:attedance__/features/teacher/screens/teacher_profile_screen.dart';
 
 class TeacherGreeting extends StatelessWidget {
   const TeacherGreeting({super.key});
@@ -9,6 +11,7 @@ class TeacherGreeting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dark = THelperFunction.isDarkMode(context);
+    final controller = Get.find<TeacherProfileController>();
 
     // Get the current time to display appropriate greeting
     final hour = DateTime.now().hour;
@@ -60,10 +63,12 @@ class TeacherGreeting extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: TSizes.xs),
-                Text(
-                  'Tarun Sisodia', // Replace with actual teacher name
-                  style: Theme.of(context).textTheme.headlineSmall,
-                  overflow: TextOverflow.ellipsis,
+                Obx(
+                  () => Text(
+                    controller.user.value?.name ?? 'Teacher',
+                    style: Theme.of(context).textTheme.headlineSmall,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ],
             ),

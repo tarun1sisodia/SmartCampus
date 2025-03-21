@@ -29,19 +29,64 @@ Future<void> main() async {
       storageService.getUserEmail() != null &&
       storageService.getUserPassword() != null;
 
-  runApp(MyApp(isLoggedIn: isLoggedIn));
+  // If credentials are saved, try to log in automatically
+  if (isLoggedIn) {
+    try {
+      final email = storageService.getUserEmail()!;
+      final password = storageService.getUserPassword()!;
+
+      await Supabase.instance.client.auth.signInWithPassword(
+        email: email,
+        password: password,
+      );
+
+      print('Auto-login successful');
+    } catch (e) {
+      print('Auto-login failed: $e');
+      Get.snackbar(
+        'Auto-login Failed',
+        'Unable to log in automatically. Please log in manually.',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      // Continue with normal app startup even if auto-login fails
+    }
+  }
+
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final bool isLoggedIn;
-
-  const MyApp({super.key, required this.isLoggedIn});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     // Check if onboarding is completed
     final storageService = Get.find<StorageService>();
     final bool onboardingCompleted = storageService.getOnboardingStatus();
+
+    // Check if user is currently authenticated with Supabase
+    final currentUser = Supabase.instance.client.auth.currentUser;
+    final bool isAuthenticated = currentUser != null;
+
+    print('Onboarding completed: $onboardingCompleted');
+    print('User authenticated: $isAuthenticated');
+
+    // Determine initial route
+    String initialRoute;
+    Bindings initialBinding;
+
+    if (isAuthenticated) {
+      initialRoute = AppRoutes.home;
+      initialBinding = HomeBinding();
+    } else if (onboardingCompleted) {
+      initialRoute = AppRoutes.login;
+      initialBinding = LoginBinding();
+    } else {
+      initialRoute = AppRoutes.onboarding;
+      initialBinding = OnboardingBinding();
+    }
+
+    print('Initial route: $initialRoute');
 
     return GetMaterialApp(
       title: 'Attendance App',
@@ -58,10 +103,9 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.system, // Respects system theme setting
       debugShowCheckedModeBanner: false,
 
-      // Set initial route based on login status
-      initialRoute: isLoggedIn ? AppRoutes.home : AppRoutes.onboarding,
-      initialBinding:
-          onboardingCompleted ? LoginBinding() : OnboardingBinding(),
+      // Set initial route based on authentication status
+      initialRoute: initialRoute,
+      initialBinding: initialBinding,
 
       // Use the routes defined in AppRoutes
       getPages: AppRoutes.routes,

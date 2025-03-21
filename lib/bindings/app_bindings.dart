@@ -3,36 +3,47 @@ import 'package:attedance__/features/authentication/controllers/forgot_password_
 import 'package:attedance__/features/authentication/controllers/login_controller.dart';
 import 'package:attedance__/features/authentication/controllers/signup_controller.dart';
 import 'package:attedance__/features/authentication/controllers/supabase_auth_controller.dart';
+import 'package:attedance__/features/teacher/screens/teacher_profile_screen.dart';
 import 'package:get/get.dart';
 
 /// A class that manages all controller bindings for the app
 /// This centralizes dependency injection and improves performance
 class AppBindings {
-  
   /// Initialize all bindings that should be available globally
   static void initGlobalBindings() {
     // Auth controllers with permanent: true will persist throughout the app lifecycle
     Get.put(SupabaseAuthController(), permanent: true);
   }
-  
+
   /// Onboarding bindings
   static void registerOnboardingBindings() {
     Get.lazyPut(() => OnboardingController(), fenix: true);
   }
-  
+
   /// Login bindings
   static void registerLoginBindings() {
     Get.lazyPut(() => LoginController(), fenix: true);
   }
-  
+
   /// Signup bindings
   static void registerSignupBindings() {
     Get.lazyPut(() => SignupController(), fenix: true);
   }
-  
+
   /// Forgot password bindings
   static void registerForgotPasswordBindings() {
     Get.lazyPut(() => ForgotPasswordController(), fenix: true);
+  }
+
+  /// Teacher profile bindings
+  static void registerTeacherProfileBindings() {
+    Get.lazyPut(() => TeacherProfileController(), fenix: true);
+  }
+
+  /// Home screen bindings (includes all controllers needed for the home screen)
+  static void registerHomeBindings() {
+    // Register any controllers needed for the home screen
+    // Removed duplicate TeacherProfileController registration
   }
 }
 
@@ -62,5 +73,19 @@ class ForgotPasswordBinding extends Bindings {
   @override
   void dependencies() {
     AppBindings.registerForgotPasswordBindings();
+  }
+}
+
+class TeacherProfileBinding extends Bindings {
+  @override
+  void dependencies() {
+    AppBindings.registerTeacherProfileBindings();
+  }
+}
+
+class HomeBinding extends Bindings {
+  @override
+  void dependencies() {
+    AppBindings.registerHomeBindings();
   }
 }

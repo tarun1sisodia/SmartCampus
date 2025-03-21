@@ -1,4 +1,6 @@
+import 'package:attedance__/routes/app_routes.dart';
 import 'package:attedance__/services/storage_service.dart';
+import 'package:attedance__/utils/helpers/snackbar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -56,23 +58,49 @@ class SupabaseAuthController extends GetxController {
       );
 
       if (response.user != null) {
+        // Save credentials if remember me is checked
         if (rememberMe.value) {
           StorageService.instance.saveUserCredentials(
             emailController.text.trim(),
             passwordController.text,
           );
         }
-        Get.offAll(() => const NavigationMenu());
+      
+        // Check if user exists in the users table, if not create a new entry
+        try {
+          final userData = await supabase
+              .from('users')
+              .select()
+              .eq('id', response.user!.id)
+              .maybeSingle();
+        
+          if (userData == null) {
+            // User doesn't exist in the database yet, create a new entry
+            await supabase.from('users').insert({
+              'id': response.user!.id,
+              'name': response.user!.userMetadata?['name'] ?? 'New User',
+              'email': response.user!.email ?? '',
+              'phone': response.user!.userMetadata?['phone'] ?? '',
+              'created_at': DateTime.now().toIso8601String(),
+            });
+          }
+        } catch (e) {
+          print('Error checking/creating user data: $e');
+          // Continue with navigation even if there's an error here
+        }
+      
+        // Navigate to home using named route
+        Get.offAllNamed(AppRoutes.home);
       } else {
         errorMessage.value = 'Authentication failed';
       }
     } catch (e) {
       errorMessage.value = e.toString();
+      TSnackBar.showAuthError(message: e.toString());
     } finally {
       isLoading.value = false;
     }
   }
-
   Future<void> signUpWithEmail(String name, String phone) async {
     try {
       isLoading.value = true;

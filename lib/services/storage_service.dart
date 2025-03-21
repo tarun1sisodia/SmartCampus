@@ -57,4 +57,13 @@ class StorageService extends GetxService {
     await _storage.remove(userEmailKey);
     await _storage.remove(userPasswordKey);
   }
+
+  Future<void> clearAllData() async {
+    try {
+      await _storage.erase();
+      print('All stored data cleared successfully');
+    } catch (e) {
+      print('Error clearing stored data: $e');
+    }
+  }
 }
