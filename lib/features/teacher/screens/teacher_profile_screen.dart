@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:attedance__/models/user_model.dart';
 import 'package:attedance__/routes/app_routes.dart';
 import 'package:attedance__/utils/constants/colors.dart';
@@ -7,6 +9,8 @@ import 'package:attedance__/utils/helpers/snackbar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as path;
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class TeacherProfileScreen extends StatelessWidget {
@@ -234,9 +238,9 @@ class TeacherProfileScreen extends StatelessWidget {
   }
 
   Widget _buildProfileHeader(
-    BuildContext context,
-    TeacherProfileController controller,
-    bool dark,
+    BuildContext context, 
+    TeacherProfileController controller, 
+    bool dark
   ) {
     return Column(
       children: [
@@ -244,37 +248,66 @@ class TeacherProfileScreen extends StatelessWidget {
         Stack(
           children: [
             // Profile image
-            Container(
-              width: 120,
-              height: 120,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: dark ? TColors.yellow : TColors.deepPurple,
-                  width: 2,
+            Obx(() {
+              if (controller.isUploadingImage.value) {
+                return Container(
+                  width: 120,
+                  height: 120,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: dark ? TColors.yellow : TColors.deepPurple,
+                      width: 2,
+                    ),
+                  ),
+                  child: const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              }
+            
+              return Container(
+                width: 120,
+                height: 120,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: dark ? TColors.yellow : TColors.deepPurple,
+                    width: 2,
+                  ),
+                  image: controller.user.value?.profileImageUrl != null
+                      ? DecorationImage(
+                          image: NetworkImage(controller.user.value!.profileImageUrl!),
+                          fit: BoxFit.cover,
+                        )
+                      : null,
+                  color: controller.user.value?.profileImageUrl == null
+                      ? (dark ? TColors.darkerGrey : TColors.grey)
+                      : null,
                 ),
-                color: dark ? TColors.darkerGrey : TColors.grey,
-              ),
-              child: Center(
-                child: Text(
-                  controller.user.value?.name.substring(0, 1).toUpperCase() ??
-                      'T',
-                  style: Theme.of(context).textTheme.displayMedium,
-                ),
-              ),
-            ),
+                child: controller.user.value?.profileImageUrl == null
+                    ? Center(
+                        child: Text(
+                          controller.user.value?.name.substring(0, 1).toUpperCase() ?? 'T',
+                          style: Theme.of(context).textTheme.displayMedium,
+                        ),
+                      )
+                    : null,
+              );
+            }),
 
             // Edit button
-            if (controller.isEditMode.value)
-              Positioned(
-                right: 0,
-                bottom: 0,
-                child: Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: dark ? TColors.yellow : TColors.deepPurple,
-                    shape: BoxShape.circle,
-                  ),
+            Positioned(
+              right: 0,
+              bottom: 0,
+              child: Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: dark ? TColors.yellow : TColors.deepPurple,
+                  shape: BoxShape.circle,
+                ),
+                child: InkWell(
+                  onTap: () => controller.pickAndUploadImage(),
                   child: Icon(
                     Iconsax.camera,
                     size: 20,
@@ -282,6 +315,7 @@ class TeacherProfileScreen extends StatelessWidget {
                   ),
                 ),
               ),
+            ),
           ],
         ),
 
@@ -299,15 +333,12 @@ class TeacherProfileScreen extends StatelessWidget {
         Obx(
           () => Text(
             controller.user.value?.email ?? 'teacher@example.com',
-            style: Theme.of(
-              context,
-            ).textTheme.bodyMedium?.copyWith(color: Colors.grey),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey),
           ),
         ),
       ],
     );
   }
-
   Widget _buildProfileInfo(
     BuildContext context,
     TeacherProfileController controller,
@@ -542,6 +573,7 @@ class TeacherProfileController extends GetxController {
   final errorMessage = ''.obs;
   final isEditMode = false.obs;
   final emailNotifications = true.obs;
+  final isUploadingImage = false.obs;
 
   @override
   void onInit() {
@@ -567,8 +599,8 @@ class TeacherProfileController extends GetxController {
 
         // Create a fallback user model with placeholder data
         user.value = UserModel(
-          id: 'guest',
-          name: 'Guest Teacher',
+          id: 'charon',
+          name: 'Tarun ',
           email: 'teacher@example.com',
           phone: 'Not available',
         );
@@ -707,6 +739,65 @@ class TeacherProfileController extends GetxController {
       TSnackBar.showError(message: 'Failed to sign out: ${e.toString()}');
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  Future<void> pickAndUploadImage() async {
+    try {
+      isUploadingImage.value = true;
+      
+      // Get current user
+      final currentUser = supabase.auth.currentUser;
+      if (currentUser == null) {
+        TSnackBar.showError(message: 'You must be logged in to upload an image');
+        return;
+      }
+      
+      // Pick image
+      final ImagePicker picker = ImagePicker();
+      final XFile? image = await picker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 512,
+        maxHeight: 512,
+        imageQuality: 75,
+      );
+      
+      if (image == null) {
+        isUploadingImage.value = false;
+        return; // User canceled the picker
+      }
+      
+      // Get file extension
+      final fileExt = path.extension(image.path);
+      final fileName = '${currentUser.id}${fileExt}';
+      final filePath = '${currentUser.id}/$fileName';
+      
+      // Upload to Supabase Storage
+      final file = File(image.path);
+      await supabase.storage
+        .from('profile_images')
+        .upload(filePath, file, fileOptions: const FileOptions(upsert: true));
+      
+      // Get the public URL
+      final imageUrl = supabase.storage
+        .from('profile_images')
+        .getPublicUrl(filePath);
+      
+      // Update user record with the image URL
+      await supabase
+        .from('users')
+        .update({'profile_image_url': imageUrl})
+        .eq('id', currentUser.id);
+      
+      // Refresh user data
+      await loadUserData();
+      
+      TSnackBar.showSuccess(message: 'Profile image updated successfully');
+    } catch (e) {
+      TSnackBar.showError(message: 'Failed to upload image: ${e.toString()}');
+      print('Image upload error: $e');
+    } finally {
+      isUploadingImage.value = false;
     }
   }
 }

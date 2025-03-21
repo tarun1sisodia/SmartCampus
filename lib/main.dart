@@ -11,10 +11,10 @@ Future<void> main() async {
 
   // Initialize Supabase
   await Supabase.initialize(
-    url: 'https://otcqeieukikymmsjwfeu.supabase.co',
-    anonKey:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im90Y3FlaWV1a2lreW1tc2p3ZmV1Iiwicm9sSI6ImFub24iLCJpYXQiOjE3NDI1MjA5MDMsImV4cCI6MjA1ODA5NjkwM30.M3D533la8914BPuHQkyHWnoxN5OM4N_-vVpMDvKDMbk',
+    url: 'https://hgjwopqcwptinpcihquk.supabase.co',
+    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhnandvcHFjd3B0aW5wY2locXVrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI1ODQyOTksImV4cCI6MjA1ODE2MDI5OX0.QftWVNrZOrwlyRV1lwq_jW1_fmRab9KhjB7j08Zxdfk',
   );
+
 
   // Initialize services
   await Get.putAsync(() => StorageService().init());

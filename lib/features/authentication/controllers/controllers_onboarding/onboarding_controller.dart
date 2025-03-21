@@ -47,10 +47,6 @@ class OnboardingController extends GetxController {
     Get.offAllNamed(AppRoutes.login);
   }
 
-  @override
-  void onInit() {
-    super.onInit();
-  }
 
   void checkIfOnboardingCompleted() {}
 }

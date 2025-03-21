@@ -105,11 +105,11 @@ class NavigationController extends GetxController {
   final Rx<int> selectedIndex = 0.obs; //observer Widget.
 
   // Initialize ProfileController when NavigationController is created
-  // @override
-  // void onInit() {
-  //   super.onInit();
-  //   Get.put(TeacherProfileController());
-  // }
+  @override
+  void onInit() {
+    super.onInit();
+    Get.put(TeacherProfileController());
+  }
 
   final screens = [
     TeacherHomeScreen(),

@@ -12,10 +12,6 @@ import 'package:mockito/mockito.dart';
 class TestStorageService extends GetxService {
   bool _onboardingCompleted = false;
   
-  @override
-  void onInit() {
-    super.onInit();
-  }
   
   bool getOnboardingStatus() {
     return _onboardingCompleted;

@@ -1,4 +1,3 @@
-import 'package:provider/provider.dart';
 
 import '../utils/constants/constants.dart';
 import 'package:flutter/material.dart';

@@ -17,7 +17,7 @@ class ForgotPasswordScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(ForgotPasswordController());
-    final _formKey = GlobalKey<FormState>();
+    final formKey = GlobalKey<FormState>();
     final dark = THelperFunction.isDarkMode(context);
 
     return Scaffold(
@@ -60,7 +60,7 @@ class ForgotPasswordScreen extends StatelessWidget {
 
               // Form
               Form(
-                key: _formKey,
+                key: formKey,
                 child: Column(
                   children: [
                     // Email field
@@ -109,7 +109,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                               controller.isLoading.value
                                   ? null
                                   : () async {
-                                    if (_formKey.currentState!.validate()) {
+                                    if (formKey.currentState!.validate()) {
                                       try {
                                         await controller.resetPassword();
                                         // Navigate using named route and pass the email
