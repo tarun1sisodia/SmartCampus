@@ -1,0 +1,34 @@
+import '../../../../../utils/constants/image_strings.dart';
+import '../../../../../utils/constants/sized.dart';
+import '../../../../../utils/constants/text_strings.dart';
+import '../../../../../utils/helpers/helper_function.dart';
+import 'package:flutter/material.dart';
+
+class LogoAndText extends StatelessWidget {
+  const LogoAndText({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final dark = THelperFunction.isDarkMode(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Image(
+          image: AssetImage(
+            dark ? TImageStrings.microsoft : TImageStrings.apple,
+          ),
+          height: 100,
+        ),
+        Text(
+          TTexts.logintitle1,
+          style: Theme.of(context).textTheme.headlineMedium,
+        ),
+        const SizedBox(height: TSizes.sm),
+        Text(
+          TTexts.loginsubtitle1,
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+      ],
+    );
+  }
+}

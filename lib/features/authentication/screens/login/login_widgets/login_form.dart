@@ -1,0 +1,128 @@
+import 'package:attedance__/features/authentication/controllers/auth_controller.dart';
+import 'package:attedance__/features/authentication/controllers/supabase_auth_controller.dart';
+import 'package:attedance__/features/authentication/screens/login/login_widgets/remember_checkbox.dart';
+import 'package:attedance__/features/authentication/screens/signup/signup.dart';
+import 'package:attedance__/features/authentication/screens/signup/singup_widgets/textfields.dart';
+import 'package:attedance__/utils/constants/colors.dart';
+import 'package:attedance__/utils/constants/sized.dart';
+import 'package:attedance__/utils/constants/text_strings.dart';
+import 'package:attedance__/utils/helpers/helper_function.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:iconsax/iconsax.dart';
+
+class LoginForm extends StatelessWidget {
+  LoginForm({super.key});
+  
+  final controller = Get.put(SupabaseAuthController());
+  final _formKey = GlobalKey<FormState>();
+  final _passwordVisible = false.obs;
+
+  @override
+  Widget build(BuildContext context) {
+    final dark = THelperFunction.isDarkMode(context);
+    
+    return Form(
+      key: _formKey,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: TSizes.spaceBtwSections,
+          vertical: TSizes.spaceBtwSections,
+        ),
+        child: Column(
+          children: [
+            // Email field
+            Textfields(
+              controller: controller.emailController,
+              iconColor: dark ? TColors.yellow : TColors.deepPurple,
+              prefixIcon: const Icon(Iconsax.direct_right),
+              labelText: TTexts.email,
+              keyboardType: TextInputType.emailAddress,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter your email';
+                }
+                if (!GetUtils.isEmail(value)) {
+                  return 'Please enter a valid email';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: TSizes.spaceBtwInputFields),
+            
+            // Password field
+            Obx(() => Textfields(
+              controller: controller.passwordController,
+              iconColor: dark ? TColors.yellow : TColors.deepPurple,
+              prefixIcon: const Icon(Iconsax.password_check),
+              labelText: TTexts.password,
+              obscureText: !_passwordVisible.value,
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _passwordVisible.value ? Iconsax.eye : Iconsax.eye_slash,
+                ),
+                onPressed: () => _passwordVisible.value = !_passwordVisible.value,
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter your password';
+                }
+                if (value.length < 6) {
+                  return 'Password must be at least 6 characters';
+                }
+                return null;
+              },
+            )),
+
+            SizedBox(height: TSizes.spaceBtwInputFields / 2),
+            RememberAndForget(),
+            
+            // Error message
+            Obx(() => controller.errorMessage.value.isNotEmpty
+              ? Padding(
+                  padding: const EdgeInsets.only(top: TSizes.spaceBtwItems),
+                  child: Text(
+                    controller.errorMessage.value,
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                )
+              : const SizedBox.shrink()
+            ),
+            
+            const SizedBox(height: TSizes.appBarHeight),
+
+            // Sign in button
+            Obx(() => SizedBox(
+              width: double.infinity,
+              height: TSizes.appBarHeight,
+              child: ElevatedButton(
+                onPressed: controller.isLoading.value
+                  ? null
+                  : () {
+                      if (_formKey.currentState!.validate()) {
+                        controller.signInWithEmail();
+                      }
+                    },
+                child: controller.isLoading.value
+                  ? const CircularProgressIndicator()
+                  : Text(TTexts.signIn),
+              ),
+            )),
+            
+            const SizedBox(height: TSizes.spaceBtwItems),
+            
+            // Create account button
+            SizedBox(
+              width: double.infinity,
+              height: TSizes.appBarHeight,
+              child: OutlinedButton(
+                onPressed: () => Get.to(() => Signup()),
+                child: Text(TTexts.createAccount),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
