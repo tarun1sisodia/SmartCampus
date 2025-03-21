@@ -1,3 +1,4 @@
+import 'package:attedance__/services/storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -5,37 +6,61 @@ import '../../../navigation_menu.dart';
 
 class SupabaseAuthController extends GetxController {
   static SupabaseAuthController get instance => Get.find();
-  
+
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  
+
   // Store these temporarily during the signup process
   String _tempName = '';
   String _tempPhone = '';
-  
+
   final isLoading = false.obs;
   final errorMessage = ''.obs;
-  
+
   final supabase = Supabase.instance.client;
-  
+
   @override
   void onClose() {
     emailController.dispose();
     passwordController.dispose();
     super.onClose();
   }
-  
+
+  final rememberMe = false.obs;
+
+  void setRememberMe(bool value) {
+    rememberMe.value = value;
+    StorageService.instance.setRememberUserStatus(value);
+
+    if (value) {
+      // Save current credentials
+      StorageService.instance.saveUserCredentials(
+        emailController.text,
+        passwordController.text,
+      );
+    } else {
+      // Clear saved credentials
+      StorageService.instance.clearUserCredentials();
+    }
+  }
+
   Future<void> signInWithEmail() async {
     try {
       isLoading.value = true;
       errorMessage.value = '';
-      
+
       final response = await supabase.auth.signInWithPassword(
         email: emailController.text.trim(),
         password: passwordController.text,
       );
-      
+
       if (response.user != null) {
+        if (rememberMe.value) {
+          StorageService.instance.saveUserCredentials(
+            emailController.text.trim(),
+            passwordController.text,
+          );
+        }
         Get.offAll(() => const NavigationMenu());
       } else {
         errorMessage.value = 'Authentication failed';
@@ -46,27 +71,26 @@ class SupabaseAuthController extends GetxController {
       isLoading.value = false;
     }
   }
-  
+
   Future<void> signUpWithEmail(String name, String phone) async {
     try {
       isLoading.value = true;
       errorMessage.value = '';
-      
+
       // Store these temporarily for later use after email verification
       _tempName = name;
       _tempPhone = phone;
-      
+
       // Sign up the user with Supabase Auth
       final response = await supabase.auth.signUp(
         email: emailController.text.trim(),
         password: passwordController.text,
       );
-      
+
       if (response.user == null) {
         errorMessage.value = 'Registration failed';
       }
       // We don't store user data yet - we'll do that after email verification
-      
     } catch (e) {
       errorMessage.value = e.toString();
       rethrow; // Rethrow to handle in the UI
@@ -74,15 +98,15 @@ class SupabaseAuthController extends GetxController {
       isLoading.value = false;
     }
   }
-  
+
   // This method will be called after email verification is confirmed
   Future<void> storeUserData() async {
     try {
       isLoading.value = true;
-      
+
       // Get the current user
       final user = supabase.auth.currentUser;
-      
+
       if (user != null) {
         // Store user data in the Supabase table
         await supabase.from('users').insert({
@@ -92,7 +116,7 @@ class SupabaseAuthController extends GetxController {
           'phone': _tempPhone,
           'created_at': DateTime.now().toIso8601String(),
         });
-        
+
         // Clear temporary data
         _tempName = '';
         _tempPhone = '';
@@ -104,14 +128,11 @@ class SupabaseAuthController extends GetxController {
       isLoading.value = false;
     }
   }
-  
+
   Future<void> resendVerificationEmail(String email) async {
     try {
       isLoading.value = true;
-      await supabase.auth.resend(
-        type: OtpType.signup,
-        email: email,
-      );
+      await supabase.auth.resend(type: OtpType.signup, email: email);
     } catch (e) {
       errorMessage.value = e.toString();
       rethrow;
@@ -119,7 +140,7 @@ class SupabaseAuthController extends GetxController {
       isLoading.value = false;
     }
   }
-  
+
   // Check if user's email is verified
   Future<bool> checkEmailVerified() async {
     try {
@@ -134,12 +155,10 @@ class SupabaseAuthController extends GetxController {
     try {
       isLoading.value = true;
       errorMessage.value = '';
-      
+
       // Request password reset email from Supabase
-      await supabase.auth.resetPasswordForEmail(
-        emailController.text.trim(),
-      );
-      
+      await supabase.auth.resetPasswordForEmail(emailController.text.trim());
+
       // Success - no need to set a message as we'll navigate to confirmation screen
     } catch (e) {
       errorMessage.value = e.toString();

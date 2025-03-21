@@ -1,6 +1,6 @@
-import 'package:attedance__/features/authentication/controllers/supabase_auth_controller.dart';
+import 'package:attedance__/features/authentication/controllers/signup_controller.dart';
 import 'package:attedance__/features/authentication/screens/signup/singup_widgets/textfields.dart';
-import 'package:attedance__/features/authentication/screens/signup/singup_widgets/verify_email_screen.dart';
+import 'package:attedance__/routes/app_routes.dart';
 import 'package:attedance__/utils/constants/colors.dart';
 import 'package:attedance__/utils/constants/sized.dart';
 import 'package:attedance__/utils/constants/text_strings.dart';
@@ -12,11 +12,8 @@ import 'package:iconsax/iconsax.dart';
 class SignupForm extends StatelessWidget {
   SignupForm({super.key});
 
-  final controller = Get.put(SupabaseAuthController());
+  final controller = Get.find<SignupController>();
   final _formKey = GlobalKey<FormState>();
-  final _firstnameController = TextEditingController();
-  final _phoneController = TextEditingController();
-  final _passwordVisible = false.obs;
 
   @override
   Widget build(BuildContext context) {
@@ -30,12 +27,10 @@ class SignupForm extends StatelessWidget {
           vertical: TSizes.spaceBtwSections,
         ),
         child: Column(
-          // crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            
             // Name field
             Textfields(
-              controller: _firstnameController,
+              controller: controller.nameController,
               iconColor: dark ? TColors.yellow : TColors.deepPurple,
               prefixIcon: const Icon(Iconsax.user),
               labelText: TTexts.firstName,
@@ -47,16 +42,17 @@ class SignupForm extends StatelessWidget {
               },
             ),
             const SizedBox(height: TSizes.spaceBtwInputFields),
+
             //Phone Number
             Textfields(
-              controller: _phoneController,
+              controller: controller.phoneController,
               iconColor: dark ? TColors.yellow : TColors.deepPurple,
-              prefixIcon: const Icon(Iconsax.user),
+              prefixIcon: const Icon(Iconsax.call),
               labelText: TTexts.phoneNumber,
               keyboardType: TextInputType.phone,
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Please enter your name';
+                  return 'Please enter your phone number';
                 }
                 return null;
               },
@@ -89,13 +85,14 @@ class SignupForm extends StatelessWidget {
                 iconColor: dark ? TColors.yellow : TColors.deepPurple,
                 prefixIcon: const Icon(Iconsax.password_check),
                 labelText: TTexts.password,
-                obscureText: !_passwordVisible.value,
+                obscureText: !controller.passwordVisible.value,
                 suffixIcon: IconButton(
                   icon: Icon(
-                    _passwordVisible.value ? Iconsax.eye : Iconsax.eye_slash,
+                    controller.passwordVisible.value
+                        ? Iconsax.eye
+                        : Iconsax.eye_slash,
                   ),
-                  onPressed:
-                      () => _passwordVisible.value = !_passwordVisible.value,
+                  onPressed: controller.togglePasswordVisibility,
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -139,17 +136,13 @@ class SignupForm extends StatelessWidget {
                           : () async {
                             if (_formKey.currentState!.validate()) {
                               try {
-                                await controller.signUpWithEmail(
-                                  _firstnameController.text.trim(),
-                                  _phoneController.text.trim()
-                                );
+                                await controller.signUpWithEmail();
 
-                                // After successful signup, navigate to email verification screen
-                                Get.to(
-                                  () => VerifyEmailScreen(
-                                    email:
-                                        controller.emailController.text.trim(),
-                                  ),
+                                // Navigate to email verification screen using named route
+                                Get.toNamed(
+                                  AppRoutes.verifyEmail,
+                                  arguments:
+                                      controller.emailController.text.trim(),
                                 );
                               } catch (e) {
                                 // Error is already handled in the controller

@@ -1,32 +1,70 @@
 import 'package:attedance__/features/authentication/screens/forgot_password/forgot_password_2.dart';
-
-import '../../signup/forget_reset/forget_password.dart';
+import 'package:attedance__/services/storage_service.dart';
 import '../../../../../utils/constants/colors.dart';
 import '../../../../../utils/constants/text_strings.dart';
 import '../../../../../utils/helpers/helper_function.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class RememberAndForget extends StatelessWidget {
-  const RememberAndForget({super.key});
+class RememberAndForget extends StatefulWidget {
+  final Function(bool) onRememberChanged;
+  final bool initialValue;
+
+  const RememberAndForget({
+    super.key,
+    required this.onRememberChanged,
+    required this.initialValue,
+  });
+
+  @override
+  State<RememberAndForget> createState() => _RememberAndForgetState();
+}
+
+class _RememberAndForgetState extends State<RememberAndForget> {
+  late bool _isChecked;
+
+  @override
+  void initState() {
+    super.initState();
+    _isChecked = widget.initialValue;
+  }
 
   @override
   Widget build(BuildContext context) {
     final dark = THelperFunction.isDarkMode(context);
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Row(
           children: [
-            Checkbox(value: true, onChanged: (value) {}),
-            Text(TTexts.rememberMe),
+            Checkbox(
+              value: _isChecked,
+              activeColor: dark ? TColors.buttonPrimary : TColors.deepPurple,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  _isChecked = value ?? false;
+                });
+                widget.onRememberChanged(_isChecked);
+              },
+            ),
+            Text(
+              TTexts.rememberMe,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
           ],
         ),
         TextButton(
-          onPressed: () => Get.to(ForgotPasswordScreen()),
+          onPressed: () => Get.to(() => ForgotPasswordScreen()),
           child: Text(
-            style: TextStyle(color: dark ? TColors.buttonPrimary : TColors.red),
             TTexts.forgotPassword,
+            style: TextStyle(
+              color: dark ? TColors.buttonPrimary : TColors.red,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
       ],

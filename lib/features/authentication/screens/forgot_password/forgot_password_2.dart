@@ -1,6 +1,7 @@
+import 'package:attedance__/features/authentication/controllers/forgot_password_controller.dart';
 import 'package:attedance__/features/authentication/controllers/supabase_auth_controller.dart';
-import 'package:attedance__/features/authentication/screens/forgot_password/reset_password_confirmation.dart';
 import 'package:attedance__/features/authentication/screens/signup/singup_widgets/textfields.dart';
+import 'package:attedance__/routes/app_routes.dart';
 import 'package:attedance__/utils/constants/colors.dart';
 import 'package:attedance__/utils/constants/image_strings.dart';
 import 'package:attedance__/utils/constants/sized.dart';
@@ -15,10 +16,10 @@ class ForgotPasswordScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<SupabaseAuthController>();
+    final controller = Get.put(ForgotPasswordController());
     final _formKey = GlobalKey<FormState>();
     final dark = THelperFunction.isDarkMode(context);
-    
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -34,11 +35,13 @@ class ForgotPasswordScreen extends StatelessWidget {
             children: [
               // Image
               Image(
-                image: AssetImage(TImageStrings.verifyemail), // Use an appropriate image
+                image: AssetImage(
+                  TImageStrings.verifyemail,
+                ), // Use an appropriate image
                 width: THelperFunction.screenWidth() * 0.6,
               ),
               const SizedBox(height: TSizes.spaceBtwSections),
-              
+
               // Title
               Text(
                 'Forgot Password?',
@@ -46,7 +49,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: TSizes.spaceBtwItems),
-              
+
               // Subtitle
               Text(
                 'Enter your email and we\'ll send you a link to reset your password',
@@ -54,7 +57,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: TSizes.spaceBtwSections),
-              
+
               // Form
               Form(
                 key: _formKey,
@@ -77,45 +80,57 @@ class ForgotPasswordScreen extends StatelessWidget {
                         return null;
                       },
                     ),
-                    
+
                     // Error message
-                    Obx(() => controller.errorMessage.value.isNotEmpty
-                      ? Padding(
-                          padding: const EdgeInsets.only(top: TSizes.spaceBtwItems),
-                          child: Text(
-                            controller.errorMessage.value,
-                            style: const TextStyle(color: Colors.red),
-                          ),
-                        )
-                      : const SizedBox.shrink()
+                    Obx(
+                      () =>
+                          controller.errorMessage.value.isNotEmpty
+                              ? Padding(
+                                padding: const EdgeInsets.only(
+                                  top: TSizes.spaceBtwItems,
+                                ),
+                                child: Text(
+                                  controller.errorMessage.value,
+                                  style: const TextStyle(color: Colors.red),
+                                ),
+                              )
+                              : const SizedBox.shrink(),
                     ),
-                    
+
                     const SizedBox(height: TSizes.spaceBtwSections),
-                    
+
                     // Submit button
-                    Obx(() => SizedBox(
-                      width: double.infinity,
-                      height: TSizes.appBarHeight,
-                      child: ElevatedButton(
-                        onPressed: controller.isLoading.value
-                          ? null
-                          : () async {
-                              if (_formKey.currentState!.validate()) {
-                                try {
-                                  await controller.resetPassword();
-                                  Get.to(() => ResetPasswordConfirmationScreen(
-                                    email: controller.emailController.text.trim(),
-                                  ));
-                                } catch (e) {
-                                  // Error is already handled in the controller
-                                }
-                              }
-                            },
-                        child: controller.isLoading.value
-                          ? const CircularProgressIndicator()
-                          : Text('Reset Password'),
+                    Obx(
+                      () => SizedBox(
+                        width: double.infinity,
+                        height: TSizes.appBarHeight,
+                        child: ElevatedButton(
+                          onPressed:
+                              controller.isLoading.value
+                                  ? null
+                                  : () async {
+                                    if (_formKey.currentState!.validate()) {
+                                      try {
+                                        await controller.resetPassword();
+                                        // Navigate using named route and pass the email
+                                        Get.toNamed(
+                                          AppRoutes.resetConfirmation,
+                                          arguments:
+                                              controller.emailController.text
+                                                  .trim(),
+                                        );
+                                      } catch (e) {
+                                        // Error is already handled in the controller
+                                      }
+                                    }
+                                  },
+                          child:
+                              controller.isLoading.value
+                                  ? const CircularProgressIndicator()
+                                  : Text('Reset Password'),
+                        ),
                       ),
-                    )),
+                    ),
                   ],
                 ),
               ),

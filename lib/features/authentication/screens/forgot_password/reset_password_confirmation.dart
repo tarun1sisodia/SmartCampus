@@ -1,5 +1,5 @@
-import 'package:attedance__/features/authentication/controllers/supabase_auth_controller.dart';
-import 'package:attedance__/features/authentication/screens/login/login.dart';
+import 'package:attedance__/features/authentication/controllers/forgot_password_controller.dart';
+import 'package:attedance__/routes/app_routes.dart'; // Import the routes
 import 'package:attedance__/utils/constants/image_strings.dart';
 import 'package:attedance__/utils/constants/sized.dart';
 import 'package:attedance__/utils/helpers/helper_function.dart';
@@ -9,22 +9,21 @@ import 'package:get/get.dart';
 
 class ResetPasswordConfirmationScreen extends StatelessWidget {
   final String email;
-  
-  const ResetPasswordConfirmationScreen({
-    super.key,
-    required this.email,
-  });
+
+  const ResetPasswordConfirmationScreen({super.key, required this.email});
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<SupabaseAuthController>();
-    
+    // Find the controller - it should be registered in the binding
+    final controller = Get.find<ForgotPasswordController>();
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
-            onPressed: () => Get.offAll(() => Login()),
+            onPressed:
+                () => Get.offAllNamed(AppRoutes.login), // Use named route
             icon: Icon(CupertinoIcons.clear),
           ),
         ],
@@ -57,13 +56,14 @@ class ResetPasswordConfirmationScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: TSizes.spaceBtwSections),
-              
+
               // Back to Login button
               SizedBox(
                 height: TSizes.appBarHeight,
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () => Get.offAll(() => Login()),
+                  onPressed:
+                      () => Get.offAllNamed(AppRoutes.login), // Use named route
                   child: Text(
                     'Back to Login',
                     style: Theme.of(context).textTheme.headlineSmall,
@@ -71,14 +71,15 @@ class ResetPasswordConfirmationScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: TSizes.spaceBtwItems),
-              
+
               // Resend email button
               SizedBox(
                 width: double.infinity,
                 child: TextButton(
                   onPressed: () async {
                     try {
-                      // Resend password reset email
+                      // Make sure the controller has the email
+                      controller.emailController.text = email;
                       await controller.resetPassword();
                       Get.snackbar(
                         'Email Sent',

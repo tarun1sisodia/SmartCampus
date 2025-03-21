@@ -13,7 +13,7 @@ import 'package:iconsax/iconsax.dart';
 
 class LoginForm extends StatelessWidget {
   LoginForm({super.key});
-  
+
   final controller = Get.put(SupabaseAuthController());
   final _formKey = GlobalKey<FormState>();
   final _passwordVisible = false.obs;
@@ -21,7 +21,7 @@ class LoginForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dark = THelperFunction.isDarkMode(context);
-    
+
     return Form(
       key: _formKey,
       child: Padding(
@@ -49,74 +49,94 @@ class LoginForm extends StatelessWidget {
               },
             ),
             const SizedBox(height: TSizes.spaceBtwInputFields),
-            
+
             // Password field
-            Obx(() => Textfields(
-              controller: controller.passwordController,
-              iconColor: dark ? TColors.yellow : TColors.deepPurple,
-              prefixIcon: const Icon(Iconsax.password_check),
-              labelText: TTexts.password,
-              obscureText: !_passwordVisible.value,
-              suffixIcon: IconButton(
-                icon: Icon(
-                  _passwordVisible.value ? Iconsax.eye : Iconsax.eye_slash,
+            Obx(
+              () => Textfields(
+                controller: controller.passwordController,
+                iconColor: dark ? TColors.yellow : TColors.deepPurple,
+                prefixIcon: const Icon(Iconsax.password_check),
+                labelText: TTexts.password,
+                obscureText: !_passwordVisible.value,
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _passwordVisible.value ? Iconsax.eye : Iconsax.eye_slash,
+                  ),
+                  onPressed:
+                      () => _passwordVisible.value = !_passwordVisible.value,
                 ),
-                onPressed: () => _passwordVisible.value = !_passwordVisible.value,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your password';
+                  }
+                  if (value.length < 6) {
+                    return 'Password must be at least 6 characters';
+                  }
+                  return null;
+                },
               ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter your password';
-                }
-                if (value.length < 6) {
-                  return 'Password must be at least 6 characters';
-                }
-                return null;
-              },
-            )),
+            ),
 
             SizedBox(height: TSizes.spaceBtwInputFields / 2),
-            RememberAndForget(),
-            
-            // Error message
-            Obx(() => controller.errorMessage.value.isNotEmpty
-              ? Padding(
-                  padding: const EdgeInsets.only(top: TSizes.spaceBtwItems),
-                  child: Text(
-                    controller.errorMessage.value,
-                    style: const TextStyle(color: Colors.red),
-                  ),
-                )
-              : const SizedBox.shrink()
+            RememberAndForget(
+              initialValue: controller.rememberMe.value,
+              onRememberChanged: controller.setRememberMe,
             ),
-            
+
+            // Error message
+            Obx(
+              () =>
+                  controller.errorMessage.value.isNotEmpty
+                      ? Padding(
+                        padding: const EdgeInsets.only(
+                          top: TSizes.spaceBtwItems,
+                        ),
+                        child: Text(
+                          controller.errorMessage.value,
+                          style: const TextStyle(color: Colors.red),
+                        ),
+                      )
+                      : const SizedBox.shrink(),
+            ),
+
             const SizedBox(height: TSizes.appBarHeight),
 
             // Sign in button
-            Obx(() => SizedBox(
-              width: double.infinity,
-              height: TSizes.appBarHeight,
-              child: ElevatedButton(
-                onPressed: controller.isLoading.value
-                  ? null
-                  : () {
-                      if (_formKey.currentState!.validate()) {
-                        controller.signInWithEmail();
-                      }
-                    },
-                child: controller.isLoading.value
-                  ? const CircularProgressIndicator()
-                  : Text(TTexts.signIn),
+            Obx(
+              () => SizedBox(
+                width: double.infinity,
+                height: TSizes.appBarHeight,
+                child: ElevatedButton(
+                  onPressed:
+                      controller.isLoading.value
+                          ? null
+                          : () {
+                            if (_formKey.currentState!.validate()) {
+                              if (controller.emailController.text.isNotEmpty &&
+                                  controller
+                                      .passwordController
+                                      .text
+                                      .isNotEmpty) {
+                                controller.signInWithEmail();
+                              }
+                            }
+                          },
+                  child:
+                      controller.isLoading.value
+                          ? const CircularProgressIndicator()
+                          : Text(TTexts.signIn),
+                ),
               ),
-            )),
-            
+            ),
+
             const SizedBox(height: TSizes.spaceBtwItems),
-            
+
             // Create account button
             SizedBox(
               width: double.infinity,
               height: TSizes.appBarHeight,
               child: OutlinedButton(
-                onPressed: () => Get.to(() => Signup()),
+                onPressed: () => Get.offAllNamed('/signup'),
                 child: Text(TTexts.createAccount),
               ),
             ),

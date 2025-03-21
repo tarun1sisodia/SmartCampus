@@ -1,12 +1,12 @@
+import 'package:attedance__/features/authentication/controllers/signup_controller.dart';
 import 'package:attedance__/features/authentication/screens/login/login_widgets/button_footer.dart';
 import 'package:attedance__/features/authentication/screens/login/login_widgets/divider_login.dart';
 import 'package:attedance__/features/authentication/screens/signup/singup_widgets/signup_form.dart';
+import 'package:attedance__/routes/app_routes.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
-
-import '../../../../../utils/constants/sized.dart';
-import '../../../../../utils/constants/text_strings.dart';
+import 'package:attedance__/utils/constants/sized.dart';
+import 'package:attedance__/utils/constants/text_strings.dart';
 
 class Signup extends StatelessWidget {
   const Signup({super.key});
@@ -15,7 +15,12 @@ class Signup extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: true,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Get.offAllNamed(AppRoutes.login),
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -23,15 +28,24 @@ class Signup extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Title
               Text(
                 TTexts.createAccount,
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
               const SizedBox(height: TSizes.spaceBtwSections),
+              
+              // Signup Form
               SignupForm(),
+              
               const SizedBox(height: TSizes.spaceBtwSections),
+              
+              // Divider
               CustomDivider(dividerText: TTexts.orSignUpWith.capitalize!),
+              
               const SizedBox(height: TSizes.spaceBtwSections),
+              
+              // Social Login Buttons
               FooterButton(),
             ],
           ),

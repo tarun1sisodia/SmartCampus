@@ -46,6 +46,8 @@ dependencies:
   intl: ^0.20.2
   get_storage: ^2.1.1
   supabase: ^2.6.3
+  mockito: ^5.4.5
+  build_runner: ^2.4.15
 
 dev_dependencies:
   flutter_test:

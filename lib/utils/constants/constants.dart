@@ -62,13 +62,13 @@ class FirestorePaths {
 }
 
 // Routes used in the app
-class AppRoutes {
-  static const String login = '/login';
-  static const String home = '/home';
-  static const String profile = '/profile';
-  static const String classSelection = '/class-selection';
-  static const String attendance = '/attendance';
-}
+// class AppRoutes {
+//   static const String login = '/login';
+//   static const String home = '/home';
+//   static const String profile = '/profile';
+//   static const String classSelection = '/class-selection';
+//   static const String attendance = '/attendance';
+// }
 
 // Asset paths
 class AppAssets {
