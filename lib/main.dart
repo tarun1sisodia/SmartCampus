@@ -13,7 +13,7 @@ Future<void> main() async {
   await Supabase.initialize(
     url: 'https://otcqeieukikymmsjwfeu.supabase.co',
     anonKey:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im90Y3FlaWV1a2lreW1tc2p3ZmV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI1MjA5MDMsImV4cCI6MjA1ODA5NjkwM30.M3D533la8914BPuHQkyHWnoxN5OM4N_-vVpMDvKDMbk',
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im90Y3FlaWV1a2lreW1tc2p3ZmV1Iiwicm9sSI6ImFub24iLCJpYXQiOjE3NDI1MjA5MDMsImV4cCI6MjA1ODA5NjkwM30.M3D533la8914BPuHQkyHWnoxN5OM4N_-vVpMDvKDMbk',
   );
 
   // Initialize services
@@ -22,11 +22,20 @@ Future<void> main() async {
   // Initialize global bindings
   AppBindings.initGlobalBindings();
 
-  runApp(const MyApp());
+  // Check if user is already logged in
+  final storageService = Get.find<StorageService>();
+  final bool isLoggedIn =
+      storageService.getRememberUserStatus() &&
+      storageService.getUserEmail() != null &&
+      storageService.getUserPassword() != null;
+
+  runApp(MyApp(isLoggedIn: isLoggedIn));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool isLoggedIn;
+
+  const MyApp({super.key, required this.isLoggedIn});
 
   @override
   Widget build(BuildContext context) {
@@ -49,9 +58,8 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.system, // Respects system theme setting
       debugShowCheckedModeBanner: false,
 
-      // Set initial route based on onboarding status
-      initialRoute:
-          onboardingCompleted ? AppRoutes.login : AppRoutes.onboarding,
+      // Set initial route based on login status
+      initialRoute: isLoggedIn ? AppRoutes.home : AppRoutes.onboarding,
       initialBinding:
           onboardingCompleted ? LoginBinding() : OnboardingBinding(),
 

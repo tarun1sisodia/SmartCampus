@@ -1,4 +1,5 @@
 import 'package:attedance__/services/storage_service.dart';
+import 'package:attedance__/utils/helpers/snackbar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -39,10 +40,26 @@ class LoginController extends GetxController {
         emailController.text,
         passwordController.text,
       );
+      // Show a confirmation message
+      TSnackBar.showInfo(
+        message: 'Your credentials will be remembered for next login',
+        title: 'Remember Me',
+      );
     } else {
       // Clear saved credentials
       StorageService.instance.clearUserCredentials();
+      // Show a confirmation message
+      TSnackBar.showInfo(
+        message: 'Your credentials will not be saved',
+        title: 'Remember Me',
+      );
     }
+  }
+
+  bool isUserLoggedIn() {
+    final email = StorageService.instance.getUserEmail();
+    final password = StorageService.instance.getUserPassword();
+    return email != null && password != null;
   }
 
   void login() async {
@@ -54,19 +71,31 @@ class LoginController extends GetxController {
           passwordController.text,
         );
       }
-    } catch (e) {
-      Get.snackbar(
-        'Login Failed',
-        e.toString(),
-        snackPosition: SnackPosition.BOTTOM,
-      );
-    }
-  }
 
-  @override
-  void onClose() {
-    emailController.dispose();
-    passwordController.dispose();
-    super.onClose();
+      // Show success message
+      TSnackBar.showSuccess(
+        message: 'You have successfully logged in',
+        title: 'Welcome Back',
+      );
+    } catch (e) {
+      // Determine if it's a server error or client error
+      if (e.toString().contains('network') ||
+          e.toString().contains('connection')) {
+        TSnackBar.showNetworkError();
+      } else if (e.toString().contains('auth') ||
+          e.toString().contains('credentials')) {
+        TSnackBar.showAuthError(
+          message: 'Invalid email or password. Please try again.',
+        );
+      } else {
+        TSnackBar.showServerError(message: e.toString());
+      }
+    }
+    @override
+    void onClose() {
+      emailController.dispose();
+      passwordController.dispose();
+      super.onClose();
+    }
   }
 }

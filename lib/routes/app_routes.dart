@@ -6,6 +6,7 @@ import 'package:attedance__/features/authentication/screens/login/login.dart';
 import 'package:attedance__/features/authentication/screens/onboarding/onboarding.dart';
 import 'package:attedance__/features/authentication/screens/signup/signup.dart';
 import 'package:attedance__/features/authentication/screens/signup/singup_widgets/verify_email_screen.dart';
+import 'package:attedance__/features/teacher/screens/teacher_home_screen.dart';
 import 'package:get/get.dart';
 
 /// A class that manages all routes for the app
@@ -17,6 +18,7 @@ class AppRoutes {
   static const String forgotPassword = '/forgot-password';
   static const String resetConfirmation = '/reset-confirmation';
   static const String verifyEmail = '/verify-email';
+  static const String home = '/home'; // Add home route
 
   /// Get all application routes
   static List<GetPage> routes = [
@@ -63,6 +65,11 @@ class AppRoutes {
       },
       binding: SignupBinding(), // Use signup binding for verification screen
       transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: home,
+      page: () => TeacherHomeScreen(), // Replace with your home screen widget
+      transition: Transition.fadeIn,
     ),
   ];
 
