@@ -1,3 +1,5 @@
+import 'package:attedance__/routes/app_routes.dart';
+
 import '../../screens/login/login.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -7,14 +9,6 @@ class OnboardingController extends GetxController {
   static OnboardingController get instance => Get.find();
   final pageController = PageController();
   final currentPageIndex = 0.obs;
-
-  // Check if onboarding is completed
-  void checkIfOnboardingCompleted() async {
-    final onboardingCompleted = StorageService.instance.getOnboardingStatus();
-    if (onboardingCompleted) {
-      Get.offAllNamed('/login');
-    }
-  }
 
   void updatePageIndicator(index) => currentPageIndex.value = index;
 
@@ -27,7 +21,7 @@ class OnboardingController extends GetxController {
     if (currentPageIndex.value == 2) {
       // Mark onboarding as completed
       StorageService.instance.setOnboardingStatus(true);
-      Get.offAllNamed('/Login');
+      Get.offAllNamed(AppRoutes.login); // Fixed route
     } else {
       int page = currentPageIndex.value + 1;
       pageController.jumpToPage(page);
@@ -37,12 +31,13 @@ class OnboardingController extends GetxController {
   void skipPage() {
     // Mark onboarding as completed
     StorageService.instance.setOnboardingStatus(true);
-    Get.offAllNamed('/Login');
+    Get.offAllNamed(AppRoutes.login); // Fixed route
   }
 
   @override
-  void onInit() async {
-    checkIfOnboardingCompleted();
+  void onInit() {
     super.onInit();
   }
+
+  void checkIfOnboardingCompleted() {}
 }
