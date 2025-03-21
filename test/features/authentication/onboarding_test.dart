@@ -1,5 +1,4 @@
 import 'package:attedance__/features/authentication/controllers/controllers_onboarding/onboarding_controller.dart';
-import 'package:attedance__/features/authentication/screens/login/login.dart';
 import 'package:attedance__/features/authentication/screens/onboarding/onboarding.dart';
 import 'package:attedance__/services/storage_service.dart';
 import 'package:attedance__/utils/constants/text_strings.dart';

@@ -236,67 +236,38 @@ class TeacherProfileScreen extends StatelessWidget {
       }),
     );
   }
-
-  Widget _buildProfileHeader(
-    BuildContext context, 
-    TeacherProfileController controller, 
-    bool dark
-  ) {
-    return Column(
-      children: [
-        // Profile image with edit button
-        Stack(
-          children: [
-            // Profile image
-            Obx(() {
-              if (controller.isUploadingImage.value) {
-                return Container(
-                  width: 120,
-                  height: 120,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: dark ? TColors.yellow : TColors.deepPurple,
-                      width: 2,
-                    ),
-                  ),
-                  child: const Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                );
-              }
-            
-              return Container(
-                width: 120,
-                height: 120,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: dark ? TColors.yellow : TColors.deepPurple,
-                    width: 2,
-                  ),
-                  image: controller.user.value?.profileImageUrl != null
-                      ? DecorationImage(
-                          image: NetworkImage(controller.user.value!.profileImageUrl!),
-                          fit: BoxFit.cover,
-                        )
-                      : null,
-                  color: controller.user.value?.profileImageUrl == null
-                      ? (dark ? TColors.darkerGrey : TColors.grey)
-                      : null,
+Widget _buildProfileHeader(
+  BuildContext context, 
+  TeacherProfileController controller, 
+  bool dark
+) {
+  return Column(
+    children: [
+      // Profile image with edit button
+      Stack(
+        children: [
+          // Profile image with Hero animation
+          Hero(
+            tag: 'profileImage',
+            child: Container(
+              width: 120,
+              height: 120,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: dark ? TColors.yellow : TColors.deepPurple,
+                  width: 2,
                 ),
-                child: controller.user.value?.profileImageUrl == null
-                    ? Center(
-                        child: Text(
-                          controller.user.value?.name.substring(0, 1).toUpperCase() ?? 'T',
-                          style: Theme.of(context).textTheme.displayMedium,
-                        ),
-                      )
-                    : null,
-              );
-            }),
+                image: const DecorationImage(
+                  image: AssetImage('assets/logos/darkapplogo.png'),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ),
 
-            // Edit button
+          // Edit button
+          if (controller.isEditMode.value)
             Positioned(
               right: 0,
               bottom: 0,
@@ -316,29 +287,30 @@ class TeacherProfileScreen extends StatelessWidget {
                 ),
               ),
             ),
-          ],
-        ),
+        ],
+      ),
 
-        const SizedBox(height: TSizes.spaceBtwItems),
+      const SizedBox(height: TSizes.spaceBtwItems),
 
-        // Teacher name
-        Obx(
-          () => Text(
-            controller.user.value?.name ?? 'Teacher',
-            style: Theme.of(context).textTheme.headlineSmall,
-          ),
+      // Teacher name
+      Obx(
+        () => Text(
+          controller.user.value?.name ?? 'Teacher',
+          style: Theme.of(context).textTheme.headlineSmall,
         ),
+      ),
 
-        // Teacher email
-        Obx(
-          () => Text(
-            controller.user.value?.email ?? 'teacher@example.com',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey),
-          ),
+      // Teacher email
+      Obx(
+        () => Text(
+          controller.user.value?.email ?? 'teacher@example.com',
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey),
         ),
-      ],
-    );
-  }
+      ),
+    ],
+  );
+}
+  
   Widget _buildProfileInfo(
     BuildContext context,
     TeacherProfileController controller,
@@ -741,9 +713,34 @@ class TeacherProfileController extends GetxController {
       isLoading.value = false;
     }
   }
-
   Future<void> pickAndUploadImage() async {
     try {
+      // Show image source selection dialog
+      final ImageSource? source = await showDialog<ImageSource>(
+        context: Get.context!,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            title: const Text('Select Image Source'),
+            children: <Widget>[
+              SimpleDialogOption(
+                onPressed: () => Navigator.pop(context, ImageSource.camera),
+                child: const Text('Take a photo'),
+              ),
+              SimpleDialogOption(
+                onPressed: () => Navigator.pop(context, ImageSource.gallery),
+                child: const Text('Choose from gallery'),
+              ),
+              SimpleDialogOption(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Cancel'),
+              ),
+            ],
+          );
+        },
+      );
+      
+      if (source == null) return; // User canceled the dialog
+      
       isUploadingImage.value = true;
       
       // Get current user
@@ -756,7 +753,7 @@ class TeacherProfileController extends GetxController {
       // Pick image
       final ImagePicker picker = ImagePicker();
       final XFile? image = await picker.pickImage(
-        source: ImageSource.gallery,
+        source: source,
         maxWidth: 512,
         maxHeight: 512,
         imageQuality: 75,

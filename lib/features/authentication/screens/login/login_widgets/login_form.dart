@@ -1,3 +1,4 @@
+import 'package:attedance__/features/authentication/controllers/signup_controller.dart';
 import 'package:attedance__/features/authentication/controllers/supabase_auth_controller.dart';
 import 'package:attedance__/features/authentication/screens/login/login_widgets/remember_checkbox.dart';
 import 'package:attedance__/features/authentication/screens/signup/singup_widgets/textfields.dart';
@@ -81,22 +82,6 @@ class LoginForm extends StatelessWidget {
               onRememberChanged: controller.setRememberMe,
             ),
 
-            // Error message
-            Obx(
-              () =>
-                  controller.errorMessage.value.isNotEmpty
-                      ? Padding(
-                        padding: const EdgeInsets.only(
-                          top: TSizes.spaceBtwItems,
-                        ),
-                        child: Text(
-                          controller.errorMessage.value,
-                          style: const TextStyle(color: Colors.red),
-                        ),
-                      )
-                      : const SizedBox.shrink(),
-            ),
-
             const SizedBox(height: TSizes.appBarHeight),
 
             // Sign in button
@@ -128,13 +113,18 @@ class LoginForm extends StatelessWidget {
             ),
 
             const SizedBox(height: TSizes.spaceBtwItems),
-
             // Create account button
             SizedBox(
               width: double.infinity,
               height: TSizes.appBarHeight,
               child: OutlinedButton(
-                onPressed: () => Get.offAllNamed('/signup'),
+                onPressed: () {
+                  // Clean up any existing SignupController
+                  if (Get.isRegistered<SignupController>()) {
+                    Get.delete<SignupController>(force: true);
+                  }
+                  Get.toNamed('/signup');
+                },
                 child: Text(TTexts.createAccount),
               ),
             ),

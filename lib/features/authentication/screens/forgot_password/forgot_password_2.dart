@@ -1,5 +1,4 @@
 import 'package:attedance__/features/authentication/controllers/forgot_password_controller.dart';
-import 'package:attedance__/features/authentication/controllers/supabase_auth_controller.dart';
 import 'package:attedance__/features/authentication/screens/signup/singup_widgets/textfields.dart';
 import 'package:attedance__/routes/app_routes.dart';
 import 'package:attedance__/utils/constants/colors.dart';

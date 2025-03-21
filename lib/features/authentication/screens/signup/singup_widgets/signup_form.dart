@@ -108,21 +108,20 @@ class SignupForm extends StatelessWidget {
             ),
 
             // Error message
-            Obx(
-              () =>
-                  controller.errorMessage.value.isNotEmpty
-                      ? Padding(
-                        padding: const EdgeInsets.only(
-                          top: TSizes.spaceBtwItems,
-                        ),
-                        child: Text(
-                          controller.errorMessage.value,
-                          style: const TextStyle(color: Colors.red),
-                        ),
-                      )
-                      : const SizedBox.shrink(),
-            ),
-
+            // Obx(
+            //   () =>
+            //       controller.errorMessage.value.isNotEmpty
+            //           ? Padding(
+            //             padding: const EdgeInsets.only(
+            //               top: TSizes.spaceBtwItems,
+            //             ),
+            //             child: Text(
+            //               controller.errorMessage.value,
+            //               style: const TextStyle(color: Colors.red),
+            //             ),
+            //           )
+            //           : const SizedBox.shrink(),
+            // ),
             const SizedBox(height: TSizes.appBarHeight),
 
             // Sign up button
@@ -131,28 +130,31 @@ class SignupForm extends StatelessWidget {
                 width: double.infinity,
                 height: TSizes.appBarHeight,
                 child: ElevatedButton(
-                  onPressed: controller.isLoading.value
-                      ? null
-                      : () async {
-                          if (_formKey.currentState!.validate()) {
-                            try {
-                              await controller.signUpWithEmail();
-                              
-                              // Navigate to email verification screen using named route
-                              Get.toNamed(
-                                AppRoutes.verifyEmail,
-                                arguments: controller.emailController.text.trim(),
+                  onPressed:
+                      controller.isLoading.value
+                          ? null
+                          : () async {
+                            if (_formKey.currentState!.validate()) {
+                              try {
+                                await controller.signUpWithEmail();
+
+                                // Navigate to email verification screen using named route
+                                Get.toNamed(
+                                  AppRoutes.verifyEmail,
+                                  arguments:
+                                      controller.emailController.text.trim(),
+                                );
+                              } catch (e) {
+                                // Error is already handled in the controller with custom snackbar
+                              }
+                            } else {
+                              // Show validation error if form is not valid
+                              TSnackBar.showValidationError(
+                                message:
+                                    'Please fill in all required fields correctly.',
                               );
-                            } catch (e) {
-                              // Error is already handled in the controller with custom snackbar
                             }
-                          } else {
-                            // Show validation error if form is not valid
-                            TSnackBar.showValidationError(
-                              message: 'Please fill in all required fields correctly.',
-                            );
-                          }
-                        },
+                          },
                   child:
                       controller.isLoading.value
                           ? const CircularProgressIndicator()

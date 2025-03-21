@@ -55,19 +55,30 @@ class OnboardingBinding extends Bindings {
   }
 }
 
-class LoginBinding extends Bindings {
-  @override
-  void dependencies() {
-    AppBindings.registerLoginBindings();
-  }
-}
-
 class SignupBinding extends Bindings {
   @override
   void dependencies() {
-    AppBindings.registerSignupBindings();
+    // First remove any existing instance to prevent dependency conflicts
+    if (Get.isRegistered<SignupController>()) {
+      Get.delete<SignupController>(force: true);
+    }
+    // Then create a new one
+    Get.lazyPut(() => SignupController(), fenix: true);
   }
 }
+
+class LoginBinding extends Bindings {
+  @override
+  void dependencies() {
+    // First remove any existing instance to prevent dependency conflicts
+    if (Get.isRegistered<LoginController>()) {
+      Get.delete<LoginController>(force: true);
+    }
+    // Then create a new one
+    Get.lazyPut(() => LoginController(), fenix: true);
+  }
+}
+
 
 class ForgotPasswordBinding extends Bindings {
   @override

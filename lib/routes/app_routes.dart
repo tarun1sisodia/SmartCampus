@@ -35,7 +35,7 @@ class AppRoutes {
     ),
     GetPage(
       name: signup,
-      page: () => Signup(),
+      page: () => const Signup(),
       binding: SignupBinding(), // Use a dedicated binding for signup
       transition: Transition.rightToLeft,
     ),

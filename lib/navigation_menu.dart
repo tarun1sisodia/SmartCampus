@@ -1,4 +1,6 @@
+import 'package:attedance__/features/teacher/controllers/messages_controller.dart';
 import 'package:attedance__/features/teacher/screens/teacher_home_screen.dart';
+import 'package:attedance__/features/teacher/screens/teacher_messages_screen.dart';
 import 'package:attedance__/features/teacher/screens/teacher_profile_screen.dart';
 import 'package:attedance__/routes/app_routes.dart';
 import 'package:get/get.dart';
@@ -72,6 +74,7 @@ class NavigationMenu extends StatelessWidget {
                   : Theme.of(context).scaffoldBackgroundColor,
           indicatorColor: dark ? TColors.darkerGrey : TColors.borderSecondary,
           destinations: [
+            // Inside the NavigationMenu build method, update the Messages navigation destination:
             NavigationDestination(
               label: 'Home',
               icon: Icon(
@@ -86,6 +89,39 @@ class NavigationMenu extends StatelessWidget {
                 color: dark ? Colors.orange : Colors.deepPurpleAccent,
               ),
             ),
+            NavigationDestination(
+              label: 'Messages',
+              icon: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Icon(
+                    Iconsax.message,
+                    color: dark ? Colors.orange : Colors.deepPurpleAccent,
+                  ),
+                  // Badge for unread messages
+                  Positioned(
+                    top: -5,
+                    right: -5,
+                    child: Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Text(
+                        '3', // Number of unread messages
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 8,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
             NavigationDestination(
               label: 'Profile',
               icon: Icon(
@@ -104,25 +140,18 @@ class NavigationMenu extends StatelessWidget {
 class NavigationController extends GetxController {
   final Rx<int> selectedIndex = 0.obs; //observer Widget.
 
-  // Initialize ProfileController when NavigationController is created
+  // Initialize controllers when NavigationController is created
   @override
   void onInit() {
     super.onInit();
     Get.put(TeacherProfileController());
+    Get.put(MessagesController()); // Add this line
   }
 
   final screens = [
     TeacherHomeScreen(),
-    AddClassScreen(), // Replace placeholder with actual screen
+    const TeacherMessagesScreen(),
+    const Center(child: Text('Add Class')),
     const TeacherProfileScreen(),
   ];
-}
-
-class AddClassScreen extends StatelessWidget {
-  const AddClassScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar());
-  }
 }

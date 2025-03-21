@@ -12,9 +12,9 @@ Future<void> main() async {
   // Initialize Supabase
   await Supabase.initialize(
     url: 'https://hgjwopqcwptinpcihquk.supabase.co',
-    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhnandvcHFjd3B0aW5wY2locXVrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI1ODQyOTksImV4cCI6MjA1ODE2MDI5OX0.QftWVNrZOrwlyRV1lwq_jW1_fmRab9KhjB7j08Zxdfk',
+    anonKey:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhnandvcHFjd3B0aW5wY2locXVrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI1ODQyOTksImV4cCI6MjA1ODE2MDI5OX0.QftWVNrZOrwlyRV1lwq_jW1_fmRab9KhjB7j08Zxdfk',
   );
-
 
   // Initialize services
   await Get.putAsync(() => StorageService().init());
@@ -106,6 +106,7 @@ class MyApp extends StatelessWidget {
       // Set initial route based on authentication status
       initialRoute: initialRoute,
       initialBinding: initialBinding,
+      smartManagement: SmartManagement.keepFactory,
 
       // Use the routes defined in AppRoutes
       getPages: AppRoutes.routes,
