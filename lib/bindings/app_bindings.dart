@@ -42,8 +42,10 @@ class AppBindings {
 
   /// Home screen bindings (includes all controllers needed for the home screen)
   static void registerHomeBindings() {
-    // Register any controllers needed for the home screen
-    // Removed duplicate TeacherProfileController registration
+    Get.lazyPut(
+      () => TeacherProfileController(),
+      fenix: true,
+    ); // Ensure proper binding
   }
 }
 
@@ -78,7 +80,6 @@ class LoginBinding extends Bindings {
     Get.lazyPut(() => LoginController(), fenix: true);
   }
 }
-
 
 class ForgotPasswordBinding extends Bindings {
   @override

@@ -25,6 +25,9 @@ class TeacherGreeting extends StatelessWidget {
       greeting = 'Good Evening';
     }
 
+    // Handle null user gracefully
+    final userName = controller.user.value?.name ?? 'Teacher';
+
     return Container(
       padding: const EdgeInsets.all(0),
       decoration: BoxDecoration(color: dark ? TColors.dark : TColors.light),
@@ -65,7 +68,7 @@ class TeacherGreeting extends StatelessWidget {
                 const SizedBox(height: TSizes.xs),
                 Obx(
                   () => Text(
-                    controller.user.value?.name ?? 'Teacher',
+                    userName,
                     style: Theme.of(context).textTheme.headlineSmall,
                     overflow: TextOverflow.ellipsis,
                   ),

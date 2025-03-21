@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:attedance__/utils/constants/colors.dart';
 import 'package:attedance__/utils/constants/sized.dart';
 import 'package:attedance__/utils/helpers/helper_function.dart';
@@ -8,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
 class TeacherMessagesScreen extends StatelessWidget {
-  const TeacherMessagesScreen({Key? key}) : super(key: key);
+  const TeacherMessagesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -35,72 +33,85 @@ class TeacherMessagesScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(TSizes.defaultSpace),
+      body: Stack(
         children: [
-          // Message categories
-          _buildCategorySelector(context, dark),
+          ListView(
+            padding: const EdgeInsets.all(TSizes.defaultSpace),
+            children: [
+              // Message categories
+              _buildCategorySelector(context, dark),
 
-          const SizedBox(height: TSizes.spaceBtwSections),
+              const SizedBox(height: TSizes.spaceBtwSections),
 
-          // Recent messages
-          Text(
-            'Recent Messages',
-            style: Theme.of(context).textTheme.titleLarge,
+              // Recent messages
+              Text(
+                'Recent Messages',
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              const SizedBox(height: TSizes.spaceBtwItems),
+
+              // Message list
+              _buildMessageItem(
+                context: context,
+                name: 'John Smith',
+                message: 'Hello, I have a question about the homework.',
+                time: '10:30 AM',
+                isUnread: true,
+                avatarText: 'JS',
+                dark: dark,
+              ),
+
+              _buildMessageItem(
+                context: context,
+                name: 'Sarah Johnson',
+                message: 'Thank you for the feedback on my project.',
+                time: 'Yesterday',
+                isUnread: false,
+                avatarText: 'SJ',
+                dark: dark,
+              ),
+
+              _buildMessageItem(
+                context: context,
+                name: 'Michael Brown',
+                message: 'When is the next class meeting?',
+                time: 'Yesterday',
+                isUnread: true,
+                avatarText: 'MB',
+                dark: dark,
+              ),
+
+              _buildMessageItem(
+                context: context,
+                name: 'Emily Davis',
+                message: 'I\'ve submitted my assignment.',
+                time: 'Monday',
+                isUnread: false,
+                avatarText: 'ED',
+                dark: dark,
+              ),
+
+              _buildMessageItem(
+                context: context,
+                name: 'David Wilson',
+                message: 'Can we schedule a meeting to discuss my grades?',
+                time: 'Sunday',
+                isUnread: false,
+                avatarText: 'DW',
+                dark: dark,
+              ),
+            ],
           ),
-          const SizedBox(height: TSizes.spaceBtwItems),
-
-          // Message list
-          _buildMessageItem(
-            context: context,
-            name: 'John Smith',
-            message: 'Hello, I have a question about the homework.',
-            time: '10:30 AM',
-            isUnread: true,
-            avatarText: 'JS',
-            dark: dark,
+          Positioned(
+            bottom: 16,
+            right: 16,
+            child: FloatingActionButton(
+              onPressed: () {
+                // Handle FAB action
+              },
+              child: const Icon(Iconsax.add),
+            ),
           ),
-
-          _buildMessageItem(
-            context: context,
-            name: 'Sarah Johnson',
-            message: 'Thank you for the feedback on my project.',
-            time: 'Yesterday',
-            isUnread: false,
-            avatarText: 'SJ',
-            dark: dark,
-          ),
-
-          _buildMessageItem(
-            context: context,
-            name: 'Michael Brown',
-            message: 'When is the next class meeting?',
-            time: 'Yesterday',
-            isUnread: true,
-            avatarText: 'MB',
-            dark: dark,
-          ),
-
-          _buildMessageItem(
-            context: context,
-            name: 'Emily Davis',
-            message: 'I\'ve submitted my assignment.',
-            time: 'Monday',
-            isUnread: false,
-            avatarText: 'ED',
-            dark: dark,
-          ),
-
-          _buildMessageItem(
-            context: context,
-            name: 'David Wilson',
-            message: 'Can we schedule a meeting to discuss my grades?',
-            time: 'Sunday',
-            isUnread: false,
-            avatarText: 'DW',
-            dark: dark,
-          ),
-          FloatingActionButton(onPressed: () {}, child: Icon(Iconsax.add)),
         ],
       ),
     );
@@ -272,10 +283,10 @@ class _MessageDetailScreen extends StatelessWidget {
   final String avatarText;
 
   const _MessageDetailScreen({
-    Key? key,
+    super.key,
     required this.name,
     required this.avatarText,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

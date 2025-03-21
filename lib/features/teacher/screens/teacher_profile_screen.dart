@@ -109,69 +109,6 @@ class TeacherProfileScreen extends StatelessWidget {
 
                 const SizedBox(height: TSizes.spaceBtwSections),
 
-                // Settings sections
-                _buildSection(
-                  context: context,
-                  title: 'App Settings',
-                  items: [
-                    _buildProfileMenuItem(
-                      title: 'Dark Mode',
-                      icon: dark ? Iconsax.moon : Iconsax.sun_1,
-                      trailing: Switch(
-                        value: dark,
-                        onChanged: (_) => controller.toggleTheme(),
-                        activeColor: dark ? TColors.yellow : TColors.deepPurple,
-                      ),
-                      dark: dark,
-                    ),
-                    _buildProfileMenuItem(
-                      title: 'Email Notifications',
-                      icon: Iconsax.notification,
-                      trailing: Obx(
-                        () => Switch(
-                          value: controller.emailNotifications.value,
-                          onChanged: controller.toggleEmailNotifications,
-                          activeColor:
-                              dark ? TColors.yellow : TColors.deepPurple,
-                        ),
-                      ),
-                      dark: dark,
-                    ),
-                    _buildProfileMenuItem(
-                      title: 'Language',
-                      icon: Iconsax.language_square,
-                      trailing: const Text('English'),
-                      dark: dark,
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: TSizes.spaceBtwItems),
-
-                _buildSection(
-                  context: context,
-                  title: 'Support',
-                  items: [
-                    _buildProfileMenuItem(
-                      title: 'Help & Support',
-                      icon: Iconsax.support,
-                      dark: dark,
-                    ),
-                    _buildProfileMenuItem(
-                      title: 'Terms of Service',
-                      icon: Iconsax.document,
-                      dark: dark,
-                    ),
-                    _buildProfileMenuItem(
-                      title: 'Privacy Policy',
-                      icon: Iconsax.security_safe,
-                      dark: dark,
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: TSizes.spaceBtwSections),
-
                 // Sign Out Button
                 SizedBox(
                   width: double.infinity,
@@ -236,81 +173,84 @@ class TeacherProfileScreen extends StatelessWidget {
       }),
     );
   }
-Widget _buildProfileHeader(
-  BuildContext context, 
-  TeacherProfileController controller, 
-  bool dark
-) {
-  return Column(
-    children: [
-      // Profile image with edit button
-      Stack(
-        children: [
-          // Profile image with Hero animation
-          Hero(
-            tag: 'profileImage',
-            child: Container(
-              width: 120,
-              height: 120,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: dark ? TColors.yellow : TColors.deepPurple,
-                  width: 2,
-                ),
-                image: const DecorationImage(
-                  image: AssetImage('assets/logos/darkapplogo.png'),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          ),
 
-          // Edit button
-          if (controller.isEditMode.value)
-            Positioned(
-              right: 0,
-              bottom: 0,
+  Widget _buildProfileHeader(
+    BuildContext context,
+    TeacherProfileController controller,
+    bool dark,
+  ) {
+    return Column(
+      children: [
+        // Profile image with edit button
+        Stack(
+          children: [
+            // Profile image with Hero animation
+            Hero(
+              tag: 'profileImage',
               child: Container(
-                padding: const EdgeInsets.all(4),
+                width: 120,
+                height: 120,
                 decoration: BoxDecoration(
-                  color: dark ? TColors.yellow : TColors.deepPurple,
                   shape: BoxShape.circle,
-                ),
-                child: InkWell(
-                  onTap: () => controller.pickAndUploadImage(),
-                  child: Icon(
-                    Iconsax.camera,
-                    size: 20,
-                    color: dark ? Colors.black : Colors.white,
+                  border: Border.all(
+                    color: dark ? TColors.yellow : TColors.deepPurple,
+                    width: 2,
+                  ),
+                  image: const DecorationImage(
+                    image: AssetImage('assets/logos/darkapplogo.png'),
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),
             ),
-        ],
-      ),
 
-      const SizedBox(height: TSizes.spaceBtwItems),
-
-      // Teacher name
-      Obx(
-        () => Text(
-          controller.user.value?.name ?? 'Teacher',
-          style: Theme.of(context).textTheme.headlineSmall,
+            // Edit button
+            if (controller.isEditMode.value)
+              Positioned(
+                right: 0,
+                bottom: 0,
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: dark ? TColors.yellow : TColors.deepPurple,
+                    shape: BoxShape.circle,
+                  ),
+                  child: InkWell(
+                    onTap: () => controller.pickAndUploadImage(),
+                    child: Icon(
+                      Iconsax.camera,
+                      size: 20,
+                      color: dark ? Colors.black : Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+          ],
         ),
-      ),
 
-      // Teacher email
-      Obx(
-        () => Text(
-          controller.user.value?.email ?? 'teacher@example.com',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey),
+        const SizedBox(height: TSizes.spaceBtwItems),
+
+        // Teacher name
+        Obx(
+          () => Text(
+            controller.user.value?.name ?? 'Teacher',
+            style: Theme.of(context).textTheme.headlineSmall,
+          ),
         ),
-      ),
-    ],
-  );
-}
-  
+
+        // Teacher email
+        Obx(
+          () => Text(
+            controller.user.value?.email ?? 'teacher@example.com',
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: Colors.grey),
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildProfileInfo(
     BuildContext context,
     TeacherProfileController controller,
@@ -713,6 +653,7 @@ class TeacherProfileController extends GetxController {
       isLoading.value = false;
     }
   }
+
   Future<void> pickAndUploadImage() async {
     try {
       // Show image source selection dialog
@@ -738,18 +679,20 @@ class TeacherProfileController extends GetxController {
           );
         },
       );
-      
+
       if (source == null) return; // User canceled the dialog
-      
+
       isUploadingImage.value = true;
-      
+
       // Get current user
       final currentUser = supabase.auth.currentUser;
       if (currentUser == null) {
-        TSnackBar.showError(message: 'You must be logged in to upload an image');
+        TSnackBar.showError(
+          message: 'You must be logged in to upload an image',
+        );
         return;
       }
-      
+
       // Pick image
       final ImagePicker picker = ImagePicker();
       final XFile? image = await picker.pickImage(
@@ -758,37 +701,37 @@ class TeacherProfileController extends GetxController {
         maxHeight: 512,
         imageQuality: 75,
       );
-      
+
       if (image == null) {
         isUploadingImage.value = false;
         return; // User canceled the picker
       }
-      
+
       // Get file extension
       final fileExt = path.extension(image.path);
-      final fileName = '${currentUser.id}${fileExt}';
+      final fileName = '${currentUser.id}$fileExt';
       final filePath = '${currentUser.id}/$fileName';
-      
+
       // Upload to Supabase Storage
       final file = File(image.path);
       await supabase.storage
-        .from('profile_images')
-        .upload(filePath, file, fileOptions: const FileOptions(upsert: true));
-      
+          .from('profile_images')
+          .upload(filePath, file, fileOptions: const FileOptions(upsert: true));
+
       // Get the public URL
       final imageUrl = supabase.storage
-        .from('profile_images')
-        .getPublicUrl(filePath);
-      
+          .from('profile_images')
+          .getPublicUrl(filePath);
+
       // Update user record with the image URL
       await supabase
-        .from('users')
-        .update({'profile_image_url': imageUrl})
-        .eq('id', currentUser.id);
-      
+          .from('users')
+          .update({'profile_image_url': imageUrl})
+          .eq('id', currentUser.id);
+
       // Refresh user data
       await loadUserData();
-      
+
       TSnackBar.showSuccess(message: 'Profile image updated successfully');
     } catch (e) {
       TSnackBar.showError(message: 'Failed to upload image: ${e.toString()}');

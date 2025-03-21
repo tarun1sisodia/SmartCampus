@@ -2,7 +2,6 @@ import 'package:attedance__/features/authentication/controllers/signup_controlle
 import 'package:attedance__/features/authentication/screens/login/login_widgets/button_footer.dart';
 import 'package:attedance__/features/authentication/screens/login/login_widgets/divider_login.dart';
 import 'package:attedance__/features/authentication/screens/signup/singup_widgets/signup_form.dart';
-import 'package:attedance__/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:attedance__/utils/constants/sized.dart';

@@ -13,7 +13,7 @@ class TeacherHomeScreen extends StatelessWidget {
 
   // Controller for search functionality
   final searchController = TextEditingController();
-  final RxBool isSearching = false.obs;
+  final RxBool isSearching = RxBool(false);
   
   // Get current user's name
   final String userName = Supabase.instance.client.auth.currentUser?.userMetadata?['name'] ?? 'Teacher';
@@ -83,8 +83,7 @@ class TeacherHomeScreen extends StatelessWidget {
           ),
           const SizedBox(width: TSizes.sm),
         ],
-      ),
-      body: SingleChildScrollView(
+      ),      body: SingleChildScrollView(
         child: Column(
           children: [
             // Curved header section with greeting
