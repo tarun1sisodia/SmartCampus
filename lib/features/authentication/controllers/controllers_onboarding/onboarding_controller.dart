@@ -1,9 +1,8 @@
 import 'package:attedance__/routes/app_routes.dart';
-
-import '../../screens/login/login.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../services/storage_service.dart';
+import 'package:attedance__/utils/helpers/snackbar_helper.dart';
 
 class OnboardingController extends GetxController {
   static OnboardingController get instance => Get.find();
@@ -21,7 +20,14 @@ class OnboardingController extends GetxController {
     if (currentPageIndex.value == 2) {
       // Mark onboarding as completed
       StorageService.instance.setOnboardingStatus(true);
-      Get.offAllNamed(AppRoutes.login); // Fixed route
+      
+      // Show welcome message
+      TSnackBar.showSuccess(
+        message: 'You\'re all set! Let\'s get started with your attendance tracking.',
+        title: 'Setup Complete',
+      );
+      
+      Get.offAllNamed(AppRoutes.login);
     } else {
       int page = currentPageIndex.value + 1;
       pageController.jumpToPage(page);
@@ -31,7 +37,14 @@ class OnboardingController extends GetxController {
   void skipPage() {
     // Mark onboarding as completed
     StorageService.instance.setOnboardingStatus(true);
-    Get.offAllNamed(AppRoutes.login); // Fixed route
+    
+    // Show welcome message
+    TSnackBar.showInfo(
+      message: 'Welcome to the Attendance App! Please log in to continue.',
+      title: 'Welcome',
+    );
+    
+    Get.offAllNamed(AppRoutes.login);
   }
 
   @override

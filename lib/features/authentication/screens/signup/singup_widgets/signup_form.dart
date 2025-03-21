@@ -5,6 +5,7 @@ import 'package:attedance__/utils/constants/colors.dart';
 import 'package:attedance__/utils/constants/sized.dart';
 import 'package:attedance__/utils/constants/text_strings.dart';
 import 'package:attedance__/utils/helpers/helper_function.dart';
+import 'package:attedance__/utils/helpers/snackbar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -130,25 +131,28 @@ class SignupForm extends StatelessWidget {
                 width: double.infinity,
                 height: TSizes.appBarHeight,
                 child: ElevatedButton(
-                  onPressed:
-                      controller.isLoading.value
-                          ? null
-                          : () async {
-                            if (_formKey.currentState!.validate()) {
-                              try {
-                                await controller.signUpWithEmail();
-
-                                // Navigate to email verification screen using named route
-                                Get.toNamed(
-                                  AppRoutes.verifyEmail,
-                                  arguments:
-                                      controller.emailController.text.trim(),
-                                );
-                              } catch (e) {
-                                // Error is already handled in the controller
-                              }
+                  onPressed: controller.isLoading.value
+                      ? null
+                      : () async {
+                          if (_formKey.currentState!.validate()) {
+                            try {
+                              await controller.signUpWithEmail();
+                              
+                              // Navigate to email verification screen using named route
+                              Get.toNamed(
+                                AppRoutes.verifyEmail,
+                                arguments: controller.emailController.text.trim(),
+                              );
+                            } catch (e) {
+                              // Error is already handled in the controller with custom snackbar
                             }
-                          },
+                          } else {
+                            // Show validation error if form is not valid
+                            TSnackBar.showValidationError(
+                              message: 'Please fill in all required fields correctly.',
+                            );
+                          }
+                        },
                   child:
                       controller.isLoading.value
                           ? const CircularProgressIndicator()

@@ -105,7 +105,8 @@ class TSnackBar {
   static void showError({
     required String message,
     String title = 'Error',
-    MessageSource source = MessageSource.app,
+    MessageSource source =
+        MessageSource.app, // No need for TSnackBar.MessageSource
   }) {
     show(
       title: title,

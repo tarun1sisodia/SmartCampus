@@ -11,6 +11,7 @@ class SupabaseAuthController extends GetxController {
   final passwordController = TextEditingController();
 
   // Store these temporarily during the signup process
+  // These will be used after email verification to store user data in the database
   String _tempName = '';
   String _tempPhone = '';
 
@@ -108,6 +109,11 @@ class SupabaseAuthController extends GetxController {
       final user = supabase.auth.currentUser;
 
       if (user != null) {
+        // Log the user data being stored
+        print(
+          'Storing user data: id=${user.id}, name=$_tempName, email=${user.email}, phone=$_tempPhone',
+        );
+
         // Store user data in the Supabase table
         await supabase.from('users').insert({
           'id': user.id,
