@@ -1,0 +1,531 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:iconsax/iconsax.dart';
+import '../controllers/class_controller.dart';
+import '../../../utils/constants/colors.dart';
+import '../../../utils/constants/sized.dart';
+import '../../../utils/helpers/helper_function.dart';
+import 'add_student_screen.dart';
+import 'attendance_screen.dart';
+
+class ClassListScreen extends StatelessWidget {
+  final classController = Get.put(ClassController());
+
+  ClassListScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final dark = THelperFunction.isDarkMode(context);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'My Classes',
+          style: Theme.of(context).textTheme.headlineSmall,
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _showAddClassDialog(context),
+        backgroundColor: dark ? TColors.yellow : TColors.deepPurple,
+        child: const Icon(Iconsax.add),
+      ),
+      body: Obx(() {
+        if (classController.isLoading.value) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (classController.classes.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Iconsax.book_1,
+                  size: 64,
+                  color: dark ? TColors.yellow : TColors.deepPurple,
+                ),
+                const SizedBox(height: TSizes.spaceBtwItems),
+                Text(
+                  'No Classes Yet',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                const SizedBox(height: TSizes.spaceBtwItems / 2),
+                Text(
+                  'Create your first class to get started',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: TSizes.spaceBtwItems),
+                ElevatedButton.icon(
+                  onPressed: () => _showAddClassDialog(context),
+                  icon: const Icon(Iconsax.add),
+                  label: const Text('Create Class'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: dark ? TColors.yellow : TColors.deepPurple,
+                    foregroundColor: dark ? Colors.black : Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+
+        return ListView.builder(
+          padding: const EdgeInsets.all(TSizes.defaultSpace),
+          itemCount: classController.classes.length,
+          itemBuilder: (context, index) {
+            final classItem = classController.classes[index];
+            return Card(
+              margin: const EdgeInsets.only(bottom: TSizes.spaceBtwItems),
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(TSizes.md),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          backgroundColor:
+                              dark ? TColors.yellow : TColors.deepPurple,
+                          child: Text(
+                            classItem.subjectName?.substring(0, 1) ?? 'C',
+                            style: TextStyle(
+                              color: dark ? Colors.black : Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: TSizes.spaceBtwItems),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                classItem.subjectName ?? 'Unknown Subject',
+                                style: Theme.of(context).textTheme.titleMedium
+                                    ?.copyWith(fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                '${classItem.courseName} - Year ${classItem.year}${classItem.section != null ? ' (${classItem.section})' : ''}',
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
+                            ],
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(Iconsax.more),
+                          onPressed:
+                              () => _showClassOptions(context, classItem),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: TSizes.spaceBtwItems),
+                    const Divider(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        _buildActionButton(
+                          context,
+                          icon: Iconsax.people,
+                          label: 'Students',
+                          onTap:
+                              () => Get.to(
+                                () => AddStudentScreen(classModel: classItem),
+                              ),
+                        ),
+                        _buildActionButton(
+                          context,
+                          icon: Iconsax.calendar_1,
+                          label: 'Attendance',
+                          onTap:
+                              () => Get.to(
+                                () => AttendanceScreen(classModel: classItem),
+                              ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      }),
+    );
+  }
+
+  // Build an action button
+  Widget _buildActionButton(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    final dark = THelperFunction.isDarkMode(context);
+
+    return Expanded(
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(TSizes.buttonRadius),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: TSizes.sm),
+          child: Column(
+            children: [
+              Icon(icon, color: dark ? TColors.yellow : TColors.deepPurple),
+              const SizedBox(height: TSizes.spaceBtwItems / 2),
+              Text(label, style: Theme.of(context).textTheme.bodySmall),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Show dialog to add a new class
+  void _showAddClassDialog(BuildContext context) {
+    final dark = THelperFunction.isDarkMode(context);
+
+    // Reset form controllers
+    classController.yearController.clear();
+    classController.sectionController.clear();
+
+    Get.dialog(
+      AlertDialog(
+        title: const Text('Create New Class'),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Subject dropdown
+              Obx(
+                () => DropdownButtonFormField<String>(
+                  decoration: InputDecoration(
+                    labelText: 'Subject',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(
+                        TSizes.inputFieldRadius,
+                      ),
+                    ),
+                  ),
+                  value:
+                      classController.subjects.isNotEmpty
+                          ? classController.selectedSubjectId.value
+                          : null,
+                  items:
+                      classController.subjects.map((subject) {
+                        return DropdownMenuItem<String>(
+                          value: subject.id,
+                          child: Text(subject.name),
+                        );
+                      }).toList(),
+                  onChanged: (value) {
+                    if (value != null) {
+                      classController.selectedSubjectId.value = value;
+                    }
+                  },
+                ),
+              ),
+
+              const SizedBox(height: TSizes.spaceBtwInputFields),
+
+              // Course dropdown
+              Obx(
+                () => DropdownButtonFormField<String>(
+                  decoration: InputDecoration(
+                    labelText: 'Course',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(
+                        TSizes.inputFieldRadius,
+                      ),
+                    ),
+                  ),
+                  value:
+                      classController.courses.isNotEmpty
+                          ? classController.selectedCourseId.value
+                          : null,
+                  items:
+                      classController.courses.map((course) {
+                        return DropdownMenuItem<String>(
+                          value: course.id,
+                          child: Text(course.name),
+                        );
+                      }).toList(),
+                  onChanged: (value) {
+                    if (value != null) {
+                      classController.selectedCourseId.value = value;
+                    }
+                  },
+                ),
+              ),
+
+              const SizedBox(height: TSizes.spaceBtwInputFields),
+
+              // Year field
+              TextField(
+                controller: classController.yearController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  labelText: 'Year',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(
+                      TSizes.inputFieldRadius,
+                    ),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: TSizes.spaceBtwInputFields),
+
+              // Section field
+              TextField(
+                controller: classController.sectionController,
+                decoration: InputDecoration(
+                  labelText: 'Section (Optional)',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(
+                      TSizes.inputFieldRadius,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: Text(
+              'Cancel',
+              style: TextStyle(color: dark ? Colors.white70 : Colors.black54),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              if (classController.validateClassForm()) {
+                classController.createClass();
+                Get.back();
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: dark ? TColors.yellow : TColors.deepPurple,
+              foregroundColor: dark ? Colors.black : Colors.white,
+            ),
+            child: const Text('Create'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Show options for a class
+  void _showClassOptions(BuildContext context, dynamic classItem) {
+    final dark = THelperFunction.isDarkMode(context);
+
+    Get.bottomSheet(
+      Container(
+        padding: const EdgeInsets.all(TSizes.defaultSpace),
+        decoration: BoxDecoration(
+          color: dark ? Colors.grey[900] : Colors.white,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(TSizes.cardRadiusLg),
+            topRight: Radius.circular(TSizes.cardRadiusLg),
+          ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: Icon(
+                Iconsax.edit,
+                color: dark ? TColors.yellow : TColors.deepPurple,
+              ),
+              title: const Text('Edit Class'),
+              onTap: () {
+                Get.back();
+                _showEditClassDialog(context, classItem);
+              },
+            ),
+            ListTile(
+              leading: Icon(Iconsax.trash, color: Colors.red),
+              title: const Text('Delete Class'),
+              onTap: () {
+                Get.back();
+                _showDeleteConfirmation(context, classItem);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Show dialog to edit a class
+  void _showEditClassDialog(BuildContext context, dynamic classItem) {
+    final dark = THelperFunction.isDarkMode(context);
+
+    // Set form controllers with current values
+    classController.yearController.text = classItem.year.toString();
+    classController.sectionController.text = classItem.section ?? '';
+    classController.selectedSubjectId.value = classItem.subjectId;
+    classController.selectedCourseId.value = classItem.courseId;
+
+    Get.dialog(
+      AlertDialog(
+        title: const Text('Edit Class'),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Subject dropdown
+              Obx(
+                () => DropdownButtonFormField<String>(
+                  decoration: InputDecoration(
+                    labelText: 'Subject',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(
+                        TSizes.inputFieldRadius,
+                      ),
+                    ),
+                  ),
+                  value: classController.selectedSubjectId.value,
+                  items:
+                      classController.subjects.map((subject) {
+                        return DropdownMenuItem<String>(
+                          value: subject.id,
+                          child: Text(subject.name),
+                        );
+                      }).toList(),
+                  onChanged: (value) {
+                    if (value != null) {
+                      classController.selectedSubjectId.value = value;
+                    }
+                  },
+                ),
+              ),
+
+              const SizedBox(height: TSizes.spaceBtwInputFields),
+
+              // Course dropdown
+              Obx(
+                () => DropdownButtonFormField<String>(
+                  decoration: InputDecoration(
+                    labelText: 'Course',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(
+                        TSizes.inputFieldRadius,
+                      ),
+                    ),
+                  ),
+                  value: classController.selectedCourseId.value,
+                  items:
+                      classController.courses.map((course) {
+                        return DropdownMenuItem<String>(
+                          value: course.id,
+                          child: Text(course.name),
+                        );
+                      }).toList(),
+                  onChanged: (value) {
+                    if (value != null) {
+                      classController.selectedCourseId.value = value;
+                    }
+                  },
+                ),
+              ),
+
+              const SizedBox(height: TSizes.spaceBtwInputFields),
+
+              // Year field
+              TextField(
+                controller: classController.yearController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  labelText: 'Year',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(
+                      TSizes.inputFieldRadius,
+                    ),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: TSizes.spaceBtwInputFields),
+
+              // Section field
+              TextField(
+                controller: classController.sectionController,
+                decoration: InputDecoration(
+                  labelText: 'Section (Optional)',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(
+                      TSizes.inputFieldRadius,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: Text(
+              'Cancel',
+              style: TextStyle(color: dark ? Colors.white70 : Colors.black54),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              if (classController.validateClassForm()) {
+                classController.updateClass(classItem.id);
+                Get.back();
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: dark ? TColors.yellow : TColors.deepPurple,
+              foregroundColor: dark ? Colors.black : Colors.white,
+            ),
+            child: const Text('Update'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Show delete confirmation dialog
+  void _showDeleteConfirmation(BuildContext context, dynamic classItem) {
+    final dark = THelperFunction.isDarkMode(context);
+
+    Get.dialog(
+      AlertDialog(
+        title: const Text('Delete Class'),
+        content: Text(
+          'Are you sure you want to delete "${classItem.subjectName}"? This action cannot be undone.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: Text(
+              'Cancel',
+              style: TextStyle(color: dark ? Colors.white70 : Colors.black54),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              classController.deleteClass(classItem.id);
+              Get.back();
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+            ),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+  }
+}

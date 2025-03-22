@@ -1,40 +1,57 @@
-class Student {
+class StudentModel {
   final String id;
-  final String name;
   final String rollNumber;
-  final String course;
+  final String name;
+  final String courseId;
   final int year;
-  final String? imageUrl;
+  final String? section;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
 
-  Student({
+  // Transient field for attendance tracking
+  String? attendanceStatus;
+
+  StudentModel({
     required this.id,
-    required this.name,
     required this.rollNumber,
-    required this.course,
+    required this.name,
+    required this.courseId,
     required this.year,
-    this.imageUrl,
+    this.section,
+    this.createdAt,
+    this.updatedAt,
+    this.attendanceStatus,
   });
 
-  // Factory constructor to create a Student from a Map (Firestore document)
-  factory Student.fromMap(Map<String, dynamic> map, String documentId) {
-    return Student(
-      id: documentId,
-      name: map['name'] ?? '',
-      rollNumber: map['rollNumber'] ?? '',
-      course: map['course'] ?? '',
-      year: map['year'] ?? 1,
-      imageUrl: map['imageUrl'],
+  factory StudentModel.fromJson(Map<String, dynamic> json) {
+    return StudentModel(
+      id: json['id'],
+      rollNumber: json['roll_number'],
+      name: json['name'],
+      courseId: json['course_id'],
+      year: json['year'],
+      section: json['section'],
+      createdAt:
+          json['created_at'] != null
+              ? DateTime.parse(json['created_at'])
+              : null,
+      updatedAt:
+          json['updated_at'] != null
+              ? DateTime.parse(json['updated_at'])
+              : null,
     );
   }
 
-  // Convert Student to a Map for Firestore
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return {
+      'id': id,
+      'roll_number': rollNumber,
       'name': name,
-      'rollNumber': rollNumber,
-      'course': course,
+      'course_id': courseId,
       'year': year,
-      'imageUrl': imageUrl,
+      'section': section,
+      'created_at': createdAt?.toIso8601String(),
+      'updated_at': updatedAt?.toIso8601String(),
     };
   }
 }

@@ -65,14 +65,14 @@ class StorageService extends GetxService {
       if (Platform.isAndroid || Platform.isIOS) {
         // Get app cache directory
         final cacheDir = await getTemporaryDirectory();
-        
+
         // Get app documents directory
         final appDocDir = await getApplicationDocumentsDirectory();
-        
+
         // Calculate total size
         final cacheSize = await _calculateDirectorySize(cacheDir);
         final docSize = await _calculateDirectorySize(appDocDir);
-        
+
         // Return total size in MB
         return (cacheSize + docSize) / (1024 * 1024);
       } else {
@@ -90,7 +90,10 @@ class StorageService extends GetxService {
     int totalSize = 0;
     try {
       if (await dir.exists()) {
-        await for (final FileSystemEntity entity in dir.list(recursive: true, followLinks: false)) {
+        await for (final FileSystemEntity entity in dir.list(
+          recursive: true,
+          followLinks: false,
+        )) {
           try {
             if (entity is File) {
               totalSize += await entity.length();
@@ -129,7 +132,7 @@ class StorageService extends GetxService {
             }
           }
         }
-        
+
         // For Android, also clear the app cache directory
         if (Platform.isAndroid) {
           try {
@@ -170,10 +173,10 @@ class StorageService extends GetxService {
     try {
       // Clear all data in GetStorage
       await _storage.erase();
-      
+
       // Clear cache
       await clearCache();
-      
+
       // On Android, clear app data directories
       if (Platform.isAndroid) {
         try {
@@ -194,7 +197,7 @@ class StorageService extends GetxService {
           print('Error clearing Android app data: $e');
         }
       }
-      
+
       return;
     } catch (e) {
       print('Error clearing all data: $e');
@@ -207,38 +210,37 @@ class StorageService extends GetxService {
     try {
       // Create a map to store all data
       final Map<String, dynamic> allData = {};
-      
+
       // Get all keys from GetStorage
       final keys = _storage.getKeys();
-      
+
       // Manually build the map
       for (final key in keys) {
         // Skip sensitive data like passwords
         if (key == userPasswordKey) continue;
-        
+
         // Add the value to our map
         allData[key] = _storage.read(key);
       }
-      
+
       // Add timestamp and device info
       allData['exportDate'] = DateTime.now().toIso8601String();
       allData['platform'] = Platform.operatingSystem;
       allData['version'] = Platform.operatingSystemVersion;
-      
+
       // Convert to JSON
       final String jsonData = jsonEncode(allData);
-      
+
       // Create a temporary file
       final tempDir = await getTemporaryDirectory();
       final file = File('${tempDir.path}/attendance_app_data_export.json');
       await file.writeAsString(jsonData);
-      
+
       // Share the file
-      await Share.shareXFiles(
-        [XFile(file.path)],
-        text: 'Attendance App Data Export',
-      );
-      
+      await Share.shareXFiles([
+        XFile(file.path),
+      ], text: 'Attendance App Data Export');
+
       return;
     } catch (e) {
       print('Error exporting data: $e');

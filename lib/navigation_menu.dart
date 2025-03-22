@@ -1,6 +1,6 @@
-import 'package:attedance__/features/teacher/screens/teacher_home_screen.dart';
-import 'package:attedance__/features/teacher/screens/teacher_messages_screen.dart';
-import 'package:attedance__/features/teacher/screens/teacher_settings_screen.dart';
+import 'package:attedance__/features/teacher/screens/dashboard_screen.dart';
+import 'package:attedance__/features/teacher/screens/class_list_screen.dart';
+import 'package:attedance__/features/teacher/screens/teacher_profile_screen.dart';
 import 'package:attedance__/routes/app_routes.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -17,7 +17,7 @@ class NavigationMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     final dark = THelperFunction.isDarkMode(context);
     final controller = Get.put(NavigationController());
-
+    
     // Check if user is authenticated
     final currentUser = Supabase.instance.client.auth.currentUser;
     if (currentUser == null) {
@@ -57,8 +57,9 @@ class NavigationMenu extends StatelessWidget {
         ),
       );
     }
-
+    
     return Scaffold(
+      //Here are Making a Observer which is observering an instance of obs.
       bottomNavigationBar: Obx(
         () => NavigationBar(
           height: 80,
@@ -73,30 +74,23 @@ class NavigationMenu extends StatelessWidget {
           indicatorColor: dark ? TColors.darkerGrey : TColors.borderSecondary,
           destinations: [
             NavigationDestination(
-              label: 'Home',
+              label: 'Dashboard',
               icon: Icon(
                 Iconsax.home,
                 color: dark ? Colors.orange : Colors.deepPurpleAccent,
               ),
             ),
             NavigationDestination(
-              label: 'Add',
+              label: 'Classes',
               icon: Icon(
-                Iconsax.element_plus,
+                Iconsax.book_1,
                 color: dark ? Colors.orange : Colors.deepPurpleAccent,
               ),
             ),
             NavigationDestination(
-              label: 'Messages',
+              label: 'Profile',
               icon: Icon(
-                Iconsax.message,
-                color: dark ? Colors.orange : Colors.deepPurpleAccent,
-              ),
-            ),
-            NavigationDestination(
-              label: 'Settings',
-              icon: Icon(
-                Iconsax.setting,
+                Iconsax.user,
                 color: dark ? Colors.orange : Colors.deepPurpleAccent,
               ),
             ),
@@ -109,13 +103,18 @@ class NavigationMenu extends StatelessWidget {
 }
 
 class NavigationController extends GetxController {
-  final Rx<int> selectedIndex = 0.obs;
-
-  // Removed redundant Get.put calls
+  final Rx<int> selectedIndex = 0.obs; //observer Widget.
+  
+  // Initialize ProfileController when NavigationController is created
+  @override
+  void onInit() {
+    super.onInit();
+    Get.put(TeacherProfileController());
+  }
+  
   final screens = [
-    TeacherHomeScreen(),
-    const Center(child: Text('Add Class')),
-    const TeacherMessagesScreen(),
-    const TeacherSettingsScreen(),
+    DashboardScreen(),
+    ClassListScreen(),
+    const TeacherProfileScreen(),
   ];
 }
