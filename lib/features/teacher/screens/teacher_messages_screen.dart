@@ -283,7 +283,6 @@ class _MessageDetailScreen extends StatelessWidget {
   final String avatarText;
 
   const _MessageDetailScreen({
-    super.key,
     required this.name,
     required this.avatarText,
   });

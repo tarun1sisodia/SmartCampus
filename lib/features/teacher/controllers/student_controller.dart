@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../models/class_model.dart';
 import '../../../models/student_model.dart';
 import '../../../services/student_service.dart';

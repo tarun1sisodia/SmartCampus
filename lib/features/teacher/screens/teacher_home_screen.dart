@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'dashboard_screen.dart'; // Importing the DashboardScreen
 
 class TeacherHomeScreen extends StatelessWidget {
   TeacherHomeScreen({super.key});
@@ -83,7 +84,8 @@ class TeacherHomeScreen extends StatelessWidget {
           ),
           const SizedBox(width: TSizes.sm),
         ],
-      ),      body: SingleChildScrollView(
+      ),      
+      body: SingleChildScrollView(
         child: Column(
           children: [
             // Curved header section with greeting
@@ -159,6 +161,17 @@ class TeacherHomeScreen extends StatelessWidget {
               ),
             ),
             
+            // New section for Dashboard
+            Padding(
+              padding: const EdgeInsets.all(TSizes.defaultSpace),
+              child: ElevatedButton(
+                onPressed: () {
+                  Get.to(() => DashboardScreen()); // Navigate to DashboardScreen
+                },
+                child: Text('Go to Dashboard'),
+              ),
+            ),
+
             // Rest of your existing body content
             Padding(
               padding: const EdgeInsets.all(TSizes.defaultSpace),

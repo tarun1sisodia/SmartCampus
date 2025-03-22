@@ -112,7 +112,7 @@ class TeacherSettingsScreen extends StatelessWidget {
 
                     // Get cache size
                     final cacheSize = await storageService.getCacheSize();
-                    final cacheSizeText = cacheSize.toStringAsFixed(2) + ' MB';
+                    final cacheSizeText = '${cacheSize.toStringAsFixed(2)} MB';
 
                     // Show a dialog with storage and data options
                     Get.dialog(

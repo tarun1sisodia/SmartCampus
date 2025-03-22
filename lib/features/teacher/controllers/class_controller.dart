@@ -4,7 +4,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../models/class_model.dart';
 import '../../../models/course_model.dart';
 import '../../../models/subject_model.dart';
-import '../../../models/course_model.dart'; // Ensure Course is imported
+// Ensure Course is imported
 import '../../../services/class_service.dart';
 import '../../../services/course_service.dart';
 import '../../../services/subject_service.dart';

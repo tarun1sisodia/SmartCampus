@@ -309,6 +309,7 @@ class AttendanceScreen extends StatelessWidget {
           ),
         ],
       ),
+      
     );
   }
 }

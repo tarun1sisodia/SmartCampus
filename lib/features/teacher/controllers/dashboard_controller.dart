@@ -1,13 +1,17 @@
+import 'package:attedance__/services/course_service.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../models/class_model.dart';
 import '../../../services/class_service.dart';
 import '../../../services/attendance_service.dart';
+import '../../../services/subject_service.dart';
 import '../../../utils/helpers/snackbar_helper.dart';
 
 class DashboardController extends GetxController {
-  final classService = ClassService();
   final attendanceService = AttendanceService();
+  final subjectService = SubjectService();
+  final classService = ClassService();
+  final courseService = CourseService();
   
   final isLoading = false.obs;
   final classes = <ClassModel>[].obs;
@@ -35,8 +39,10 @@ class DashboardController extends GetxController {
         return;
       }
       
-      // Load classes
-      final teacherClasses = await classService.getTeacherClasses(currentUser.id);
+     // Load classes
+    print('Fetching classes for teacher: ${currentUser.id}'); // Add this
+    final teacherClasses = await classService.getTeacherClasses(currentUser.id);
+    print('Classes fetched: ${teacherClasses.length}'); // Add this
       classes.assignAll(teacherClasses);
       totalClasses.value = teacherClasses.length;
       
@@ -87,6 +93,45 @@ class DashboardController extends GetxController {
     } catch (e) {
       print('Error getting student count: $e');
       return 0;
+    }
+  }
+
+  // Add this to your DashboardController
+  Future<void> createInitialData() async {
+    try {
+      final currentUser = Supabase.instance.client.auth.currentUser;
+      if (currentUser == null) return;
+      
+      // Check if user has any classes
+      final classes = await classService.getTeacherClasses(currentUser.id);
+      
+      if (classes.isEmpty) {
+        // Create a sample subject
+        final subject = await subjectService.createSubject(
+          'Mathematics',
+          'MATH101',
+        );
+        
+        // Create a sample course
+        final course = await courseService.createCourse(
+          'Computer Science',
+          'CS',
+        );
+        
+        // Create a sample class
+        await classService.createClass(
+          teacherId: currentUser.id,
+          subjectId: subject.id,
+          courseId: course.id,
+          year: 1,
+          section: 'A',
+        );
+        
+        // Reload data
+        await loadDashboardData();
+      }
+    } catch (e) {
+      print('Error creating initial data: $e');
     }
   }
 }

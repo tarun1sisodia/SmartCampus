@@ -7,6 +7,7 @@ import 'package:attedance__/features/authentication/screens/signup/signup.dart';
 import 'package:attedance__/features/authentication/screens/signup/singup_widgets/verify_email_screen.dart';
 import 'package:attedance__/navigation_menu.dart';
 import 'package:get/get.dart';
+import 'package:attedance__/features/teacher/screens/dashboard_screen.dart'; // Importing the DashboardScreen
 
 /// A class that manages all routes for the app
 class AppRoutes {
@@ -67,7 +68,7 @@ class AppRoutes {
     ),
     GetPage(
       name: home,
-      page: () => NavigationMenu(),
+      page: () => DashboardScreen(), // Set DashboardScreen as home
       binding: HomeBinding(),
       transition: Transition.fadeIn,
     ),
@@ -76,7 +77,7 @@ class AppRoutes {
   /// Navigate to the initial route based on app state
   static String getInitialRoute() {
     // This would typically check if onboarding is completed
-    // For now, we'll just return the onboarding route
-    return onboarding;
+    // For now, we'll just return the home route
+    return home; // Change to home route
   }
 }

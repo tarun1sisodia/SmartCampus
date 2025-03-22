@@ -112,14 +112,16 @@ class AttendanceService {
     required String sessionId,
     required List<StudentModel> students,
   }) async {
-    // Implement the logic to submit attendance records to the backend or database
-    // Example:
-    for (var student in students) {
-      // Submit each student's attendance record
-      print(
-        'Submitting attendance for ${student.name}: ${student.attendanceStatus}',
-      );
-    }
+    final records =
+        students.map((student) {
+          return {
+            'session_id': sessionId,
+            'student_id': student.id,
+            'status': student.attendanceStatus ?? 'absent',
+          };
+        }).toList();
+
+    await supabase.from('attendance_records').upsert(records);
   }
 
   // Submit attendance for multiple students at once
