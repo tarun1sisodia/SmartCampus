@@ -1,4 +1,5 @@
 import 'package:attedance__/features/teacher/screens/teacher_profile_screen.dart';
+import 'package:attedance__/features/teacher/screens/teacher_settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -12,6 +13,8 @@ import 'class_list_screen.dart';
 
 class DashboardScreen extends StatelessWidget {
   final dashboardController = Get.put(DashboardController());
+  final searchController = TextEditingController();
+  final RxBool isSearching = RxBool(false);
 
   DashboardScreen({super.key});
   final String userName =
@@ -64,9 +67,9 @@ class DashboardScreen extends StatelessWidget {
         actions: [
           // Notification icon or other actions
           IconButton(
-            icon: const Icon(Iconsax.notification),
+            icon: const Icon(Iconsax.settings),
             onPressed: () {
-              // Handle notification action
+              Get.to(() => const TeacherSettingsScreen());
             },
           ),
           const SizedBox(width: TSizes.sm),
@@ -101,6 +104,55 @@ class DashboardScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: dark ? TColors.dark : TColors.light,
+                  borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: TSizes.md),
+                child: Row(
+                  children: [
+                    Icon(
+                      Iconsax.search_normal,
+                      color: dark ? TColors.yellow : TColors.deepPurple,
+                    ),
+                    const SizedBox(width: TSizes.spaceBtwItems),
+                    Expanded(
+                      child: TextField(
+                        controller: searchController,
+                        decoration: InputDecoration(
+                          hintText: 'Search classes, students...',
+                          border: InputBorder.none,
+                          hintStyle: TextStyle(
+                            color: dark ? Colors.white70 : Colors.black54,
+                          ),
+                        ),
+                        style: TextStyle(
+                          color: dark ? Colors.white : Colors.black,
+                        ),
+                        onChanged: (value) {
+                          isSearching.value = value.isNotEmpty;
+                          // Implement your search logic here
+                        },
+                      ),
+                    ),
+                    Obx(
+                      () =>
+                          isSearching.value
+                              ? IconButton(
+                                icon: const Icon(Icons.clear),
+                                onPressed: () {
+                                  searchController.clear();
+                                  isSearching.value = false;
+                                  // Clear search results
+                                },
+                              )
+                              : const SizedBox.shrink(),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: TSizes.spaceBtwSections),
               // Stats cards
               Row(
                 children: [
@@ -298,8 +350,8 @@ class DashboardScreen extends StatelessWidget {
         );
       }),
     );
-  }
 
+  }
   // Build a stat card widget
   Widget _buildStatCard(
     BuildContext context,
