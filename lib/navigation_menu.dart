@@ -17,7 +17,7 @@ class NavigationMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     final dark = THelperFunction.isDarkMode(context);
     final controller = Get.put(NavigationController());
-    
+
     // Check if user is authenticated
     final currentUser = Supabase.instance.client.auth.currentUser;
     if (currentUser == null) {
@@ -57,7 +57,7 @@ class NavigationMenu extends StatelessWidget {
         ),
       );
     }
-    
+
     return Scaffold(
       //Here are Making a Observer which is observering an instance of obs.
       bottomNavigationBar: Obx(
@@ -104,14 +104,15 @@ class NavigationMenu extends StatelessWidget {
 
 class NavigationController extends GetxController {
   final Rx<int> selectedIndex = 0.obs; //observer Widget.
-  
+
   // Initialize ProfileController when NavigationController is created
   @override
   void onInit() {
     super.onInit();
+    print("NavigationController initialized");
     Get.put(TeacherProfileController());
   }
-  
+
   final screens = [
     DashboardScreen(),
     ClassListScreen(),

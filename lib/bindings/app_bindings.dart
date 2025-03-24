@@ -7,6 +7,7 @@ import 'package:attedance__/features/teacher/controllers/attendance_controller.d
 import 'package:attedance__/features/teacher/controllers/class_controller.dart';
 import 'package:attedance__/features/teacher/controllers/dashboard_controller.dart';
 import 'package:attedance__/features/teacher/screens/teacher_profile_screen.dart';
+import 'package:attedance__/navigation_menu.dart';
 import 'package:get/get.dart';
 
 /// A class that manages all controller bindings for the app
@@ -104,5 +105,6 @@ class HomeBinding extends Bindings {
     Get.lazyPut(() => DashboardController(), fenix: true); // Ensure DashboardController is bound
     Get.lazyPut(() => ClassController(), fenix: true);
     Get.lazyPut(() => AttendanceController(), fenix: true);
+    Get.lazyPut(()=>NavigationController(),fenix: true);
   }
 }

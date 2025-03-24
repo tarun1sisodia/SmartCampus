@@ -1,4 +1,5 @@
 import 'package:attedance__/bindings/app_bindings.dart';
+import 'package:attedance__/navigation_menu.dart';
 import 'package:attedance__/routes/app_routes.dart';
 import 'package:attedance__/services/storage_service.dart';
 import 'package:flutter/material.dart';
@@ -103,6 +104,7 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.system, // Respects system theme setting
       debugShowCheckedModeBanner: false,
 
+      home: NavigationMenu(),
       // Set initial route based on authentication status
       initialRoute: initialRoute,
       initialBinding: initialBinding,
