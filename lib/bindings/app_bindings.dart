@@ -3,6 +3,8 @@ import 'package:attedance__/features/authentication/controllers/forgot_password_
 import 'package:attedance__/features/authentication/controllers/login_controller.dart';
 import 'package:attedance__/features/authentication/controllers/signup_controller.dart';
 import 'package:attedance__/features/authentication/controllers/supabase_auth_controller.dart';
+import 'package:attedance__/features/teacher/controllers/attendance_controller.dart';
+import 'package:attedance__/features/teacher/controllers/class_controller.dart';
 import 'package:attedance__/features/teacher/controllers/dashboard_controller.dart';
 import 'package:attedance__/features/teacher/screens/teacher_profile_screen.dart';
 import 'package:get/get.dart';
@@ -100,7 +102,7 @@ class HomeBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut(() => DashboardController(), fenix: true); // Ensure DashboardController is bound
-    // Get.lazyPut(() => ClassController(), fenix: true);
-    // Get.lazyPut(() => AttendanceController(), fenix: true);
+    Get.lazyPut(() => ClassController(), fenix: true);
+    Get.lazyPut(() => AttendanceController(), fenix: true);
   }
 }

@@ -37,9 +37,19 @@ class DashboardScreen extends StatelessWidget {
 
         if (dashboardController.classes.isEmpty) {
           return Center(
-            child: Text(
-              'No data available',
-              style: Theme.of(context).textTheme.bodyMedium,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'No data available',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                const SizedBox(height: TSizes.spaceBtwItems),
+                ElevatedButton(
+                  onPressed: () => dashboardController.createInitialData(),
+                  child: const Text('Create Sample Data'),
+                ),
+              ],
             ),
           );
         }

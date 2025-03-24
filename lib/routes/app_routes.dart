@@ -5,7 +5,6 @@ import 'package:attedance__/features/authentication/screens/login/login.dart';
 import 'package:attedance__/features/authentication/screens/onboarding/onboarding.dart';
 import 'package:attedance__/features/authentication/screens/signup/signup.dart';
 import 'package:attedance__/features/authentication/screens/signup/singup_widgets/verify_email_screen.dart';
-import 'package:attedance__/navigation_menu.dart';
 import 'package:get/get.dart';
 import 'package:attedance__/features/teacher/screens/dashboard_screen.dart'; // Importing the DashboardScreen
 
