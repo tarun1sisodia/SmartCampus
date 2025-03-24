@@ -350,7 +350,6 @@ class DashboardScreen extends StatelessWidget {
         );
       }),
     );
-
   }
   // Build a stat card widget
   Widget _buildStatCard(

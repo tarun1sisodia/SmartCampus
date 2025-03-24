@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:attedance__/models/user_model.dart';
 import 'package:attedance__/routes/app_routes.dart';
+import 'package:attedance__/services/attendance_service.dart';
+import 'package:attedance__/services/class_service.dart';
 import 'package:attedance__/utils/constants/colors.dart';
 import 'package:attedance__/utils/constants/sized.dart';
 import 'package:attedance__/utils/helpers/helper_function.dart';
@@ -89,14 +91,36 @@ class TeacherProfileScreen extends StatelessWidget {
                 const SizedBox(height: TSizes.spaceBtwSections),
 
                 // Stats summary
-                Row(
-                  children: [
-                    _buildStatItem(context, '12', 'Classes'),
-                    _buildStatItem(context, '248', 'Students'),
-                    _buildStatItem(context, '87%', 'Attendance'),
-                  ],
-                ),
+                Obx(() {
+                  if (controller.isStatsLoading.value) {
+                    return const Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 16.0),
+                        child: CircularProgressIndicator(),
+                      ),
+                    );
+                  }
 
+                  return Row(
+                    children: [
+                      _buildStatItem(
+                        context,
+                        controller.classCount.toString(),
+                        'Classes',
+                      ),
+                      _buildStatItem(
+                        context,
+                        controller.studentCount.toString(),
+                        'Students',
+                      ),
+                      _buildStatItem(
+                        context,
+                        '${controller.averageAttendance.value.toStringAsFixed(1)}%',
+                        'Attendance',
+                      ),
+                    ],
+                  );
+                }),
                 const SizedBox(height: TSizes.spaceBtwSections),
 
                 // User Info Form or Display
@@ -471,6 +495,95 @@ class TeacherProfileScreen extends StatelessWidget {
 
 // Consolidated TeacherProfileController
 class TeacherProfileController extends GetxController {
+  // Add these at the top of your TeacherProfileController class
+  final classService = ClassService();
+  final attendanceService = AttendanceService();
+
+  // Add these observable properties to store statistics
+  final classCount = 0.obs;
+  final studentCount = 0.obs;
+  final averageAttendance = 0.0.obs;
+  final isStatsLoading = false.obs;
+
+  // Add this method to fetch statistics
+  Future<void> loadTeacherStats() async {
+    try {
+      isStatsLoading.value = true;
+
+      final currentUser = supabase.auth.currentUser;
+      if (currentUser == null) {
+        return;
+      }
+
+      // Get classes count
+      final classes = await classService.getTeacherClasses(currentUser.id);
+      classCount.value = classes.length;
+
+      // Get total student count
+      int totalStudents = 0;
+      double totalAttendancePercentage = 0.0;
+      int classesWithAttendance = 0;
+
+      for (var classModel in classes) {
+        // Get students for this class
+        try {
+          final response = await supabase
+              .from('class_students')
+              .select('id')
+              .eq('class_id', classModel.id);
+
+          totalStudents += response.length;
+        } catch (e) {
+          print('Error getting students for class ${classModel.id}: $e');
+        }
+
+        // Get attendance stats for this class
+        try {
+          final stats = await attendanceService.getAttendanceStatsForClass(
+            classModel.id,
+          );
+          if (stats['totalSessions'] > 0) {
+            totalAttendancePercentage += stats['averageAttendance'] as double;
+            classesWithAttendance++;
+          }
+        } catch (e) {
+          print(
+            'Error getting attendance stats for class ${classModel.id}: $e',
+          );
+          // Continue with next class if there's an error
+        }
+      }
+
+      // Update student count
+      studentCount.value = totalStudents;
+
+      // Calculate average attendance
+      if (classesWithAttendance > 0) {
+        averageAttendance.value =
+            totalAttendancePercentage / classesWithAttendance;
+      } else {
+        averageAttendance.value = 0.0;
+      }
+    } catch (e) {
+      print('Error loading teacher stats: $e');
+    } finally {
+      isStatsLoading.value = false;
+    }
+  }
+
+  // Update the onInit method to also load stats
+  @override
+  void onInit() {
+    super.onInit();
+    loadUserData();
+    loadTeacherStats();
+  }
+
+  // Add method to refresh all data
+  Future<void> refreshProfileData() async {
+    await Future.wait([loadUserData(), loadTeacherStats()]);
+  }
+
   final supabase = Supabase.instance.client;
 
   // User data
@@ -486,12 +599,6 @@ class TeacherProfileController extends GetxController {
   final isEditMode = false.obs;
   final emailNotifications = true.obs;
   final isUploadingImage = false.obs;
-
-  @override
-  void onInit() {
-    super.onInit();
-    loadUserData();
-  }
 
   @override
   void onClose() {
@@ -511,7 +618,7 @@ class TeacherProfileController extends GetxController {
 
         // Create a fallback user model with placeholder data
         user.value = UserModel(
-          id: 'charon',
+          id: 'Tarun',
           name: 'Tarun ',
           email: 'teacher@example.com',
           phone: 'Not available',
