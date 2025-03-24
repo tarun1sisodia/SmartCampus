@@ -1,7 +1,9 @@
+import 'package:attedance__/features/teacher/screens/teacher_profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../controllers/dashboard_controller.dart';
 import '../../../utils/constants/colors.dart';
 import '../../../utils/constants/sized.dart';
@@ -12,6 +14,9 @@ class DashboardScreen extends StatelessWidget {
   final dashboardController = Get.put(DashboardController());
 
   DashboardScreen({super.key});
+  final String userName =
+      Supabase.instance.client.auth.currentUser?.userMetadata?['name'] ??
+      'Teacher';
 
   @override
   Widget build(BuildContext context) {
@@ -19,15 +24,52 @@ class DashboardScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        // Replace title with profile image on the left
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Hero(
+            tag: 'profileImage',
+            child: GestureDetector(
+              onTap: () {
+                // Navigate to profile screen with standard animation
+                Get.to(
+                  () => const TeacherProfileScreen(),
+                  transition: Transition.rightToLeft,
+                  duration: const Duration(milliseconds: 300),
+                );
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: dark ? TColors.yellow : TColors.deepPurple,
+                    width: 2,
+                  ),
+                  image: const DecorationImage(
+                    image: AssetImage('assets/logos/darkapplogo.png'),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        // Add "Hi, username" in the app bar
         title: Text(
-          'Dashboard',
-          style: Theme.of(context).textTheme.headlineSmall,
+          'Hi, $userName',
+          style: Theme.of(
+            context,
+          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
         ),
         actions: [
+          // Notification icon or other actions
           IconButton(
-            onPressed: () => dashboardController.loadDashboardData(),
-            icon: const Icon(Iconsax.refresh),
+            icon: const Icon(Iconsax.notification),
+            onPressed: () {
+              // Handle notification action
+            },
           ),
+          const SizedBox(width: TSizes.sm),
         ],
       ),
       body: Obx(() {

@@ -94,6 +94,13 @@ class NavigationMenu extends StatelessWidget {
                 color: dark ? Colors.orange : Colors.deepPurpleAccent,
               ),
             ),
+            NavigationDestination(
+              label: 'Mark',
+              icon: Icon(
+                Iconsax.add,
+                color: dark ? Colors.orange : Colors.deepPurpleAccent,
+              ),
+            ),
           ],
         ),
       ),
