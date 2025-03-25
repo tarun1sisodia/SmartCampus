@@ -8,9 +8,10 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'utils/theme/custom_themes/text_field_theme.dart';
 
 Future<void> main() async {
+  //Intializing the binding for the app .
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Supabase
+  // Initialize Supabase by directly providing the url and key . they are very secret and import for app to run with backend properly .
   await Supabase.initialize(
     url: 'https://hgjwopqcwptinpcihquk.supabase.co',
     anonKey:
@@ -25,6 +26,7 @@ Future<void> main() async {
 
   // Check if user is already logged in
   final storageService = Get.find<StorageService>();
+  // Checking by getting the local system data if available.
   final bool isLoggedIn =
       storageService.getRememberUserStatus() &&
       storageService.getUserEmail() != null &&
@@ -52,7 +54,7 @@ Future<void> main() async {
       // Continue with normal app startup even if auto-login fails
     }
   }
-
+  // Running the App 
   runApp(MyApp());
 }
 
@@ -72,10 +74,11 @@ class MyApp extends StatelessWidget {
     print('Onboarding completed: $onboardingCompleted');
     print('User authenticated: $isAuthenticated');
 
-    // Determine initial route
+    // Determine initial route they are very import to run the UI and Logic.
     String initialRoute;
     Bindings initialBinding;
 
+    // Check and decide the which UI to show and redirect 
     if (isAuthenticated) {
       initialRoute = AppRoutes.home;
       initialBinding = HomeBinding();
@@ -91,23 +94,27 @@ class MyApp extends StatelessWidget {
 
     return GetMaterialApp(
       title: 'Attendance App',
+      // Theme Data is for the UI in Light theme
       theme: ThemeData(
         primarySwatch: Colors.blue,
         brightness: Brightness.light,
         inputDecorationTheme: TTextFieldTheme.lightInputDecoration,
       ),
+      //Dark theme design for ui in Dark Theme
       darkTheme: ThemeData(
         primarySwatch: Colors.blue,
         brightness: Brightness.dark,
         inputDecorationTheme: TTextFieldTheme.darkInputDecoration,
       ),
       themeMode: ThemeMode.system, // Respects system theme setting
+      // remove debug banner from ui 
       debugShowCheckedModeBanner: false,
 
       home: NavigationMenu(),
       // Set initial route based on authentication status
       initialRoute: initialRoute,
       initialBinding: initialBinding,
+      // managing the routes by dispoing the unused controllers from memory.
       smartManagement: SmartManagement.keepFactory,
 
       // Use the routes defined in AppRoutes

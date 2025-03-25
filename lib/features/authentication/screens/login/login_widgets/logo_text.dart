@@ -11,11 +11,11 @@ class LogoAndText extends StatelessWidget {
   Widget build(BuildContext context) {
     final dark = THelperFunction.isDarkMode(context);
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Image(
           image: AssetImage(
-            dark ? TImageStrings.microsoft : TImageStrings.apple,
+            dark ? TImageStrings.darkApplogo : TImageStrings.lightApplogo,
           ),
           height: 100,
         ),
@@ -27,6 +27,7 @@ class LogoAndText extends StatelessWidget {
         Text(
           TTexts.loginsubtitle1,
           style: Theme.of(context).textTheme.bodyMedium,
+          textAlign: TextAlign.center,
         ),
       ],
     );

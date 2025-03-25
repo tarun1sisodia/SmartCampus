@@ -1,5 +1,7 @@
 import 'package:attedance__/features/teacher/screens/dashboard_screen.dart';
 import 'package:attedance__/features/teacher/screens/class_list_screen.dart';
+import 'package:attedance__/features/teacher/screens/mark_attendance_screen.dart';
+import 'package:attedance__/features/teacher/screens/teacher_messages_screen.dart';
 import 'package:attedance__/features/teacher/screens/teacher_profile_screen.dart';
 import 'package:attedance__/routes/app_routes.dart';
 import 'package:get/get.dart';
@@ -87,17 +89,24 @@ class NavigationMenu extends StatelessWidget {
                 color: dark ? Colors.orange : Colors.deepPurpleAccent,
               ),
             ),
-            NavigationDestination(
-              label: 'Profile',
-              icon: Icon(
-                Iconsax.user,
-                color: dark ? Colors.orange : Colors.deepPurpleAccent,
-              ),
-            ),
+            // NavigationDestination(
+            //   label: 'Profile',
+            //   icon: Icon(
+            //     Iconsax.user,
+            //     color: dark ? Colors.orange : Colors.deepPurpleAccent,
+            //   ),
+            // ),
             NavigationDestination(
               label: 'Mark',
               icon: Icon(
                 Iconsax.add,
+                color: dark ? Colors.orange : Colors.deepPurpleAccent,
+              ),
+            ),
+            NavigationDestination(
+              label: 'Messages',
+              icon: Icon(
+                Iconsax.message,
                 color: dark ? Colors.orange : Colors.deepPurpleAccent,
               ),
             ),
@@ -123,6 +132,8 @@ class NavigationController extends GetxController {
   final screens = [
     DashboardScreen(),
     ClassListScreen(),
-    const TeacherProfileScreen(),
+    // const TeacherProfileScreen(),
+    MarkAttendanceScreen(),
+    TeacherMessagesScreen(),
   ];
 }

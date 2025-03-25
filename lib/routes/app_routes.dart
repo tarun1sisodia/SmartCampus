@@ -7,7 +7,7 @@ import 'package:attedance__/features/authentication/screens/signup/signup.dart';
 import 'package:attedance__/features/authentication/screens/signup/singup_widgets/verify_email_screen.dart';
 import 'package:attedance__/navigation_menu.dart';
 import 'package:get/get.dart';
-import 'package:attedance__/features/teacher/screens/dashboard_screen.dart'; // Importing the DashboardScreen
+// Importing the DashboardScreen
 
 /// A class that manages all routes for the app
 class AppRoutes {
@@ -36,7 +36,8 @@ class AppRoutes {
     ),
     GetPage(
       name: signup,
-      page: () => const Signup(),
+      // i remove const from Signup()
+      page: () => Signup(),
       binding: SignupBinding(), // Use a dedicated binding for signup
       transition: Transition.rightToLeft,
     ),

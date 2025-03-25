@@ -1,10 +1,8 @@
 import '../../controllers/controllers_onboarding/onboarding_controller.dart';
 import 'widgets/onboarding_dot_navigation.dart';
 import 'widgets/onboarding_next_button.dart';
-import 'widgets/onboarding_page.dart';
 import 'widgets/onboarding_skip.dart';
 import '../../../../utils/constants/image_strings.dart';
-import '../../../../utils/constants/text_strings.dart';
 import '../../../../utils/helpers/helper_function.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -30,11 +28,17 @@ class Onboarding extends StatelessWidget {
                 TImageStrings.hello_robo,
                 width: THelperFunction.screenWidth() * 0.6,
               ),
-              OnboardingPage(
-                image: TImageStrings.searching,
-                title: TTexts.attedancetitle3,
-                subtitle: TTexts.attendanceSubtitle3,
+              Lottie.asset(
+                // TTexts.onboardingtitle3,
+                TImageStrings.searching,
+                width: THelperFunction.screenWidth() * 0.6,
               ),
+
+              // OnboardingPage(
+              //   image: TImageStrings.searching,
+              //   title: TTexts.attedancetitle3,
+              //   subtitle: TTexts.attendanceSubtitle3,
+              // ),
               Lottie.asset(
                 // TTexts.onboardingtitle3,
                 TImageStrings.lightEmailSuccess,
