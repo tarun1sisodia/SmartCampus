@@ -2,7 +2,7 @@ class AttendanceRecordModel {
   final String id;
   final String sessionId;
   final String studentId;
-  final String status; // 'present', 'absent', 'late', etc.
+  final String status;
   final String? remarks;
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -19,7 +19,7 @@ class AttendanceRecordModel {
 
   factory AttendanceRecordModel.fromJson(Map<String, dynamic> json) {
     return AttendanceRecordModel(
-      id: json['id'],
+      id: json['id'] ?? '',
       sessionId: json['session_id'],
       studentId: json['student_id'],
       status: json['status'],

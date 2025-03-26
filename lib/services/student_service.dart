@@ -1,68 +1,103 @@
+import 'package:attedance__/models/student_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../models/student_model.dart';
 
 class StudentService {
   final supabase = Supabase.instance.client;
 
   // Get all students for a class
   Future<List<StudentModel>> getStudentsForClass(String classId) async {
-    final response = await supabase
-        .from('class_students')
-        .select('student:student_id(*)')
-        .eq('class_id', classId);
-    
-    return response.map((json) => StudentModel.fromJson(json['student'])).toList();
+    try {
+      final response = await supabase
+          .from('class_students')
+          .select('*, students(*)')
+          .eq('class_id', classId)
+          .order('created_at');
+
+      return response.map<StudentModel>((json) {
+        final studentData = json['students'] as Map<String, dynamic>;
+
+        return StudentModel(
+          id: studentData['id'],
+          name: studentData['name'],
+          rollNumber: studentData['roll_number'],
+          classId: json['class_id'],
+          createdAt:
+              studentData['created_at'] != null
+                  ? DateTime.parse(studentData['created_at'])
+                  : null,
+          updatedAt:
+              studentData['updated_at'] != null
+                  ? DateTime.parse(studentData['updated_at'])
+                  : null,
+        );
+      }).toList();
+    } catch (e) {
+      throw 'Failed to get students: $e';
+    }
   }
 
   // Add a student to a class
-  Future<StudentModel> addStudentToClass({
+  Future<void> addStudentToClass({
     required String name,
     required String rollNumber,
-    required String courseId,
-    required int year,
-    String? section,
     required String classId,
   }) async {
-    // First, check if the student already exists
-    final existingStudents = await supabase
-        .from('students')
-        .select()
-        .eq('roll_number', rollNumber)
-        .eq('course_id', courseId)
-        .eq('year', year);
-    
-    String studentId;
-    
-    if (existingStudents.isNotEmpty) {
-      // Student already exists, use their ID
-      studentId = existingStudents[0]['id'];
-    } else {
-      // Create a new student
-      final newStudent = await supabase.from('students').insert({
-        'name': name,
-        'roll_number': rollNumber,
-        'course_id': courseId,
-        'year': year,
-        'section': section,
-      }).select().single();
-      
-      studentId = newStudent['id'];
+    try {
+      // First, check if student with this roll number already exists
+      final existingStudents = await supabase
+          .from('students')
+          .select()
+          .eq('roll_number', rollNumber);
+
+      String studentId;
+
+      if (existingStudents.isNotEmpty) {
+        // Student exists, use existing ID
+        studentId = existingStudents[0]['id'];
+
+        // Update student name if needed
+        if (existingStudents[0]['name'] != name) {
+          await supabase
+              .from('students')
+              .update({'name': name})
+              .eq('id', studentId);
+        }
+      } else {
+        // Create new student
+        final studentData = {
+          'name': name,
+          'roll_number': rollNumber,
+          'created_at': DateTime.now().toIso8601String(),
+        };
+
+        final response =
+            await supabase
+                .from('students')
+                .insert(studentData)
+                .select()
+                .single();
+
+        studentId = response['id'];
+      }
+
+      // Check if student is already in this class
+      final existingClassStudents = await supabase
+          .from('class_students')
+          .select()
+          .eq('class_id', classId)
+          .eq('student_id', studentId);
+
+      if (existingClassStudents.isEmpty) {
+        // Add student to class
+        await supabase.from('class_students').insert({
+          'class_id': classId,
+          'student_id': studentId,
+          'created_at': DateTime.now().toIso8601String(),
+        });
+      }
+    } catch (e) {
+      throw 'Failed to add student to class: $e';
     }
-    
-    // Now add the student to the class
-    await supabase.from('class_students').insert({
-      'class_id': classId,
-      'student_id': studentId,
-    });
-    
-    // Return the student model
-    final studentData = await supabase
-        .from('students')
-        .select()
-        .eq('id', studentId)
-        .single();
-    
-    return StudentModel.fromJson(studentData);
   }
 
   // Remove a student from a class
@@ -70,21 +105,42 @@ class StudentService {
     required String studentId,
     required String classId,
   }) async {
-    await supabase
-        .from('class_students')
-        .delete()
-        .eq('class_id', classId)
-        .eq('student_id', studentId);
+    try {
+      // Delete class-student relationship
+      await supabase
+          .from('class_students')
+          .delete()
+          .eq('class_id', classId)
+          .eq('student_id', studentId);
+
+      // Note: We don't delete the student record itself, as they might be in other classes
+    } catch (e) {
+      throw 'Failed to remove student from class: $e';
+    }
   }
 
   // Get a student by ID
-  Future<StudentModel> getStudentById(String id) async {
-    final response = await supabase
-        .from('students')
-        .select()
-        .eq('id', id)
-        .single();
-    
-    return StudentModel.fromJson(response);
+  Future<StudentModel> getStudentById(String studentId) async {
+    try {
+      final response =
+          await supabase.from('students').select().eq('id', studentId).single();
+
+      return StudentModel(
+        id: response['id'],
+        name: response['name'],
+        rollNumber: response['roll_number'],
+        classId: '', // This will be filled in by the caller if needed
+        createdAt:
+            response['created_at'] != null
+                ? DateTime.parse(response['created_at'])
+                : null,
+        updatedAt:
+            response['updated_at'] != null
+                ? DateTime.parse(response['updated_at'])
+                : null,
+      );
+    } catch (e) {
+      throw 'Failed to get student: $e';
+    }
   }
 }

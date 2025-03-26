@@ -96,10 +96,11 @@ class ClassController extends GetxController {
   }
 
   // Create a new class
+  // Update the createClass method to use the selected subject and course
   Future<void> createClass() async {
     try {
-      if (selectedSubjectId.value.isEmpty ||
-          selectedCourseId.value.isEmpty ||
+      if (selectedSubject.value == null ||
+          selectedCourse.value == null ||
           yearController.text.trim().isEmpty) {
         TSnackBar.showError(message: 'Please fill in all required fields');
         return;
@@ -115,8 +116,8 @@ class ClassController extends GetxController {
 
       final newClass = await classService.createClass(
         teacherId: currentUser.id,
-        subjectId: selectedSubjectId.value,
-        courseId: selectedCourseId.value,
+        subjectId: selectedSubject.value.id,
+        courseId: selectedCourse.value!.id,
         year: int.parse(yearController.text.trim()),
         section:
             sectionController.text.trim().isNotEmpty
@@ -152,7 +153,7 @@ class ClassController extends GetxController {
       isLoading.value = true;
 
       final updatedClass = await classService.updateClass(
-        id: classId,
+        classId: classId,
         subjectId: selectedSubjectId.value,
         courseId: selectedCourseId.value,
         year: int.parse(yearController.text.trim()),

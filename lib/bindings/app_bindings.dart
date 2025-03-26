@@ -4,11 +4,14 @@ import 'package:attedance__/features/authentication/controllers/login_controller
 import 'package:attedance__/features/authentication/controllers/signup_controller.dart';
 import 'package:attedance__/features/authentication/controllers/supabase_auth_controller.dart';
 import 'package:attedance__/features/teacher/controllers/attendance_controller.dart';
+import 'package:attedance__/features/teacher/controllers/attendance_reports_controller.dart';
 import 'package:attedance__/features/teacher/controllers/class_controller.dart';
 import 'package:attedance__/features/teacher/controllers/dashboard_controller.dart';
+import 'package:attedance__/features/teacher/controllers/student_detail_controller.dart';
 import 'package:attedance__/features/teacher/screens/teacher_profile_screen.dart';
 import 'package:attedance__/navigation_menu.dart';
 import 'package:get/get.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// A class that manages all controller bindings for the app
 /// This centralizes dependency injection and improves performance
@@ -102,9 +105,35 @@ class TeacherProfileBinding extends Bindings {
 class HomeBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut(() => DashboardController(), fenix: true); // Ensure DashboardController is bound
-    Get.lazyPut(() => ClassController(), fenix: true);
+    // Check if user is authenticated before binding controllers
+    final currentUser = Supabase.instance.client.auth.currentUser;
+    if (currentUser != null) {
+      Get.lazyPut(() => DashboardController(), fenix: true);
+      Get.lazyPut(() => ClassController(), fenix: true);
+      Get.lazyPut(() => AttendanceController(), fenix: true);
+      Get.lazyPut(() => NavigationController(), fenix: true);
+    }
+  }
+}
+
+// Add these bindings
+class ReportsBinding extends Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut(() => AttendanceReportsController(), fenix: true);
+  }
+}
+
+class StudentDetailBinding extends Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut(() => StudentDetailController(), fenix: true);
+  }
+}
+
+class AttendanceBinding extends Bindings {
+  @override
+  void dependencies() {
     Get.lazyPut(() => AttendanceController(), fenix: true);
-    Get.lazyPut(()=>NavigationController(),fenix: true);
   }
 }

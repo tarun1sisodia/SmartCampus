@@ -5,6 +5,8 @@ import 'package:attedance__/features/authentication/screens/login/login.dart';
 import 'package:attedance__/features/authentication/screens/onboarding/onboarding.dart';
 import 'package:attedance__/features/authentication/screens/signup/signup.dart';
 import 'package:attedance__/features/authentication/screens/signup/singup_widgets/verify_email_screen.dart';
+import 'package:attedance__/features/teacher/screens/attendance_reports_screen.dart';
+import 'package:attedance__/features/teacher/screens/student_detail_screen.dart';
 import 'package:attedance__/navigation_menu.dart';
 import 'package:get/get.dart';
 // Importing the DashboardScreen
@@ -19,6 +21,8 @@ class AppRoutes {
   static const String resetConfirmation = '/reset-confirmation';
   static const String verifyEmail = '/verify-email';
   static const String home = '/home'; // Add home route
+  static const String attendanceReports = '/attendance-reports';
+  static const String studentDetail = '/student-detail';
 
   /// Get all application routes
   static List<GetPage> routes = [
@@ -72,6 +76,24 @@ class AppRoutes {
       page: () => NavigationMenu(), // Set DashboardScreen as home
       binding: HomeBinding(),
       transition: Transition.fadeIn,
+    ),
+    GetPage(
+      name: attendanceReports,
+      page: () => AttendanceReportsScreen(),
+      binding: ReportsBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: studentDetail,
+      page: () {
+        final args = Get.arguments as Map<String, dynamic>;
+        return StudentDetailScreen(
+          student: args['student'],
+          classId: args['classId'],
+        );
+      },
+      binding: StudentDetailBinding(),
+      transition: Transition.rightToLeft,
     ),
   ];
 

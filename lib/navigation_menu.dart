@@ -1,3 +1,4 @@
+import 'package:attedance__/features/teacher/screens/attendance_reports_screen.dart';
 import 'package:attedance__/features/teacher/screens/dashboard_screen.dart';
 import 'package:attedance__/features/teacher/screens/class_list_screen.dart';
 import 'package:attedance__/features/teacher/screens/mark_attendance_screen.dart';
@@ -104,12 +105,19 @@ class NavigationMenu extends StatelessWidget {
               ),
             ),
             NavigationDestination(
-              label: 'Messages',
+              label: 'charts',
               icon: Icon(
-                Iconsax.message,
+                Iconsax.chart,
                 color: dark ? Colors.orange : Colors.deepPurpleAccent,
               ),
             ),
+            // NavigationDestination(
+            //   label: 'Messages',
+            //   icon: Icon(
+            //     Iconsax.message,
+            //     color: dark ? Colors.orange : Colors.deepPurpleAccent,
+            //   ),
+            // ),
           ],
         ),
       ),
@@ -134,6 +142,7 @@ class NavigationController extends GetxController {
     ClassListScreen(),
     // const TeacherProfileScreen(),
     MarkAttendanceScreen(),
-    TeacherMessagesScreen(),
+    // TeacherMessagesScreen(),
+    AttendanceReportsScreen(),
   ];
 }

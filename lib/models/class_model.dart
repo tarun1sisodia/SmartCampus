@@ -5,12 +5,10 @@ class ClassModel {
   final String courseId;
   final int year;
   final String? section;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
-
-  // Denormalized fields for UI display
   final String? subjectName;
   final String? courseName;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
 
   ClassModel({
     required this.id,
@@ -19,10 +17,10 @@ class ClassModel {
     required this.courseId,
     required this.year,
     this.section,
-    this.createdAt,
-    this.updatedAt,
     this.subjectName,
     this.courseName,
+    this.createdAt,
+    this.updatedAt,
   });
 
   factory ClassModel.fromJson(Map<String, dynamic> json) {
@@ -33,6 +31,8 @@ class ClassModel {
       courseId: json['course_id'],
       year: json['year'],
       section: json['section'],
+      subjectName: json['subject_name'],
+      courseName: json['course_name'],
       createdAt:
           json['created_at'] != null
               ? DateTime.parse(json['created_at'])
@@ -41,8 +41,6 @@ class ClassModel {
           json['updated_at'] != null
               ? DateTime.parse(json['updated_at'])
               : null,
-      subjectName: json['subject_name'],
-      courseName: json['course_name'],
     );
   }
 
@@ -54,6 +52,8 @@ class ClassModel {
       'course_id': courseId,
       'year': year,
       'section': section,
+      'subject_name': subjectName,
+      'course_name': courseName,
       'created_at': createdAt?.toIso8601String(),
       'updated_at': updatedAt?.toIso8601String(),
     };

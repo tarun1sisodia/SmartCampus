@@ -18,12 +18,14 @@ class SubjectModel {
       id: json['id'],
       name: json['name'],
       code: json['code'],
-      createdAt: json['created_at'] != null 
-          ? DateTime.parse(json['created_at']) 
-          : null,
-      updatedAt: json['updated_at'] != null 
-          ? DateTime.parse(json['updated_at']) 
-          : null,
+      createdAt:
+          json['created_at'] != null
+              ? DateTime.parse(json['created_at'])
+              : null,
+      updatedAt:
+          json['updated_at'] != null
+              ? DateTime.parse(json['updated_at'])
+              : null,
     );
   }
 

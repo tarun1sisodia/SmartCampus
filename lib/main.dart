@@ -54,7 +54,7 @@ Future<void> main() async {
       // Continue with normal app startup even if auto-login fails
     }
   }
-  // Running the App 
+  // Running the App
   runApp(MyApp());
 }
 
@@ -78,7 +78,7 @@ class MyApp extends StatelessWidget {
     String initialRoute;
     Bindings initialBinding;
 
-    // Check and decide the which UI to show and redirect 
+    // Check and decide the which UI to show and redirect
     if (isAuthenticated) {
       initialRoute = AppRoutes.home;
       initialBinding = HomeBinding();
@@ -107,10 +107,10 @@ class MyApp extends StatelessWidget {
         inputDecorationTheme: TTextFieldTheme.darkInputDecoration,
       ),
       themeMode: ThemeMode.system, // Respects system theme setting
-      // remove debug banner from ui 
+      // remove debug banner from ui
       debugShowCheckedModeBanner: false,
 
-      home: NavigationMenu(),
+      // home: NavigationMenu(),
       // Set initial route based on authentication status
       initialRoute: initialRoute,
       initialBinding: initialBinding,

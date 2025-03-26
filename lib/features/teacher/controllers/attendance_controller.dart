@@ -10,67 +10,39 @@ import '../../../services/attendance_service.dart';
 import '../../../utils/helpers/snackbar_helper.dart';
 
 class AttendanceController extends GetxController {
-  final classService = ClassService();
-  final studentService = StudentService();
   final attendanceService = AttendanceService();
+  final studentService = StudentService();
+  final classService = ClassService();
 
   final isLoading = false.obs;
-  final selectedClass = Rxn<ClassModel>();
+  final isStudentsLoaded = false.obs;
   final students = <StudentModel>[].obs;
+  final currentSessionId = ''.obs;
+  final selectedClass = Rx<ClassModel?>(null);
   final attendanceSessions = <AttendanceSessionModel>[].obs;
 
-  // For creating a new session
+  // For creating new sessions
   final sessionDate = DateTime.now().obs;
   final startTimeController = TextEditingController();
   final endTimeController = TextEditingController();
 
-  // For tracking attendance
-  final currentSessionId = ''.obs;
-
-  @override
-  void onClose() {
-    startTimeController.dispose();
-    endTimeController.dispose();
-    super.onClose();
-  }
-
-  // Set the selected class and load its data
-  Future<void> setSelectedClass(ClassModel classModel) async {
+  // Set the selected class
+  void setSelectedClass(ClassModel classModel) {
     selectedClass.value = classModel;
-    await loadStudentsForClass(classModel.id);
-    await loadAttendanceSessions(classModel.id);
-  }
-
-  // Load students for a class
-  Future<void> loadStudentsForClass(String classId) async {
-    try {
-      isLoading.value = true;
-
-      final classStudents = await studentService.getStudentsForClass(classId);
-
-      // Initialize all students with no attendance status
-      for (var student in classStudents) {
-        student.attendanceStatus = null;
-      }
-
-      students.assignAll(classStudents);
-    } catch (e) {
-      TSnackBar.showError(message: 'Failed to load students: ${e.toString()}');
-    } finally {
-      isLoading.value = false;
-    }
+    loadAttendanceSessions(classModel.id);
   }
 
   // Load attendance sessions for a class
+  // Add this method to load attendance sessions
   Future<void> loadAttendanceSessions(String classId) async {
     try {
       isLoading.value = true;
 
-      final sessions = await attendanceService.getAttendanceSessionsForClass(
-        classId,
-      );
-
+      final sessions = await attendanceService.getAttendanceSessions(classId);
       attendanceSessions.assignAll(sessions);
+
+      // Load students for the class
+      await loadStudentsForClass();
     } catch (e) {
       TSnackBar.showError(
         message: 'Failed to load attendance sessions: ${e.toString()}',
@@ -80,9 +52,127 @@ class AttendanceController extends GetxController {
     }
   }
 
+  // Add this method to load students for the class
+  Future<void> loadStudentsForClass() async {
+    try {
+      if (selectedClass.value == null) return;
+
+      isLoading.value = true;
+
+      // Load students for the class
+      final classStudents = await studentService.getStudentsForClass(
+        selectedClass.value!.id,
+      );
+
+      // Initialize attendance status for all students
+      for (var student in classStudents) {
+        student.attendanceStatus = 'absent'; // Default status
+      }
+
+      students.assignAll(classStudents);
+      isStudentsLoaded.value = true;
+    } catch (e) {
+      TSnackBar.showError(message: 'Failed to load students: ${e.toString()}');
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  // Load students for the current session
+  Future<void> loadStudentsForSession() async {
+    try {
+      if (currentSessionId.value.isEmpty || selectedClass.value == null) {
+        return;
+      }
+
+      isLoading.value = true;
+
+      // Load students for the class
+      final classStudents = await studentService.getStudentsForClass(
+        selectedClass.value!.id,
+      );
+
+      // Load existing attendance records for this session
+      final attendanceRecords = await attendanceService
+          .getAttendanceRecordsForSession(currentSessionId.value);
+
+      // Map attendance records to students
+      for (var student in classStudents) {
+        final record = attendanceRecords.firstWhereOrNull(
+          (record) => record.studentId == student.id,
+        );
+
+        student.attendanceStatus = record?.status ?? 'absent';
+      }
+
+      students.assignAll(classStudents);
+      isStudentsLoaded.value = true;
+    } catch (e) {
+      TSnackBar.showError(message: 'Failed to load students: ${e.toString()}');
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  // Update a student's attendance status
+  void updateStudentStatus(String studentId, String status) {
+    final index = students.indexWhere((student) => student.id == studentId);
+    if (index != -1) {
+      final student = students[index];
+      student.attendanceStatus = status;
+      students[index] = student;
+    }
+  }
+
+  // Submit attendance for all students
+  Future<void> submitAttendance() async {
+    try {
+      isLoading.value = true;
+
+      if (currentSessionId.value.isEmpty) {
+        TSnackBar.showError(message: 'No session selected');
+        return;
+      }
+
+      // Prepare attendance records
+      final records =
+          students
+              .map(
+                (student) => {
+                  'student_id': student.id,
+                  'status': student.attendanceStatus ?? 'absent',
+                  'remarks': '',
+                },
+              )
+              .toList();
+
+      // Submit attendance records
+      await attendanceService.submitBulkAttendance(
+        sessionId: currentSessionId.value,
+        records: records,
+      );
+
+      TSnackBar.showSuccess(
+        message: 'Attendance submitted successfully',
+        title: 'Success',
+      );
+
+      // Navigate back to attendance screen
+      Get.back();
+    } catch (e) {
+      TSnackBar.showError(
+        message: 'Failed to submit attendance: ${e.toString()}',
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
   // Create a new attendance session
   Future<void> createAttendanceSession() async {
     try {
+      isLoading.value = true;
+
       if (selectedClass.value == null) {
         TSnackBar.showError(message: 'No class selected');
         return;
@@ -90,151 +180,43 @@ class AttendanceController extends GetxController {
 
       final currentUser = Supabase.instance.client.auth.currentUser;
       if (currentUser == null) {
-        TSnackBar.showError(message: 'User not authenticated');
-        return;
-      }
-
-      // Add date validation
-      if (sessionDate.value.isAfter(
-        DateTime.now().add(const Duration(days: 1)),
-      )) {
         TSnackBar.showError(
-          message: 'Cannot create attendance sessions for future dates',
+          message: 'You must be logged in to create a session',
         );
         return;
       }
 
-      isLoading.value = true;
-
-      final teacherId = currentUser.id;
-
+      // Create the session
       final session = await attendanceService.createAttendanceSession(
         classId: selectedClass.value!.id,
         date: sessionDate.value,
         startTime:
-            startTimeController.text.isNotEmpty
-                ? startTimeController.text
-                : null,
-        endTime:
-            endTimeController.text.isNotEmpty ? endTimeController.text : null,
-        createdBy: teacherId,
+            startTimeController.text.isEmpty ? null : startTimeController.text,
+        endTime: endTimeController.text.isEmpty ? null : endTimeController.text,
+        createdBy: currentUser.id,
       );
 
-      // Set the current session ID for attendance tracking
-      currentSessionId.value = session.id;
+      // Reload sessions
+      await loadAttendanceSessions(selectedClass.value!.id);
 
-      // Add to the list
-      attendanceSessions.insert(0, session);
-
-      // Reset form
-      startTimeController.clear();
-      endTimeController.clear();
-
-      TSnackBar.showSuccess(message: 'Attendance session created successfully');
-
-      // Close the dialog
+      // Close dialog
       Get.back();
-    } catch (e) {
-      TSnackBar.showError(
-        message: 'Failed to create attendance session: ${e.toString()}',
+
+      TSnackBar.showSuccess(
+        message: 'Attendance session created successfully',
+        title: 'Success',
       );
+    } catch (e) {
+      TSnackBar.showError(message: 'Failed to create session: ${e.toString()}');
     } finally {
       isLoading.value = false;
     }
   }
 
-  // Mark a student as present
-  void markStudentPresent(int index) {
-    if (index >= 0 && index < students.length) {
-      students[index].attendanceStatus = 'present';
-      students.refresh();
-    }
-  }
-
-  // Mark a student as absent
-  void markStudentAbsent(int index) {
-    if (index >= 0 && index < students.length) {
-      students[index].attendanceStatus = 'absent';
-      students.refresh();
-    }
-  }
-
-  // Submit attendance for the current session
-  Future<void> submitAttendance() async {
-    try {
-      if (currentSessionId.value.isEmpty) {
-        TSnackBar.showError(message: 'No active attendance session');
-        return;
-      }
-
-      // Check if all students have an attendance status
-      final unmarkedStudents =
-          students.where((s) => s.attendanceStatus == null).length;
-      if (unmarkedStudents > 0) {
-        Get.dialog(
-          AlertDialog(
-            title: Text('Unmarked Students'),
-            content: Text(
-              'There are $unmarkedStudents students without attendance. They will be marked as absent by default. Continue?',
-            ),
-            actions: [
-              TextButton(onPressed: () => Get.back(), child: Text('Cancel')),
-              ElevatedButton(
-                onPressed: () {
-                  Get.back();
-                  _submitAttendanceRecords();
-                },
-                child: Text('Continue'),
-              ),
-            ],
-          ),
-        );
-        return;
-      }
-
-      await _submitAttendanceRecords();
-    } catch (e) {
-      TSnackBar.showError(
-        message: 'Failed to submit attendance: ${e.toString()}',
-      );
-    }
-  }
-
-  // Private method to submit attendance records
-  Future<void> _submitAttendanceRecords() async {
-    try {
-      final currentUser = Supabase.instance.client.auth.currentUser;
-      if (currentUser == null) {
-        TSnackBar.showError(message: 'User not authenticated');
-        return;
-      }
-
-      isLoading.value = true;
-
-      await attendanceService.submitAttendanceRecords(
-        sessionId: currentSessionId.value,
-        students: students,
-      );
-
-      // Reset student attendance status
-      for (var student in students) {
-        student.attendanceStatus = null;
-      }
-      students.refresh();
-
-      // Reset current session
-      currentSessionId.value = '';
-
-      TSnackBar.showSuccess(message: 'Attendance submitted successfully');
-
-      // Navigate back to the class screen
-      Get.back();
-    } catch (e) {
-      TSnackBar.showError(
-        message: 'Failed to submit attendance: ${e.toString()}',
-      );
-    } finally {
-      isLoading.value = false;
-    }
+  @override
+  void onClose() {
+    startTimeController.dispose();
+    endTimeController.dispose();
+    super.onClose();
   }
 }
