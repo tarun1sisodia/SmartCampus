@@ -49,10 +49,7 @@ class AppBindings {
 
   /// Home screen bindings (includes all controllers needed for the home screen)
   static void registerHomeBindings() {
-    Get.lazyPut(
-      () => TeacherProfileController(),
-      fenix: true,
-    ); // Ensure proper binding
+    Get.lazyPut(() => TeacherProfileController(), fenix: true);
   }
 }
 
@@ -135,5 +132,27 @@ class AttendanceBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut(() => AttendanceController(), fenix: true);
+  }
+}
+
+// Add this for the Messages screen
+class MessagesBinding extends Bindings {
+  @override
+  void dependencies() {
+    // Don't initialize OnboardingController here!
+    // Instead, use the appropriate controller for messages
+    // For now, we'll use HomeBinding since it has the necessary controllers
+    HomeBinding().dependencies();
+  }
+}
+
+// Add this for the Settings screen
+class SettingsBinding extends Bindings {
+  @override
+  void dependencies() {
+    // Don't initialize OnboardingController here!
+    // Instead, use the appropriate controller for settings
+    // For now, we'll use HomeBinding since it has the necessary controllers
+    HomeBinding().dependencies();
   }
 }

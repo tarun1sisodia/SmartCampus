@@ -1,8 +1,6 @@
-import 'package:attedance__/features/teacher/screens/attendance_reports_screen.dart';
 import 'package:attedance__/features/teacher/screens/dashboard_screen.dart';
 import 'package:attedance__/features/teacher/screens/class_list_screen.dart';
-import 'package:attedance__/features/teacher/screens/mark_attendance_screen.dart';
-import 'package:attedance__/features/teacher/screens/teacher_messages_screen.dart';
+import 'package:attedance__/features/teacher/screens/more_menu_screen.dart';
 import 'package:attedance__/features/teacher/screens/teacher_profile_screen.dart';
 import 'package:attedance__/routes/app_routes.dart';
 import 'package:get/get.dart';
@@ -20,7 +18,7 @@ class NavigationMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     final dark = THelperFunction.isDarkMode(context);
     final controller = Get.put(NavigationController());
-
+    
     // Check if user is authenticated
     final currentUser = Supabase.instance.client.auth.currentUser;
     if (currentUser == null) {
@@ -60,9 +58,8 @@ class NavigationMenu extends StatelessWidget {
         ),
       );
     }
-
+    
     return Scaffold(
-      //Here are Making a Observer which is observering an instance of obs.
       bottomNavigationBar: Obx(
         () => NavigationBar(
           height: 80,
@@ -78,7 +75,7 @@ class NavigationMenu extends StatelessWidget {
           destinations: [
             NavigationDestination(
               label: 'Dashboard',
-              icon: Icon(
+                            icon: Icon(
                 Iconsax.home,
                 color: dark ? Colors.orange : Colors.deepPurpleAccent,
               ),
@@ -90,34 +87,20 @@ class NavigationMenu extends StatelessWidget {
                 color: dark ? Colors.orange : Colors.deepPurpleAccent,
               ),
             ),
-            // NavigationDestination(
-            //   label: 'Profile',
-            //   icon: Icon(
-            //     Iconsax.user,
-            //     color: dark ? Colors.orange : Colors.deepPurpleAccent,
-            //   ),
-            // ),
             NavigationDestination(
-              label: 'Mark',
+              label: 'Profile',
               icon: Icon(
-                Iconsax.add,
+                Iconsax.user,
                 color: dark ? Colors.orange : Colors.deepPurpleAccent,
               ),
             ),
             NavigationDestination(
-              label: 'charts',
+              label: 'More',
               icon: Icon(
-                Iconsax.chart,
+                Iconsax.more,
                 color: dark ? Colors.orange : Colors.deepPurpleAccent,
               ),
             ),
-            // NavigationDestination(
-            //   label: 'Messages',
-            //   icon: Icon(
-            //     Iconsax.message,
-            //     color: dark ? Colors.orange : Colors.deepPurpleAccent,
-            //   ),
-            // ),
           ],
         ),
       ),
@@ -127,22 +110,19 @@ class NavigationMenu extends StatelessWidget {
 }
 
 class NavigationController extends GetxController {
-  final Rx<int> selectedIndex = 0.obs; //observer Widget.
-
-  // Initialize ProfileController when NavigationController is created
+  final Rx<int> selectedIndex = 0.obs;
+  
   @override
   void onInit() {
     super.onInit();
-    print("NavigationController initialized");
+    print('NavigationController initialized');
     Get.put(TeacherProfileController());
   }
-
+  
   final screens = [
     DashboardScreen(),
     ClassListScreen(),
-    // const TeacherProfileScreen(),
-    MarkAttendanceScreen(),
-    // TeacherMessagesScreen(),
-    AttendanceReportsScreen(),
+    const TeacherProfileScreen(),
+    const MoreMenuScreen(),
   ];
 }
