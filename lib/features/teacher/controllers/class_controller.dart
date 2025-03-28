@@ -102,17 +102,20 @@ class ClassController extends GetxController {
       if (selectedSubject.value == null ||
           selectedCourse.value == null ||
           yearController.text.trim().isEmpty) {
+        print('Validation Failed');
         TSnackBar.showError(message: 'Please fill in all required fields');
         return;
       }
-
+      print('Validation Passed');
       isLoading.value = true;
 
       final currentUser = Supabase.instance.client.auth.currentUser;
       if (currentUser == null) {
+        print('User not logged in');
         TSnackBar.showError(message: 'You must be logged in to create a class');
         return;
       }
+      print('Creating Class ...');
 
       final newClass = await classService.createClass(
         teacherId: currentUser.id,
@@ -124,7 +127,7 @@ class ClassController extends GetxController {
                 ? sectionController.text.trim()
                 : null,
       );
-
+      print('Class created: $newClass');
       // Add to the list
       classes.insert(0, newClass);
 
@@ -134,6 +137,7 @@ class ClassController extends GetxController {
 
       TSnackBar.showSuccess(message: 'Class created successfully');
     } catch (e) {
+      print('Failed to create class: $e');
       TSnackBar.showError(message: 'Failed to create class: ${e.toString()}');
     } finally {
       isLoading.value = false;

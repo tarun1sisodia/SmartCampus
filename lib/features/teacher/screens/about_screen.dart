@@ -125,8 +125,8 @@ class AboutScreen extends StatelessWidget {
                   color: dark ? TColors.yellow : TColors.deepPurple,
                 ),
               ),
-              title: const Text('Email'),
-              subtitle: const Text('contact@attendanceapp.com'),
+              title: const Text('Google Developer'),
+              subtitle: const Text('g.dev/tarun1sisodia'),
             ),
             const SizedBox(height: TSizes.spaceBtwSections),
 

@@ -10,10 +10,10 @@ class SessionTimerWidget extends StatelessWidget {
   final bool isSessionActive;
   
   const SessionTimerWidget({
-    Key? key,
+    super.key,
     required this.remainingTime,
     this.isSessionActive = true,
-  }) : super(key: key);
+  });
   
   @override
   Widget build(BuildContext context) {

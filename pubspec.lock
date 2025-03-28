@@ -169,14 +169,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.3"
-  circular_indicator:
-    dependency: "direct main"
-    description:
-      name: circular_indicator
-      sha256: "5440522e030045891de21698e666356508ce0096cc5a8a90dfacd3fb60f3ee50"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.6"
   clock:
     dependency: transitive
     description:

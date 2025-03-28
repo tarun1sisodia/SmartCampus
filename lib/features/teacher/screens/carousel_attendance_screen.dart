@@ -26,7 +26,7 @@ class CarouselAttendanceScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Carousel Attendance'),
-        automaticallyImplyLeading: false,
+        // automaticallyImplyLeading: false,
         actions: [
           // Session timer in app bar
           // Obx(

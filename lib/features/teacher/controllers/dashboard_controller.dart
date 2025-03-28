@@ -108,14 +108,14 @@ class DashboardController extends GetxController {
       if (classes.isEmpty) {
         // Create a sample subject
         final subject = await subjectService.createSubject(
-          'Mathematics',
-          'MATH101',
+          'Operating Systems',
+          'BCA301',
         );
         
         // Create a sample course
         final course = await courseService.createCourse(
-          'Computer Science',
-          'CS',
+          'Bachelors of Computer Application',
+          'BCA',
         );
         
         // Create a sample class

@@ -1,11 +1,17 @@
 import 'package:attedance__/app/bindings/app_bindings.dart';
-import 'package:attedance__/app/routes/app_routes.dart';
+import 'package:attedance__/myapp.dart';
 import 'package:attedance__/services/storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'app/theme/custom_themes/text_field_theme.dart';
 
+  /// The main entry point of the app.
+  ///
+  /// Initializes the app's bindings, services, and global state.
+  /// Checks if the user is already logged in and tries to log in
+  /// automatically if credentials are saved.
+  /// Starts the app normally even if auto-login fails.
+  ///
 Future<void> main() async {
   //Intializing the binding for the app .
   WidgetsFlutterBinding.ensureInitialized();
@@ -57,67 +63,3 @@ Future<void> main() async {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    // Check if onboarding is completed
-    final storageService = Get.find<StorageService>();
-    final bool onboardingCompleted = storageService.getOnboardingStatus();
-
-    // Check if user is currently authenticated with Supabase
-    final currentUser = Supabase.instance.client.auth.currentUser;
-    final bool isAuthenticated = currentUser != null;
-
-    print('Onboarding completed: $onboardingCompleted');
-    print('User authenticated: $isAuthenticated');
-
-    // Determine initial route they are very import to run the UI and Logic.
-    String initialRoute;
-    Bindings initialBinding;
-
-    // Check and decide the which UI to show and redirect
-    if (isAuthenticated) {
-      initialRoute = AppRoutes.home;
-      initialBinding = HomeBinding();
-    } else if (onboardingCompleted) {
-      initialRoute = AppRoutes.login;
-      initialBinding = LoginBinding();
-    } else {
-      initialRoute = AppRoutes.onboarding;
-      initialBinding = OnboardingBinding();
-    }
-
-    print('Initial route: $initialRoute');
-
-    return GetMaterialApp(
-      title: 'Attendance App',
-      // Theme Data is for the UI in Light theme
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        brightness: Brightness.light,
-        inputDecorationTheme: TTextFieldTheme.lightInputDecoration,
-      ),
-      //Dark theme design for ui in Dark Theme
-      darkTheme: ThemeData(
-        primarySwatch: Colors.blue,
-        brightness: Brightness.dark,
-        inputDecorationTheme: TTextFieldTheme.darkInputDecoration,
-      ),
-      themeMode: ThemeMode.system, // Respects system theme setting
-      // remove debug banner from ui
-      debugShowCheckedModeBanner: false,
-
-      // home: NavigationMenu(),
-      // Set initial route based on authentication status
-      initialRoute: initialRoute,
-      initialBinding: initialBinding,
-      // managing the routes by dispoing the unused controllers from memory.
-      smartManagement: SmartManagement.keepFactory,
-
-      // Use the routes defined in AppRoutes
-      getPages: AppRoutes.routes,
-    );
-  }
-}
