@@ -1,6 +1,6 @@
-import '../../../utils/constants/screen_size_calculator.dart';
+import '../../utils/constants/screen_size_calculator.dart';
 
-import '../../../utils/constants/sized.dart';
+import '../../utils/constants/sized.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';

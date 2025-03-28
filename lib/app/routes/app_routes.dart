@@ -1,4 +1,4 @@
-import 'package:attedance__/bindings/app_bindings.dart';
+import 'package:attedance__/app/bindings/app_bindings.dart';
 import 'package:attedance__/features/authentication/screens/forgot_password/forgot_password_2.dart';
 import 'package:attedance__/features/authentication/screens/forgot_password/reset_password_confirmation.dart';
 import 'package:attedance__/features/authentication/screens/login/login.dart';
@@ -44,66 +44,67 @@ class AppRoutes {
   static const String notifications = '/notifications';
   static const String calendar = '/calendar';
 
+
   /// Get all application routes
   static List<GetPage> routes = [
+    
     GetPage(
       name: reports,
       page: () => const ReportsScreen(),
-      binding: ReportsBinding(), // Use ReportsBinding instead of HomeBinding
+      binding: ReportsBinding(),
       transition: Transition.rightToLeft,
     ),
     GetPage(
       name: message,
       page: () => const TeacherMessagesScreen(),
-      binding: MessagesBinding(), // Use MessagesBinding instead of HomeBinding
+      binding: MessagesBinding(),
       transition: Transition.rightToLeft,
     ),
     GetPage(
       name: settings,
-      page: () => const TeacherSettingsScreen(), // Make sure this class exists
-      binding: SettingsBinding(), // Use SettingsBinding
+      page: () => const TeacherSettingsScreen(),
+      binding: SettingsBinding(),
       transition: Transition.rightToLeft,
     ),
-    // Add similar GetPage entries for other routes
     GetPage(
       name: help,
-      page: () => const HelpScreen(), // Create this screen
+      page: () => const HelpScreen(),
       binding: HomeBinding(),
       transition: Transition.rightToLeft,
     ),
     GetPage(
       name: feedback,
-      page: () => const FeedbackScreen(), // Create this screen
+      page: () => const FeedbackScreen(),
       binding: HomeBinding(),
       transition: Transition.rightToLeft,
     ),
     GetPage(
       name: about,
-      page: () => const AboutScreen(), // Create this screen
+      page: () => const AboutScreen(),
       binding: HomeBinding(),
       transition: Transition.rightToLeft,
     ),
     GetPage(
       name: export,
-      page: () => const ExportDataScreen(), // Create this screen
+      page: () => const ExportDataScreen(),
       binding: HomeBinding(),
       transition: Transition.rightToLeft,
     ),
     GetPage(
       name: import,
-      page: () => const ImportDataScreen(), // Create this screen
+      page: () => const ImportDataScreen(),
       binding: HomeBinding(),
       transition: Transition.rightToLeft,
     ),
     GetPage(
       name: notifications,
-      page: () => const NotificationsScreen(), // Create this screen
+      page: () => const NotificationsScreen(),
       binding: HomeBinding(),
       transition: Transition.rightToLeft,
     ),
     GetPage(
       name: calendar,
-      page: () => const CalendarScreen(), // Create this screen
+      page: () => const CalendarScreen(),
       binding: HomeBinding(),
       transition: Transition.rightToLeft,
     ),
@@ -174,7 +175,6 @@ class AppRoutes {
       transition: Transition.rightToLeft,
     ),
   ];
-
   /// Navigate to the initial route based on app state
   static String getInitialRoute() {
     return home;

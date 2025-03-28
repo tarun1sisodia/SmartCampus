@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/class_controller.dart';
-import '../../../utils/constants/colors.dart';
-import '../../../utils/constants/sized.dart';
-import '../../../utils/helpers/helper_function.dart';
+import '../../../common/utils/constants/colors.dart';
+import '../../../common/utils/constants/sized.dart';
+import '../../../common/utils/helpers/helper_function.dart';
 
 class CreateClassScreen extends StatelessWidget {
   final classController = Get.find<ClassController>();

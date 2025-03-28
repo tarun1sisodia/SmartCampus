@@ -1,11 +1,11 @@
-import 'package:attedance__/utils/theme/custom_themes/appbar_theme.dart';
-import 'package:attedance__/utils/theme/custom_themes/bottom_sheet_theme.dart';
-import 'package:attedance__/utils/theme/custom_themes/checkbox_theme.dart';
-import 'package:attedance__/utils/theme/custom_themes/chip_theme.dart';
-import 'package:attedance__/utils/theme/custom_themes/elevated_button_theme.dart';
-import 'package:attedance__/utils/theme/custom_themes/searchbar_theme.dart';
-import 'package:attedance__/utils/theme/custom_themes/text_field_theme.dart';
-import 'package:attedance__/utils/theme/custom_themes/text_theme.dart';
+import 'package:attedance__/app/theme/custom_themes/appbar_theme.dart';
+import 'package:attedance__/app/theme/custom_themes/bottom_sheet_theme.dart';
+import 'package:attedance__/app/theme/custom_themes/checkbox_theme.dart';
+import 'package:attedance__/app/theme/custom_themes/chip_theme.dart';
+import 'package:attedance__/app/theme/custom_themes/elevated_button_theme.dart';
+import 'package:attedance__/app/theme/custom_themes/searchbar_theme.dart';
+import 'package:attedance__/app/theme/custom_themes/text_field_theme.dart';
+import 'package:attedance__/app/theme/custom_themes/text_theme.dart';
 import 'package:flutter/material.dart';
 
 class TAppTheme {

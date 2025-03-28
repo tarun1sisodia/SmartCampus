@@ -1,14 +1,15 @@
 import 'package:attedance__/features/teacher/screens/dashboard_screen.dart';
 import 'package:attedance__/features/teacher/screens/class_list_screen.dart';
+import 'package:attedance__/features/teacher/screens/mark_attendance_screen.dart';
 import 'package:attedance__/features/teacher/screens/more_menu_screen.dart';
 import 'package:attedance__/features/teacher/screens/teacher_profile_screen.dart';
-import 'package:attedance__/routes/app_routes.dart';
+import 'package:attedance__/app/routes/app_routes.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import 'utils/constants/colors.dart';
-import 'utils/helpers/helper_function.dart';
+import 'common/utils/constants/colors.dart';
+import 'common/utils/helpers/helper_function.dart';
 import 'package:flutter/material.dart';
 
 class NavigationMenu extends StatelessWidget {
@@ -122,7 +123,7 @@ class NavigationController extends GetxController {
   final screens = [
     DashboardScreen(),
     ClassListScreen(),
-    const TeacherProfileScreen(),
+    MarkAttendanceScreen(),
     const MoreMenuScreen(),
   ];
 }

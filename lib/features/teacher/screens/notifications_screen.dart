@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
-import '../../../utils/constants/colors.dart';
-import '../../../utils/constants/sized.dart';
-import '../../../utils/helpers/helper_function.dart';
+import '../../../common/utils/constants/colors.dart';
+import '../../../common/utils/constants/sized.dart';
+import '../../../common/utils/helpers/helper_function.dart';
 
 class NotificationsScreen extends StatelessWidget {
   const NotificationsScreen({super.key});

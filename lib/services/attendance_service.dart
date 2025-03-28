@@ -159,7 +159,7 @@ class AttendanceService {
       final response = await supabase
           .from('attendance_records')
           .select('status')
-          .contains('session_id', sessionIds);
+          .inFilter('session_id', sessionIds);
 
       // Count statuses
       int presentCount = 0;
@@ -263,6 +263,7 @@ class AttendanceService {
       throw 'Failed to get attendance statistics: $e';
     }
   }
+
   // Get attendance statistics for a student
   Future<Map<String, dynamic>> getAttendanceStatsForStudent({
     required String classId,

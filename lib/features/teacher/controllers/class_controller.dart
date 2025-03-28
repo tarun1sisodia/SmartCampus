@@ -8,7 +8,7 @@ import '../../../models/subject_model.dart';
 import '../../../services/class_service.dart';
 import '../../../services/course_service.dart';
 import '../../../services/subject_service.dart';
-import '../../../utils/helpers/snackbar_helper.dart';
+import '../../../common/utils/helpers/snackbar_helper.dart';
 
 class ClassController extends GetxController {
   final classService = ClassService();
@@ -179,18 +179,27 @@ class ClassController extends GetxController {
   }
 
   // Delete a class
+  // Delete a class
   Future<void> deleteClass(String classId) async {
     try {
       isLoading.value = true;
 
-      await classService.deleteClass(classId);
+      // First delete related records (like students, attendance, etc.)
+      await Supabase.instance.client
+          .from('class_students')
+          .delete()
+          .eq('class_id', classId);
 
-      // Remove from the list
+      // Then delete the class itself
+      await Supabase.instance.client.from('classes').delete().eq('id', classId);
+
+      // Remove the class from the local list
       classes.removeWhere((c) => c.id == classId);
 
       TSnackBar.showSuccess(message: 'Class deleted successfully');
     } catch (e) {
       TSnackBar.showError(message: 'Failed to delete class: ${e.toString()}');
+      // Don't rethrow the exception since we're already handling it with the snackbar
     } finally {
       isLoading.value = false;
     }

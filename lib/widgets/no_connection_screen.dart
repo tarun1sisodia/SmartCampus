@@ -1,5 +1,5 @@
 
-import '../utils/constants/constants.dart';
+import '../common/utils/constants/constants.dart';
 import 'package:flutter/material.dart';
 // import '../providers/connectivity_provider.dart';
 

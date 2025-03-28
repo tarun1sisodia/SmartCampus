@@ -1,7 +1,7 @@
-import '../../../utils/constants/colors.dart';
-import '../../../utils/constants/screen_size_calculator.dart';
-import '../../../utils/constants/sized.dart';
-import '../../../utils/helpers/helper_function.dart';
+import '../../utils/constants/colors.dart';
+import '../../utils/constants/screen_size_calculator.dart';
+import '../../utils/constants/sized.dart';
+import '../../utils/helpers/helper_function.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 

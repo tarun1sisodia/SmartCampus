@@ -1,8 +1,8 @@
 import '../../../controllers/controllers_onboarding/onboarding_controller.dart';
-import '../../../../../utils/constants/colors.dart';
-import '../../../../../utils/constants/sized.dart';
-import '../../../../../utils/device/device_utility.dart';
-import '../../../../../utils/helpers/helper_function.dart';
+import '../../../../../common/utils/constants/colors.dart';
+import '../../../../../common/utils/constants/sized.dart';
+import '../../../../../common/utils/device/device_utility.dart';
+import '../../../../../common/utils/helpers/helper_function.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 

@@ -1,4 +1,4 @@
-import 'package:attedance__/utils/helpers/snackbar_helper.dart';
+import 'package:attedance__/common/utils/helpers/snackbar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';

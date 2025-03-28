@@ -1,4 +1,4 @@
-import '../../utils/constants/sized.dart';
+import '../utils/constants/sized.dart';
 import 'package:flutter/material.dart';
 
 class TSpacingStyles {

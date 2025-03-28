@@ -2,10 +2,10 @@ import 'package:attedance__/features/authentication/controllers/signup_controlle
 import 'package:attedance__/features/authentication/controllers/supabase_auth_controller.dart';
 import 'package:attedance__/features/authentication/screens/login/login_widgets/remember_checkbox.dart';
 import 'package:attedance__/features/authentication/screens/signup/singup_widgets/textfields.dart';
-import 'package:attedance__/utils/constants/colors.dart';
-import 'package:attedance__/utils/constants/sized.dart';
-import 'package:attedance__/utils/constants/text_strings.dart';
-import 'package:attedance__/utils/helpers/helper_function.dart';
+import 'package:attedance__/common/utils/constants/colors.dart';
+import 'package:attedance__/common/utils/constants/sized.dart';
+import 'package:attedance__/common/utils/constants/text_strings.dart';
+import 'package:attedance__/common/utils/helpers/helper_function.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';

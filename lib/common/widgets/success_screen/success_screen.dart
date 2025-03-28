@@ -1,6 +1,6 @@
-import '../../../utils/constants/sized.dart';
-import '../../../utils/constants/text_strings.dart';
-import '../../../utils/helpers/helper_function.dart';
+import '../../utils/constants/sized.dart';
+import '../../utils/constants/text_strings.dart';
+import '../../utils/helpers/helper_function.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

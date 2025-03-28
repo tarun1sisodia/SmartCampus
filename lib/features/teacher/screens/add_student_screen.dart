@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../../models/class_model.dart';
-import '../../../utils/constants/colors.dart';
-import '../../../utils/constants/sized.dart';
-import '../../../utils/helpers/helper_function.dart';
+import '../../../common/utils/constants/colors.dart';
+import '../../../common/utils/constants/sized.dart';
+import '../../../common/utils/helpers/helper_function.dart';
 
 class AddStudentScreen extends StatelessWidget {
   final ClassModel classModel;
@@ -31,7 +31,7 @@ class AddStudentScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showAddStudentDialog(context),
-        backgroundColor: dark ? TColors.yellow : TColors.deepPurple,
+        backgroundColor: dark ? TColors.blue : TColors.yellow,
         child: const Icon(Iconsax.add),
       ),
       body: Obx(() {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:attedance__/utils/constants/colors.dart';
+import 'package:attedance__/common/utils/constants/colors.dart';
 import 'package:iconsax/iconsax.dart';
 
 enum MessageType { success, error, warning, info }

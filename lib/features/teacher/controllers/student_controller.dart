@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import '../../../models/class_model.dart';
 import '../../../models/student_model.dart';
 import '../../../services/student_service.dart';
-import '../../../utils/helpers/snackbar_helper.dart';
+import '../../../common/utils/helpers/snackbar_helper.dart';
 
 class StudentController extends GetxController {
   final studentService = StudentService();

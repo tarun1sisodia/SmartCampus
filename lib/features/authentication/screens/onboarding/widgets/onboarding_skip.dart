@@ -1,8 +1,8 @@
 import 'package:attedance__/features/authentication/controllers/controllers_onboarding/onboarding_controller.dart';
-import 'package:attedance__/utils/constants/colors.dart';
-import 'package:attedance__/utils/constants/sized.dart';
-import 'package:attedance__/utils/device/device_utility.dart';
-import 'package:attedance__/utils/helpers/helper_function.dart';
+import 'package:attedance__/common/utils/constants/colors.dart';
+import 'package:attedance__/common/utils/constants/sized.dart';
+import 'package:attedance__/common/utils/device/device_utility.dart';
+import 'package:attedance__/common/utils/helpers/helper_function.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingSkip extends StatelessWidget {

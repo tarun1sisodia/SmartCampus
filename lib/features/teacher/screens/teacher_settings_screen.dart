@@ -1,10 +1,10 @@
 import 'package:attedance__/features/teacher/screens/teacher_profile_screen.dart';
-import 'package:attedance__/routes/app_routes.dart';
+import 'package:attedance__/app/routes/app_routes.dart';
 import 'package:attedance__/services/storage_service.dart';
-import 'package:attedance__/utils/constants/colors.dart';
-import 'package:attedance__/utils/constants/sized.dart';
-import 'package:attedance__/utils/helpers/helper_function.dart';
-import 'package:attedance__/utils/helpers/snackbar_helper.dart';
+import 'package:attedance__/common/utils/constants/colors.dart';
+import 'package:attedance__/common/utils/constants/sized.dart';
+import 'package:attedance__/common/utils/helpers/helper_function.dart';
+import 'package:attedance__/common/utils/helpers/snackbar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';

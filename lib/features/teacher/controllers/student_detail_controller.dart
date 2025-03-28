@@ -2,7 +2,7 @@ import 'package:attedance__/models/class_model.dart';
 import 'package:attedance__/models/student_model.dart';
 import 'package:attedance__/services/attendance_service.dart';
 import 'package:attedance__/services/class_service.dart';
-import 'package:attedance__/utils/helpers/snackbar_helper.dart';
+import 'package:attedance__/common/utils/helpers/snackbar_helper.dart';
 import 'package:get/get.dart';
 
 class StudentDetailController extends GetxController {

@@ -6,9 +6,9 @@ import 'package:iconsax/iconsax.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../controllers/dashboard_controller.dart';
-import '../../../utils/constants/colors.dart';
-import '../../../utils/constants/sized.dart';
-import '../../../utils/helpers/helper_function.dart';
+import '../../../common/utils/constants/colors.dart';
+import '../../../common/utils/constants/sized.dart';
+import '../../../common/utils/helpers/helper_function.dart';
 import 'class_list_screen.dart';
 
 class DashboardScreen extends StatelessWidget {

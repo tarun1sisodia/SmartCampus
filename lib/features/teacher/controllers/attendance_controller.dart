@@ -7,7 +7,7 @@ import '../../../models/attendance_session_model.dart';
 import '../../../services/class_service.dart';
 import '../../../services/student_service.dart';
 import '../../../services/attendance_service.dart';
-import '../../../utils/helpers/snackbar_helper.dart';
+import '../../../common/utils/helpers/snackbar_helper.dart';
 
 class AttendanceController extends GetxController {
   final attendanceService = AttendanceService();
@@ -121,6 +121,7 @@ class AttendanceController extends GetxController {
       final student = students[index];
       student.attendanceStatus = status;
       students[index] = student;
+      students.refresh();
     }
   }
 

@@ -5,7 +5,7 @@ import '../../../models/class_model.dart';
 import '../../../services/class_service.dart';
 import '../../../services/attendance_service.dart';
 import '../../../services/subject_service.dart';
-import '../../../utils/helpers/snackbar_helper.dart';
+import '../../../common/utils/helpers/snackbar_helper.dart';
 
 class DashboardController extends GetxController {
   final attendanceService = AttendanceService();

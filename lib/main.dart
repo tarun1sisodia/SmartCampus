@@ -1,11 +1,10 @@
-import 'package:attedance__/bindings/app_bindings.dart';
-import 'package:attedance__/navigation_menu.dart';
-import 'package:attedance__/routes/app_routes.dart';
+import 'package:attedance__/app/bindings/app_bindings.dart';
+import 'package:attedance__/app/routes/app_routes.dart';
 import 'package:attedance__/services/storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'utils/theme/custom_themes/text_field_theme.dart';
+import 'app/theme/custom_themes/text_field_theme.dart';
 
 Future<void> main() async {
   //Intializing the binding for the app .

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import '../controllers/class_controller.dart';
-import '../../../utils/constants/colors.dart';
-import '../../../utils/constants/sized.dart';
-import '../../../utils/helpers/helper_function.dart';
+import '../../../common/utils/constants/colors.dart';
+import '../../../common/utils/constants/sized.dart';
+import '../../../common/utils/helpers/helper_function.dart';
 import 'add_student_screen.dart';
 import 'attendance_screen.dart';
 
@@ -200,6 +200,36 @@ class ClassListScreen extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              Obx(
+                () => DropdownButtonFormField<String>(
+                  decoration: InputDecoration(
+                    labelText: 'Course',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(
+                        TSizes.inputFieldRadius,
+                      ),
+                    ),
+                  ),
+                  value:
+                      classController.courses.isNotEmpty
+                          ? classController.selectedCourseId.value
+                          : null,
+                  items:
+                      classController.courses.map((course) {
+                        return DropdownMenuItem<String>(
+                          value: course.id,
+                          child: Text(course.name),
+                        );
+                      }).toList(),
+                  onChanged: (value) {
+                    if (value != null) {
+                      classController.selectedCourseId.value = value;
+                    }
+                  },
+                ),
+              ),
+
+              const SizedBox(height: TSizes.spaceBtwInputFields),
               // Subject dropdown
               Obx(
                 () => DropdownButtonFormField<String>(
@@ -233,36 +263,6 @@ class ClassListScreen extends StatelessWidget {
               const SizedBox(height: TSizes.spaceBtwInputFields),
 
               // Course dropdown
-              Obx(
-                () => DropdownButtonFormField<String>(
-                  decoration: InputDecoration(
-                    labelText: 'Course',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(
-                        TSizes.inputFieldRadius,
-                      ),
-                    ),
-                  ),
-                  value:
-                      classController.courses.isNotEmpty
-                          ? classController.selectedCourseId.value
-                          : null,
-                  items:
-                      classController.courses.map((course) {
-                        return DropdownMenuItem<String>(
-                          value: course.id,
-                          child: Text(course.name),
-                        );
-                      }).toList(),
-                  onChanged: (value) {
-                    if (value != null) {
-                      classController.selectedCourseId.value = value;
-                    }
-                  },
-                ),
-              ),
-
-              const SizedBox(height: TSizes.spaceBtwInputFields),
 
               // Year field
               TextField(
@@ -380,6 +380,33 @@ class ClassListScreen extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              Obx(
+                () => DropdownButtonFormField<String>(
+                  decoration: InputDecoration(
+                    labelText: 'Course',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(
+                        TSizes.inputFieldRadius,
+                      ),
+                    ),
+                  ),
+                  value: classController.selectedCourseId.value,
+                  items:
+                      classController.courses.map((course) {
+                        return DropdownMenuItem<String>(
+                          value: course.id,
+                          child: Text(course.name),
+                        );
+                      }).toList(),
+                  onChanged: (value) {
+                    if (value != null) {
+                      classController.selectedCourseId.value = value;
+                    }
+                  },
+                ),
+              ),
+              const SizedBox(height: TSizes.spaceBtwInputFields),
+
               // Subject dropdown
               Obx(
                 () => DropdownButtonFormField<String>(
@@ -407,35 +434,7 @@ class ClassListScreen extends StatelessWidget {
                 ),
               ),
 
-              const SizedBox(height: TSizes.spaceBtwInputFields),
-
               // Course dropdown
-              Obx(
-                () => DropdownButtonFormField<String>(
-                  decoration: InputDecoration(
-                    labelText: 'Course',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(
-                        TSizes.inputFieldRadius,
-                      ),
-                    ),
-                  ),
-                  value: classController.selectedCourseId.value,
-                  items:
-                      classController.courses.map((course) {
-                        return DropdownMenuItem<String>(
-                          value: course.id,
-                          child: Text(course.name),
-                        );
-                      }).toList(),
-                  onChanged: (value) {
-                    if (value != null) {
-                      classController.selectedCourseId.value = value;
-                    }
-                  },
-                ),
-              ),
-
               const SizedBox(height: TSizes.spaceBtwInputFields),
 
               // Year field

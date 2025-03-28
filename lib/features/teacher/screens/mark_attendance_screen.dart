@@ -2,20 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import '../controllers/attendance_controller.dart';
-import '../../../utils/constants/colors.dart';
-import '../../../utils/constants/sized.dart';
-import '../../../utils/helpers/helper_function.dart';
+import '../../../common/utils/constants/colors.dart';
+import '../../../common/utils/constants/sized.dart';
+import '../../../common/utils/helpers/helper_function.dart';
 
 class MarkAttendanceScreen extends StatelessWidget {
   final attendanceController = Get.find<AttendanceController>();
-  
+
+  MarkAttendanceScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     final dark = THelperFunction.isDarkMode(context);
-    
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Mark Attendance', style: Theme.of(context).textTheme.headlineSmall),
+        title: Text(
+          'Mark Attendance',
+          style: Theme.of(context).textTheme.headlineSmall,
+        ),
         actions: [
           IconButton(
             onPressed: () => attendanceController.loadStudentsForSession(),
@@ -23,20 +28,22 @@ class MarkAttendanceScreen extends StatelessWidget {
           ),
         ],
       ),
-      floatingActionButton: Obx(() => 
-        attendanceController.isStudentsLoaded.value ? 
-        FloatingActionButton.extended(
-          onPressed: () => _showSubmitConfirmation(context),
-          backgroundColor: dark ? TColors.yellow : TColors.deepPurple,
-          icon: const Icon(Iconsax.tick_square),
-          label: const Text('Submit Attendance'),
-        ) : const SizedBox.shrink()
+      floatingActionButton: Obx(
+        () =>
+            attendanceController.isStudentsLoaded.value
+                ? FloatingActionButton.extended(
+                  onPressed: () => _showSubmitConfirmation(context),
+                  backgroundColor: dark ? TColors.blue : TColors.yellow,
+                  icon: const Icon(Iconsax.tick_square),
+                  label: const Text('Submit Attendance'),
+                )
+                : const SizedBox.shrink(),
       ),
       body: Obx(() {
         if (attendanceController.isLoading.value) {
           return const Center(child: CircularProgressIndicator());
         }
-        
+
         if (attendanceController.currentSessionId.value.isEmpty) {
           return Center(
             child: Column(
@@ -62,7 +69,7 @@ class MarkAttendanceScreen extends StatelessWidget {
             ),
           );
         }
-        
+
         if (attendanceController.students.isEmpty) {
           return Center(
             child: Column(
@@ -88,7 +95,7 @@ class MarkAttendanceScreen extends StatelessWidget {
             ),
           );
         }
-        
+
         return ListView.builder(
           padding: const EdgeInsets.all(TSizes.defaultSpace),
           itemCount: attendanceController.students.length,
@@ -100,10 +107,13 @@ class MarkAttendanceScreen extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
               ),
-              child: Obx(() => ListTile(
+              child: ListTile(
                 contentPadding: const EdgeInsets.all(TSizes.md),
                 leading: CircleAvatar(
-                  backgroundColor: _getStatusColor(student.attendanceStatus, dark),
+                  backgroundColor: _getStatusColor(
+                    student.attendanceStatus,
+                    dark,
+                  ),
                   child: Text(
                     student.name.substring(0, 1),
                     style: TextStyle(
@@ -131,23 +141,32 @@ class MarkAttendanceScreen extends StatelessWidget {
                 trailing: DropdownButton<String>(
                   value: student.attendanceStatus ?? 'absent',
                   onChanged: (value) {
-                    attendanceController.updateStudentStatus(student.id, value!);
+                    attendanceController.updateStudentStatus(
+                      student.id,
+                      value!,
+                    );
                   },
                   items: const [
-                    DropdownMenuItem(value: 'present', child: Text('Present')),
+                    DropdownMenuItem(
+                      value: 'present',
+                      child: Text('Present'),
+                    ),
                     DropdownMenuItem(value: 'absent', child: Text('Absent')),
                     DropdownMenuItem(value: 'late', child: Text('Late')),
-                    DropdownMenuItem(value: 'excused', child: Text('Excused')),
+                    DropdownMenuItem(
+                      value: 'excused',
+                      child: Text('Excused'),
+                    ),
                   ],
                 ),
-              )),
+              ),
             );
           },
         );
       }),
     );
   }
-  
+
   Color _getStatusColor(String? status, bool dark) {
     switch (status) {
       case 'present':
@@ -162,19 +181,18 @@ class MarkAttendanceScreen extends StatelessWidget {
         return dark ? TColors.yellow : TColors.deepPurple;
     }
   }
-  
+
   void _showSubmitConfirmation(BuildContext context) {
     final dark = THelperFunction.isDarkMode(context);
-    
+
     Get.dialog(
       AlertDialog(
         title: const Text('Submit Attendance'),
-        content: const Text('Are you sure you want to submit the attendance for this session?'),
+        content: const Text(
+          'Are you sure you want to submit the attendance for this session?',
+        ),
         actions: [
-          TextButton(
-            onPressed: () => Get.back(),
-            child: const Text('Cancel'),
-          ),
+          TextButton(onPressed: () => Get.back(), child: const Text('Cancel')),
           ElevatedButton(
             onPressed: () {
               Get.back();

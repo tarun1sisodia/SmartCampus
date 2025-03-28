@@ -1,5 +1,5 @@
-import 'package:attedance__/utils/constants/sized.dart';
-import 'package:attedance__/utils/helpers/helper_function.dart';
+import 'package:attedance__/common/utils/constants/sized.dart';
+import 'package:attedance__/common/utils/helpers/helper_function.dart';
 import 'package:flutter/material.dart';
 
 class StatsContainer extends StatelessWidget {

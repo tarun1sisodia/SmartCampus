@@ -5,9 +5,9 @@ import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 import '../controllers/attendance_controller.dart';
 import '../../../models/class_model.dart';
-import '../../../utils/constants/colors.dart';
-import '../../../utils/constants/sized.dart';
-import '../../../utils/helpers/helper_function.dart';
+import '../../../common/utils/constants/colors.dart';
+import '../../../common/utils/constants/sized.dart';
+import '../../../common/utils/helpers/helper_function.dart';
 class AttendanceScreen extends StatelessWidget {
   final ClassModel classModel;
   final attendanceController = Get.put(AttendanceController());

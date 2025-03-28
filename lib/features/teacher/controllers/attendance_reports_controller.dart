@@ -5,7 +5,7 @@ import 'package:attedance__/models/student_model.dart';
 import 'package:attedance__/services/attendance_service.dart';
 import 'package:attedance__/services/class_service.dart';
 import 'package:attedance__/services/student_service.dart';
-import 'package:attedance__/utils/helpers/snackbar_helper.dart';
+import 'package:attedance__/common/utils/helpers/snackbar_helper.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:csv/csv.dart'; // Ensure this import is present

@@ -1,8 +1,8 @@
 import '../../../../../common/widgets/appbar/appbar.dart';
 import '../../../../../common/widgets/products_cart/cart_menu_icon.dart';
-import '../../../../../utils/constants/sized.dart';
-import '../../../../../utils/constants/text_strings.dart';
-import '../../../../../utils/helpers/helper_function.dart';
+import '../../../../../common/utils/constants/sized.dart';
+import '../../../../../common/utils/constants/text_strings.dart';
+import '../../../../../common/utils/helpers/helper_function.dart';
 import 'package:flutter/material.dart';
 
 class THomeAppbar extends StatelessWidget {

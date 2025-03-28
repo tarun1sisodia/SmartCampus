@@ -51,6 +51,11 @@ class AppBindings {
   static void registerHomeBindings() {
     Get.lazyPut(() => TeacherProfileController(), fenix: true);
   }
+  static void createClassScreen()
+    {
+     Get.lazyPut(() => ClassController(), fenix: true); 
+    }
+  
 }
 
 /// Individual bindings classes for use with GetX routing
@@ -110,6 +115,13 @@ class HomeBinding extends Bindings {
       Get.lazyPut(() => AttendanceController(), fenix: true);
       Get.lazyPut(() => NavigationController(), fenix: true);
     }
+  }
+}
+
+class CreateClassScreen  extends Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut(() => ClassController(), fenix: true);
   }
 }
 

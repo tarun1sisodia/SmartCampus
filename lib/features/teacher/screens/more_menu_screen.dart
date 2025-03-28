@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../../../routes/app_routes.dart';
-import '../../../utils/constants/colors.dart';
-import '../../../utils/constants/sized.dart';
-import '../../../utils/helpers/helper_function.dart';
+import '../../../app/routes/app_routes.dart';
+import '../../../common/utils/constants/colors.dart';
+import '../../../common/utils/constants/sized.dart';
+import '../../../common/utils/helpers/helper_function.dart';
 
 class MoreMenuScreen extends StatelessWidget {
   const MoreMenuScreen({super.key});
@@ -39,7 +39,6 @@ class MoreMenuScreen extends StatelessWidget {
 
   Widget _buildMenuItem(BuildContext context, MenuItem item, bool dark) {
     return InkWell(
-
       onTap: () {
         // Use named routes with proper error handling
         try {
@@ -79,18 +78,14 @@ class MoreMenuScreen extends StatelessWidget {
                 color: item.color.withOpacity(0.1),
                 shape: BoxShape.circle,
               ),
-              child: Icon(
-                item.icon,
-                color: item.color,
-                size: 28,
-              ),
+              child: Icon(item.icon, color: item.color, size: 28),
             ),
             const SizedBox(height: TSizes.spaceBtwItems / 2),
             Text(
               item.title,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
           ],
