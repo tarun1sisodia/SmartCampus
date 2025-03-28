@@ -26,7 +26,7 @@ class ClassListScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showAddClassDialog(context),
-        backgroundColor: dark ? TColors.yellow : TColors.deepPurple,
+        backgroundColor: dark ? TColors.blue : TColors.yellow,
         child: const Icon(Iconsax.add),
       ),
       body: Obx(() {

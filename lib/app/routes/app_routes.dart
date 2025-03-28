@@ -5,9 +5,11 @@ import 'package:attedance__/features/authentication/screens/login/login.dart';
 import 'package:attedance__/features/authentication/screens/onboarding/onboarding.dart';
 import 'package:attedance__/features/authentication/screens/signup/signup.dart';
 import 'package:attedance__/features/authentication/screens/signup/singup_widgets/verify_email_screen.dart';
+import 'package:attedance__/features/teacher/bindings/carousel_attendance_binding.dart';
 import 'package:attedance__/features/teacher/screens/about_screen.dart';
 import 'package:attedance__/features/teacher/screens/attendance_reports_screen.dart';
 import 'package:attedance__/features/teacher/screens/calendar_screen.dart';
+import 'package:attedance__/features/teacher/screens/carousel_attendance_screen.dart';
 import 'package:attedance__/features/teacher/screens/export_data_screen.dart';
 import 'package:attedance__/features/teacher/screens/feedback_screen.dart';
 import 'package:attedance__/features/teacher/screens/help_screen.dart';
@@ -43,11 +45,18 @@ class AppRoutes {
   static const String import = '/import';
   static const String notifications = '/notifications';
   static const String calendar = '/calendar';
-
+  static const String carouselAttendance = '/CarouselAttendanceScreen';
 
   /// Get all application routes
   static List<GetPage> routes = [
-    
+    GetPage(
+      name: carouselAttendance,
+      page: () => CarouselAttendanceScreen(),
+      binding: CarouselAttendanceBinding(),
+      transition: Transition.rightToLeft,
+      transitionDuration: const Duration(milliseconds: 300),
+    ),
+
     GetPage(
       name: reports,
       page: () => const ReportsScreen(),
@@ -175,6 +184,7 @@ class AppRoutes {
       transition: Transition.rightToLeft,
     ),
   ];
+
   /// Navigate to the initial route based on app state
   static String getInitialRoute() {
     return home;

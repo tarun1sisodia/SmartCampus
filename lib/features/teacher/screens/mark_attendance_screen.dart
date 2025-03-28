@@ -1,3 +1,4 @@
+import 'package:attedance__/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -25,6 +26,11 @@ class MarkAttendanceScreen extends StatelessWidget {
           IconButton(
             onPressed: () => attendanceController.loadStudentsForSession(),
             icon: const Icon(Iconsax.refresh),
+          ),
+          IconButton(
+            onPressed: () => Get.toNamed(AppRoutes.carouselAttendance),
+            icon: const Icon(Iconsax.slider_horizontal_1),
+            tooltip: 'Carousel View',
           ),
         ],
       ),
@@ -147,16 +153,10 @@ class MarkAttendanceScreen extends StatelessWidget {
                     );
                   },
                   items: const [
-                    DropdownMenuItem(
-                      value: 'present',
-                      child: Text('Present'),
-                    ),
+                    DropdownMenuItem(value: 'present', child: Text('Present')),
                     DropdownMenuItem(value: 'absent', child: Text('Absent')),
                     DropdownMenuItem(value: 'late', child: Text('Late')),
-                    DropdownMenuItem(
-                      value: 'excused',
-                      child: Text('Excused'),
-                    ),
+                    DropdownMenuItem(value: 'excused', child: Text('Excused')),
                   ],
                 ),
               ),

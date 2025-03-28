@@ -59,6 +59,7 @@ dependencies:
   percent_indicator: ^4.2.4
   csv: ^6.0.0
   table_calendar: ^3.2.0
+  carousel_slider: ^5.0.0
 
 dev_dependencies:
   flutter_test:

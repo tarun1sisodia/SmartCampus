@@ -1,3 +1,4 @@
+import 'package:attedance__/features/teacher/screens/carousel_attendance_screen.dart';
 import 'package:attedance__/features/teacher/screens/dashboard_screen.dart';
 import 'package:attedance__/features/teacher/screens/class_list_screen.dart';
 import 'package:attedance__/features/teacher/screens/mark_attendance_screen.dart';
@@ -19,7 +20,7 @@ class NavigationMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     final dark = THelperFunction.isDarkMode(context);
     final controller = Get.put(NavigationController());
-    
+
     // Check if user is authenticated
     final currentUser = Supabase.instance.client.auth.currentUser;
     if (currentUser == null) {
@@ -59,7 +60,7 @@ class NavigationMenu extends StatelessWidget {
         ),
       );
     }
-    
+
     return Scaffold(
       bottomNavigationBar: Obx(
         () => NavigationBar(
@@ -75,8 +76,8 @@ class NavigationMenu extends StatelessWidget {
           indicatorColor: dark ? TColors.darkerGrey : TColors.borderSecondary,
           destinations: [
             NavigationDestination(
-              label: 'Dashboard',
-                            icon: Icon(
+              label: 'Home',
+              icon: Icon(
                 Iconsax.home,
                 color: dark ? Colors.orange : Colors.deepPurpleAccent,
               ),
@@ -89,9 +90,9 @@ class NavigationMenu extends StatelessWidget {
               ),
             ),
             NavigationDestination(
-              label: 'Profile',
+              label: 'Mark',
               icon: Icon(
-                Iconsax.user,
+                Iconsax.add_square,
                 color: dark ? Colors.orange : Colors.deepPurpleAccent,
               ),
             ),
@@ -112,18 +113,18 @@ class NavigationMenu extends StatelessWidget {
 
 class NavigationController extends GetxController {
   final Rx<int> selectedIndex = 0.obs;
-  
+
   @override
   void onInit() {
     super.onInit();
     print('NavigationController initialized');
     Get.put(TeacherProfileController());
   }
-  
+
   final screens = [
     DashboardScreen(),
     ClassListScreen(),
-    MarkAttendanceScreen(),
+    CarouselAttendanceScreen(),
     const MoreMenuScreen(),
   ];
 }
