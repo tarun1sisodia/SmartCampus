@@ -246,7 +246,7 @@ class TeacherSettingsScreen extends StatelessWidget {
                                             );
 
                                             // Navigate to login screen
-                                            Get.offAllNamed(AppRoutes.login);
+                                            Get.offAllNamed(AppRoutes.onboarding);
                                           } catch (e) {
                                             // Dismiss loading dialog
                                             Get.back();

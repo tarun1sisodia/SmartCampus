@@ -32,6 +32,11 @@ class CarouselAttendanceController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    // Load students for the current session if a session ID is already set
+    if (attendanceController.currentSessionId.value.isNotEmpty) {
+      attendanceController.loadStudentsForSession();
+    }
+    
     // Listen to changes in the students list to update statistics
     ever(attendanceController.students, (_) => updateStatistics());
 

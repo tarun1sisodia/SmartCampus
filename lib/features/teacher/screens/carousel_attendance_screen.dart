@@ -1,3 +1,4 @@
+import 'package:attedance__/features/teacher/screens/class_list_screen.dart';
 import 'package:attedance__/features/teacher/widgets/session_timer_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,17 +13,16 @@ import '../../../common/utils/constants/sized.dart';
 import '../../../common/utils/helpers/helper_function.dart';
 
 class CarouselAttendanceScreen extends StatelessWidget {
-  final carouselAttendanceController = Get.put(CarouselAttendanceController());
-  final CarouselSliderController carouselController =
-      CarouselSliderController();
+  // Use Get.find instead of Get.put to avoid recreating the controller
+  final carouselAttendanceController = Get.find<CarouselAttendanceController>();
+  final CarouselSliderController carouselController = CarouselSliderController();
 
   CarouselAttendanceScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     final dark = THelperFunction.isDarkMode(context);
- 
-
+    
     return Scaffold(
       appBar: AppBar(
         title: const Text('Carousel Attendance'),
@@ -48,10 +48,19 @@ class CarouselAttendanceScreen extends StatelessWidget {
           // ),
           SizedBox(width: TSizes.spaceBtwSections),
           IconButton(
-            onPressed:
-                () =>
-                    carouselAttendanceController.attendanceController
-                        .loadStudentsForSession(),
+            onPressed: () {
+              // Only try to load students if a session is selected
+              if (carouselAttendanceController.attendanceController.currentSessionId.value.isNotEmpty) {
+                carouselAttendanceController.attendanceController.loadStudentsForSession();
+              } else {
+                // Show a message if no session is selected
+                Get.snackbar(
+                  'No Session Selected',
+                  'Please select a session from the attendance screen first',
+                  snackPosition: SnackPosition.BOTTOM,
+                );
+              }
+            },
             icon: const Icon(Iconsax.refresh),
           ),
         ],
@@ -98,6 +107,19 @@ class CarouselAttendanceScreen extends StatelessWidget {
                   'Please select an attendance session',
                   style: Theme.of(context).textTheme.bodyMedium,
                   textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: TSizes.spaceBtwItems),
+                // Add this button to allow selecting a session
+                ElevatedButton(
+                  onPressed: () {
+                    // Navigate to class list to select a class first
+                    Get.to(() => ClassListScreen());
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: dark ? TColors.yellow : TColors.deepPurple,
+                    foregroundColor: dark ? Colors.black : Colors.white,
+                  ),
+                  child: const Text('Select a Class'),
                 ),
               ],
             ),

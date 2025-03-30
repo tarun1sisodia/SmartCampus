@@ -1,3 +1,5 @@
+import 'package:attedance__/features/teacher/bindings/carousel_attendance_binding.dart';
+import 'package:attedance__/features/teacher/screens/carousel_attendance_screen.dart';
 import 'package:attedance__/features/teacher/screens/mark_attendance_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -211,7 +213,21 @@ class AttendanceScreen extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                              trailing: const Icon(Iconsax.arrow_right_3),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                    icon: const Icon(Iconsax.play_circle),
+                                    tooltip: 'Carousel View',
+                                    onPressed: () {
+                                      // Set current session and navigate to carousel attendance
+                                      attendanceController.currentSessionId.value = session.id;
+                                      Get.to(() => CarouselAttendanceScreen(), binding: CarouselAttendanceBinding());
+                                    },
+                                  ),
+                                  const Icon(Iconsax.arrow_right_3),
+                                ],
+                              ),
                             ),
                           );
                         },

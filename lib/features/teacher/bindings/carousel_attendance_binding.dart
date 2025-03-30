@@ -8,6 +8,9 @@ class CarouselAttendanceBinding implements Bindings {
     // Make sure the attendance controller is available
     if (!Get.isRegistered<AttendanceController>()) {
       Get.put(AttendanceController());
+    } else {
+      // If it's already registered, find it
+      Get.find<AttendanceController>();
     }
     
     // Initialize the carousel attendance controller

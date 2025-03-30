@@ -5,6 +5,7 @@ import 'package:attedance__/features/authentication/controllers/signup_controlle
 import 'package:attedance__/features/authentication/controllers/supabase_auth_controller.dart';
 import 'package:attedance__/features/teacher/controllers/attendance_controller.dart';
 import 'package:attedance__/features/teacher/controllers/attendance_reports_controller.dart';
+import 'package:attedance__/features/teacher/controllers/carousel_attendance_controller.dart';
 import 'package:attedance__/features/teacher/controllers/class_controller.dart';
 import 'package:attedance__/features/teacher/controllers/dashboard_controller.dart';
 import 'package:attedance__/features/teacher/controllers/student_detail_controller.dart';
@@ -114,6 +115,8 @@ class HomeBinding extends Bindings {
       Get.lazyPut(() => ClassController(), fenix: true);
       Get.lazyPut(() => AttendanceController(), fenix: true);
       Get.lazyPut(() => NavigationController(), fenix: true);
+      // Add this line to initialize CarouselAttendanceController
+      Get.lazyPut(() => CarouselAttendanceController(), fenix: true);
     }
   }
 }

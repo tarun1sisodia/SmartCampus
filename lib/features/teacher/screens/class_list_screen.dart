@@ -7,6 +7,7 @@ import '../../../common/utils/constants/sized.dart';
 import '../../../common/utils/helpers/helper_function.dart';
 import 'add_student_screen.dart';
 import 'attendance_screen.dart';
+import 'create_class_screen.dart'; // Ensure this import points to the correct file
 
 class ClassListScreen extends StatelessWidget {
   final classController = Get.put(ClassController());
@@ -25,7 +26,7 @@ class ClassListScreen extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _showAddClassDialog(context),
+        onPressed: () => Get.to(() => CreateClassScreen()),
         backgroundColor: dark ? TColors.blue : TColors.yellow,
         child: const Icon(Iconsax.add),
       ),
