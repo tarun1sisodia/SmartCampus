@@ -5,6 +5,7 @@ import 'package:attedance__/features/teacher/screens/create_class_screen.dart';
 import 'package:attedance__/features/teacher/screens/dashboard_screen.dart';
 import 'package:attedance__/features/teacher/screens/class_list_screen.dart';
 import 'package:attedance__/features/teacher/screens/more_menu_screen.dart';
+import 'package:attedance__/features/teacher/screens/teacher_messages_screen.dart';
 import 'package:attedance__/features/teacher/screens/teacher_profile_screen.dart';
 import 'package:attedance__/app/routes/app_routes.dart';
 import 'package:get/get.dart';
@@ -92,9 +93,9 @@ class NavigationMenu extends StatelessWidget {
               ),
             ),
             NavigationDestination(
-              label: 'Mark',
+              label: 'Sessions',
               icon: Icon(
-                Iconsax.add_square,
+                Iconsax.timer_1,
                 color: dark ? Colors.orange : Colors.deepPurpleAccent,
               ),
             ),
@@ -138,7 +139,7 @@ class NavigationController extends GetxController {
     // CreateClassScreen(),
     ClassListScreen(),
     // Replace direct instantiation with a method that ensures the controller exists
-    _getCarouselScreen(),
+    TeacherMessagesScreen(),
     const MoreMenuScreen(),
   ];
   

@@ -60,45 +60,56 @@ class CarouselAttendanceController extends GetxController {
     // Get the current session details
     final currentSession = attendanceController.attendanceSessions
         .firstWhereOrNull(
-          (session) =>
-              session.id == attendanceController.currentSessionId.value,
+          (session) => session.id == attendanceController.currentSessionId.value,
         );
 
     if (currentSession != null) {
       // Parse start and end times
-      if (currentSession.startTime != null &&
-          currentSession.startTime!.isNotEmpty) {
-        final startTimeParts = currentSession.startTime!.split(':');
-        if (startTimeParts.length >= 2) {
-          final hour = int.tryParse(startTimeParts[0]) ?? 0;
-          final minute = int.tryParse(startTimeParts[1]) ?? 0;
-
-          final now = DateTime.now();
-          sessionStartTime.value = DateTime(
-            currentSession.date.year,
-            currentSession.date.month,
-            currentSession.date.day,
-            hour,
-            minute,
-          );
+      if (currentSession.startTime != null && currentSession.startTime!.isNotEmpty) {
+        try {
+          final startTimeParts = currentSession.startTime!.split(':');
+          if (startTimeParts.length >= 2) {
+            final hour = int.tryParse(startTimeParts[0]) ?? 0;
+            final minute = int.tryParse(startTimeParts[1]) ?? 0;
+            
+            // Create DateTime with today's date and the session time
+            final today = DateTime.now();
+            sessionStartTime.value = DateTime(
+              currentSession.date.year,
+              currentSession.date.month,
+              currentSession.date.day,
+              hour,
+              minute,
+            );
+            
+            print('Session start time: ${sessionStartTime.value}');
+          }
+        } catch (e) {
+          print('Error parsing start time: $e');
         }
       }
 
-      if (currentSession.endTime != null &&
-          currentSession.endTime!.isNotEmpty) {
-        final endTimeParts = currentSession.endTime!.split(':');
-        if (endTimeParts.length >= 2) {
-          final hour = int.tryParse(endTimeParts[0]) ?? 0;
-          final minute = int.tryParse(endTimeParts[1]) ?? 0;
-
-          final now = DateTime.now();
-          sessionEndTime.value = DateTime(
-            currentSession.date.year,
-            currentSession.date.month,
-            currentSession.date.day,
-            hour,
-            minute,
-          );
+      if (currentSession.endTime != null && currentSession.endTime!.isNotEmpty) {
+        try {
+          final endTimeParts = currentSession.endTime!.split(':');
+          if (endTimeParts.length >= 2) {
+            final hour = int.tryParse(endTimeParts[0]) ?? 0;
+            final minute = int.tryParse(endTimeParts[1]) ?? 0;
+            
+            // Create DateTime with today's date and the session time
+            final today = DateTime.now();
+            sessionEndTime.value = DateTime(
+              currentSession.date.year,
+              currentSession.date.month,
+              currentSession.date.day,
+              hour,
+              minute,
+            );
+            
+            print('Session end time: ${sessionEndTime.value}');
+          }
+        } catch (e) {
+          print('Error parsing end time: $e');
         }
       }
 
@@ -112,6 +123,7 @@ class CarouselAttendanceController extends GetxController {
       _timer!.cancel();
     }
 
+    print('Starting timer. Start time: $sessionStartTime, End time: $sessionEndTime');
     isTimerRunning.value = true;
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       elapsedTime.value++;
@@ -132,8 +144,10 @@ class CarouselAttendanceController extends GetxController {
   }
 
   void _updateRemainingTime() {
+    final now = DateTime.now();
+    
     if (sessionEndTime.value != null) {
-      final now = DateTime.now();
+      // Calculate remaining time until session ends
       final remaining = sessionEndTime.value!.difference(now);
 
       if (remaining.isNegative) {
@@ -146,14 +160,24 @@ class CarouselAttendanceController extends GetxController {
         remainingTime.value =
             '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
       }
+    } else if (sessionStartTime.value != null) {
+      // If no end time but we have start time, show elapsed time since start
+      final elapsed = now.difference(sessionStartTime.value!);
+      
+      final hours = elapsed.inHours;
+      final minutes = elapsed.inMinutes.remainder(60);
+      final seconds = elapsed.inSeconds.remainder(60);
+
+      remainingTime.value =
+          'Elapsed: ${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
     } else {
-      // If no end time, just show elapsed time
+      // If no start or end time, just show elapsed time since timer started
       final hours = elapsedTime.value ~/ 3600;
       final minutes = (elapsedTime.value ~/ 60) % 60;
       final seconds = elapsedTime.value % 60;
 
       remainingTime.value =
-          '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+          'Timer: ${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
     }
   }
 

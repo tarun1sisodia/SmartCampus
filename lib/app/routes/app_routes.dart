@@ -5,8 +5,10 @@ import 'package:attedance__/features/authentication/screens/login/login.dart';
 import 'package:attedance__/features/authentication/screens/onboarding/onboarding.dart';
 import 'package:attedance__/features/authentication/screens/signup/signup.dart';
 import 'package:attedance__/features/authentication/screens/signup/singup_widgets/verify_email_screen.dart';
+import 'package:attedance__/features/teacher/bindings/all_sessions_binding.dart';
 import 'package:attedance__/features/teacher/bindings/carousel_attendance_binding.dart';
 import 'package:attedance__/features/teacher/screens/about_screen.dart';
+import 'package:attedance__/features/teacher/screens/all_sessions_screen.dart';
 import 'package:attedance__/features/teacher/screens/attendance_reports_screen.dart';
 import 'package:attedance__/features/teacher/screens/calendar_screen.dart';
 import 'package:attedance__/features/teacher/screens/carousel_attendance_screen.dart';
@@ -46,6 +48,8 @@ class AppRoutes {
   static const String notifications = '/notifications';
   static const String calendar = '/calendar';
   static const String carouselAttendance = '/CarouselAttendanceScreen';
+
+  static const String allSessions = '/all-sessions';
 
   /// Get all application routes
   static List<GetPage> routes = [
@@ -182,6 +186,11 @@ class AppRoutes {
       },
       binding: StudentDetailBinding(),
       transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: AppRoutes.allSessions,
+      page: () => AllSessionsScreen(),
+      binding: AllSessionsBinding(),
     ),
   ];
 

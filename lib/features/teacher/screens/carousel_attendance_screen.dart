@@ -165,21 +165,31 @@ class CarouselAttendanceScreen extends StatelessWidget {
                 excusedCount: carouselAttendanceController.excusedCount.value,
               ),
             ),
-            // Session timer above carousel
+            // Session timer above carousel - make it more visible
             Obx(
-              () =>
-                  carouselAttendanceController.isTimerRunning.value
-                      ? Padding(
-                        padding: const EdgeInsets.only(bottom: TSizes.md),
-                        child: SessionTimerWidget(
-                          remainingTime:
-                              carouselAttendanceController.remainingTime.value,
-                          isSessionActive:
-                              !carouselAttendanceController.remainingTime.value
-                                  .contains('Ended'),
+              () => carouselAttendanceController.isTimerRunning.value
+                  ? Container(
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: TSizes.defaultSpace,
+                        vertical: TSizes.sm,
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: TSizes.md,
+                        vertical: TSizes.sm,
+                      ),
+                      decoration: BoxDecoration(
+                        color: dark ? TColors.darkerGrey : Colors.grey.shade100,
+                        borderRadius: BorderRadius.circular(TSizes.borderRadiusMd),
+                        border: Border.all(
+                          color: dark ? TColors.yellow.withOpacity(0.3) : TColors.deepPurple.withOpacity(0.3),
                         ),
-                      )
-                      : const SizedBox.shrink(),
+                      ),
+                      child: SessionTimerWidget(
+                        remainingTime: carouselAttendanceController.remainingTime.value,
+                        isSessionActive: !carouselAttendanceController.remainingTime.value.contains('Ended'),
+                      ),
+                    )
+                  : const SizedBox.shrink(),
             ),
 
             // Carousel of student cards

@@ -156,6 +156,12 @@ class MoreMenuScreen extends StatelessWidget {
       color: Colors.cyan,
       route: AppRoutes.calendar,
     ),
+    MenuItem(
+      title: 'All Sessions',
+      icon: Iconsax.calendar_1,
+      color: Colors.yellow,
+      route: AppRoutes.allSessions,
+    ),
   ];
 }
 
