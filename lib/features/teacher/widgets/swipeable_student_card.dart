@@ -5,7 +5,6 @@ import '../../../common/utils/constants/sized.dart';
 import '../../../common/utils/device/device_utility.dart';
 import '../../../common/utils/helpers/helper_function.dart';
 // Make sure this import is correct
-import '../../../common/utils/constants/screen_size_calculator.dart';
 
 class SwipeableStudentCard extends StatelessWidget {
   final StudentModel student;

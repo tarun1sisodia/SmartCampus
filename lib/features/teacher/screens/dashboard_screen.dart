@@ -67,7 +67,7 @@ class DashboardScreen extends StatelessWidget {
         actions: [
           // Notification icon or other actions
           IconButton(
-            icon: const Icon(Iconsax.settings),
+            icon: const Icon(Iconsax.setting),
             onPressed: () {
               Get.to(() => const TeacherSettingsScreen());
             },
