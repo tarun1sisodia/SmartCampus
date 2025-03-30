@@ -209,6 +209,9 @@ class TeacherProfileScreen extends StatelessWidget {
         Stack(
           children: [
             // Profile image with Hero animation
+            // Replace the profile image section in _buildProfileHeader method with this:
+
+            // Profile image with Hero animation
             Hero(
               tag: 'profileImage',
               child: Container(
@@ -220,10 +223,22 @@ class TeacherProfileScreen extends StatelessWidget {
                     color: dark ? TColors.yellow : TColors.deepPurple,
                     width: 2,
                   ),
-                  image: const DecorationImage(
-                    image: AssetImage('assets/logos/darkapplogo.png'),
-                    fit: BoxFit.cover,
-                  ),
+                  image:
+                      controller.user.value?.profileImageUrl != null &&
+                              controller.user.value!.profileImageUrl!.isNotEmpty
+                          ? DecorationImage(
+                            image: NetworkImage(
+                              controller.user.value!.profileImageUrl!,
+                            ),
+                            fit: BoxFit.cover,
+                            onError: (exception, stackTrace) {
+                              print('Error loading profile image: $exception');
+                            },
+                          )
+                          : const DecorationImage(
+                            image: AssetImage('assets/logos/darkapplogo.png'),
+                            fit: BoxFit.cover,
+                          ),
                 ),
               ),
             ),

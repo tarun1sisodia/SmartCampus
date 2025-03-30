@@ -22,7 +22,7 @@ class AllSessionsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'All Attendance Sessions',
+          'All Sessions',
           style: Theme.of(context).textTheme.headlineSmall,
         ),
         actions: [

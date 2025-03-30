@@ -1,7 +1,8 @@
 import 'package:attedance__/features/teacher/controllers/attendance_controller.dart';
 import 'package:attedance__/features/teacher/controllers/carousel_attendance_controller.dart';
-import 'package:attedance__/features/teacher/screens/carousel_attendance_screen.dart';
-import 'package:attedance__/features/teacher/screens/create_class_screen.dart';
+import 'package:attedance__/features/teacher/screens/all_sessions_screen.dart';
+// import 'package:attedance__/features/teacher/screens/carousel_attendance_screen.dart';
+// import 'package:attedance__/features/teacher/screens/create_class_screen.dart';
 import 'package:attedance__/features/teacher/screens/dashboard_screen.dart';
 import 'package:attedance__/features/teacher/screens/class_list_screen.dart';
 import 'package:attedance__/features/teacher/screens/more_menu_screen.dart';
@@ -139,19 +140,19 @@ class NavigationController extends GetxController {
     // CreateClassScreen(),
     ClassListScreen(),
     // Replace direct instantiation with a method that ensures the controller exists
-    TeacherMessagesScreen(),
+    AllSessionsScreen(),
     const MoreMenuScreen(),
   ];
   
   // Helper method to ensure controller exists before creating screen
-  static Widget _getCarouselScreen() {
-    // Make sure the controllers are registered
-    if (!Get.isRegistered<AttendanceController>()) {
-      Get.put(AttendanceController());
-    }
-    if (!Get.isRegistered<CarouselAttendanceController>()) {
-      Get.put(CarouselAttendanceController());
-    }
-    return CarouselAttendanceScreen();
-  }
+  // static Widget _getCarouselScreen() {
+  //   // Make sure the controllers are registered
+  //   if (!Get.isRegistered<AttendanceController>()) {
+  //     Get.put(AttendanceController());
+  //   }
+  //   if (!Get.isRegistered<CarouselAttendanceController>()) {
+  //     Get.put(CarouselAttendanceController());
+  //   }
+  //   return CarouselAttendanceScreen();
+  // }
 }

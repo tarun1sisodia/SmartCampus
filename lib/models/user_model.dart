@@ -8,6 +8,7 @@ class UserModel {
   final String? phone;
   final String? profileImageUrl;
   final DateTime? createdAt;
+  
 
   UserModel({
     required this.id,

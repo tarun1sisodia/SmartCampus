@@ -1,5 +1,6 @@
 import 'package:attedance__/features/teacher/screens/teacher_profile_screen.dart';
 import 'package:attedance__/features/teacher/screens/teacher_settings_screen.dart';
+import 'package:attedance__/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -28,36 +29,48 @@ class DashboardScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         // Replace title with profile image on the left
-        leading: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Hero(
-            tag: 'profileImage',
-            child: GestureDetector(
-              onTap: () {
-                // Navigate to profile screen with standard animation
-                Get.to(
-                  () => const TeacherProfileScreen(),
-                  transition: Transition.rightToLeft,
-                  duration: const Duration(milliseconds: 300),
-                );
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: dark ? TColors.yellow : TColors.deepPurple,
-                    width: 2,
-                  ),
-                  image: const DecorationImage(
+        // Replace the Hero widget in the appBar's leading section with this:
+
+leading: Padding(
+  padding: const EdgeInsets.all(8.0),
+  child: Hero(
+    tag: 'profileImage',
+    child: GestureDetector(
+      onTap: () => Get.to(() => const TeacherProfileScreen()),
+      child: FutureBuilder<UserModel?>(
+        future: _getUserData(),
+        builder: (context, snapshot) {
+          return Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: dark ? TColors.yellow : TColors.deepPurple,
+                width: 2,
+              ),
+              image: snapshot.hasData && 
+                    snapshot.data?.profileImageUrl != null && 
+                    snapshot.data!.profileImageUrl!.isNotEmpty
+                ? DecorationImage(
+                    image: NetworkImage(snapshot.data!.profileImageUrl!),
+                    fit: BoxFit.cover,
+                    onError: (exception, stackTrace) {
+                      print('Error loading profile image: $exception');
+                    },
+                  )
+                : const DecorationImage(
                     image: AssetImage('assets/logos/darkapplogo.png'),
                     fit: BoxFit.cover,
                   ),
-                ),
-              ),
             ),
-          ),
-        ),
-        // Add "Hi, username" in the app bar
+          );
+        },
+      ),
+    ),
+  ),
+),
+ // Add "Hi, username" in the app bar
         title: Text(
           'Hi, $userName',
           style: Theme.of(
@@ -138,6 +151,7 @@ class DashboardScreen extends StatelessWidget {
                           ),
                           onChanged: (value) {
                             isSearching.value = value.isNotEmpty;
+                            dashboardController.searchClasses(value);
                             // Implement your search logic here
                           },
                         ),
@@ -150,6 +164,7 @@ class DashboardScreen extends StatelessWidget {
                                   onPressed: () {
                                     searchController.clear();
                                     isSearching.value = false;
+                                    dashboardController.searchClasses('');
                                     // Clear search results
                                   },
                                 )
@@ -403,5 +418,31 @@ class DashboardScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<UserModel?> _getUserData() async {
+    try {
+      final currentUser = Supabase.instance.client.auth.currentUser;
+      if (currentUser == null) return null;
+      
+      final userData = await Supabase.instance.client
+          .from('users')
+          .select()
+          .eq('id', currentUser.id)
+          .maybeSingle();
+      
+      if (userData != null) {
+        return UserModel.fromJson({
+          ...userData,
+          'id': currentUser.id,
+          'email': currentUser.email ?? '',
+        });
+      }
+      
+      return null;
+    } catch (e) {
+      print('Error fetching user data: $e');
+      return null;
+    }
   }
 }
