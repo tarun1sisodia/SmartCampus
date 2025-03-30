@@ -28,11 +28,14 @@ The Attendance Management System is a cross-platform Flutter application designe
    ```bash
    cd attedance__
    ```
-3. Install dependencies:
+3. Update Supabase secrets:
+   Replace the placeholder Supabase URL and API key in the project with your own.
+   These can be found in your Supabase project settings.
+4. Install dependencies:
    ```bash
    flutter pub get
    ```
-4. Run the application:
+5. Run the application:
    ```bash
    flutter run
    ```
