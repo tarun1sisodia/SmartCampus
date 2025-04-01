@@ -1,3 +1,4 @@
+import 'package:attedance__/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -24,7 +25,22 @@ class ClassListScreen extends StatelessWidget {
           'My Classes',
           style: Theme.of(context).textTheme.headlineSmall,
         ),
+        actions: [
+          // Add refresh button here
+          IconButton(
+            onPressed: () => classController.loadClasses(),
+            icon: const Icon(Iconsax.refresh),
+            tooltip: 'Refresh',
+          ),
+          const SizedBox(width: TSizes.sm),
+          IconButton(
+            onPressed: () => Get.toNamed(AppRoutes.reports),
+            icon: const Icon(Iconsax.chart),
+            tooltip: 'Reports',
+          ),
+        ],
       ),
+
       floatingActionButton: FloatingActionButton(
         onPressed: () => Get.to(() => CreateClassScreen()),
         backgroundColor: dark ? TColors.blue : TColors.yellow,

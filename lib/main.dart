@@ -4,12 +4,14 @@ import 'package:attedance__/services/storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:get_storage/get_storage.dart';
+import 'services/language_service.dart';
 
   /// The main entry point of the app.
   ///
   /// Initializes the app's bindings, services, and global state.
   /// Checks if the user is already logged in and tries to log in
-  /// automatically if credentials are saved.
+/// automatically if credentials are saved.
   /// Starts the app normally even if auto-login fails.
   ///
 /// Main entry point of the application.
@@ -25,6 +27,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 Future<void> main() async {
   //Intializing the binding for the app .
   WidgetsFlutterBinding.ensureInitialized();
+  await GetStorage.init();
 
   // Initialize Supabase by directly providing the url and key . they are very secret and import for app to run with backend properly .
   await Supabase.initialize(
@@ -35,6 +38,7 @@ Future<void> main() async {
 
   // Initialize services
   await Get.putAsync(() => StorageService().init());
+  await Get.putAsync(() => LanguageService().init());
 
   // Initialize global bindings
   AppBindings.initGlobalBindings();

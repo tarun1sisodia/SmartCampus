@@ -12,13 +12,13 @@ import 'package:iconsax/iconsax.dart';
 
 class SignupForm extends StatelessWidget {
   SignupForm({super.key});
-
-  final controller = Get.find<SignupController>();
-  final _formKey = GlobalKey<FormState>();
-
+  
+  final controller = Get.put(SignupController());
+  
   @override
   Widget build(BuildContext context) {
     final dark = THelperFunction.isDarkMode(context);
+    final _formKey = GlobalKey<FormState>();
 
     return Form(
       key: _formKey,

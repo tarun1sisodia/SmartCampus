@@ -22,6 +22,12 @@ class SupabaseAuthController extends GetxController {
   final supabase = Supabase.instance.client;
 
   @override
+  void onInit() {
+    super.onInit();
+    loadSavedCredentials();
+  }
+
+  @override
   void onClose() {
     emailController.dispose();
     passwordController.dispose();
@@ -29,6 +35,20 @@ class SupabaseAuthController extends GetxController {
   }
 
   final rememberMe = false.obs;
+
+  void loadSavedCredentials() {
+    final remember = StorageService.instance.getRememberUserStatus();
+    if (remember) {
+      final email = StorageService.instance.getUserEmail();
+      final password = StorageService.instance.getUserPassword();
+
+      if (email != null && password != null) {
+        emailController.text = email;
+        passwordController.text = password;
+        rememberMe.value = true;
+      }
+    }
+  }
 
   void setRememberMe(bool value) {
     rememberMe.value = value;
@@ -40,9 +60,19 @@ class SupabaseAuthController extends GetxController {
         emailController.text,
         passwordController.text,
       );
+      // Show a confirmation message
+      TSnackBar.showInfo(
+        message: 'Your credentials will be remembered for next login',
+        title: 'Remember Me',
+      );
     } else {
       // Clear saved credentials
       StorageService.instance.clearUserCredentials();
+      // Show a confirmation message
+      TSnackBar.showInfo(
+        message: 'Your credentials will not be saved',
+        title: 'Remember Me',
+      );
     }
   }
 
@@ -64,15 +94,16 @@ class SupabaseAuthController extends GetxController {
             passwordController.text,
           );
         }
-      
+
         // Check if user exists in the users table, if not create a new entry
         try {
-          final userData = await supabase
-              .from('users')
-              .select()
-              .eq('id', response.user!.id)
-              .maybeSingle();
-        
+          final userData =
+              await supabase
+                  .from('users')
+                  .select()
+                  .eq('id', response.user!.id)
+                  .maybeSingle();
+
           if (userData == null) {
             // User doesn't exist in the database yet, create a new entry
             await supabase.from('users').insert({
@@ -87,19 +118,49 @@ class SupabaseAuthController extends GetxController {
           print('Error checking/creating user data: $e');
           // Continue with navigation even if there's an error here
         }
-      
+
+        // Show success message
+        TSnackBar.showSuccess(
+          message: 'You have successfully logged in',
+          title: 'Welcome Back',
+        );
+
         // Navigate to home using named route
         Get.offAllNamed(AppRoutes.home);
       } else {
         errorMessage.value = 'Authentication failed';
+        TSnackBar.showAuthError(
+          message: 'Authentication failed. Please try again.',
+        );
       }
     } catch (e) {
       errorMessage.value = e.toString();
-      TSnackBar.showAuthError(message: e.toString());
+
+      // Enhanced error handling with specific messages
+      if (e is AuthException) {
+        if (e.message.contains('Invalid login credentials')) {
+          TSnackBar.showAuthError(
+            message: 'Invalid email or password. Please try again.',
+          );
+        } else if (e.message.contains('Email not confirmed')) {
+          TSnackBar.showAuthError(
+            message: 'Please verify your email before logging in.',
+          );
+        } else {
+          TSnackBar.showAuthError(message: e.message);
+        }
+      } else if (e.toString().contains('network') ||
+          e.toString().contains('connection') ||
+          e.toString().contains('timeout')) {
+        TSnackBar.showNetworkError();
+      } else {
+        TSnackBar.showServerError(message: e.toString());
+      }
     } finally {
       isLoading.value = false;
     }
   }
+
   Future<void> signUpWithEmail(String name, String phone) async {
     try {
       isLoading.value = true;
@@ -117,10 +178,39 @@ class SupabaseAuthController extends GetxController {
 
       if (response.user == null) {
         errorMessage.value = 'Registration failed';
+        TSnackBar.showAuthError(
+          message: 'Registration failed. Please try again.',
+        );
+      } else {
+        // Show success message
+        TSnackBar.showSuccess(
+          message:
+              'Registration successful! Please check your email to verify your account.',
+          title: 'Account Created',
+        );
       }
       // We don't store user data yet - we'll do that after email verification
     } catch (e) {
       errorMessage.value = e.toString();
+
+      // Enhanced error handling with specific messages
+      if (e is AuthException) {
+        if (e.message.contains('already registered')) {
+          TSnackBar.showAuthError(
+            message:
+                'This email is already registered. Please use a different email or try logging in.',
+          );
+        } else {
+          TSnackBar.showAuthError(message: e.message);
+        }
+      } else if (e.toString().contains('network') ||
+          e.toString().contains('connection') ||
+          e.toString().contains('timeout')) {
+        TSnackBar.showNetworkError();
+      } else {
+        TSnackBar.showServerError(message: e.toString());
+      }
+
       rethrow; // Rethrow to handle in the UI
     } finally {
       isLoading.value = false;
@@ -153,10 +243,31 @@ class SupabaseAuthController extends GetxController {
         // Clear temporary data
         _tempName = '';
         _tempPhone = '';
+
+        // Show success message
+        TSnackBar.showSuccess(
+          message: 'Your account has been fully set up!',
+          title: 'Setup Complete',
+        );
       }
     } catch (e) {
       print('Error storing user data: $e');
       errorMessage.value = 'Failed to store user data';
+
+      if (e.toString().contains('network') ||
+          e.toString().contains('connection') ||
+          e.toString().contains('timeout')) {
+        TSnackBar.showNetworkError();
+      } else if (e.toString().contains('duplicate') ||
+          e.toString().contains('unique constraint')) {
+        TSnackBar.showAuthError(
+          message: 'This user data already exists in our system.',
+        );
+      } else {
+        TSnackBar.showServerError(
+          message: 'Failed to store your information. Please try again later.',
+        );
+      }
     } finally {
       isLoading.value = false;
     }
@@ -166,8 +277,30 @@ class SupabaseAuthController extends GetxController {
     try {
       isLoading.value = true;
       await supabase.auth.resend(type: OtpType.signup, email: email);
+
+      // Show success message
+      TSnackBar.showSuccess(
+        message: 'Verification email has been resent to $email',
+        title: 'Email Sent',
+      );
     } catch (e) {
       errorMessage.value = e.toString();
+
+      if (e.toString().contains('network') ||
+          e.toString().contains('connection')) {
+        TSnackBar.showNetworkError();
+      } else if (e.toString().contains('too many requests') ||
+          e.toString().contains('rate limit')) {
+        TSnackBar.showAuthError(
+          message:
+              'Too many attempts. Please wait a moment before trying again.',
+        );
+      } else {
+        TSnackBar.showServerError(
+          message: 'Failed to resend verification email: ${e.toString()}',
+        );
+      }
+
       rethrow;
     } finally {
       isLoading.value = false;
@@ -180,6 +313,9 @@ class SupabaseAuthController extends GetxController {
       final response = await supabase.auth.getUser();
       return response.user?.emailConfirmedAt != null;
     } catch (e) {
+      TSnackBar.showServerError(
+        message: 'Failed to check email verification status: ${e.toString()}',
+      );
       return false;
     }
   }
@@ -192,10 +328,55 @@ class SupabaseAuthController extends GetxController {
       // Request password reset email from Supabase
       await supabase.auth.resetPasswordForEmail(emailController.text.trim());
 
-      // Success - no need to set a message as we'll navigate to confirmation screen
+      // Show success message
+      TSnackBar.showSuccess(
+        message: 'Password reset instructions have been sent to your email',
+        title: 'Reset Email Sent',
+      );
     } catch (e) {
       errorMessage.value = e.toString();
+
+      if (e.toString().contains('network') ||
+          e.toString().contains('connection')) {
+        TSnackBar.showNetworkError();
+      } else if (e.toString().contains('not found') ||
+          e.toString().contains('no user')) {
+        TSnackBar.showAuthError(
+          message: 'No account found with this email address.',
+        );
+      } else {
+        TSnackBar.showServerError(
+          message: 'Failed to send password reset email: ${e.toString()}',
+        );
+      }
+
       rethrow; // Rethrow to handle in the UI
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> signOut() async {
+    try {
+      isLoading.value = true;
+
+      await supabase.auth.signOut();
+
+      // Clear saved credentials if not using remember me
+      if (!rememberMe.value) {
+        StorageService.instance.clearUserCredentials();
+      }
+
+      // Show success message
+      TSnackBar.showSuccess(
+        message: 'You have been successfully logged out',
+        title: 'Signed Out',
+      );
+
+      // Navigate to login screen
+      Get.offAllNamed(AppRoutes.login);
+    } catch (e) {
+      TSnackBar.showServerError(message: 'Failed to sign out: ${e.toString()}');
     } finally {
       isLoading.value = false;
     }

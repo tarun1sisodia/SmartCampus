@@ -91,33 +91,39 @@ class LoginForm extends StatelessWidget {
                 height: TSizes.appBarHeight,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                  backgroundColor: dark ? TColors.yellow : TColors.deepPurple,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                    side: BorderSide(
-                    color: dark ? TColors.deepPurple : TColors.yellow,
-                    width: 2.0,
-                    ),
-                  ),
-                  ),
-                  onPressed: controller.isLoading.value
-                    ? null
-                    : () {
-                      if (_formKey.currentState!.validate()) {
-                      if (controller.emailController.text.isNotEmpty &&
-                        controller.passwordController.text.isNotEmpty) {
-                        controller.signInWithEmail();
-                      }
-                      }
-                    },
-                  child: controller.isLoading.value
-                    ? const CircularProgressIndicator()
-                    : Text(
-                      TTexts.signIn,
-                      style: TextStyle(
-                      color: dark ? TColors.deepPurple : TColors.yellow,
+                    backgroundColor: dark ? TColors.black : TColors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                      side: BorderSide(
+                        color: dark ? TColors.yellow : TColors.deepPurple,
+                        width: 2.0,
                       ),
                     ),
+                  ),
+                  onPressed:
+                      controller.isLoading.value
+                          ? null
+                          : () {
+                            if (_formKey.currentState!.validate()) {
+                              if (controller.emailController.text.isNotEmpty &&
+                                  controller
+                                      .passwordController
+                                      .text
+                                      .isNotEmpty) {
+                                controller.signInWithEmail();
+                              }
+                            }
+                          },
+                  child:
+                      controller.isLoading.value
+                          ? const CircularProgressIndicator()
+                          : Text(
+                            TTexts.signIn,
+                            // style: TextStyle(
+                            //   color: dark ? TColors.deepPurple : TColors.yellow,
+                            // ),
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
                 ),
               ),
             ),

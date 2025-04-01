@@ -96,54 +96,14 @@ class MoreMenuScreen extends StatelessWidget {
 
   // Define menu items with routes instead of callbacks
   static final List<MenuItem> _menuItems = [
-    MenuItem(
-      title: 'Reports',
-      icon: Iconsax.chart,
-      color: Colors.blue,
-      route: AppRoutes.reports,
-    ),
-    MenuItem(
-      title: 'Settings',
-      icon: Iconsax.setting,
-      color: Colors.purple,
-      route: AppRoutes.settings,
-    ),
+   
     MenuItem(
       title: 'Messages',
       icon: Iconsax.message,
       color: Colors.orange,
       route: AppRoutes.message,
     ),
-    MenuItem(
-      title: 'Help',
-      icon: Iconsax.info_circle,
-      color: Colors.green,
-      route: AppRoutes.help,
-    ),
-    MenuItem(
-      title: 'Feedback',
-      icon: Iconsax.message_question,
-      color: Colors.orange,
-      route: AppRoutes.feedback,
-    ),
-    MenuItem(
-      title: 'About',
-      icon: Iconsax.info_circle,
-      color: Colors.red,
-      route: AppRoutes.about,
-    ),
-    MenuItem(
-      title: 'Export Data',
-      icon: Iconsax.export,
-      color: Colors.teal,
-      route: AppRoutes.export,
-    ),
-    MenuItem(
-      title: 'Import Data',
-      icon: Iconsax.import,
-      color: Colors.indigo,
-      route: AppRoutes.import,
-    ),
+    
     MenuItem(
       title: 'Notifications',
       icon: Iconsax.notification,

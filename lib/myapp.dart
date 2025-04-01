@@ -1,6 +1,8 @@
 import 'package:attedance__/app/bindings/app_bindings.dart';
 import 'package:attedance__/app/routes/app_routes.dart';
 import 'package:attedance__/app/theme/custom_themes/text_field_theme.dart';
+import 'package:attedance__/common/translations/app_translations.dart';
+import 'package:attedance__/services/language_service.dart';
 import 'package:attedance__/services/storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -49,8 +51,13 @@ class MyApp extends StatelessWidget {
 
     print('Initial route: $initialRoute');
 
+    final languageService = Get.find<LanguageService>();
+
     return GetMaterialApp(
       title: 'Attendance App',
+      translations: AppTranslations(),
+      locale: languageService.currentLocale.value,
+      fallbackLocale: const Locale('en', 'US'),
       // Theme Data is for the UI in Light theme
       theme: ThemeData(
         primarySwatch: Colors.blue,

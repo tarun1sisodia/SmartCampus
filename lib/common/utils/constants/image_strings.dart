@@ -1,6 +1,7 @@
 class TImageStrings {
-  static const String darkApplogo = "assets/logos/darkapplogo.png";
-  static const String lightApplogo = "assets/logos/lightapplogo.png";
+  static const String appLogo = "assets/logos/smartcampus.png";
+  static const String darkApplogo = "assets/logos/1.png";
+  static const String lightApplogo = "assets/logos/2.png";
 
   static const String google = "assets/icons/google.png";
   static const String facebook = "assets/icons/facebook.png";

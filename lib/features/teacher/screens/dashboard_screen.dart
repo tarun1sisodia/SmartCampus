@@ -112,7 +112,11 @@ class DashboardScreen extends StatelessWidget {
             },
           ),
           const SizedBox(width: TSizes.sm),
-          
+          IconButton(
+            onPressed: () => dashboardController.loadDashboardData(),
+            icon: const Icon(Iconsax.refresh),
+            tooltip: 'Refresh',
+          ),
         ],
       ),
       body: Obx(() {

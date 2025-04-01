@@ -1,3 +1,4 @@
+import 'package:attedance__/features/auth/controllers/change_password_controller.dart';
 import 'package:attedance__/features/authentication/controllers/controllers_onboarding/onboarding_controller.dart';
 import 'package:attedance__/features/authentication/controllers/forgot_password_controller.dart';
 import 'package:attedance__/features/authentication/controllers/login_controller.dart';
@@ -52,11 +53,14 @@ class AppBindings {
   static void registerHomeBindings() {
     Get.lazyPut(() => TeacherProfileController(), fenix: true);
   }
-  static void createClassScreen()
-    {
-     Get.lazyPut(() => ClassController(), fenix: true); 
-    }
-  
+
+  static void createClassScreen() {
+    Get.lazyPut(() => ClassController(), fenix: true);
+  }
+
+  static void registerChangePasswordBindings() {
+    Get.lazyPut(() => ChangePasswordController(), fenix: true);
+  }
 }
 
 /// Individual bindings classes for use with GetX routing
@@ -121,7 +125,19 @@ class HomeBinding extends Bindings {
   }
 }
 
-class CreateClassScreen  extends Bindings {
+class ChangePasswordBinding extends Bindings {
+  @override
+  void dependencies() {
+    // First remove any existing instance to prevent dependency conflicts
+    if (Get.isRegistered<ChangePasswordController>()) {
+      Get.delete<ChangePasswordController>(force: true);
+    }
+    // Then create a new one
+    Get.lazyPut(() => ChangePasswordController(), fenix: true);
+  }
+}
+
+class CreateClassScreen extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut(() => ClassController(), fenix: true);

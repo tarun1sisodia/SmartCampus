@@ -1,4 +1,5 @@
 import 'package:attedance__/app/bindings/app_bindings.dart';
+import 'package:attedance__/features/auth/screens/change_password_screen.dart';
 import 'package:attedance__/features/authentication/screens/forgot_password/forgot_password_2.dart';
 import 'package:attedance__/features/authentication/screens/forgot_password/reset_password_confirmation.dart';
 import 'package:attedance__/features/authentication/screens/login/login.dart';
@@ -48,11 +49,18 @@ class AppRoutes {
   static const String notifications = '/notifications';
   static const String calendar = '/calendar';
   static const String carouselAttendance = '/CarouselAttendanceScreen';
-
+  static const String changePassword = '/change-password';
   static const String allSessions = '/all-sessions';
 
   /// Get all application routes
   static List<GetPage> routes = [
+    GetPage(
+      name: changePassword,
+      page: () => ChangePasswordScreen(),
+      binding: ChangePasswordBinding(),
+      transition: Transition.rightToLeft,
+      transitionDuration: const Duration(milliseconds: 300),
+    ),
     GetPage(
       name: carouselAttendance,
       page: () => CarouselAttendanceScreen(),
@@ -63,7 +71,7 @@ class AppRoutes {
 
     GetPage(
       name: reports,
-      page: () => const ReportsScreen(),
+      page: () => ReportsScreen(),
       binding: ReportsBinding(),
       transition: Transition.rightToLeft,
     ),

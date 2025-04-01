@@ -1,5 +1,6 @@
 import 'package:attedance__/features/teacher/screens/teacher_profile_screen.dart';
 import 'package:attedance__/app/routes/app_routes.dart';
+import 'package:attedance__/services/language_service.dart';
 import 'package:attedance__/services/storage_service.dart';
 import 'package:attedance__/common/utils/constants/colors.dart';
 import 'package:attedance__/common/utils/constants/sized.dart';
@@ -18,6 +19,7 @@ class TeacherSettingsScreen extends StatelessWidget {
     final controller = Get.put(
       TeacherProfileController(),
     ); // Ensure initialization
+    final languageService = Get.find<LanguageService>();
 
     return Scaffold(
       appBar: AppBar(
@@ -49,7 +51,7 @@ class TeacherSettingsScreen extends StatelessWidget {
                   icon: Iconsax.password_check,
                   dark: dark,
                   onTap: () {
-                    // Implement change password functionality
+                    Get.toNamed(AppRoutes.changePassword);
                   },
                 ),
                 _buildProfileMenuItem(
@@ -85,12 +87,14 @@ class TeacherSettingsScreen extends StatelessWidget {
                   ),
                 ),
                 _buildProfileMenuItem(
-                  title: 'Language',
+                  title: 'language'.tr,
                   icon: Iconsax.language_square,
                   dark: dark,
-                  trailing: const Text('English'),
+                  trailing: Obx(
+                    () => Text(languageService.getCurrentLanguageName()),
+                  ),
                   onTap: () {
-                    // Implement language selection
+                    _showLanguageSelectionDialog(context, languageService);
                   },
                 ),
                 _buildProfileMenuItem(
@@ -98,7 +102,24 @@ class TeacherSettingsScreen extends StatelessWidget {
                   icon: Iconsax.notification,
                   dark: dark,
                   onTap: () {
-                    // Implement notification settings
+                    Get.toNamed(AppRoutes.notifications);
+                  },
+                ),
+
+                _buildProfileMenuItem(
+                  title: 'Data Import',
+                  icon: Iconsax.import_1, // Updated icon for Data Import
+                  dark: dark,
+                  onTap: () {
+                    Get.toNamed(AppRoutes.import);
+                  },
+                ),
+                _buildProfileMenuItem(
+                  title: 'Data Export',
+                  icon: Iconsax.export_3, // Updated icon for Data Export
+                  dark: dark,
+                  onTap: () {
+                    Get.toNamed(AppRoutes.export);
                   },
                 ),
 
@@ -246,7 +267,9 @@ class TeacherSettingsScreen extends StatelessWidget {
                                             );
 
                                             // Navigate to login screen
-                                            Get.offAllNamed(AppRoutes.onboarding);
+                                            Get.offAllNamed(
+                                              AppRoutes.onboarding,
+                                            );
                                           } catch (e) {
                                             // Dismiss loading dialog
                                             Get.back();
@@ -338,15 +361,15 @@ class TeacherSettingsScreen extends StatelessWidget {
                   icon: Iconsax.support,
                   dark: dark,
                   onTap: () {
-                    // Implement help & support
+                    Get.toNamed(AppRoutes.help);
                   },
                 ),
                 _buildProfileMenuItem(
-                  title: 'Terms of Service',
-                  icon: Iconsax.document,
+                  title: 'Feedback',
+                  icon: Iconsax.message_question,
                   dark: dark,
                   onTap: () {
-                    // Implement terms of service
+                   Get.toNamed(AppRoutes.feedback);
                   },
                 ),
                 _buildProfileMenuItem(
@@ -362,7 +385,7 @@ class TeacherSettingsScreen extends StatelessWidget {
                   icon: Iconsax.info_circle,
                   dark: dark,
                   onTap: () {
-                    // Implement about screen
+                    Get.toNamed(AppRoutes.about);
                   },
                 ),
               ],
@@ -410,7 +433,49 @@ class TeacherSettingsScreen extends StatelessWidget {
       ),
     );
   }
-
+  
+void _showLanguageSelectionDialog(BuildContext context, LanguageService languageService) {
+    final dark = THelperFunction.isDarkMode(context);
+    
+    Get.dialog(
+      AlertDialog(
+        title: Text('select_language'.tr),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: languageService.languages.length,
+            itemBuilder: (context, index) {
+              final language = languageService.languages[index];
+              final isSelected = languageService.currentLocale.value.toString() == 
+                  language['locale'].toString();
+              
+              return ListTile(
+                title: Text(language['name']),
+                trailing: isSelected 
+                    ? Icon(
+                        Icons.check_circle,
+                        color: dark ? TColors.yellow : TColors.deepPurple,
+                      )
+                    : null,
+                onTap: () {
+                  languageService.changeLanguage(language['code']);
+                  Get.back();
+                  TSnackBar.showSuccess(message: 'language_changed'.tr);
+                },
+              );
+            },
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: Text('no'.tr),
+          ),
+        ],
+      ),
+    );
+  }
   Widget _buildSection({
     required BuildContext context,
     required String title,
@@ -468,6 +533,7 @@ class TeacherSettingsScreen extends StatelessWidget {
       ),
       title: Text(title),
       trailing: trailing ?? const Icon(Iconsax.arrow_right_3, size: 18),
+
     );
   }
 }

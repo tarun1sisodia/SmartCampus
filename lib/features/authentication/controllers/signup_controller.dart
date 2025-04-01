@@ -19,6 +19,12 @@ class SignupController extends GetxController {
   final supabase = Supabase.instance.client;
 
   @override
+  void onInit() {
+    super.onInit();
+    // Initialize controllers if needed
+  }
+
+  @override
   void onClose() {
     // Dispose controllers to prevent memory leaks
     emailController.dispose();
@@ -103,7 +109,7 @@ class SignupController extends GetxController {
         TSnackBar.showError(
           message: 'An account with this email already exists.',
           title: 'Registration Failed',
-          source: MessageSource.server, // Removed TSnackBar. prefix
+          source: MessageSource.server,
         );
       } else {
         TSnackBar.showServerError(message: e.toString());

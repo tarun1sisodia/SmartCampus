@@ -61,6 +61,9 @@ dependencies:
   carousel_slider: ^5.0.0
   flutter_launcher_icons: ^0.14.3
   shorebird_code_push: ^2.0.3
+  pdf: ^3.11.3
+  file_picker: ^10.0.0
+  universal_html: ^2.2.4
 
 dev_dependencies:
   flutter_test:
