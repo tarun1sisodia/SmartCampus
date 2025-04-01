@@ -77,10 +77,13 @@ class AllSessionsScreen extends StatelessWidget {
                         hintText: 'Search by class or subject',
                         prefixIcon: const Icon(Iconsax.search_normal),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(TSizes.inputFieldRadius),
+                          borderRadius: BorderRadius.circular(
+                            TSizes.inputFieldRadius,
+                          ),
                         ),
                       ),
-                      onChanged: (value) => allSessionsController.filterSessions(),
+                      onChanged:
+                          (value) => allSessionsController.filterSessions(),
                     ),
                   ),
                   IconButton(
@@ -94,11 +97,15 @@ class AllSessionsScreen extends StatelessWidget {
             // Sessions list
             Expanded(
               child: ListView.builder(
-                padding: const EdgeInsets.symmetric(horizontal: TSizes.defaultSpace),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: TSizes.defaultSpace,
+                ),
                 itemCount: allSessionsController.filteredSessions.length,
                 itemBuilder: (context, index) {
                   final session = allSessionsController.filteredSessions[index];
-                  final formattedDate = DateFormat('EEEE, MMMM d, yyyy').format(session.date);
+                  final formattedDate = DateFormat(
+                    'EEEE, MMMM d, yyyy',
+                  ).format(session.date);
 
                   return Card(
                     margin: const EdgeInsets.only(bottom: TSizes.spaceBtwItems),
@@ -108,7 +115,8 @@ class AllSessionsScreen extends StatelessWidget {
                     ),
                     child: ExpansionTile(
                       leading: CircleAvatar(
-                        backgroundColor: dark ? TColors.yellow : TColors.deepPurple,
+                        backgroundColor:
+                            dark ? TColors.yellow : TColors.deepPurple,
                         child: Text(
                           DateFormat('d').format(session.date),
                           style: TextStyle(
@@ -119,9 +127,8 @@ class AllSessionsScreen extends StatelessWidget {
                       ),
                       title: Text(
                         session.className ?? 'Unknown Class',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -142,7 +149,8 @@ class AllSessionsScreen extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              if (session.startTime != null && session.endTime != null)
+                              if (session.startTime != null &&
+                                  session.endTime != null)
                                 Text(
                                   'Time: ${session.startTime} - ${session.endTime}',
                                   style: Theme.of(context).textTheme.bodyMedium,
@@ -154,35 +162,68 @@ class AllSessionsScreen extends StatelessWidget {
                               ),
                               const SizedBox(height: TSizes.spaceBtwItems),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 children: [
                                   ElevatedButton.icon(
                                     onPressed: () {
                                       // Set current session and navigate to mark attendance
-                                      allSessionsController.attendanceController.currentSessionId.value = session.id;
-                                      allSessionsController.attendanceController.selectedClass.value = session.classModel;
+                                      allSessionsController
+                                          .attendanceController
+                                          .currentSessionId
+                                          .value = session.id;
+                                      allSessionsController
+                                          .attendanceController
+                                          .selectedClass
+                                          .value = session.classModel;
                                       Get.to(() => MarkAttendanceScreen());
                                     },
                                     icon: const Icon(Iconsax.clipboard_text),
                                     label: const Text('Standard View'),
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor: dark ? TColors.yellow : TColors.deepPurple,
-                                      foregroundColor: dark ? Colors.black : Colors.white,
+                                      backgroundColor:
+                                          dark
+                                              ? TColors.yellow
+                                              : TColors.deepPurple,
+                                      foregroundColor:
+                                          dark ? Colors.black : Colors.white,
                                     ),
                                   ),
                                   ElevatedButton.icon(
                                     onPressed: () {
                                       // Set current session and navigate to carousel attendance
-                                      allSessionsController.attendanceController.currentSessionId.value = session.id;
-                                      allSessionsController.attendanceController.selectedClass.value = session.classModel;
-                                      Get.to(() => CarouselAttendanceScreen(), binding: CarouselAttendanceBinding());
+                                      allSessionsController
+                                          .attendanceController
+                                          .currentSessionId
+                                          .value = session.id;
+                                      allSessionsController
+                                          .attendanceController
+                                          .selectedClass
+                                          .value = session.classModel;
+                                      Get.to(
+                                        () => CarouselAttendanceScreen(),
+                                        binding: CarouselAttendanceBinding(),
+                                      );
                                     },
                                     icon: const Icon(Iconsax.play_circle),
                                     label: const Text('Carousel View'),
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor: dark ? TColors.blue : TColors.yellow,
-                                      foregroundColor: dark ? Colors.white : Colors.black,
+                                      backgroundColor:
+                                          dark ? TColors.blue : TColors.yellow,
+                                      foregroundColor:
+                                          dark ? Colors.white : Colors.black,
                                     ),
+                                  ),
+                                  // Add delete button
+                                  IconButton(
+                                    onPressed: () {
+                                      _showDeleteConfirmation(
+                                        context,
+                                        session.id,
+                                      );
+                                    },
+                                    icon: const Icon(Iconsax.trash),
+                                    color: Colors.red,
                                   ),
                                 ],
                               ),
@@ -223,98 +264,113 @@ class AllSessionsScreen extends StatelessWidget {
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: TSizes.spaceBtwItems),
-            
+
             // Date filter
-            Text(
-              'Date Range',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
+            Text('Date Range', style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: TSizes.spaceBtwItems / 2),
             Row(
               children: [
                 Expanded(
-                  child: Obx(() => OutlinedButton(
-                    onPressed: () async {
-                      final pickedDate = await showDatePicker(
-                        context: context,
-                        initialDate: allSessionsController.startDate.value,
-                        firstDate: DateTime(2020),
-                        lastDate: DateTime.now().add(const Duration(days: 365)),
-                      );
-                      if (pickedDate != null) {
-                        allSessionsController.startDate.value = pickedDate;
-                        allSessionsController.filterSessions();
-                      }
-                    },
-                    child: Text(
-                      DateFormat('MMM d, yyyy').format(allSessionsController.startDate.value),
+                  child: Obx(
+                    () => OutlinedButton(
+                      onPressed: () async {
+                        final pickedDate = await showDatePicker(
+                          context: context,
+                          initialDate: allSessionsController.startDate.value,
+                          firstDate: DateTime(2020),
+                          lastDate: DateTime.now().add(
+                            const Duration(days: 365),
+                          ),
+                        );
+                        if (pickedDate != null) {
+                          allSessionsController.startDate.value = pickedDate;
+                          allSessionsController.filterSessions();
+                        }
+                      },
+                      child: Text(
+                        DateFormat(
+                          'MMM d, yyyy',
+                        ).format(allSessionsController.startDate.value),
+                      ),
                     ),
-                  )),
+                  ),
                 ),
                 const SizedBox(width: TSizes.spaceBtwItems),
                 Expanded(
-                  child: Obx(() => OutlinedButton(
-                    onPressed: () async {
-                      final pickedDate = await showDatePicker(
-                        context: context,
-                        initialDate: allSessionsController.endDate.value,
-                        firstDate: DateTime(2020),
-                        lastDate: DateTime.now().add(const Duration(days: 365)),
-                      );
-                      if (pickedDate != null) {
-                        allSessionsController.endDate.value = pickedDate;
-                        allSessionsController.filterSessions();
-                      }
-                    },
-                    child: Text(
-                      DateFormat('MMM d, yyyy').format(allSessionsController.endDate.value),
+                  child: Obx(
+                    () => OutlinedButton(
+                      onPressed: () async {
+                        final pickedDate = await showDatePicker(
+                          context: context,
+                          initialDate: allSessionsController.endDate.value,
+                          firstDate: DateTime(2020),
+                          lastDate: DateTime.now().add(
+                            const Duration(days: 365),
+                          ),
+                        );
+                        if (pickedDate != null) {
+                          allSessionsController.endDate.value = pickedDate;
+                          allSessionsController.filterSessions();
+                        }
+                      },
+                      child: Text(
+                        DateFormat(
+                          'MMM d, yyyy',
+                        ).format(allSessionsController.endDate.value),
+                      ),
                     ),
-                  )),
+                  ),
                 ),
               ],
             ),
-            
+
             const SizedBox(height: TSizes.spaceBtwItems),
-            
+
             // Class filter
-            Text(
-              'Classes',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
+            Text('Classes', style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: TSizes.spaceBtwItems / 2),
             SizedBox(
               height: 50,
-              child: Obx(() => ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: allSessionsController.classes.length,
-                itemBuilder: (context, index) {
-                  final classItem = allSessionsController.classes[index];
-                  final isSelected = allSessionsController.selectedClassIds.contains(classItem.id);
-                  
-                  return Padding(
-                    padding: const EdgeInsets.only(right: TSizes.sm),
-                    child: FilterChip(
-                      selected: isSelected,
-                      label: Text(classItem.subjectName ?? 'Unknown'),
-                      onSelected: (selected) {
-                        if (selected) {
-                          allSessionsController.selectedClassIds.add(classItem.id);
-                        } else {
-                          allSessionsController.selectedClassIds.remove(classItem.id);
-                        }
-                        allSessionsController.filterSessions();
-                      },
-                      backgroundColor: dark ? TColors.darkerGrey : Colors.grey.shade200,
-                      selectedColor: dark ? TColors.yellow : TColors.deepPurple,
-                      checkmarkColor: dark ? Colors.black : Colors.white,
-                    ),
-                  );
-                },
-              )),
+              child: Obx(
+                () => ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: allSessionsController.classes.length,
+                  itemBuilder: (context, index) {
+                    final classItem = allSessionsController.classes[index];
+                    final isSelected = allSessionsController.selectedClassIds
+                        .contains(classItem.id);
+
+                    return Padding(
+                      padding: const EdgeInsets.only(right: TSizes.sm),
+                      child: FilterChip(
+                        selected: isSelected,
+                        label: Text(classItem.subjectName ?? 'Unknown'),
+                        onSelected: (selected) {
+                          if (selected) {
+                            allSessionsController.selectedClassIds.add(
+                              classItem.id,
+                            );
+                          } else {
+                            allSessionsController.selectedClassIds.remove(
+                              classItem.id,
+                            );
+                          }
+                          allSessionsController.filterSessions();
+                        },
+                        backgroundColor:
+                            dark ? TColors.darkerGrey : Colors.grey.shade200,
+                        selectedColor:
+                            dark ? TColors.yellow : TColors.deepPurple,
+                        checkmarkColor: dark ? Colors.black : Colors.white,
+                      ),
+                    );
+                  },
+                ),
+              ),
             ),
-            
+
             const SizedBox(height: TSizes.spaceBtwSections),
-            
+
             // Action buttons
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -342,6 +398,27 @@ class AllSessionsScreen extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  void _showDeleteConfirmation(BuildContext context, String sessionId) {
+    Get.dialog(
+      AlertDialog(
+        title: const Text('Delete Session'),
+        content: const Text(
+          'Are you sure you want to delete this session? This action cannot be undone.',
+        ),
+        actions: [
+          TextButton(onPressed: () => Get.back(), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () {
+              Get.back();
+              allSessionsController.deleteSession(sessionId);
+            },
+            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+          ),
+        ],
       ),
     );
   }

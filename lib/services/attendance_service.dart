@@ -83,6 +83,28 @@ class AttendanceService {
     }
   }
 
+  // Existing methods and properties
+
+  /// Deletes an attendance session by its ID.
+  ///
+  /// This method interacts with the backend to delete the session
+  /// with the specified [sessionId]. Throws an exception if the
+  /// deletion fails.
+  Future<void> deleteSession(String sessionId) async {
+    try {
+      // First delete all attendance records for this session
+      await supabase
+          .from('attendance_records')
+          .delete()
+          .eq('session_id', sessionId);
+
+      // Then delete the session
+      await supabase.from('attendance_sessions').delete().eq('id', sessionId);
+    } catch (e) {
+      throw 'Failed to delete session: $e';
+    }
+  }
+
   // Get attendance records for a session
   Future<List<AttendanceRecordModel>> getAttendanceRecords(
     String sessionId,

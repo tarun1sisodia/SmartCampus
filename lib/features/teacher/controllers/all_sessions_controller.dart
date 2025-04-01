@@ -9,22 +9,21 @@ import '../../../common/utils/helpers/snackbar_helper.dart';
 import 'attendance_controller.dart';
 
 class AllSessionsController extends GetxController {
-  
   final attendanceService = AttendanceService();
   final classService = ClassService();
   final attendanceController = Get.find<AttendanceController>();
-  
+
   final isLoading = false.obs;
   final allSessions = <AttendanceSessionWithClass>[].obs;
   final filteredSessions = <AttendanceSessionWithClass>[].obs;
   final classes = <ClassModel>[].obs;
-  
+
   // Filter variables
   final searchController = TextEditingController();
   final startDate = DateTime.now().subtract(const Duration(days: 30)).obs;
   final endDate = DateTime.now().obs;
   final selectedClassIds = <String>[].obs;
-  
+
   @override
   /// Called when the controller is initialized.
   ///
@@ -35,7 +34,7 @@ class AllSessionsController extends GetxController {
     loadAllSessions();
     loadClasses();
   }
-  
+
   @override
   /// Disposes of the search controller and calls the superclass's [onClose].
   ///
@@ -44,7 +43,7 @@ class AllSessionsController extends GetxController {
     searchController.dispose();
     super.onClose();
   }
-  
+
   /// Loads all attendance sessions for classes taught by the current teacher.
   ///
   /// This function is called when the controller is initialized, and also when
@@ -53,44 +52,49 @@ class AllSessionsController extends GetxController {
   Future<void> loadAllSessions() async {
     try {
       isLoading.value = true;
-      
+
       final currentUser = Supabase.instance.client.auth.currentUser;
       if (currentUser == null) {
         TSnackBar.showError(message: 'You must be logged in to view sessions');
         return;
       }
-      
+
       // Get all classes for this teacher
-      final teacherClasses = await classService.getTeacherClasses(currentUser.id);
-      
+      final teacherClasses = await classService.getTeacherClasses(
+        currentUser.id,
+      );
+
       // Get sessions for all classes
       List<AttendanceSessionWithClass> allTeacherSessions = [];
-      
+
       for (var classModel in teacherClasses) {
-        final sessions = await attendanceService.getAttendanceSessions(classModel.id);
-        
+        final sessions = await attendanceService.getAttendanceSessions(
+          classModel.id,
+        );
+
         // Add class info to each session
-        final sessionsWithClass = sessions.map((session) {
-          return AttendanceSessionWithClass(
-            id: session.id,
-            classId: session.classId,
-            date: session.date,
-            startTime: session.startTime,
-            endTime: session.endTime,
-            createdBy: session.createdBy,
-            createdAt: session.createdAt,
-            className: classModel.courseName,
-            subjectName: classModel.subjectName,
-            classModel: classModel,
-          );
-        }).toList();
-        
+        final sessionsWithClass =
+            sessions.map((session) {
+              return AttendanceSessionWithClass(
+                id: session.id,
+                classId: session.classId,
+                date: session.date,
+                startTime: session.startTime,
+                endTime: session.endTime,
+                createdBy: session.createdBy,
+                createdAt: session.createdAt,
+                className: classModel.courseName,
+                subjectName: classModel.subjectName,
+                classModel: classModel,
+              );
+            }).toList();
+
         allTeacherSessions.addAll(sessionsWithClass);
       }
-      
+
       // Sort sessions by date (newest first)
       allTeacherSessions.sort((a, b) => b.date.compareTo(a.date));
-      
+
       allSessions.assignAll(allTeacherSessions);
       filteredSessions.assignAll(allTeacherSessions);
     } catch (e) {
@@ -99,13 +103,13 @@ class AllSessionsController extends GetxController {
       isLoading.value = false;
     }
   }
-  
+
   /// Loads all classes taught by the current teacher.
   ///
   /// This function retrieves the classes associated with the currently
   /// authenticated teacher and updates the `classes` observable list
-  /// with the fetched data. If the user is not authenticated, the 
-  /// function will return early. Any errors encountered during the 
+  /// with the fetched data. If the user is not authenticated, the
+  /// function will return early. Any errors encountered during the
   /// process are caught and logged to the console.
 
   /// Loads all classes taught by the current teacher.
@@ -118,14 +122,16 @@ class AllSessionsController extends GetxController {
     try {
       final currentUser = Supabase.instance.client.auth.currentUser;
       if (currentUser == null) return;
-      
-      final teacherClasses = await classService.getTeacherClasses(currentUser.id);
+
+      final teacherClasses = await classService.getTeacherClasses(
+        currentUser.id,
+      );
       classes.assignAll(teacherClasses);
     } catch (e) {
       print('Error loading classes: $e');
     }
   }
-  
+
   /// Filters sessions based on search term, date range, and selected classes.
   ///
   /// Applies three filtering criteria to the [allSessions] list:
@@ -136,24 +142,33 @@ class AllSessionsController extends GetxController {
   /// Updates [filteredSessions] with the filtered list of sessions.
   void filterSessions() {
     final searchTerm = searchController.text.toLowerCase();
-    
-    filteredSessions.value = allSessions.where((session) {
-      // Apply date filter
-      final isInDateRange = session.date.isAfter(startDate.value.subtract(const Duration(days: 1))) && 
-                           session.date.isBefore(endDate.value.add(const Duration(days: 1)));
-      
-      // Apply class filter if any classes are selected
-      final isClassSelected = selectedClassIds.isEmpty || selectedClassIds.contains(session.classId);
-      
-      // Apply search filter
-      final matchesSearch = searchTerm.isEmpty || 
-                           (session.className?.toLowerCase().contains(searchTerm) ?? false) ||
-                           (session.subjectName?.toLowerCase().contains(searchTerm) ?? false);
-      
-      return isInDateRange && isClassSelected && matchesSearch;
-    }).toList();
+
+    filteredSessions.value =
+        allSessions.where((session) {
+          // Apply date filter
+          final isInDateRange =
+              session.date.isAfter(
+                startDate.value.subtract(const Duration(days: 1)),
+              ) &&
+              session.date.isBefore(endDate.value.add(const Duration(days: 1)));
+
+          // Apply class filter if any classes are selected
+          final isClassSelected =
+              selectedClassIds.isEmpty ||
+              selectedClassIds.contains(session.classId);
+
+          // Apply search filter
+          final matchesSearch =
+              searchTerm.isEmpty ||
+              (session.className?.toLowerCase().contains(searchTerm) ??
+                  false) ||
+              (session.subjectName?.toLowerCase().contains(searchTerm) ??
+                  false);
+
+          return isInDateRange && isClassSelected && matchesSearch;
+        }).toList();
   }
-  
+
   /// Resets all filters to their default values.
   ///
   /// Clears the search term, sets the date range to the last 30 days, and
@@ -166,6 +181,37 @@ class AllSessionsController extends GetxController {
     selectedClassIds.clear();
     filteredSessions.assignAll(allSessions);
   }
+
+  /// Deletes an attendance session by its [sessionId].
+  ///
+  /// This function attempts to delete the attendance session identified by the
+  /// provided [sessionId] from the backend and removes it from the local lists
+  /// ([allSessions] and [filteredSessions]). If the deletion is successful, a
+  /// success snackbar is shown. If there is an error during the deletion process,
+  /// an error snackbar is displayed. The [isLoading] observable is updated to
+  /// indicate whether the operation is in progress.
+
+  Future<void> deleteSession(String sessionId) async {
+    try {
+      isLoading.value = true;
+
+      // Call the service method to delete the session
+      await attendanceService.deleteSession(sessionId);
+
+      // Remove the session from local lists
+      allSessions.removeWhere((session) => session.id == sessionId);
+      filteredSessions.removeWhere((session) => session.id == sessionId);
+
+      TSnackBar.showSuccess(
+        message: 'Session deleted successfully',
+        title: 'Success',
+      );
+    } catch (e) {
+      TSnackBar.showError(message: 'Failed to delete session: ${e.toString()}');
+    } finally {
+      isLoading.value = false;
+    }
+  }
 }
 
 // Extended model to include class information with session
@@ -173,7 +219,7 @@ class AttendanceSessionWithClass extends AttendanceSessionModel {
   final String? className;
   final String? subjectName;
   final ClassModel? classModel;
-  
+
   AttendanceSessionWithClass({
     required super.id,
     required super.classId,

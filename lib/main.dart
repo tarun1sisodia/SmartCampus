@@ -12,6 +12,16 @@ import 'package:supabase_flutter/supabase_flutter.dart';
   /// automatically if credentials are saved.
   /// Starts the app normally even if auto-login fails.
   ///
+/// Main entry point of the application.
+///
+/// Performs the following startup tasks:
+/// - Initializes Flutter bindings
+/// - Configures Supabase authentication
+/// - Initializes storage and global app services
+/// - Attempts automatic user login if credentials are saved
+/// - Launches the main application widget
+///
+/// Handles auto-login gracefully, continuing app startup even if login fails.
 Future<void> main() async {
   //Intializing the binding for the app .
   WidgetsFlutterBinding.ensureInitialized();
