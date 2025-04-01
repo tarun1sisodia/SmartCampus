@@ -140,7 +140,8 @@ class TTexts {
   // static const String homeAppbartitle= "Good Morning for shopping";
   // Forgot Password
   static const String forgotPasswordTitle = "Forgot Password?";
-  static const String forgotPasswordSubtitle = "Enter your email and we'll send you a link to reset your password";
+  static const String forgotPasswordSubtitle =
+      "Enter your email and we'll send you a link to reset your password";
   static const String resetPassword = "Reset Password";
   static const String checkEmail = "Check Your Email";
   static const String backToLogin = "Back to Login";

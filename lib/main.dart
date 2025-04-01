@@ -7,13 +7,13 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:get_storage/get_storage.dart';
 import 'services/language_service.dart';
 
-  /// The main entry point of the app.
-  ///
-  /// Initializes the app's bindings, services, and global state.
-  /// Checks if the user is already logged in and tries to log in
+/// The main entry point of the app.
+///
+/// Initializes the app's bindings, services, and global state.
+/// Checks if the user is already logged in and tries to log in
 /// automatically if credentials are saved.
-  /// Starts the app normally even if auto-login fails.
-  ///
+/// Starts the app normally even if auto-login fails.
+///
 /// Main entry point of the application.
 ///
 /// Performs the following startup tasks:
@@ -76,4 +76,3 @@ Future<void> main() async {
   // Running the App
   runApp(MyApp());
 }
-

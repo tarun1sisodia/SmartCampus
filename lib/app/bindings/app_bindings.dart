@@ -1,4 +1,4 @@
-import 'package:attedance__/features/auth/controllers/change_password_controller.dart';
+import 'package:attedance__/features/authentication/controllers/change_password_controller.dart';
 import 'package:attedance__/features/authentication/controllers/controllers_onboarding/onboarding_controller.dart';
 import 'package:attedance__/features/authentication/controllers/forgot_password_controller.dart';
 import 'package:attedance__/features/authentication/controllers/login_controller.dart';

@@ -25,7 +25,7 @@ class TAppTheme {
     chipTheme: TChipTheme.lightChipThemeData,
     elevatedButtonTheme: TElevatedButtonTheme.lightElevatedButton,
     searchBarTheme: TSearchbarTheme.lightSearchBar,
-    iconTheme: IconThemeData(color: Colors.black)
+    iconTheme: IconThemeData(color: Colors.black),
   );
   static ThemeData darkTheme = ThemeData(
     useMaterial3: true,
@@ -41,6 +41,6 @@ class TAppTheme {
     chipTheme: TChipTheme.darkChipThemeData,
     elevatedButtonTheme: TElevatedButtonTheme.darkElevatedButton,
     searchBarTheme: TSearchbarTheme.darkSearchBar,
-    iconTheme: IconThemeData(color: Colors.white)
+    iconTheme: IconThemeData(color: Colors.white),
   );
 }

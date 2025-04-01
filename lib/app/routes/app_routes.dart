@@ -1,5 +1,5 @@
 import 'package:attedance__/app/bindings/app_bindings.dart';
-import 'package:attedance__/features/auth/screens/change_password_screen.dart';
+import 'package:attedance__/features/authentication/screens/change_password/change_password_screen.dart';
 import 'package:attedance__/features/authentication/screens/forgot_password/forgot_password_2.dart';
 import 'package:attedance__/features/authentication/screens/forgot_password/reset_password_confirmation.dart';
 import 'package:attedance__/features/authentication/screens/login/login.dart';

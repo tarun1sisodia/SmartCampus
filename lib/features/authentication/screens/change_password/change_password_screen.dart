@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../../../common/utils/constants/colors.dart';
-import '../../../common/utils/constants/sized.dart';
-import '../../../common/utils/helpers/helper_function.dart';
-import '../controllers/change_password_controller.dart';
+import '../../../../common/utils/constants/colors.dart';
+import '../../../../common/utils/constants/sized.dart';
+import '../../../../common/utils/helpers/helper_function.dart';
+import '../../controllers/change_password_controller.dart';
 
 class ChangePasswordScreen extends StatelessWidget {
   final controller = Get.put(ChangePasswordController());

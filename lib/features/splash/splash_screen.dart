@@ -13,30 +13,31 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
-  
+
   @override
   void initState() {
     super.initState();
-    
+
     // Initialize animation controller
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 2500),
     );
-    
+
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: _animationController,
         curve: const Interval(0.0, 0.5, curve: Curves.easeIn),
       ),
     );
-    
+
     // Start animation
     _animationController.forward();
-    
+
     // Navigate to appropriate screen after animation completes
     _animationController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
@@ -44,36 +45,33 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       }
     });
   }
-  
+
   @override
   void dispose() {
     _animationController.dispose();
     super.dispose();
   }
-  
+
   Future<void> _checkAuthAndNavigate() async {
     // Check if user is logged in
     final currentUser = Supabase.instance.client.auth.currentUser;
-    
+
     // Check if onboarding is completed
     final bool onboardingCompleted = true; // Replace with your actual logic
-    
+
     if (currentUser != null) {
       print('User authenticated: true');
       Get.offAllNamed(AppRoutes.home);
     } else if (onboardingCompleted) {
       print('Onboarding completed: true');
       Get.offAllNamed(AppRoutes.login);
-    } else {
-      print('Navigating to onboarding');
-      Get.offAllNamed(AppRoutes.onboarding);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final dark = THelperFunction.isDarkMode(context);
-    
+
     return Scaffold(
       backgroundColor: dark ? TColors.dark : Colors.white,
       body: Center(
@@ -84,10 +82,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
             AnimatedBuilder(
               animation: _fadeAnimation,
               builder: (context, child) {
-                return Opacity(
-                  opacity: _fadeAnimation.value,
-                  child: child,
-                );
+                return Opacity(opacity: _fadeAnimation.value, child: child);
               },
               child: Image.asset(
                 'assets/logos/darkapplogo.png',
@@ -95,9 +90,9 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                 height: 150,
               ),
             ),
-            
+
             const SizedBox(height: 30),
-            
+
             // Loading animation
             SizedBox(
               width: 100,
@@ -107,17 +102,14 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                 fit: BoxFit.cover,
               ),
             ),
-            
+
             const SizedBox(height: 20),
-            
+
             // App name with fade animation
             AnimatedBuilder(
               animation: _fadeAnimation,
               builder: (context, child) {
-                return Opacity(
-                  opacity: _fadeAnimation.value,
-                  child: child,
-                );
+                return Opacity(opacity: _fadeAnimation.value, child: child);
               },
               child: Text(
                 'Attendance App',
@@ -127,17 +119,14 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                 ),
               ),
             ),
-            
+
             const SizedBox(height: 10),
-            
+
             // Tagline with fade animation
             AnimatedBuilder(
               animation: _fadeAnimation,
               builder: (context, child) {
-                return Opacity(
-                  opacity: _fadeAnimation.value,
-                  child: child,
-                );
+                return Opacity(opacity: _fadeAnimation.value, child: child);
               },
               child: Text(
                 'Track attendance with ease',

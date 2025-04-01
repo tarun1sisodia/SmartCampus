@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 /// with Firebase web packages
 class FallThroughError extends Error {
   FallThroughError();
-  
+
   @override
   String toString() => 'FallThroughError: Switch statement case falls through.';
 }
