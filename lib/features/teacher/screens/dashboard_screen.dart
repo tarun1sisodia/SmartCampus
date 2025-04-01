@@ -13,7 +13,7 @@ import '../../../common/utils/helpers/helper_function.dart';
 import 'class_list_screen.dart';
 
 class DashboardScreen extends StatelessWidget {
-  final dashboardController = Get.put(DashboardController());
+  final dashboardController = Get.find<DashboardController>();
   final searchController = TextEditingController();
   final RxBool isSearching = RxBool(false);
 
@@ -23,6 +23,26 @@ class DashboardScreen extends StatelessWidget {
       'Teacher';
 
   @override
+  /// Builds the main dashboard screen for teachers, displaying key information and interactions.
+  ///
+  /// This method constructs a [Scaffold] with an app bar showing the user's profile,
+  /// a search functionality, statistics cards, average attendance visualization,
+  /// and a list of recent classes. It handles different states such as loading,
+  /// empty data, and populated data using the [dashboardController].
+  ///
+  /// The screen adapts to dark and light themes and provides interactive elements
+  /// like profile navigation, settings access, and class exploration.
+  /// Builds and returns the dashboard screen's widget tree.
+  ///
+  /// Constructs a complex UI with an app bar, search functionality,
+  /// statistics cards, attendance visualization, and recent classes list.
+  /// Handles different states like loading, empty data, and populated data
+  /// using the [dashboardController].
+  ///
+  /// The method adapts to dark and light themes and provides interactive
+  /// elements for navigation and data exploration.
+  ///
+  /// Returns a [Scaffold] with the complete dashboard layout.
   Widget build(BuildContext context) {
     final dark = THelperFunction.isDarkMode(context);
 
@@ -30,47 +50,53 @@ class DashboardScreen extends StatelessWidget {
       appBar: AppBar(
         // Replace title with profile image on the left
         // Replace the Hero widget in the appBar's leading section with this:
-
-leading: Padding(
-  padding: const EdgeInsets.all(8.0),
-  child: Hero(
-    tag: 'profileImage',
-    child: GestureDetector(
-      onTap: () => Get.to(() => const TeacherProfileScreen()),
-      child: FutureBuilder<UserModel?>(
-        future: _getUserData(),
-        builder: (context, snapshot) {
-          return Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: dark ? TColors.yellow : TColors.deepPurple,
-                width: 2,
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Hero(
+            tag: 'profileImage',
+            child: GestureDetector(
+              onTap: () => Get.to(() => const TeacherProfileScreen()),
+              child: FutureBuilder<UserModel?>(
+                future: _getUserData(),
+                builder: (context, snapshot) {
+                  return Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: dark ? TColors.yellow : TColors.deepPurple,
+                        width: 2,
+                      ),
+                      image:
+                          snapshot.hasData &&
+                                  snapshot.data?.profileImageUrl != null &&
+                                  snapshot.data!.profileImageUrl!.isNotEmpty
+                              ? DecorationImage(
+                                image: NetworkImage(
+                                  snapshot.data!.profileImageUrl!,
+                                ),
+                                fit: BoxFit.cover,
+                                onError: (exception, stackTrace) {
+                                  print(
+                                    'Error loading profile image: $exception',
+                                  );
+                                },
+                              )
+                              : const DecorationImage(
+                                image: AssetImage(
+                                  'assets/logos/darkapplogo.png',
+                                ),
+                                fit: BoxFit.cover,
+                              ),
+                    ),
+                  );
+                },
               ),
-              image: snapshot.hasData && 
-                    snapshot.data?.profileImageUrl != null && 
-                    snapshot.data!.profileImageUrl!.isNotEmpty
-                ? DecorationImage(
-                    image: NetworkImage(snapshot.data!.profileImageUrl!),
-                    fit: BoxFit.cover,
-                    onError: (exception, stackTrace) {
-                      print('Error loading profile image: $exception');
-                    },
-                  )
-                : const DecorationImage(
-                    image: AssetImage('assets/logos/darkapplogo.png'),
-                    fit: BoxFit.cover,
-                  ),
             ),
-          );
-        },
-      ),
-    ),
-  ),
-),
- // Add "Hi, username" in the app bar
+          ),
+        ),
+        // Add "Hi, username" in the app bar
         title: Text(
           'Hi, $userName',
           style: Theme.of(
@@ -86,6 +112,7 @@ leading: Padding(
             },
           ),
           const SizedBox(width: TSizes.sm),
+          
         ],
       ),
       body: Obx(() {
@@ -424,13 +451,14 @@ leading: Padding(
     try {
       final currentUser = Supabase.instance.client.auth.currentUser;
       if (currentUser == null) return null;
-      
-      final userData = await Supabase.instance.client
-          .from('users')
-          .select()
-          .eq('id', currentUser.id)
-          .maybeSingle();
-      
+
+      final userData =
+          await Supabase.instance.client
+              .from('users')
+              .select()
+              .eq('id', currentUser.id)
+              .maybeSingle();
+
       if (userData != null) {
         return UserModel.fromJson({
           ...userData,
@@ -438,7 +466,7 @@ leading: Padding(
           'email': currentUser.email ?? '',
         });
       }
-      
+
       return null;
     } catch (e) {
       print('Error fetching user data: $e');

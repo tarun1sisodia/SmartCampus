@@ -46,6 +46,16 @@ class AttendanceReportsController extends GetxController {
   }
 
   // Load all classes for the current teacher
+  /// Loads all classes for the current teacher.
+  ///
+  /// This function is called when the controller is initialized. It fetches all
+  /// classes for the current user, and then sets the `classes` observable list
+  /// with the fetched data. If the `selectedClassId` is empty, the first class
+  /// is selected and the attendance data is loaded.
+  ///
+  /// If the user is not authenticated, the function will return early and show
+  /// an error message. Any other errors encountered during the process are
+  /// caught and logged to the console.
   Future<void> loadClasses() async {
     try {
       isLoading.value = true;
@@ -73,6 +83,18 @@ class AttendanceReportsController extends GetxController {
   }
 
   // Load attendance data for the selected class and date range
+  /// Loads attendance data for the selected class and date range.
+  ///
+  /// This function is called when the user selects a class and date range from
+  /// the dropdown menus. It fetches all attendance sessions for the selected
+  /// class and date range, loads the students for the class, and then calculates
+  /// overall statistics (present, absent, late, and average attendance) for the
+  /// selected class. Additionally, it calculates attendance statistics for each
+  /// student in the class.
+  ///
+  /// If the user is not authenticated, the function will return early and show
+  /// an error message. Any other errors encountered during the process are
+  /// caught and logged to the console.
   Future<void> loadAttendanceData() async {
     try {
       if (selectedClassId.isEmpty) return;
@@ -140,6 +162,11 @@ class AttendanceReportsController extends GetxController {
   }
 
   // Navigate to student detail screen
+  /// Navigate to the student detail screen.
+  ///
+  /// This function takes a `StudentModel` instance as a parameter and navigates
+  /// to the student detail screen, passing the student instance and the
+  /// selected class ID to the screen as parameters.
   void navigateToStudentDetail(StudentModel student) {
     Get.to(
       () =>
@@ -148,6 +175,14 @@ class AttendanceReportsController extends GetxController {
   }
 
   // Export attendance report as CSV
+  /// Export the attendance report as a CSV file.
+  ///
+  /// This function will first check if there is any data available to export. If
+  /// there is, it will then create a CSV file with the class details and the
+  /// attendance statistics for each student. The CSV file will be saved to the
+  /// temporary directory on the device and will be shared using the
+  /// [Share] package. If there is an error exporting the report, a snack bar
+  /// will be shown with the error message.
   Future<void> exportAttendanceReport() async {
     try {
       if (selectedClassId.isEmpty || students.isEmpty || sessions.isEmpty) {

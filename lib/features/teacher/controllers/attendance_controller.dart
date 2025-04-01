@@ -27,6 +27,13 @@ class AttendanceController extends GetxController {
   final endTimeController = TextEditingController();
 
   // Set the selected class
+  /// Sets the currently selected class and loads its attendance sessions.
+  ///
+  /// This function updates the `selectedClass` with the provided `classModel` and triggers
+  /// the loading of attendance sessions associated with the class.
+  ///
+  /// [classModel] - The class model representing the selected class.
+
   void setSelectedClass(ClassModel classModel) {
     selectedClass.value = classModel;
     loadAttendanceSessions(classModel.id);
@@ -34,6 +41,7 @@ class AttendanceController extends GetxController {
 
   // Load attendance sessions for a class
   // Add this method to load attendance sessions
+
   Future<void> loadAttendanceSessions(String classId) async {
     try {
       isLoading.value = true;
@@ -53,6 +61,14 @@ class AttendanceController extends GetxController {
   }
 
   // Add this method to load students for the class
+  /// Loads students for the currently selected class.
+  ///
+  /// This function loads students for the class set in `selectedClass` and
+  /// initializes their attendance status to 'absent'. It also sets the
+  /// `isStudentsLoaded` flag.
+  ///
+  /// If the `selectedClass` is null, the function returns immediately without
+  /// performing any action.
   Future<void> loadStudentsForClass() async {
     try {
       if (selectedClass.value == null) return;
@@ -79,6 +95,18 @@ class AttendanceController extends GetxController {
   }
 
   // Load students for the current session
+  /// Loads students for the currently selected session.
+  ///
+  /// This function retrieves the list of students for the class associated
+  /// with the currently selected session, and it attempts to load existing
+  /// attendance records for these students. If attendance records exist, it
+  /// updates each student's attendance status accordingly; otherwise, it
+  /// defaults the status to 'absent'. The `isStudentsLoaded` flag is set upon
+  /// successful loading of students.
+  ///
+  /// If no session is selected or if no class is associated with the selected
+  /// session, the function returns immediately without performing any action.
+
   Future<void> loadStudentsForSession() async {
     try {
       if (currentSessionId.value.isEmpty || selectedClass.value == null) {
@@ -115,6 +143,15 @@ class AttendanceController extends GetxController {
   }
 
   // Update a student's attendance status
+  /// Updates the attendance status of a student.
+  ///
+  /// This function finds the student in the list by their ID and updates
+  /// their attendance status with the provided status. If the student is
+  /// found, the list is refreshed to reflect the change.
+  ///
+  /// [studentId] The ID of the student whose status is to be updated.
+  /// [status] The new attendance status to assign to the student.
+
   void updateStudentStatus(String studentId, String status) {
     final index = students.indexWhere((student) => student.id == studentId);
     if (index != -1) {
@@ -170,6 +207,21 @@ class AttendanceController extends GetxController {
   }
 
   // Create a new attendance session
+  /// Create a new attendance session for the currently selected class.
+  ///
+  /// The session's date is set to the current [sessionDate] and the start
+  /// and end times are set to the values of [startTimeController] and
+  /// [endTimeController] respectively. If either of the time controllers is
+  /// empty, the corresponding time is set to null.
+  ///
+  /// The session is created by the currently logged in user, and the session
+  /// is created with the [selectedClass] as its class.
+  ///
+  /// After creating the session, the attendance sessions for the class are
+  /// reloaded and the dialog is closed with a success message.
+  ///
+  /// If there is an error while creating the session, an error message is
+  /// shown and the dialog is not closed.
   Future<void> createAttendanceSession() async {
     try {
       isLoading.value = true;

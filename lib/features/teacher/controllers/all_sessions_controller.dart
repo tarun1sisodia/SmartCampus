@@ -9,6 +9,7 @@ import '../../../common/utils/helpers/snackbar_helper.dart';
 import 'attendance_controller.dart';
 
 class AllSessionsController extends GetxController {
+  
   final attendanceService = AttendanceService();
   final classService = ClassService();
   final attendanceController = Get.find<AttendanceController>();
@@ -25,6 +26,10 @@ class AllSessionsController extends GetxController {
   final selectedClassIds = <String>[].obs;
   
   @override
+  /// Called when the controller is initialized.
+  ///
+  /// Loads all attendance sessions for all classes taught by the current teacher,
+  /// and loads all classes taught by the current teacher.
   void onInit() {
     super.onInit();
     loadAllSessions();
@@ -32,11 +37,19 @@ class AllSessionsController extends GetxController {
   }
   
   @override
+  /// Disposes of the search controller and calls the superclass's [onClose].
+  ///
+  /// This is called when the controller is about to be removed from the widget tree.
   void onClose() {
     searchController.dispose();
     super.onClose();
   }
   
+  /// Loads all attendance sessions for classes taught by the current teacher.
+  ///
+  /// This function is called when the controller is initialized, and also when
+  /// the user searches for sessions or changes the date range.
+  ///
   Future<void> loadAllSessions() async {
     try {
       isLoading.value = true;
@@ -87,6 +100,20 @@ class AllSessionsController extends GetxController {
     }
   }
   
+  /// Loads all classes taught by the current teacher.
+  ///
+  /// This function retrieves the classes associated with the currently
+  /// authenticated teacher and updates the `classes` observable list
+  /// with the fetched data. If the user is not authenticated, the 
+  /// function will return early. Any errors encountered during the 
+  /// process are caught and logged to the console.
+
+  /// Loads all classes taught by the current teacher.
+  ///
+  /// If the user is not authenticated, the function will return early.
+  /// Any errors encountered during the process are caught and logged to the console.
+  ///
+  /// This function updates the `classes` observable list with the fetched data.
   Future<void> loadClasses() async {
     try {
       final currentUser = Supabase.instance.client.auth.currentUser;
@@ -99,6 +126,14 @@ class AllSessionsController extends GetxController {
     }
   }
   
+  /// Filters sessions based on search term, date range, and selected classes.
+  ///
+  /// Applies three filtering criteria to the [allSessions] list:
+  /// 1. Date range filter using [startDate] and [endDate]
+  /// 2. Class selection filter using [selectedClassIds]
+  /// 3. Search term filter matching against class name and subject name
+  ///
+  /// Updates [filteredSessions] with the filtered list of sessions.
   void filterSessions() {
     final searchTerm = searchController.text.toLowerCase();
     
@@ -119,6 +154,11 @@ class AllSessionsController extends GetxController {
     }).toList();
   }
   
+  /// Resets all filters to their default values.
+  ///
+  /// Clears the search term, sets the date range to the last 30 days, and
+  /// clears the selected class IDs, resulting in [filteredSessions] being
+  /// reset to [allSessions].
   void resetFilters() {
     searchController.clear();
     startDate.value = DateTime.now().subtract(const Duration(days: 30));
