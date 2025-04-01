@@ -175,23 +175,15 @@ class AttendanceSessionWithClass extends AttendanceSessionModel {
   final ClassModel? classModel;
   
   AttendanceSessionWithClass({
-    required String id,
-    required String classId,
-    required DateTime date,
-    String? startTime,
-    String? endTime,
-    required String createdBy,
-    DateTime? createdAt,
+    required super.id,
+    required super.classId,
+    required super.date,
+    super.startTime,
+    super.endTime,
+    required super.createdBy,
+    super.createdAt,
     this.className,
     this.subjectName,
     this.classModel,
-  }) : super(
-    id: id,
-    classId: classId,
-    date: date,
-    startTime: startTime,
-    endTime: endTime,
-    createdBy: createdBy,
-    createdAt: createdAt,
-  );
+  });
 }

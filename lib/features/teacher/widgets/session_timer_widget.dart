@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../../common/utils/constants/colors.dart';
-import '../../../common/utils/constants/sized.dart';
 import '../../../common/utils/helpers/helper_function.dart';
 
 class SessionTimerWidget extends StatelessWidget {

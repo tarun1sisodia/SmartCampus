@@ -6,7 +6,6 @@ import 'package:attedance__/features/teacher/screens/all_sessions_screen.dart';
 import 'package:attedance__/features/teacher/screens/dashboard_screen.dart';
 import 'package:attedance__/features/teacher/screens/class_list_screen.dart';
 import 'package:attedance__/features/teacher/screens/more_menu_screen.dart';
-import 'package:attedance__/features/teacher/screens/teacher_messages_screen.dart';
 import 'package:attedance__/features/teacher/screens/teacher_profile_screen.dart';
 import 'package:attedance__/app/routes/app_routes.dart';
 import 'package:get/get.dart';
