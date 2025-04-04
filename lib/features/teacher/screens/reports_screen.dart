@@ -503,12 +503,10 @@ class ReportsScreen extends StatelessWidget {
           fileName: fileName,
         );
 
-        if (outputFile != null) {
-          final file = File(outputFile);
-          await file.writeAsBytes(bytes);
-          TSnackBar.showSuccess(message: 'PDF saved to: $outputFile');
-        }
-      }
+        final file = File(outputFile!);
+        await file.writeAsBytes(bytes);
+        TSnackBar.showSuccess(message: 'PDF saved to: $outputFile');
+            }
     }
   }
 
