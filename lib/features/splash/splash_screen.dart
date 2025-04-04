@@ -112,7 +112,7 @@ class _SplashScreenState extends State<SplashScreen>
                 return Opacity(opacity: _fadeAnimation.value, child: child);
               },
               child: Text(
-                'Attendance App',
+                'Smart Campus',
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: dark ? TColors.yellow : TColors.deepPurple,

@@ -24,7 +24,7 @@ class LanguageService extends GetxService {
   // Current language
   final Rx<Locale> currentLocale = Rx<Locale>(const Locale('en', 'US'));
   
-  @override
+  // @override
 Future<LanguageService> init() async {
   super.onInit();
   // Load saved language

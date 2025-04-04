@@ -31,7 +31,7 @@ class AboutScreen extends StatelessWidget {
                   width: 2,
                 ),
                 image: const DecorationImage(
-                  image: AssetImage('assets/logos/darkapplogo.png'),
+                  image: AssetImage('assets/logos/smartcampus.png'),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -40,7 +40,7 @@ class AboutScreen extends StatelessWidget {
 
             // App name and version
             Text(
-              'Attendance App',
+              'Smart Campus',
               style: Theme.of(
                 context,
               ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),

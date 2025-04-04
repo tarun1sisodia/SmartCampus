@@ -46,8 +46,7 @@ class TSnackBar {
         backgroundColor = Colors.orange;
         break;
       case MessageType.info:
-      default:
-        icon = Iconsax.information;
+      icon = Iconsax.information;
         backgroundColor = TColors.deepPurple;
         break;
     }
@@ -62,8 +61,7 @@ class TSnackBar {
         sourcePrefix = '[Client] ';
         break;
       case MessageSource.app:
-      default:
-        // No prefix for app messages
+      // No prefix for app messages
         break;
     }
 
