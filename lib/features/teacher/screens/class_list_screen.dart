@@ -74,7 +74,8 @@ class ClassListScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: TSizes.spaceBtwItems),
                 ElevatedButton.icon(
-                  onPressed: () => _showAddClassDialog(context),
+                  // onPressed: () => _showAddClassDialog(context),
+                  onPressed: () => Get.to(() => CreateClassScreen()),
                   icon: const Icon(Iconsax.add),
                   label: const Text('Create Class'),
                   style: ElevatedButton.styleFrom(
@@ -203,7 +204,7 @@ class ClassListScreen extends StatelessWidget {
   }
 
   // Show dialog to add a new class
-  void _showAddClassDialog(BuildContext context) {
+ /* void _showAddClassDialog(BuildContext context) {
     final dark = THelperFunction.isDarkMode(context);
 
     // Reset form controllers
@@ -337,7 +338,7 @@ class ClassListScreen extends StatelessWidget {
       ),
     );
   }
-
+*/
   // Show options for a class
   void _showClassOptions(BuildContext context, dynamic classItem) {
     final dark = THelperFunction.isDarkMode(context);

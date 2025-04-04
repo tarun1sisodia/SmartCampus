@@ -218,9 +218,23 @@ class CarouselAttendanceScreen extends StatelessWidget {
                     },
                     onSwipeLeft: () {
                       carouselAttendanceController.moveToNextStudent();
+                      // Add this line to move the carousel
+                      if (!carouselAttendanceController.isLastStudent) {
+                        carouselController.nextPage(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                        );
+                      }
                     },
                     onSwipeRight: () {
                       carouselAttendanceController.moveToNextStudent();
+                      // Add this line to move the carousel
+                      if (!carouselAttendanceController.isLastStudent) {
+                        carouselController.nextPage(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                        );
+                      }
                     },
                   );
                 },

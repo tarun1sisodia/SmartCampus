@@ -1,7 +1,7 @@
 import '../../../../../common/utils/constants/image_strings.dart';
 import '../../../../../common/utils/constants/sized.dart';
 import '../../../../../common/utils/constants/text_strings.dart';
-import '../../../../../common/utils/helpers/helper_function.dart';
+// import '../../../../../common/utils/helpers/helper_function.dart';
 import 'package:flutter/material.dart';
 
 class LogoAndText extends StatelessWidget {
@@ -9,13 +9,14 @@ class LogoAndText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dark = THelperFunction.isDarkMode(context);
+    // final dark = THelperFunction.isDarkMode(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Image(
           image: AssetImage(
-            dark ? TImageStrings.darkApplogo : TImageStrings.lightApplogo,
+          TImageStrings.appLogo,
+            // dark ? TImageStrings.darkApplogo : TImageStrings.lightApplogo,
           ),
           height: 100,
         ),
