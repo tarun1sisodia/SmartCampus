@@ -88,89 +88,95 @@ class ClassListScreen extends StatelessWidget {
           );
         }
 
-        return ListView.builder(
-          padding: const EdgeInsets.all(TSizes.defaultSpace),
-          itemCount: classController.classes.length,
-          itemBuilder: (context, index) {
-            final classItem = classController.classes[index];
-            return Card(
-              margin: const EdgeInsets.only(bottom: TSizes.spaceBtwItems),
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(TSizes.md),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        CircleAvatar(
-                          backgroundColor:
-                              dark ? TColors.yellow : TColors.deepPurple,
-                          child: Text(
-                            classItem.subjectName?.substring(0, 1) ?? 'C',
-                            style: TextStyle(
-                              color: dark ? Colors.black : Colors.white,
-                              fontWeight: FontWeight.bold,
+        return RefreshIndicator(
+          onRefresh: () => classController.loadClasses(),
+          color: dark ? TColors.yellow : TColors.deepPurple,
+          backgroundColor: dark ? TColors.darkerGrey : Colors.white,
+          child: ListView.builder(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(TSizes.defaultSpace),
+            itemCount: classController.classes.length,
+            itemBuilder: (context, index) {
+              final classItem = classController.classes[index];
+              return Card(
+                margin: const EdgeInsets.only(bottom: TSizes.spaceBtwItems),
+                elevation: 2,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(TSizes.md),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          CircleAvatar(
+                            backgroundColor:
+                                dark ? TColors.yellow : TColors.deepPurple,
+                            child: Text(
+                              classItem.subjectName?.substring(0, 1) ?? 'C',
+                              style: TextStyle(
+                                color: dark ? Colors.black : Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
-                        ),
-                        const SizedBox(width: TSizes.spaceBtwItems),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                classItem.subjectName ?? 'Unknown Subject',
-                                style: Theme.of(context).textTheme.titleMedium
-                                    ?.copyWith(fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                '${classItem.courseName} - Year ${classItem.year}${classItem.section != null ? ' (${classItem.section})' : ''}',
-                                style: Theme.of(context).textTheme.bodyMedium,
-                              ),
-                            ],
+                          const SizedBox(width: TSizes.spaceBtwItems),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  classItem.subjectName ?? 'Unknown Subject',
+                                  style: Theme.of(context).textTheme.titleMedium
+                                      ?.copyWith(fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  '${classItem.courseName} - Year ${classItem.year}${classItem.section != null ? ' (${classItem.section})' : ''}',
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        IconButton(
-                          icon: const Icon(Iconsax.more),
-                          onPressed:
-                              () => _showClassOptions(context, classItem),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: TSizes.spaceBtwItems),
-                    const Divider(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        _buildActionButton(
-                          context,
-                          icon: Iconsax.people,
-                          label: 'Students',
-                          onTap:
-                              () => Get.to(
-                                () => AddStudentScreen(classModel: classItem),
-                              ),
-                        ),
-                        _buildActionButton(
-                          context,
-                          icon: Iconsax.calendar_1,
-                          label: 'Attendance',
-                          onTap:
-                              () => Get.to(
-                                () => AttendanceScreen(classModel: classItem),
-                              ),
-                        ),
-                      ],
-                    ),
-                  ],
+                          IconButton(
+                            icon: const Icon(Iconsax.more),
+                            onPressed:
+                                () => _showClassOptions(context, classItem),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: TSizes.spaceBtwItems),
+                      const Divider(),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          _buildActionButton(
+                            context,
+                            icon: Iconsax.people,
+                            label: 'Students',
+                            onTap:
+                                () => Get.to(
+                                  () => AddStudentScreen(classModel: classItem),
+                                ),
+                          ),
+                          _buildActionButton(
+                            context,
+                            icon: Iconsax.calendar_1,
+                            label: 'Attendance',
+                            onTap:
+                                () => Get.to(
+                                  () => AttendanceScreen(classModel: classItem),
+                                ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         );
       }),
     );
@@ -204,7 +210,7 @@ class ClassListScreen extends StatelessWidget {
   }
 
   // Show dialog to add a new class
- /* void _showAddClassDialog(BuildContext context) {
+  /* void _showAddClassDialog(BuildContext context) {
     final dark = THelperFunction.isDarkMode(context);
 
     // Reset form controllers

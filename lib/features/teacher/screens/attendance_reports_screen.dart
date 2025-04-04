@@ -64,7 +64,7 @@ class AttendanceReportsScreen extends StatelessWidget {
                             'No classes available',
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
-                        )
+                        ) 
                       else
                         DropdownButtonFormField<String>(
                           decoration: InputDecoration(
@@ -74,10 +74,14 @@ class AttendanceReportsScreen extends StatelessWidget {
                               ),
                             ),
                             contentPadding: const EdgeInsets.symmetric(
-                              horizontal: TSizes.md,
+                              horizontal: TSizes.sm,
                               vertical: TSizes.sm,
                             ),
+                            isCollapsed: true,
                           ),
+                          isExpanded:true,
+                          iconSize:24,
+                          icon:const Icon(Iconsax.arrow),
                           value: reportsController.selectedClassId.value,
                           items:
                               reportsController.classes.map((classItem) {
@@ -85,6 +89,9 @@ class AttendanceReportsScreen extends StatelessWidget {
                                   value: classItem.id,
                                   child: Text(
                                     '${classItem.subjectName} - ${classItem.courseName} Year ${classItem.year}',
+                                    overflow:TextOverflow.ellipsis,
+                                    maxLines:1,
+                                    style:TextStyle(fontSize:14),
                                   ),
                                 );
                               }).toList(),

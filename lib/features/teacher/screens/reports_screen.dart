@@ -434,7 +434,7 @@ class ReportsScreen extends StatelessWidget {
                   pw.SizedBox(height: 20),
                 ],
               );
-            }).toList(),
+            }),
           ],
         );
       },

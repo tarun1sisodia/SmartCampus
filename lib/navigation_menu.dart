@@ -1,8 +1,6 @@
 import 'package:attedance__/features/teacher/controllers/attendance_controller.dart';
 import 'package:attedance__/features/teacher/controllers/carousel_attendance_controller.dart';
 import 'package:attedance__/features/teacher/screens/all_sessions_screen.dart';
-// import 'package:attedance__/features/teacher/screens/carousel_attendance_screen.dart';
-// import 'package:attedance__/features/teacher/screens/create_class_screen.dart';
 import 'package:attedance__/features/teacher/screens/dashboard_screen.dart';
 import 'package:attedance__/features/teacher/screens/class_list_screen.dart';
 import 'package:attedance__/features/teacher/screens/more_menu_screen.dart';
@@ -66,50 +64,73 @@ class NavigationMenu extends StatelessWidget {
 
     return Scaffold(
       bottomNavigationBar: Obx(
-        () => NavigationBar(
+        () => Container(
           height: 80,
-          elevation: 0,
-          selectedIndex: controller.selectedIndex.value,
-          onDestinationSelected:
-              (index) => controller.selectedIndex.value = index,
-          backgroundColor:
-              dark
-                  ? Theme.of(context).scaffoldBackgroundColor
-                  : Theme.of(context).scaffoldBackgroundColor,
-          indicatorColor: dark ? TColors.darkerGrey : TColors.borderSecondary,
-          destinations: [
-            NavigationDestination(
-              label: 'Home',
-              icon: Icon(
-                Iconsax.home,
-                color: dark ? Colors.orange : Colors.deepPurpleAccent,
+          decoration: BoxDecoration(
+            color: dark ? Theme.of(context).scaffoldBackgroundColor : Theme.of(context).scaffoldBackgroundColor,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 10,
+                offset: const Offset(0, -5),
               ),
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _buildNavItem(context, 0, Iconsax.home, 'Home', dark, controller),
+              _buildNavItem(context, 1, Iconsax.book_1, 'Classes', dark, controller),
+              _buildNavItem(context, 2, Iconsax.timer_1, 'Sessions', dark, controller),
+              _buildNavItem(context, 3, Iconsax.more, 'More', dark, controller),
+            ],
+          ),
+        ),
+      ),
+      body: Obx(() => controller.screens[controller.selectedIndex.value]),
+    );
+  }
+
+  Widget _buildNavItem(BuildContext context, int index, IconData icon, String label, bool dark, NavigationController controller) {
+    final isSelected = controller.selectedIndex.value == index;
+    
+    return GestureDetector(
+      onTap: () => controller.selectedIndex.value = index,
+      child: Container(
+        width: 70,
+        color: Colors.transparent,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              color: isSelected 
+                ? (dark ? Colors.orange : Colors.deepPurpleAccent)
+                : (dark ? Colors.grey : Colors.grey),
+              size: 28,
             ),
-            NavigationDestination(
-              label: 'Classes',
-              icon: Icon(
-                Iconsax.book_1,
-                color: dark ? Colors.orange : Colors.deepPurpleAccent,
-              ),
-            ),
-            NavigationDestination(
-              label: 'Sessions',
-              icon: Icon(
-                Iconsax.timer_1,
-                color: dark ? Colors.orange : Colors.deepPurpleAccent,
-              ),
-            ),
-            NavigationDestination(
-              label: 'More',
-              icon: Icon(
-                Iconsax.more,
-                color: dark ? Colors.orange : Colors.deepPurpleAccent,
+            const SizedBox(height: 4),
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              height: isSelected ? 20 : 0,
+              child: AnimatedOpacity(
+                duration: const Duration(milliseconds: 200),
+                opacity: isSelected ? 1.0 : 0.0,
+                child: Text(
+                  label,
+                  style: TextStyle(
+                    color: isSelected 
+                      ? (dark ? Colors.orange : Colors.deepPurpleAccent)
+                      : Colors.grey,
+                    fontSize: 12,
+                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                  ),
+                ),
               ),
             ),
           ],
         ),
       ),
-      body: Obx(() => controller.screens[controller.selectedIndex.value]),
     );
   }
 }
@@ -136,22 +157,8 @@ class NavigationController extends GetxController {
 
   final screens = [
     DashboardScreen(),
-    // CreateClassScreen(),
     ClassListScreen(),
-    // Replace direct instantiation with a method that ensures the controller exists
     AllSessionsScreen(),
     const MoreMenuScreen(),
   ];
-  
-  // Helper method to ensure controller exists before creating screen
-  // static Widget _getCarouselScreen() {
-  //   // Make sure the controllers are registered
-  //   if (!Get.isRegistered<AttendanceController>()) {
-  //     Get.put(AttendanceController());
-  //   }
-  //   if (!Get.isRegistered<CarouselAttendanceController>()) {
-  //     Get.put(CarouselAttendanceController());
-  //   }
-  //   return CarouselAttendanceScreen();
-  // }
 }

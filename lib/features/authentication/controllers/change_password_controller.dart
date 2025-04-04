@@ -76,8 +76,9 @@ class ChangePasswordController extends GetxController {
     if (password.contains(RegExp(r'[A-Z]'))) strength += 0.2; // Uppercase
     if (password.contains(RegExp(r'[a-z]'))) strength += 0.2; // Lowercase
     if (password.contains(RegExp(r'[0-9]'))) strength += 0.2; // Numbers
-    if (password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]')))
+    if (password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
       strength += 0.2; // Special chars
+    }
 
     // Set strength value (cap at 1.0)
     passwordStrength.value = strength > 1.0 ? 1.0 : strength;

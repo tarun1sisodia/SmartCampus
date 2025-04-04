@@ -18,10 +18,10 @@ class SignupForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dark = THelperFunction.isDarkMode(context);
-    final _formKey = GlobalKey<FormState>();
+    final formKey = GlobalKey<FormState>();
 
     return Form(
-      key: _formKey,
+      key: formKey,
       child: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: TSizes.spaceBtwSections,
@@ -134,7 +134,7 @@ class SignupForm extends StatelessWidget {
                       controller.isLoading.value
                           ? null
                           : () async {
-                            if (_formKey.currentState!.validate()) {
+                            if (formKey.currentState!.validate()) {
                               try {
                                 await controller.signUpWithEmail();
 

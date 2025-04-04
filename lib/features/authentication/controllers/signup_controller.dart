@@ -18,11 +18,6 @@ class SignupController extends GetxController {
   // Supabase client
   final supabase = Supabase.instance.client;
 
-  @override
-  void onInit() {
-    super.onInit();
-    // Initialize controllers if needed
-  }
 
   @override
   void onClose() {
