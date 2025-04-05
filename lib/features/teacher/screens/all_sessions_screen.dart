@@ -180,6 +180,7 @@ class AllSessionsScreen extends StatelessWidget {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Flexible(
+                                      flex: 4,
                                       child: ElevatedButton.icon(
                                         onPressed: () {
                                           // Set current session and navigate to mark attendance
@@ -196,7 +197,11 @@ class AllSessionsScreen extends StatelessWidget {
                                         icon: const Icon(
                                           Iconsax.clipboard_text,
                                         ),
-                                        label: const Text('Standard View'),
+                                        label: const Text(
+                                          'Standard',
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                        ),
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor:
                                               dark
@@ -206,6 +211,10 @@ class AllSessionsScreen extends StatelessWidget {
                                               dark
                                                   ? Colors.black
                                                   : Colors.white,
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: TSizes.sm,
+                                            vertical: TSizes.sm,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -226,7 +235,11 @@ class AllSessionsScreen extends StatelessWidget {
                                         );
                                       },
                                       icon: const Icon(Iconsax.play_circle),
-                                      label: const Text('Carousel View'),
+                                      label: const Text(
+                                        'Carousel',
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                      ),
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor:
                                             dark
@@ -234,6 +247,10 @@ class AllSessionsScreen extends StatelessWidget {
                                                 : TColors.yellow,
                                         foregroundColor:
                                             dark ? Colors.white : Colors.black,
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: TSizes.sm,
+                                          vertical: TSizes.sm,
+                                        ),
                                       ),
                                     ),
                                     // Add delete button

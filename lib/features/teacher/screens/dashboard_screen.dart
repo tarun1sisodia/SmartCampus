@@ -1,6 +1,5 @@
 import 'package:attedance__/features/teacher/screens/teacher_profile_screen.dart';
 import 'package:attedance__/features/teacher/screens/teacher_settings_screen.dart';
-import 'package:attedance__/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -89,7 +88,7 @@ class DashboardScreen extends StatelessWidget {
                             )
                             : const DecorationImage(
                               image: AssetImage('assets/logos/smartcampus.png'),
-                              fit: BoxFit.cover,
+                              fit: BoxFit.contain,
                             ),
                   ),
                 );

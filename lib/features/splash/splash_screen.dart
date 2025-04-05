@@ -1,3 +1,4 @@
+import 'package:attedance__/services/storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
@@ -52,21 +53,26 @@ class _SplashScreenState extends State<SplashScreen>
     super.dispose();
   }
 
-  Future<void> _checkAuthAndNavigate() async {
-    // Check if user is logged in
-    final currentUser = Supabase.instance.client.auth.currentUser;
-
-    // Check if onboarding is completed
-    final bool onboardingCompleted = true; // Replace with your actual logic
-
-    if (currentUser != null) {
-      print('User authenticated: true');
-      Get.offAllNamed(AppRoutes.home);
-    } else if (onboardingCompleted) {
-      print('Onboarding completed: true');
-      Get.offAllNamed(AppRoutes.login);
-    }
+ Future<void> _checkAuthAndNavigate() async {
+  // Check if user is logged in
+  final currentUser = Supabase.instance.client.auth.currentUser;
+  
+  // Get storage service to check if first launch
+  final storageService = Get.find<StorageService>();
+  final bool onboardingCompleted = storageService.getOnboardingStatus();
+  
+  if (currentUser != null) {
+    print('User authenticated: true');
+    Get.offAllNamed(AppRoutes.home);
+  } else if (onboardingCompleted) {
+    print('Onboarding completed: true');
+    Get.offAllNamed(AppRoutes.login);
+  } else {
+    print('First time user: showing onboarding');
+    Get.offAllNamed(AppRoutes.onboarding);
   }
+}
+
 
   @override
   Widget build(BuildContext context) {

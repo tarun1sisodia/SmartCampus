@@ -400,7 +400,7 @@ class ClassListScreen extends StatelessWidget {
     Get.dialog(
       AlertDialog(
         title: const Text('Edit Class'),
-        content: Container(
+        content: SizedBox(
           width: double.maxFinite,
           child: SingleChildScrollView(
             child: Column(

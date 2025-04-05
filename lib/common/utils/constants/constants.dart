@@ -33,7 +33,6 @@ class AppColors {
 }
 
 class AppConfig {
-  // Firebase collection names
   static const String usersCollection = 'users';
   static const String classesCollection = 'classes';
   static const String studentsCollection = 'students';
@@ -54,12 +53,6 @@ class AppConfig {
 }
 
 // Firestore collection paths
-class FirestorePaths {
-  static const String users = 'users';
-  static const String classes = 'classes';
-  static const String students = 'students';
-  static const String attendance = 'attendance';
-}
 
 // Routes used in the app
 // class AppRoutes {

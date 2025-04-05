@@ -1,3 +1,5 @@
+import 'package:attedance__/features/splash/splash_screen.dart';
+
 import '../../app/bindings/app_bindings.dart';
 import '../../features/authentication/screens/change_password/change_password_screen.dart';
 import '../../features/authentication/screens/forgot_password/forgot_password_2.dart';
@@ -28,6 +30,7 @@ import 'package:get/get.dart';
 /// A class that manages all routes for the app
 class AppRoutes {
   /// Route names as constants to avoid typos
+  static const String splash = '/splash';
   static const String onboarding = '/';
   static const String login = '/login';
   static const String signup = '/signup';
@@ -54,6 +57,12 @@ class AppRoutes {
 
   /// Get all application routes
   static List<GetPage> routes = [
+    GetPage(
+      name: splash,
+      page: () => const SplashScreen(),
+      binding: HomeBinding(),
+      transition: Transition.fadeIn,
+    ),
     GetPage(
       name: changePassword,
       page: () => ChangePasswordScreen(),
@@ -204,6 +213,6 @@ class AppRoutes {
 
   /// Navigate to the initial route based on app state
   static String getInitialRoute() {
-    return home;
+    return splash; // Change this to the desired initial route
   }
 }
