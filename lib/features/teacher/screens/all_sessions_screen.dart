@@ -26,10 +26,10 @@ class AllSessionsScreen extends StatelessWidget {
           style: Theme.of(context).textTheme.headlineSmall,
         ),
         actions: [
-          IconButton(
-            onPressed: () => allSessionsController.loadAllSessions(),
-            icon: const Icon(Iconsax.refresh),
-          ),
+          // IconButton(
+          //   onPressed: () => allSessionsController.loadAllSessions(),
+          //   icon: const Icon(Iconsax.refresh),
+          // ),
         ],
       ),
       body: Obx(() {
@@ -176,7 +176,8 @@ class AllSessionsScreen extends StatelessWidget {
                                 ),
                                 const SizedBox(height: TSizes.spaceBtwItems),
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Flexible(
                                       child: ElevatedButton.icon(
@@ -192,7 +193,9 @@ class AllSessionsScreen extends StatelessWidget {
                                               .value = session.classModel;
                                           Get.to(() => MarkAttendanceScreen());
                                         },
-                                        icon: const Icon(Iconsax.clipboard_text),
+                                        icon: const Icon(
+                                          Iconsax.clipboard_text,
+                                        ),
                                         label: const Text('Standard View'),
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor:
@@ -200,7 +203,9 @@ class AllSessionsScreen extends StatelessWidget {
                                                   ? TColors.yellow
                                                   : TColors.deepPurple,
                                           foregroundColor:
-                                              dark ? Colors.black : Colors.white,
+                                              dark
+                                                  ? Colors.black
+                                                  : Colors.white,
                                         ),
                                       ),
                                     ),

@@ -236,7 +236,7 @@ class TeacherProfileScreen extends StatelessWidget {
                             },
                           )
                           : const DecorationImage(
-                            image: AssetImage('assets/logos/darkapplogo.png'),
+                            image: AssetImage('assets/logos/smartcampus.png'),
                             fit: BoxFit.cover,
                           ),
                 ),

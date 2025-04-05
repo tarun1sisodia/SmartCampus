@@ -27,12 +27,12 @@ class ClassListScreen extends StatelessWidget {
         ),
         actions: [
           // Add refresh button here
-          IconButton(
-            onPressed: () => classController.loadClasses(),
-            icon: const Icon(Iconsax.refresh),
-            tooltip: 'Refresh',
-          ),
-          const SizedBox(width: TSizes.sm),
+          // IconButton(
+          //   onPressed: () => classController.loadClasses(),
+          //   icon: const Icon(Iconsax.refresh),
+          //   tooltip: 'Refresh',
+          // ),
+          // const SizedBox(width: TSizes.sm),
           IconButton(
             onPressed: () => Get.toNamed(AppRoutes.reports),
             icon: const Icon(Iconsax.chart),
@@ -400,96 +400,112 @@ class ClassListScreen extends StatelessWidget {
     Get.dialog(
       AlertDialog(
         title: const Text('Edit Class'),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Obx(
-                () => DropdownButtonFormField<String>(
+        content: Container(
+          width: double.maxFinite,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Obx(
+                  () => DropdownButtonFormField<String>(
+                    decoration: InputDecoration(
+                      labelText: 'Course',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(
+                          TSizes.inputFieldRadius,
+                        ),
+                      ),
+                    ),
+                    isExpanded: true,
+                    // Ensure the dropdown is expanded to fit the screen
+                    value: classController.selectedCourseId.value,
+                    items:
+                        classController.courses.map((course) {
+                          return DropdownMenuItem<String>(
+                            value: course.id,
+                            child: Text(
+                              course.name,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                          );
+                        }).toList(),
+                    onChanged: (value) {
+                      if (value != null) {
+                        classController.selectedCourseId.value = value;
+                      }
+                    },
+                  ),
+                ),
+                const SizedBox(height: TSizes.spaceBtwInputFields),
+
+                // Subject dropdown
+                Obx(
+                  () => DropdownButtonFormField<String>(
+                    decoration: InputDecoration(
+                      labelText: 'Subject',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(
+                          TSizes.inputFieldRadius,
+                        ),
+                      ),
+                    ),
+                    isExpanded: true,
+
+                    // Ensure the dropdown is expanded to fit the screen
+                    value: classController.selectedSubjectId.value,
+                    items:
+                        classController.subjects.map((subject) {
+                          return DropdownMenuItem<String>(
+                            value: subject.id,
+                            child: Text(
+                              subject.name,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                          );
+                        }).toList(),
+                    onChanged: (value) {
+                      if (value != null) {
+                        classController.selectedSubjectId.value = value;
+                      }
+                    },
+                  ),
+                ),
+
+                // Course dropdown
+                const SizedBox(height: TSizes.spaceBtwInputFields),
+
+                // Year field
+                TextField(
+                  controller: classController.yearController,
+                  keyboardType: TextInputType.number,
                   decoration: InputDecoration(
-                    labelText: 'Course',
+                    labelText: 'Year',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(
                         TSizes.inputFieldRadius,
                       ),
                     ),
                   ),
-                  value: classController.selectedCourseId.value,
-                  items:
-                      classController.courses.map((course) {
-                        return DropdownMenuItem<String>(
-                          value: course.id,
-                          child: Text(course.name),
-                        );
-                      }).toList(),
-                  onChanged: (value) {
-                    if (value != null) {
-                      classController.selectedCourseId.value = value;
-                    }
-                  },
                 ),
-              ),
-              const SizedBox(height: TSizes.spaceBtwInputFields),
 
-              // Subject dropdown
-              Obx(
-                () => DropdownButtonFormField<String>(
+                const SizedBox(height: TSizes.spaceBtwInputFields),
+
+                // Section field
+                TextField(
+                  controller: classController.sectionController,
                   decoration: InputDecoration(
-                    labelText: 'Subject',
+                    labelText: 'Section (Optional)',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(
                         TSizes.inputFieldRadius,
                       ),
                     ),
                   ),
-                  value: classController.selectedSubjectId.value,
-                  items:
-                      classController.subjects.map((subject) {
-                        return DropdownMenuItem<String>(
-                          value: subject.id,
-                          child: Text(subject.name),
-                        );
-                      }).toList(),
-                  onChanged: (value) {
-                    if (value != null) {
-                      classController.selectedSubjectId.value = value;
-                    }
-                  },
                 ),
-              ),
-
-              // Course dropdown
-              const SizedBox(height: TSizes.spaceBtwInputFields),
-
-              // Year field
-              TextField(
-                controller: classController.yearController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  labelText: 'Year',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(
-                      TSizes.inputFieldRadius,
-                    ),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: TSizes.spaceBtwInputFields),
-
-              // Section field
-              TextField(
-                controller: classController.sectionController,
-                decoration: InputDecoration(
-                  labelText: 'Section (Optional)',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(
-                      TSizes.inputFieldRadius,
-                    ),
-                  ),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
         actions: [

@@ -15,6 +15,9 @@ import 'class_list_screen.dart';
 class DashboardScreen extends StatelessWidget {
   final dashboardController = Get.find<DashboardController>();
   final searchController = TextEditingController();
+  //using the existing controller
+  final profileController = Get.put(TeacherProfileController());
+  final RxBool isLoading = RxBool(true);
   final RxBool isSearching = RxBool(false);
 
   DashboardScreen({super.key});
@@ -56,52 +59,52 @@ class DashboardScreen extends StatelessWidget {
             tag: 'profileImage',
             child: GestureDetector(
               onTap: () => Get.to(() => const TeacherProfileScreen()),
-              child: FutureBuilder<UserModel?>(
-                future: _getUserData(),
-                builder: (context, snapshot) {
-                  return Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: dark ? TColors.yellow : TColors.deepPurple,
-                        width: 2,
-                      ),
-                      image:
-                          snapshot.hasData &&
-                                  snapshot.data?.profileImageUrl != null &&
-                                  snapshot.data!.profileImageUrl!.isNotEmpty
-                              ? DecorationImage(
-                                image: NetworkImage(
-                                  snapshot.data!.profileImageUrl!,
-                                ),
-                                fit: BoxFit.cover,
-                                onError: (exception, stackTrace) {
-                                  print(
-                                    'Error loading profile image: $exception',
-                                  );
-                                },
-                              )
-                              : const DecorationImage(
-                                image: AssetImage(
-                                  'assets/logos/darkapplogo.png',
-                                ),
-                                fit: BoxFit.cover,
-                              ),
+              child: Obx(() {
+                return Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: dark ? TColors.yellow : TColors.deepPurple,
+                      width: 2,
                     ),
-                  );
-                },
-              ),
+                    image:
+                        profileController.user.value?.profileImageUrl != null &&
+                                profileController
+                                    .user
+                                    .value!
+                                    .profileImageUrl!
+                                    .isNotEmpty
+                            ? DecorationImage(
+                              image: NetworkImage(
+                                profileController.user.value!.profileImageUrl!,
+                              ),
+                              fit: BoxFit.cover,
+                              onError: (exception, stackTrace) {
+                                print(
+                                  'Error loading profile image: $exception',
+                                );
+                              },
+                            )
+                            : const DecorationImage(
+                              image: AssetImage('assets/logos/smartcampus.png'),
+                              fit: BoxFit.cover,
+                            ),
+                  ),
+                );
+              }),
             ),
           ),
         ),
-        // Add "Hi, username" in the app bar
-        title: Text(
-          'Hi, $userName',
-          style: Theme.of(
-            context,
-          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+        // Use the profileController's user name directly
+        title: Obx(
+          () => Text(
+            'Hi, ${profileController.user.value?.name ?? 'Teacher'}',
+            style: Theme.of(
+              context,
+            ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+          ),
         ),
         actions: [
           // Notification icon or other actions
@@ -111,12 +114,12 @@ class DashboardScreen extends StatelessWidget {
               Get.to(() => const TeacherSettingsScreen());
             },
           ),
-          const SizedBox(width: TSizes.sm),
+          /* const SizedBox(width: TSizes.sm),
           IconButton(
             onPressed: () => dashboardController.loadDashboardData(),
             icon: const Icon(Iconsax.refresh),
             tooltip: 'Refresh',
-          ),
+          ),*/
         ],
       ),
       body: Obx(() {
@@ -449,32 +452,5 @@ class DashboardScreen extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Future<UserModel?> _getUserData() async {
-    try {
-      final currentUser = Supabase.instance.client.auth.currentUser;
-      if (currentUser == null) return null;
-
-      final userData =
-          await Supabase.instance.client
-              .from('users')
-              .select()
-              .eq('id', currentUser.id)
-              .maybeSingle();
-
-      if (userData != null) {
-        return UserModel.fromJson({
-          ...userData,
-          'id': currentUser.id,
-          'email': currentUser.email ?? '',
-        });
-      }
-
-      return null;
-    } catch (e) {
-      print('Error fetching user data: $e');
-      return null;
-    }
   }
 }
