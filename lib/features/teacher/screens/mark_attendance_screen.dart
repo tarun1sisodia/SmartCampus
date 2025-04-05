@@ -114,18 +114,20 @@ class MarkAttendanceScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
               ),
               child: ListTile(
-                contentPadding: const EdgeInsets.all(TSizes.md),
+                contentPadding: const EdgeInsets.symmetric(horizontal: TSizes.md,vertical: TSizes.sm),
                 leading: CircleAvatar(
                   backgroundColor: _getStatusColor(
                     student.attendanceStatus,
                     dark,
                   ),
+                  radius: 20,
                   child: Text(
                     student.name.substring(0, 1),
                     style: TextStyle(
                       color: dark ? Colors.black : Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 title: Text(
@@ -146,6 +148,7 @@ class MarkAttendanceScreen extends StatelessWidget {
                 ),
                 trailing: DropdownButton<String>(
                   value: student.attendanceStatus ?? 'absent',
+                  isDense: true,
                   onChanged: (value) {
                     attendanceController.updateStudentStatus(
                       student.id,

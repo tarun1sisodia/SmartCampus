@@ -63,180 +63,198 @@ class AllSessionsScreen extends StatelessWidget {
           );
         }
 
-        return Column(
-          children: [
-            // Filter options
-            Padding(
-              padding: const EdgeInsets.all(TSizes.defaultSpace),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: allSessionsController.searchController,
-                      decoration: InputDecoration(
-                        hintText: 'Search by class or subject',
-                        prefixIcon: const Icon(Iconsax.search_normal),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(
-                            TSizes.inputFieldRadius,
+        return RefreshIndicator(
+          onRefresh: () async {
+            await allSessionsController.loadAllSessions();
+          },
+          color: dark ? TColors.yellow : TColors.deepPurple,
+          backgroundColor: dark ? TColors.darkerGrey : Colors.white,
+          child: Column(
+            children: [
+              // Filter options
+              Padding(
+                padding: const EdgeInsets.all(TSizes.defaultSpace),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: allSessionsController.searchController,
+                        decoration: InputDecoration(
+                          hintText: 'Search by class or subject',
+                          prefixIcon: const Icon(Iconsax.search_normal),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(
+                              TSizes.inputFieldRadius,
+                            ),
                           ),
                         ),
+                        onChanged:
+                            (value) => allSessionsController.filterSessions(),
                       ),
-                      onChanged:
-                          (value) => allSessionsController.filterSessions(),
                     ),
-                  ),
-                  IconButton(
-                    onPressed: () => _showFilterOptions(context),
-                    icon: const Icon(Iconsax.filter),
-                  ),
-                ],
-              ),
-            ),
-
-            // Sessions list
-            Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: TSizes.defaultSpace,
+                    IconButton(
+                      onPressed: () => _showFilterOptions(context),
+                      icon: const Icon(Iconsax.filter),
+                    ),
+                  ],
                 ),
-                itemCount: allSessionsController.filteredSessions.length,
-                itemBuilder: (context, index) {
-                  final session = allSessionsController.filteredSessions[index];
-                  final formattedDate = DateFormat(
-                    'EEEE, MMMM d, yyyy',
-                  ).format(session.date);
+              ),
 
-                  return Card(
-                    margin: const EdgeInsets.only(bottom: TSizes.spaceBtwItems),
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
-                    ),
-                    child: ExpansionTile(
-                      leading: CircleAvatar(
-                        backgroundColor:
-                            dark ? TColors.yellow : TColors.deepPurple,
-                        child: Text(
-                          DateFormat('d').format(session.date),
-                          style: TextStyle(
-                            color: dark ? Colors.black : Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
+              // Sessions list
+              Expanded(
+                child: ListView.builder(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: TSizes.defaultSpace,
+                  ),
+                  itemCount: allSessionsController.filteredSessions.length,
+                  itemBuilder: (context, index) {
+                    final session =
+                        allSessionsController.filteredSessions[index];
+                    final formattedDate = DateFormat(
+                      'EEEE, MMMM d, yyyy',
+                    ).format(session.date);
+
+                    return Card(
+                      margin: const EdgeInsets.only(
+                        bottom: TSizes.spaceBtwItems,
+                      ),
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                          TSizes.cardRadiusMd,
                         ),
                       ),
-                      title: Text(
-                        session.className ?? 'Unknown Class',
-                        style: Theme.of(context).textTheme.titleMedium
-                            ?.copyWith(fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            session.subjectName ?? 'Unknown Subject',
-                            style: Theme.of(context).textTheme.bodyMedium,
+                      child: ExpansionTile(
+                        leading: CircleAvatar(
+                          backgroundColor:
+                              dark ? TColors.yellow : TColors.deepPurple,
+                          child: Text(
+                            DateFormat('d').format(session.date),
+                            style: TextStyle(
+                              color: dark ? Colors.black : Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                          Text(
-                            formattedDate,
-                            style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                        title: Text(
+                          session.className ?? 'Unknown Class',
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              session.subjectName ?? 'Unknown Subject',
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                            Text(
+                              formattedDate,
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                          ],
+                        ),
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(TSizes.md),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                if (session.startTime != null &&
+                                    session.endTime != null)
+                                  Text(
+                                    'Time: ${session.startTime} - ${session.endTime}',
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium,
+                                  ),
+                                const SizedBox(
+                                  height: TSizes.spaceBtwItems / 2,
+                                ),
+                                Text(
+                                  'Created: ${DateFormat('MMM d, yyyy').format(session.createdAt ?? DateTime.now())}',
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                ),
+                                const SizedBox(height: TSizes.spaceBtwItems),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Flexible(
+                                      child: ElevatedButton.icon(
+                                        onPressed: () {
+                                          // Set current session and navigate to mark attendance
+                                          allSessionsController
+                                              .attendanceController
+                                              .currentSessionId
+                                              .value = session.id;
+                                          allSessionsController
+                                              .attendanceController
+                                              .selectedClass
+                                              .value = session.classModel;
+                                          Get.to(() => MarkAttendanceScreen());
+                                        },
+                                        icon: const Icon(Iconsax.clipboard_text),
+                                        label: const Text('Standard View'),
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor:
+                                              dark
+                                                  ? TColors.yellow
+                                                  : TColors.deepPurple,
+                                          foregroundColor:
+                                              dark ? Colors.black : Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                    ElevatedButton.icon(
+                                      onPressed: () {
+                                        // Set current session and navigate to carousel attendance
+                                        allSessionsController
+                                            .attendanceController
+                                            .currentSessionId
+                                            .value = session.id;
+                                        allSessionsController
+                                            .attendanceController
+                                            .selectedClass
+                                            .value = session.classModel;
+                                        Get.to(
+                                          () => CarouselAttendanceScreen(),
+                                          binding: CarouselAttendanceBinding(),
+                                        );
+                                      },
+                                      icon: const Icon(Iconsax.play_circle),
+                                      label: const Text('Carousel View'),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor:
+                                            dark
+                                                ? TColors.blue
+                                                : TColors.yellow,
+                                        foregroundColor:
+                                            dark ? Colors.white : Colors.black,
+                                      ),
+                                    ),
+                                    // Add delete button
+                                    IconButton(
+                                      onPressed: () {
+                                        _showDeleteConfirmation(
+                                          context,
+                                          session.id,
+                                        );
+                                      },
+                                      icon: const Icon(Iconsax.trash),
+                                      color: Colors.red,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(TSizes.md),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              if (session.startTime != null &&
-                                  session.endTime != null)
-                                Text(
-                                  'Time: ${session.startTime} - ${session.endTime}',
-                                  style: Theme.of(context).textTheme.bodyMedium,
-                                ),
-                              const SizedBox(height: TSizes.spaceBtwItems / 2),
-                              Text(
-                                'Created: ${DateFormat('MMM d, yyyy').format(session.createdAt ?? DateTime.now())}',
-                                style: Theme.of(context).textTheme.bodySmall,
-                              ),
-                              const SizedBox(height: TSizes.spaceBtwItems),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  ElevatedButton.icon(
-                                    onPressed: () {
-                                      // Set current session and navigate to mark attendance
-                                      allSessionsController
-                                          .attendanceController
-                                          .currentSessionId
-                                          .value = session.id;
-                                      allSessionsController
-                                          .attendanceController
-                                          .selectedClass
-                                          .value = session.classModel;
-                                      Get.to(() => MarkAttendanceScreen());
-                                    },
-                                    icon: const Icon(Iconsax.clipboard_text),
-                                    label: const Text('Standard View'),
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor:
-                                          dark
-                                              ? TColors.yellow
-                                              : TColors.deepPurple,
-                                      foregroundColor:
-                                          dark ? Colors.black : Colors.white,
-                                    ),
-                                  ),
-                                  ElevatedButton.icon(
-                                    onPressed: () {
-                                      // Set current session and navigate to carousel attendance
-                                      allSessionsController
-                                          .attendanceController
-                                          .currentSessionId
-                                          .value = session.id;
-                                      allSessionsController
-                                          .attendanceController
-                                          .selectedClass
-                                          .value = session.classModel;
-                                      Get.to(
-                                        () => CarouselAttendanceScreen(),
-                                        binding: CarouselAttendanceBinding(),
-                                      );
-                                    },
-                                    icon: const Icon(Iconsax.play_circle),
-                                    label: const Text('Carousel View'),
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor:
-                                          dark ? TColors.blue : TColors.yellow,
-                                      foregroundColor:
-                                          dark ? Colors.white : Colors.black,
-                                    ),
-                                  ),
-                                  // Add delete button
-                                  IconButton(
-                                    onPressed: () {
-                                      _showDeleteConfirmation(
-                                        context,
-                                        session.id,
-                                      );
-                                    },
-                                    icon: const Icon(Iconsax.trash),
-                                    color: Colors.red,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         );
       }),
     );

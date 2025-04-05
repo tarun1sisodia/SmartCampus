@@ -37,7 +37,7 @@ class CreateClassScreen extends StatelessWidget {
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
                         const SizedBox(height: TSizes.spaceBtwItems),
-                  
+
                         // Subject Dropdown
                         DropdownButtonFormField(
                           decoration: InputDecoration(
@@ -48,11 +48,16 @@ class CreateClassScreen extends StatelessWidget {
                               ),
                             ),
                           ),
+                          isExpanded: true,
                           items:
                               classController.subjects.map((subject) {
                                 return DropdownMenuItem(
                                   value: subject,
-                                  child: Text(subject.name),
+                                  child: Text(
+                                    subject.name,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                  ),
                                 );
                               }).toList(),
                           onChanged: (value) {
@@ -60,7 +65,7 @@ class CreateClassScreen extends StatelessWidget {
                           },
                         ),
                         const SizedBox(height: TSizes.spaceBtwInputFields),
-                  
+
                         // Course Dropdown
                         DropdownButtonFormField(
                           decoration: InputDecoration(
@@ -71,11 +76,17 @@ class CreateClassScreen extends StatelessWidget {
                               ),
                             ),
                           ),
+                          isExpanded: true,
+                          // Displaying the courses based on the selected subject
                           items:
                               classController.courses.map((course) {
                                 return DropdownMenuItem(
                                   value: course,
-                                  child: Text(course.name),
+                                  child: Text(
+                                    course.name,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                  ),
                                 );
                               }).toList(),
                           onChanged: (value) {
@@ -83,7 +94,7 @@ class CreateClassScreen extends StatelessWidget {
                           },
                         ),
                         const SizedBox(height: TSizes.spaceBtwInputFields),
-                  
+
                         // Year TextField
                         TextFormField(
                           controller: classController.yearController,
@@ -99,7 +110,7 @@ class CreateClassScreen extends StatelessWidget {
                           keyboardType: TextInputType.number,
                         ),
                         const SizedBox(height: TSizes.spaceBtwInputFields),
-                  
+
                         // Section TextField
                         TextFormField(
                           controller: classController.sectionController,
@@ -114,7 +125,7 @@ class CreateClassScreen extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: TSizes.spaceBtwSections),
-                  
+
                         // Create Button
                         SizedBox(
                           width: double.infinity,
@@ -124,7 +135,8 @@ class CreateClassScreen extends StatelessWidget {
                             style: ElevatedButton.styleFrom(
                               backgroundColor:
                                   dark ? TColors.yellow : TColors.deepPurple,
-                              foregroundColor: dark ? Colors.black : Colors.white,
+                              foregroundColor:
+                                  dark ? Colors.black : Colors.white,
                             ),
                             child: const Text('Create Class'),
                           ),
