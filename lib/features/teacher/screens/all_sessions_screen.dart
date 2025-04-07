@@ -26,10 +26,10 @@ class AllSessionsScreen extends StatelessWidget {
           style: Theme.of(context).textTheme.headlineSmall,
         ),
         actions: [
-          // IconButton(
-          //   onPressed: () => allSessionsController.loadAllSessions(),
-          //   icon: const Icon(Iconsax.refresh),
-          // ),
+          IconButton(
+            onPressed: () => allSessionsController.loadAllSessions(),
+            icon: const Icon(Iconsax.refresh),
+          ),
         ],
       ),
       body: Obx(() {

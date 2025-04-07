@@ -1,3 +1,5 @@
+import 'package:attedance__/common/utils/constants/colors.dart';
+
 import '../../app/theme/custom_themes/appbar_theme.dart';
 import '../../app/theme/custom_themes/bottom_sheet_theme.dart';
 import '../../app/theme/custom_themes/checkbox_theme.dart';
@@ -15,8 +17,8 @@ class TAppTheme {
     useMaterial3: true,
     fontFamily: 'Poppins',
     brightness: Brightness.light,
-    primaryColor: Colors.blueAccent,
-    scaffoldBackgroundColor: Colors.white,
+    primaryColor: TColors.blue,
+    scaffoldBackgroundColor: TColors.white,
     textTheme: TtextTheme.lighttextTheme,
     inputDecorationTheme: TTextFieldTheme.lightInputDecoration,
     appBarTheme: TAppbarTheme.lightAppBarTheme,

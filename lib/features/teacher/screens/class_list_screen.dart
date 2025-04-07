@@ -27,12 +27,12 @@ class ClassListScreen extends StatelessWidget {
         ),
         actions: [
           // Add refresh button here
-          // IconButton(
-          //   onPressed: () => classController.loadClasses(),
-          //   icon: const Icon(Iconsax.refresh),
-          //   tooltip: 'Refresh',
-          // ),
-          // const SizedBox(width: TSizes.sm),
+          IconButton(
+            onPressed: () => classController.loadClasses(),
+            icon: const Icon(Iconsax.refresh),
+            tooltip: 'Refresh',
+          ),
+          const SizedBox(width: TSizes.sm),
           IconButton(
             onPressed: () => Get.toNamed(AppRoutes.reports),
             icon: const Icon(Iconsax.chart),
