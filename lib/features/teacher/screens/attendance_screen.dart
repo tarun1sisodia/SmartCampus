@@ -55,7 +55,7 @@ class AttendanceScreen extends StatelessWidget {
         return RefreshIndicator(
           onRefresh: () async {
             // Show loading indicator while refreshing
-            await attendanceController.attendanceSessions();
+            attendanceController.attendanceSessions();
           },
           color: dark ? TColors.yellow : TColors.deepPurple,
           backgroundColor: dark ? TColors.darkerGrey : Colors.white,

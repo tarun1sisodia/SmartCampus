@@ -7,7 +7,6 @@ import 'package:iconsax/iconsax.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import '../controllers/carousel_attendance_controller.dart';
 import '../widgets/swipeable_student_card.dart';
-import '../widgets/attendance_stats_card.dart';
 import '../widgets/attendance_action_buttons.dart';
 import '../../../common/utils/constants/colors.dart';
 import '../../../common/utils/constants/sized.dart';
