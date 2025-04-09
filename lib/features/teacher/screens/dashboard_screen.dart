@@ -113,12 +113,12 @@ class DashboardScreen extends StatelessWidget {
               Get.to(() => const TeacherSettingsScreen());
             },
           ),
-          /* const SizedBox(width: TSizes.sm),
+           const SizedBox(width: TSizes.sm),
           IconButton(
             onPressed: () => dashboardController.loadDashboardData(),
             icon: const Icon(Iconsax.refresh),
             tooltip: 'Refresh',
-          ),*/
+          ),
         ],
       ),
       body: Obx(() {
@@ -146,7 +146,7 @@ class DashboardScreen extends StatelessWidget {
         }
 
         return RefreshIndicator(
-          onRefresh: () => dashboardController.loadDashboardData(),
+            onRefresh: () async => await dashboardController.loadDashboardData(),
           color: dark ? TColors.yellow : TColors.deepPurple,
           backgroundColor: dark ? TColors.darkerGrey : Colors.white,
           child: SingleChildScrollView(

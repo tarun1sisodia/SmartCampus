@@ -181,6 +181,38 @@ class TeacherProfileScreen extends StatelessWidget {
                   ),
                 ),
 
+                const SizedBox(height: TSizes.spaceBtwItems),
+                SizedBox(
+                  width: double.infinity,
+                  height: 55,
+                  child: ElevatedButton.icon(
+                    onPressed:
+                        controller.isLoading.value
+                            ? null
+                            : () {
+                              Get.defaultDialog(
+                                title: 'Delete Account',
+                                middleText:
+                                    'This action cannot be undone. All your data will be permanently deleted. Are you sure?',
+                                textConfirm: 'Delete',
+                                textCancel: 'Cancel',
+                                confirmTextColor: Colors.white,
+                                buttonColor: Colors.red,
+                                onConfirm: () {
+                                  Get.back();
+                                  controller.deleteAccount();
+                                },
+                              );
+                            },
+                    icon: const Icon(Iconsax.trash),
+                    label: const Text('Delete Account'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red.shade700,
+                      foregroundColor: Colors.white,
+                    ),
+                  ),
+                ),
+
                 const SizedBox(height: TSizes.spaceBtwSections),
 
                 // App version
@@ -860,6 +892,92 @@ class TeacherProfileController extends GetxController {
       print('Image upload error: $e');
     } finally {
       isUploadingImage.value = false;
+    }
+  }
+
+  Future<void> deleteAccount() async {
+    try {
+      isLoading.value = true;
+
+      // Get current user
+      final currentUser = supabase.auth.currentUser;
+      if (currentUser == null) {
+        TSnackBar.showError(message: 'No authenticated user found');
+        return;
+      }
+
+      // Show a loading dialog
+      Get.dialog(
+        const Center(child: CircularProgressIndicator()),
+        barrierDismissible: false,
+      );
+
+      // 1. Delete user data from the users table
+      await supabase.from('users').delete().eq('id', currentUser.id);
+
+      // 2. Delete profile image from storage if it exists
+      if (user.value?.profileImageUrl != null &&
+          user.value!.profileImageUrl!.isNotEmpty) {
+        try {
+          final filePath =
+              '${currentUser.id}/${currentUser.id}${path.extension(user.value!.profileImageUrl!)}';
+          await supabase.storage.from('profile_images').remove([filePath]);
+        } catch (e) {
+          // Continue even if image deletion fails
+          print('Failed to delete profile image: $e');
+        }
+      }
+
+      // 3. Delete the user's classes (optional - you may want to handle this differently)
+      try {
+        final classes = await classService.getTeacherClasses(currentUser.id);
+        for (var classModel in classes) {
+          // Delete attendance sessions for this class
+          await supabase
+              .from('attendance_sessions')
+              .delete()
+              .eq('class_id', classModel.id);
+
+          // Delete class_students relationships
+          await supabase
+              .from('class_students')
+              .delete()
+              .eq('class_id', classModel.id);
+
+          // Delete the class itself
+          await supabase.from('classes').delete().eq('id', classModel.id);
+        }
+      } catch (e) {
+        print('Error deleting classes: $e');
+        // Continue with account deletion even if class deletion fails
+      }
+
+      // 4. Finally, delete the user account from Supabase Auth
+      await supabase.auth.admin.deleteUser(currentUser.id);
+
+      // Close the loading dialog
+      Get.back();
+
+      // 5. Sign out (this will happen automatically, but we'll do it explicitly)
+      await supabase.auth.signOut();
+
+      // 6. Navigate to splash screen
+      Get.offAllNamed(AppRoutes.splash);
+
+      // Show success message
+      TSnackBar.showSuccess(
+        message: 'Your account has been deleted successfully',
+      );
+    } catch (e) {
+      // Close the loading dialog if it's open
+      if (Get.isDialogOpen ?? false) {
+        Get.back();
+      }
+
+      TSnackBar.showError(message: 'Failed to delete account: ${e.toString()}');
+      print('Account deletion error: $e');
+    } finally {
+      isLoading.value = false;
     }
   }
 }
