@@ -60,7 +60,7 @@ class AppRoutes {
     GetPage(
       name: splash,
       page: () => const SplashScreen(),
-      binding: HomeBinding(),
+      binding: SplashBinding(),
       transition: Transition.fadeIn,
     ),
     GetPage(

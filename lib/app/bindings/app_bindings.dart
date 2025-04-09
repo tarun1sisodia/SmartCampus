@@ -1,3 +1,5 @@
+import 'package:attedance__/services/storage_service.dart';
+
 import '../../features/authentication/controllers/change_password_controller.dart';
 import '../../features/authentication/controllers/controllers_onboarding/onboarding_controller.dart';
 import '../../features/authentication/controllers/forgot_password_controller.dart';
@@ -62,6 +64,16 @@ class AppBindings {
 
   static void registerChangePasswordBindings() {
     Get.lazyPut(() => ChangePasswordController(), fenix: true);
+  }
+
+}
+class SplashBinding extends Bindings {
+  @override
+  void dependencies() {
+    // Only initialize services needed for the splash screen
+    Get.put(StorageService(), permanent: true);
+    // You could also initialize any controllers specific to the splash screen
+    // but avoid controllers that require authentication
   }
 }
 

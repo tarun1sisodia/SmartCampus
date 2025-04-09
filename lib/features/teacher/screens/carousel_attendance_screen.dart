@@ -1,3 +1,4 @@
+import 'package:attedance__/common/utils/device/device_utility.dart';
 import 'package:attedance__/features/teacher/screens/class_list_screen.dart';
 import 'package:attedance__/features/teacher/widgets/session_timer_widget.dart';
 import 'package:flutter/material.dart';
@@ -15,43 +16,52 @@ import '../../../common/utils/helpers/helper_function.dart';
 class CarouselAttendanceScreen extends StatelessWidget {
   // Use Get.find instead of Get.put to avoid recreating the controller
   final carouselAttendanceController = Get.find<CarouselAttendanceController>();
-  final CarouselSliderController carouselController = CarouselSliderController();
+  final CarouselSliderController carouselController =
+      CarouselSliderController();
 
   CarouselAttendanceScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     final dark = THelperFunction.isDarkMode(context);
-    
+    // Inside the build method, add these responsive variables
+    final screenSize = MediaQuery.of(context).size;
+    final isTablet = screenSize.width < 1024 && screenSize.width > 500;
+    final isMobile = screenSize.width <= 500;
+    final isLandscape = DeviceUtility.isLandscapeOrientation(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Carousel Attendance'),
-        // automaticallyImplyLeading: false,
         actions: [
           // Session timer in app bar
-          // Obx(
-          //   () =>
-          //       carouselAttendanceController.isTimerRunning.value
-          //           ? Padding(
-          //             padding: const EdgeInsets.only(right: TSizes.sm),
-          //             child: Center(
-          //               child: SessionTimerWidget(
-          //                 remainingTime:
-          //                     carouselAttendanceController.remainingTime.value,
-          //                 isSessionActive:
-          //                     !carouselAttendanceController.remainingTime.value
-          //                         .contains('Ended'),
-          //               ),
-          //             ),
-          //           )
-          //           : const SizedBox.shrink(),
-          // ),
-          SizedBox(width: TSizes.spaceBtwSections),
+          Obx(
+            () =>
+                carouselAttendanceController.isTimerRunning.value
+                    ? Padding(
+                      padding: const EdgeInsets.only(right: TSizes.sm),
+                      child: Center(
+                        child: SessionTimerWidget(
+                          remainingTime:
+                              carouselAttendanceController.remainingTime.value,
+                          isSessionActive:
+                              !carouselAttendanceController.remainingTime.value
+                                  .contains('Ended'),
+                        ),
+                      ),
+                    )
+                    : const SizedBox.shrink(),
+          ),
           IconButton(
             onPressed: () {
               // Only try to load students if a session is selected
-              if (carouselAttendanceController.attendanceController.currentSessionId.value.isNotEmpty) {
-                carouselAttendanceController.attendanceController.loadStudentsForSession();
+              if (carouselAttendanceController
+                  .attendanceController
+                  .currentSessionId
+                  .value
+                  .isNotEmpty) {
+                carouselAttendanceController.attendanceController
+                    .loadStudentsForSession();
               } else {
                 // Show a message if no session is selected
                 Get.snackbar(
@@ -65,20 +75,6 @@ class CarouselAttendanceScreen extends StatelessWidget {
           ),
         ],
       ),
-      // floatingActionButton: Obx(
-      //   () =>
-      //       carouselAttendanceController
-      //               .attendanceController
-      //               .isStudentsLoaded
-      //               .value
-      //           ? FloatingActionButton.extended(
-      //             onPressed: () => _showSubmitConfirmation(context),
-      //             backgroundColor: dark ? TColors.blue : TColors.yellow,
-      //             icon: const Icon(Iconsax.tick_square),
-      //             label: const Text('Submit Attendance'),
-      //           )
-      //           : const SizedBox.shrink(),
-      // ),
       body: Obx(() {
         final attendanceController =
             carouselAttendanceController.attendanceController;
@@ -155,41 +151,65 @@ class CarouselAttendanceScreen extends StatelessWidget {
         return Column(
           children: [
             // Attendance stats card
-            Padding(
-              padding: const EdgeInsets.all(TSizes.defaultSpace),
-              child: AttendanceStatsCard(
-                totalStudents: attendanceController.students.length,
-                presentCount: carouselAttendanceController.presentCount.value,
-                absentCount: carouselAttendanceController.absentCount.value,
-                lateCount: carouselAttendanceController.lateCount.value,
-                excusedCount: carouselAttendanceController.excusedCount.value,
+            /*Padding(
+              padding: EdgeInsets.all(
+                isMobile
+                    ? (isLandscape ? TSizes.sm : TSizes.md)
+                    : TSizes.defaultSpace,
+              ),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  // Calculate if we need a compact layout
+                  final isCompact = constraints.maxWidth < 400 || isLandscape;
+                  return AttendanceStatsCard(
+                    totalStudents: attendanceController.students.length,
+                    presentCount:
+                        carouselAttendanceController.presentCount.value,
+                    absentCount: carouselAttendanceController.absentCount.value,
+                    lateCount: carouselAttendanceController.lateCount.value,
+                    excusedCount:
+                        carouselAttendanceController.excusedCount.value,
+                    isCompact: isCompact,
+                  );
+                },
               ),
             ),
+*/
             // Session timer above carousel - make it more visible
             Obx(
-              () => carouselAttendanceController.isTimerRunning.value
-                  ? Container(
-                      margin: const EdgeInsets.symmetric(
-                        horizontal: TSizes.defaultSpace,
-                        vertical: TSizes.sm,
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: TSizes.md,
-                        vertical: TSizes.sm,
-                      ),
-                      decoration: BoxDecoration(
-                        color: dark ? TColors.darkerGrey : Colors.grey.shade100,
-                        borderRadius: BorderRadius.circular(TSizes.borderRadiusMd),
-                        border: Border.all(
-                          color: dark ? TColors.yellow.withOpacity(0.3) : TColors.deepPurple.withOpacity(0.3),
+              () =>
+                  carouselAttendanceController.isTimerRunning.value
+                      ? Container(
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: TSizes.defaultSpace,
+                          vertical: TSizes.sm,
                         ),
-                      ),
-                      child: SessionTimerWidget(
-                        remainingTime: carouselAttendanceController.remainingTime.value,
-                        isSessionActive: !carouselAttendanceController.remainingTime.value.contains('Ended'),
-                      ),
-                    )
-                  : const SizedBox.shrink(),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: TSizes.md,
+                          vertical: TSizes.sm,
+                        ),
+                        decoration: BoxDecoration(
+                          color:
+                              dark ? TColors.darkerGrey : Colors.grey.shade100,
+                          borderRadius: BorderRadius.circular(
+                            TSizes.borderRadiusMd,
+                          ),
+                          border: Border.all(
+                            color:
+                                dark
+                                    ? TColors.yellow.withOpacity(0.3)
+                                    : TColors.deepPurple.withOpacity(0.3),
+                          ),
+                        ),
+                        child: SessionTimerWidget(
+                          remainingTime:
+                              carouselAttendanceController.remainingTime.value,
+                          isSessionActive:
+                              !carouselAttendanceController.remainingTime.value
+                                  .contains('Ended'),
+                        ),
+                      )
+                      : const SizedBox.shrink(),
             ),
 
             // Carousel of student cards
@@ -198,8 +218,16 @@ class CarouselAttendanceScreen extends StatelessWidget {
                 carouselController: carouselController,
                 itemCount: attendanceController.students.length,
                 options: CarouselOptions(
-                  height: 400,
-                  viewportFraction: 0.85,
+                  height:
+                      isLandscape
+                          ? screenSize.height *
+                              0.6 // Adjust height in landscape
+                          : screenSize.height *
+                              0.4, // Adjust height in portrait
+                  viewportFraction:
+                      isLandscape
+                          ? 0.6 // Show more of adjacent cards in landscape
+                          : 0.85,
                   enlargeCenterPage: true,
                   enableInfiniteScroll: false,
                   onPageChanged: (index, reason) {
@@ -322,19 +350,43 @@ class CarouselAttendanceScreen extends StatelessWidget {
                 },
               ),
             ),
-            Obx(
-              () =>
-                  carouselAttendanceController
-                          .attendanceController
-                          .isStudentsLoaded
-                          .value
-                      ? FloatingActionButton.extended(
-                        onPressed: () => _showSubmitConfirmation(context),
-                        backgroundColor: dark ? TColors.blue : TColors.yellow,
-                        icon: const Icon(Iconsax.tick_square),
-                        label: const Text('Submit Attendance'),
-                      )
-                      : const SizedBox.shrink(),
+
+            // Replace the existing submit button with this more compact version
+            Padding(
+              padding: EdgeInsets.only(
+                bottom: isMobile ? TSizes.sm : TSizes.md,
+              ),
+              child: Obx(
+                () =>
+                    carouselAttendanceController
+                            .attendanceController
+                            .isStudentsLoaded
+                            .value
+                        ? SizedBox(
+                          width: isMobile ? 300 : 240, // Control the width
+                          height: isMobile ? 50 : 40, // Control the height
+                          child: ElevatedButton.icon(
+                            onPressed: () => _showSubmitConfirmation(context),
+                            icon: const Icon(Iconsax.tick_square, size: 20),
+                            label: const Text('Submit Attendance'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  dark ? TColors.blue : TColors.yellow,
+                              foregroundColor:
+                                  dark ? Colors.white : Colors.black,
+                              padding: EdgeInsets.symmetric(
+                                vertical: isMobile ? TSizes.xs : TSizes.sm,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                  TSizes.buttonRadius,
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
+                        : const SizedBox.shrink(),
+              ),
             ),
           ],
         );
