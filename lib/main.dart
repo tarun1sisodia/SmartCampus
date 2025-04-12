@@ -30,10 +30,14 @@ Future<void> main() async {
   await GetStorage.init();
 
   // Initialize Supabase by directly providing the url and key . they are very secret and import for app to run with backend properly .
+  // await Supabase.initialize(
+  //   url: 'https://lbcmezrvrmbsaqoqxjnm.supabase.co',
+  //   anonKey:
+  //       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxiY21lenJ2cm1ic2Fxb3F4am5tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI5ODM1MzQsImV4cCI6MjA1ODU1OTUzNH0.-7_C8OG_ws5qNaCZd6UBIPGl_RYeWsz_EGjixi09zQU',
+  // );
   await Supabase.initialize(
-    url: 'https://lbcmezrvrmbsaqoqxjnm.supabase.co',
-    anonKey:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxiY21lenJ2cm1ic2Fxb3F4am5tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI5ODM1MzQsImV4cCI6MjA1ODU1OTUzNH0.-7_C8OG_ws5qNaCZd6UBIPGl_RYeWsz_EGjixi09zQU',
+    url: 'https://bwlbpkasioafzfbtzytj.supabase.co',
+    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ3bGJwa2FzaW9hZnpmYnR6eXRqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQyMTMzMjQsImV4cCI6MjA1OTc4OTMyNH0.wuknuC3aGiDXP4Yn4SJp6iBP3rgzolr4knrpsT5ha9E',
   );
 
   // Initialize services

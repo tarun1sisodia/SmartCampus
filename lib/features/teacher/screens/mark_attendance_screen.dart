@@ -1,4 +1,5 @@
 import 'package:attedance__/app/routes/app_routes.dart';
+import 'package:attedance__/common/utils/device/device_utility.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -16,6 +17,21 @@ class MarkAttendanceScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final dark = THelperFunction.isDarkMode(context);
 
+    // Add responsive sizing variables
+    final screenSize = MediaQuery.of(context).size;
+    final isTablet = screenSize.width < 1024 && screenSize.width > 500;
+    final isMobile = screenSize.width <= 500;
+    final isLandscape = DeviceUtility.isLandscapeOrientation(context);
+
+    // Calculate responsive padding
+    final cardPadding =
+        isMobile
+            ? (isLandscape ? TSizes.xs : TSizes.sm)
+            : (isLandscape ? TSizes.sm : TSizes.md);
+
+    // Calculate avatar size based on device
+    final avatarSize =
+        isTablet ? (isLandscape ? 18.0 : 22.0) : (isLandscape ? 16.0 : 20.0);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -102,69 +118,110 @@ class MarkAttendanceScreen extends StatelessWidget {
           );
         }
 
-        return ListView.builder(
-          padding: const EdgeInsets.all(TSizes.defaultSpace),
-          itemCount: attendanceController.students.length,
-          itemBuilder: (context, index) {
-            final student = attendanceController.students[index];
-            return Card(
-              margin: const EdgeInsets.only(bottom: TSizes.spaceBtwItems),
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
-              ),
-              child: ListTile(
-                contentPadding: const EdgeInsets.symmetric(horizontal: TSizes.md,vertical: TSizes.sm),
-                leading: CircleAvatar(
-                  backgroundColor: _getStatusColor(
-                    student.attendanceStatus,
-                    dark,
+        return RefreshIndicator(
+          onRefresh: () async {
+            // Show loading indicator while refreshing
+            await attendanceController.loadStudentsForSession();
+          },
+          color: dark ? TColors.yellow : TColors.deepPurple,
+          backgroundColor: dark ? TColors.darkerGrey : Colors.white,
+          displacement: 40.0,
+          strokeWidth: 3.0,
+          triggerMode: RefreshIndicatorTriggerMode.onEdge,
+          child: ListView.builder(
+            padding: EdgeInsets.all(isMobile ? TSizes.sm : TSizes.defaultSpace),
+            itemCount: attendanceController.students.length,
+            itemBuilder: (context, index) {
+              final student = attendanceController.students[index];
+              return Card(
+                margin: EdgeInsets.only(
+                  bottom: isMobile ? TSizes.xs : TSizes.spaceBtwItems,
+                ),
+                elevation: 2,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
+                ),
+                child: ListTile(
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: cardPadding,
+                    vertical: isMobile ? TSizes.xs : TSizes.sm,
                   ),
-                  radius: 20,
-                  child: Text(
-                    student.name.substring(0, 1),
-                    style: TextStyle(
-                      color: dark ? Colors.black : Colors.white,
-                      fontWeight: FontWeight.bold,
+                  leading: CircleAvatar(
+                    backgroundColor: _getStatusColor(
+                      student.attendanceStatus,
+                      dark,
                     ),
+                    radius: 20,
+                    child: Text(
+                      student.name.isNotEmpty
+                          ? student.name.substring(0, 1)
+                          : "?",
+                      style: TextStyle(
+                        color: dark ? Colors.black : Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: avatarSize * 0.8,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  title: Text(
+                    student.name,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      fontSize:
+                          isMobile
+                              ? (isLandscape ? 14.0 : 16.0)
+                              : (isLandscape ? 16.0 : 18.0),
+                    ),
+                    maxLines: index > 0 ? 1 : 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                ),
-                title: Text(
-                  student.name,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height:
+                            isMobile ? TSizes.xs / 2 : TSizes.spaceBtwItems / 2,
+                      ),
+                      Text(
+                        'Roll Number: ${student.rollNumber}',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          // color: dark ? Colors.white70 : Colors.black54,
+                          fontSize: isMobile ? 10.0 : 12.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                  trailing: DropdownButton<String>(
+                    value: student.attendanceStatus ?? 'absent',
+                    isDense: true,
+                    underline: Container(
+                      height: 1,
+                      color: _getStatusColor(student.attendanceStatus, dark),
+                    ),
+                    onChanged: (value) {
+                      attendanceController.updateStudentStatus(
+                        student.id,
+                        value!,
+                      );
+                    },
+                    items: const [
+                      DropdownMenuItem(
+                        value: 'present',
+                        child: Text('Present'),
+                      ),
+                      DropdownMenuItem(value: 'absent', child: Text('Absent')),
+                      DropdownMenuItem(value: 'late', child: Text('Late')),
+                      DropdownMenuItem(
+                        value: 'excused',
+                        child: Text('Excused'),
+                      ),
+                    ],
                   ),
                 ),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: TSizes.spaceBtwItems / 2),
-                    Text(
-                      'Roll Number: ${student.rollNumber}',
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                  ],
-                ),
-                trailing: DropdownButton<String>(
-                  value: student.attendanceStatus ?? 'absent',
-                  isDense: true,
-                  onChanged: (value) {
-                    attendanceController.updateStudentStatus(
-                      student.id,
-                      value!,
-                    );
-                  },
-                  items: const [
-                    DropdownMenuItem(value: 'present', child: Text('Present')),
-                    DropdownMenuItem(value: 'absent', child: Text('Absent')),
-                    DropdownMenuItem(value: 'late', child: Text('Late')),
-                    DropdownMenuItem(value: 'excused', child: Text('Excused')),
-                  ],
-                ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         );
       }),
     );

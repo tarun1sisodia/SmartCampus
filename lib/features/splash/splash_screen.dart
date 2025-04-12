@@ -26,7 +26,7 @@ class _SplashScreenState extends State<SplashScreen>
     // Initialize animation controller
     _animationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 2500),
+      duration: const Duration(milliseconds: 1500),
     );
 
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
@@ -53,26 +53,25 @@ class _SplashScreenState extends State<SplashScreen>
     super.dispose();
   }
 
- Future<void> _checkAuthAndNavigate() async {
-  // Check if user is logged in
-  final currentUser = Supabase.instance.client.auth.currentUser;
-  
-  // Get storage service to check if first launch
-  final storageService = Get.find<StorageService>();
-  final bool onboardingCompleted = storageService.getOnboardingStatus();
-  
-  if (currentUser != null) {
-    print('User authenticated: true');
-    Get.offAllNamed(AppRoutes.home);
-  } else if (onboardingCompleted) {
-    print('Onboarding completed: true');
-    Get.offAllNamed(AppRoutes.login);
-  } else {
-    print('First time user: showing onboarding');
-    Get.offAllNamed(AppRoutes.onboarding);
-  }
-}
+  Future<void> _checkAuthAndNavigate() async {
+    // Check if user is logged in
+    final currentUser = Supabase.instance.client.auth.currentUser;
 
+    // Get storage service to check if first launch
+    final storageService = Get.find<StorageService>();
+    final bool onboardingCompleted = storageService.getOnboardingStatus();
+
+    if (currentUser != null) {
+      print('User authenticated: true');
+      Get.offAllNamed(AppRoutes.home);
+    } else if (onboardingCompleted) {
+      print('Onboarding completed: true');
+      Get.offAllNamed(AppRoutes.login);
+    } else {
+      print('First time user: showing onboarding');
+      Get.offAllNamed(AppRoutes.onboarding);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

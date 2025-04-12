@@ -1,5 +1,5 @@
 {
-    "cmake.sourceDirectory": "D:/StudioPro/attedance__/windows",
+    "cmake.sourceDirectory": "D:/attedance__/windows",
     "cmake.generator": "Visual Studio 17 2022",
     "cmake.buildDirectory": "${workspaceFolder}/build",
     "cmake.configureOnOpen": true

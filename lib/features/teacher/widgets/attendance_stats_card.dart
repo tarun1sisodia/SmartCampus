@@ -10,6 +10,7 @@ class AttendanceStatsCard extends StatelessWidget {
   final int absentCount;
   final int lateCount;
   final int excusedCount;
+  final bool isCompact;
   
   const AttendanceStatsCard({
     super.key,
@@ -18,6 +19,7 @@ class AttendanceStatsCard extends StatelessWidget {
     required this.absentCount,
     required this.lateCount,
     required this.excusedCount,
+    this.isCompact = false,
   });
   
   @override
