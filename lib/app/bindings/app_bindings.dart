@@ -32,6 +32,7 @@ class AppBindings {
   static void registerOnboardingBindings() {
     Get.lazyPut(() => OnboardingController(), fenix: true);
   }
+  
 
   /// Login bindings
   static void registerLoginBindings() {

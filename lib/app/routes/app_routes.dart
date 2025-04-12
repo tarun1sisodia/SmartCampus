@@ -30,8 +30,8 @@ import 'package:get/get.dart';
 /// A class that manages all routes for the app
 class AppRoutes {
   /// Route names as constants to avoid typos
-  static const String splash = '/splash';
-  static const String onboarding = '/';
+  static const String splash = '/';
+  static const String onboarding = '/onboarding';
   static const String login = '/login';
   static const String signup = '/signup';
   static const String forgotPassword = '/forgot-password';
@@ -59,8 +59,14 @@ class AppRoutes {
   static List<GetPage> routes = [
     GetPage(
       name: splash,
-      page: () => const SplashScreen(),
+      page: () => SplashScreen(),
       binding: SplashBinding(),
+      transition: Transition.fadeIn,
+    ),
+    GetPage(
+      name: onboarding,
+      page: () => Onboarding(),
+      binding: OnboardingBinding(),
       transition: Transition.fadeIn,
     ),
     GetPage(
@@ -69,6 +75,48 @@ class AppRoutes {
       binding: ChangePasswordBinding(),
       transition: Transition.rightToLeft,
       transitionDuration: const Duration(milliseconds: 300),
+    ),
+    GetPage(
+      name: login,
+      page: () => Login(),
+      binding: LoginBinding(),
+      transition: Transition.fadeIn,
+    ),
+    GetPage(
+      name: signup,
+      page: () => Signup(),
+      binding: SignupBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: forgotPassword,
+      page: () => ForgotPasswordScreen(),
+      binding: ForgotPasswordBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: resetConfirmation,
+      page: () {
+        final email = Get.arguments as String;
+        return ResetPasswordConfirmationScreen(email: email);
+      },
+      binding: ForgotPasswordBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: verifyEmail,
+      page: () {
+        final email = Get.arguments as String;
+        return VerifyEmailScreen(email: email);
+      },
+      binding: SignupBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: home,
+      page: () => NavigationMenu(),
+      binding: HomeBinding(),
+      transition: Transition.fadeIn,
     ),
     GetPage(
       name: carouselAttendance,
@@ -138,54 +186,7 @@ class AppRoutes {
       binding: HomeBinding(),
       transition: Transition.rightToLeft,
     ),
-    GetPage(
-      name: onboarding,
-      page: () => Onboarding(),
-      binding: OnboardingBinding(),
-      transition: Transition.fadeIn,
-    ),
-    GetPage(
-      name: login,
-      page: () => Login(),
-      binding: LoginBinding(),
-      transition: Transition.fadeIn,
-    ),
-    GetPage(
-      name: signup,
-      page: () => Signup(),
-      binding: SignupBinding(),
-      transition: Transition.rightToLeft,
-    ),
-    GetPage(
-      name: forgotPassword,
-      page: () => ForgotPasswordScreen(),
-      binding: ForgotPasswordBinding(),
-      transition: Transition.rightToLeft,
-    ),
-    GetPage(
-      name: resetConfirmation,
-      page: () {
-        final email = Get.arguments as String;
-        return ResetPasswordConfirmationScreen(email: email);
-      },
-      binding: ForgotPasswordBinding(),
-      transition: Transition.rightToLeft,
-    ),
-    GetPage(
-      name: verifyEmail,
-      page: () {
-        final email = Get.arguments as String;
-        return VerifyEmailScreen(email: email);
-      },
-      binding: SignupBinding(),
-      transition: Transition.rightToLeft,
-    ),
-    GetPage(
-      name: home,
-      page: () => NavigationMenu(),
-      binding: HomeBinding(),
-      transition: Transition.fadeIn,
-    ),
+
     GetPage(
       name: attendanceReports,
       page: () => AttendanceReportsScreen(),

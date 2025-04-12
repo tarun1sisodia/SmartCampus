@@ -76,25 +76,6 @@ dev_dependencies:
   flutter_lints: ^5.0.0
 
 # Add this flutter_icons configuration section
-flutter_icons:
-  android: "launcher_icon"
-  ios: true
-  image_path: "assets/logos/darkapplogo.png"
-  min_sdk_android: 21
-  adaptive_icon_background: "#FFFFFF" # White background for adaptive icons
-  adaptive_icon_foreground: "assets/logos/darkapplogo.png"
-  web:
-    generate: true
-    image_path: "assets/logos/darkapplogo.png"
-    background_color: "#FFFFFF"
-    theme_color: "#673AB7" # Deep Purple color
-  windows:
-    generate: true
-    image_path: "assets/logos/darkapplogo.png"
-    icon_size: 48
-  macos:
-    generate: true
-    image_path: "assets/logos/darkapplogo.png"
 
 # The following section is specific to Flutter packages.
 flutter:

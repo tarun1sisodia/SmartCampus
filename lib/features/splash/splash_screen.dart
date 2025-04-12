@@ -90,7 +90,7 @@ class _SplashScreenState extends State<SplashScreen>
                 return Opacity(opacity: _fadeAnimation.value, child: child);
               },
               child: Image.asset(
-                'assets/logos/darkapplogo.png',
+                'assets/logos/smartcampus.png',
                 width: 150,
                 height: 150,
               ),
