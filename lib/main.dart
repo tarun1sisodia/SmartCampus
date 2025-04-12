@@ -42,16 +42,19 @@ Future<void> main() async {
 
   // Initialize global bindings
   AppBindings.initGlobalBindings();
-
-  // Check if user is already logged in
+  await attemptAutoLogin();
+  // Running the App
+  runApp(MyApp());
+}
+Future<void> attemptAutoLogin() async {
   final storageService = Get.find<StorageService>();
-  // Checking by getting the local system data if available.
+
+  // Check if user credentials are saved
   final bool isLoggedIn =
       storageService.getRememberUserStatus() &&
       storageService.getUserEmail() != null &&
       storageService.getUserPassword() != null;
 
-  // If credentials are saved, try to log in automatically
   if (isLoggedIn) {
     try {
       final email = storageService.getUserEmail()!;
@@ -70,9 +73,8 @@ Future<void> main() async {
         'Unable to log in automatically. Please log in manually.',
         snackPosition: SnackPosition.BOTTOM,
       );
-      // Continue with normal app startup even if auto-login fails
     }
   }
-  // Running the App
-  runApp(MyApp());
 }
+
+
