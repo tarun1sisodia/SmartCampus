@@ -1,3 +1,4 @@
+import 'package:attedance__/common/utils/constants/image_strings.dart';
 import 'package:attedance__/features/teacher/screens/teacher_profile_screen.dart';
 import 'package:attedance__/features/teacher/screens/teacher_settings_screen.dart';
 import 'package:flutter/material.dart';
@@ -12,14 +13,19 @@ import '../../../common/utils/helpers/helper_function.dart';
 import 'class_list_screen.dart';
 
 class DashboardScreen extends StatelessWidget {
+  DashboardScreen({super.key});
+
   final dashboardController = Get.find<DashboardController>();
+
   final searchController = TextEditingController();
+
   //using the existing controller
   final profileController = Get.put(TeacherProfileController());
+
   final RxBool isLoading = RxBool(true);
+
   final RxBool isSearching = RxBool(false);
 
-  DashboardScreen({super.key});
   final String userName =
       Supabase.instance.client.auth.currentUser?.userMetadata?['name'] ??
       'Teacher';
@@ -57,7 +63,7 @@ class DashboardScreen extends StatelessWidget {
           child: Hero(
             tag: 'profileImage',
             child: GestureDetector(
-              onTap: () => Get.to(() => const TeacherProfileScreen()),
+              onTap: () => Get.to(() =>  TeacherProfileScreen()),
               child: Obx(() {
                 return Container(
                   width: 40,
@@ -81,13 +87,11 @@ class DashboardScreen extends StatelessWidget {
                               ),
                               fit: BoxFit.cover,
                               onError: (exception, stackTrace) {
-                                print(
-                                  'Error loading profile image: $exception',
-                                );
+                                ////print('Error loading profile image: $exception',);
                               },
                             )
                             : const DecorationImage(
-                              image: AssetImage('assets/logos/smartcampus.png'),
+                              image: AssetImage(TImageStrings.appLogo),
                               fit: BoxFit.contain,
                             ),
                   ),
@@ -113,7 +117,7 @@ class DashboardScreen extends StatelessWidget {
               Get.to(() => const TeacherSettingsScreen());
             },
           ),
-           const SizedBox(width: TSizes.sm),
+          const SizedBox(width: TSizes.sm),
           IconButton(
             onPressed: () => dashboardController.loadDashboardData(),
             icon: const Icon(Iconsax.refresh),
@@ -146,7 +150,7 @@ class DashboardScreen extends StatelessWidget {
         }
 
         return RefreshIndicator(
-            onRefresh: () async => await dashboardController.loadDashboardData(),
+          onRefresh: () async => await dashboardController.loadDashboardData(),
           color: dark ? TColors.yellow : TColors.deepPurple,
           backgroundColor: dark ? TColors.darkerGrey : Colors.white,
           child: SingleChildScrollView(
@@ -241,7 +245,7 @@ class DashboardScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.withOpacity(0.1),
+                        color: Colors.grey.withAlpha(26),
                         spreadRadius: 1,
                         blurRadius: 5,
                         offset: const Offset(0, 2),
@@ -427,7 +431,7 @@ class DashboardScreen extends StatelessWidget {
           borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.1),
+              color: Colors.grey.withAlpha(26),
               spreadRadius: 1,
               blurRadius: 5,
               offset: const Offset(0, 2),

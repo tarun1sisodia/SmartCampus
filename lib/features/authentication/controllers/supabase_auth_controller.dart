@@ -115,7 +115,7 @@ class SupabaseAuthController extends GetxController {
             });
           }
         } catch (e) {
-          print('Error checking/creating user data: $e');
+          ////print('Error checking/creating user data: $e');
           // Continue with navigation even if there's an error here
         }
 
@@ -227,9 +227,7 @@ class SupabaseAuthController extends GetxController {
 
       if (user != null) {
         // Log the user data being stored
-        print(
-          'Storing user data: id=${user.id}, name=$_tempName, email=${user.email}, phone=$_tempPhone',
-        );
+        ////print('Storing user data: id=${user.id}, name=$_tempName, email=${user.email}, phone=$_tempPhone',);
 
         // Store user data in the Supabase table
         await supabase.from('users').insert({
@@ -251,7 +249,7 @@ class SupabaseAuthController extends GetxController {
         );
       }
     } catch (e) {
-      print('Error storing user data: $e');
+      ////print('Error storing user data: $e');
       errorMessage.value = 'Failed to store user data';
 
       if (e.toString().contains('network') ||

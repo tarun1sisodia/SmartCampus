@@ -143,4 +143,31 @@ class StudentService {
       throw 'Failed to get student: $e';
     }
   }
+  // Add this method to the StudentService class
+
+// Get all students
+  Future<List<StudentModel>> getAllStudents() async {
+    try {
+      final response = await supabase.from('students').select().order('name');
+
+      return response.map<StudentModel>((json) {
+        return StudentModel(
+          id: json['id'],
+          name: json['name'],
+          rollNumber: json['roll_number'],
+          classId: '', // This will be empty since we're fetching all students
+          createdAt: json['created_at'] != null
+              ? DateTime.parse(json['created_at'])
+              : null,
+          updatedAt: json['updated_at'] != null
+              ? DateTime.parse(json['updated_at'])
+              : null,
+        );
+      }).toList();
+    } catch (e) {
+      throw 'Failed to get all students: $e';
+    }
+  }
+
 }
+

@@ -80,7 +80,7 @@ class StorageService extends GetxService {
         return 15.0; // Default estimated value
       }
     } catch (e) {
-      print('Error calculating cache size: $e');
+      ////print('Error calculating cache size: $e');
       return 0.0;
     }
   }
@@ -100,13 +100,13 @@ class StorageService extends GetxService {
             }
           } catch (e) {
             // Skip files that can't be accessed
-            print('Skipping file: ${entity.path}');
+            ////print('Skipping file: ${entity.path}');
           }
         }
       }
       return totalSize;
     } catch (e) {
-      print('Error calculating directory size: $e');
+      ////print('Error calculating directory size: $e');
       return totalSize;
     }
   }
@@ -128,7 +128,7 @@ class StorageService extends GetxService {
                 await entity.delete();
               }
             } catch (e) {
-              print('Could not delete ${entity.path}: $e');
+              ////print('Could not delete ${entity.path}: $e');
             }
           }
         }
@@ -145,7 +145,7 @@ class StorageService extends GetxService {
               }
             }
           } catch (e) {
-            print('Error clearing Android external cache: $e');
+            ////print('Error clearing Android external cache: $e');
           }
         }
       } else {
@@ -159,12 +159,12 @@ class StorageService extends GetxService {
               await appCacheDir.delete(recursive: true);
             }
           } catch (e) {
-            print('Error clearing cache on non-mobile platform: $e');
+            ////print('Error clearing cache on non-mobile platform: $e');
           }
         }
       }
     } catch (e) {
-      print('Error clearing cache: $e');
+      ////print('Error clearing cache: $e');
     }
   }
 
@@ -190,17 +190,17 @@ class StorageService extends GetxService {
                 await entity.delete();
               }
             } catch (e) {
-              print('Could not delete ${entity.path}: $e');
+              ////print('Could not delete ${entity.path}: $e');
             }
           }
         } catch (e) {
-          print('Error clearing Android app data: $e');
+          ////print('Error clearing Android app data: $e');
         }
       }
 
       return;
     } catch (e) {
-      print('Error clearing all data: $e');
+      ////print('Error clearing all data: $e');
       rethrow;
     }
   }
@@ -243,7 +243,7 @@ class StorageService extends GetxService {
 
       return;
     } catch (e) {
-      print('Error exporting data: $e');
+      ////print('Error exporting data: $e');
       rethrow;
     }
   }

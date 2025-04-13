@@ -46,7 +46,7 @@ class TSnackBar {
         backgroundColor = Colors.orange;
         break;
       case MessageType.info:
-      icon = Iconsax.information;
+        icon = Iconsax.information;
         backgroundColor = TColors.deepPurple;
         break;
     }
@@ -61,7 +61,7 @@ class TSnackBar {
         sourcePrefix = '[Client] ';
         break;
       case MessageSource.app:
-      // No prefix for app messages
+        // No prefix for app messages
         break;
     }
 
@@ -81,7 +81,7 @@ class TSnackBar {
       forwardAnimationCurve: Curves.easeOutCirc,
       reverseAnimationCurve: Curves.easeInCirc,
       overlayBlur: 0,
-      overlayColor: Colors.black.withOpacity(0.2),
+      overlayColor: Colors.black.withAlpha(20),
     );
   }
 

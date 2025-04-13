@@ -22,7 +22,7 @@ class ReportsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dark = THelperFunction.isDarkMode(context);
+    // final dark = THelperFunction.isDarkMode(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -147,7 +147,7 @@ class ReportsScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(TSizes.md),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
+                  color: color.withAlpha(26),
                   borderRadius: BorderRadius.circular(TSizes.borderRadiusMd),
                 ),
                 child: Icon(icon, color: color, size: 32),
@@ -210,7 +210,7 @@ class ReportsScreen extends StatelessWidget {
               leading: Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Colors.red.withOpacity(0.1),
+                  color: Colors.red.withAlpha(26),
                   borderRadius: BorderRadius.circular(TSizes.borderRadiusSm),
                 ),
                 child: const Icon(Iconsax.chart_2, color: Colors.red),
@@ -228,7 +228,7 @@ class ReportsScreen extends StatelessWidget {
               leading: Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Colors.green.withOpacity(0.1),
+                  color: Colors.green.withAlpha(26),
                   borderRadius: BorderRadius.circular(TSizes.borderRadiusSm),
                 ),
                 child: const Icon(Iconsax.user_octagon, color: Colors.green),
@@ -289,7 +289,7 @@ class ReportsScreen extends StatelessWidget {
               leading: Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Colors.teal.withOpacity(0.1),
+                  color: Colors.teal.withAlpha(26),
                   borderRadius: BorderRadius.circular(TSizes.borderRadiusSm),
                 ),
                 child: const Icon(Iconsax.chart_2, color: Colors.teal),
@@ -308,7 +308,7 @@ class ReportsScreen extends StatelessWidget {
               leading: Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Colors.blue.withOpacity(0.1),
+                  color: Colors.blue.withAlpha(26),
                   borderRadius: BorderRadius.circular(TSizes.borderRadiusSm),
                 ),
                 child: const Icon(Iconsax.user_octagon, color: Colors.blue),
@@ -506,7 +506,7 @@ class ReportsScreen extends StatelessWidget {
         final file = File(outputFile!);
         await file.writeAsBytes(bytes);
         TSnackBar.showSuccess(message: 'PDF saved to: $outputFile');
-            }
+      }
     }
   }
 

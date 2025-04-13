@@ -43,7 +43,7 @@ class TeacherSettingsScreen extends StatelessWidget {
                   icon: Iconsax.user,
                   dark: dark,
                   onTap: () {
-                    Get.to(() => const TeacherProfileScreen());
+                    Get.to(() => TeacherProfileScreen());
                   },
                 ),
                 _buildProfileMenuItem(
@@ -105,7 +105,6 @@ class TeacherSettingsScreen extends StatelessWidget {
                     Get.toNamed(AppRoutes.notifications);
                   },
                 ),
-
                 _buildProfileMenuItem(
                   title: 'Data Import',
                   icon: Iconsax.import_1, // Updated icon for Data Import
@@ -122,7 +121,6 @@ class TeacherSettingsScreen extends StatelessWidget {
                     Get.toNamed(AppRoutes.export);
                   },
                 ),
-
                 _buildProfileMenuItem(
                   title: 'Storage & Data',
                   icon: Iconsax.cloud,
@@ -334,6 +332,8 @@ class TeacherSettingsScreen extends StatelessWidget {
                                 }
                               },
                             ),
+
+                            // Add this to your existing settings screen
                           ],
                         ),
                         actions: [
@@ -369,7 +369,7 @@ class TeacherSettingsScreen extends StatelessWidget {
                   icon: Iconsax.message_question,
                   dark: dark,
                   onTap: () {
-                   Get.toNamed(AppRoutes.feedback);
+                    Get.toNamed(AppRoutes.feedback);
                   },
                 ),
                 _buildProfileMenuItem(
@@ -433,10 +433,13 @@ class TeacherSettingsScreen extends StatelessWidget {
       ),
     );
   }
-  
-void _showLanguageSelectionDialog(BuildContext context, LanguageService languageService) {
+
+  void _showLanguageSelectionDialog(
+    BuildContext context,
+    LanguageService languageService,
+  ) {
     final dark = THelperFunction.isDarkMode(context);
-    
+
     Get.dialog(
       AlertDialog(
         title: Text('select_language'.tr),
@@ -447,12 +450,13 @@ void _showLanguageSelectionDialog(BuildContext context, LanguageService language
             itemCount: languageService.languages.length,
             itemBuilder: (context, index) {
               final language = languageService.languages[index];
-              final isSelected = languageService.currentLocale.value.toString() == 
-                  language['locale'].toString();
-              
+              final isSelected =
+                  languageService.currentLocale.value.toString() ==
+                      language['locale'].toString();
+
               return ListTile(
                 title: Text(language['name']),
-                trailing: isSelected 
+                trailing: isSelected
                     ? Icon(
                         Icons.check_circle,
                         color: dark ? TColors.yellow : TColors.deepPurple,
@@ -468,14 +472,12 @@ void _showLanguageSelectionDialog(BuildContext context, LanguageService language
           ),
         ),
         actions: [
-          TextButton(
-            onPressed: () => Get.back(),
-            child: Text('no'.tr),
-          ),
+          TextButton(onPressed: () => Get.back(), child: Text('no'.tr)),
         ],
       ),
     );
   }
+
   Widget _buildSection({
     required BuildContext context,
     required String title,
@@ -495,18 +497,17 @@ void _showLanguageSelectionDialog(BuildContext context, LanguageService language
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
             color: Theme.of(context).cardColor,
-            border: Border.all(color: Colors.grey.withOpacity(0.1)),
+            border: Border.all(color: Colors.grey.withAlpha(26)),
           ),
           child: ListView.separated(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: items.length,
-            separatorBuilder:
-                (_, __) => Divider(
-                  height: 1,
-                  color: Colors.grey.withOpacity(0.1),
-                  indent: 70,
-                ),
+            separatorBuilder: (_, __) => Divider(
+              height: 1,
+              color: Colors.grey.withAlpha(26),
+              indent: 70,
+            ),
             itemBuilder: (_, index) => items[index],
           ),
         ),
@@ -526,14 +527,13 @@ void _showLanguageSelectionDialog(BuildContext context, LanguageService language
       leading: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: (dark ? TColors.yellow : TColors.deepPurple).withOpacity(0.1),
+          color: (dark ? TColors.yellow : TColors.deepPurple).withAlpha(26),
           shape: BoxShape.circle,
         ),
         child: Icon(icon, color: dark ? TColors.yellow : TColors.deepPurple),
       ),
       title: Text(title),
       trailing: trailing ?? const Icon(Iconsax.arrow_right_3, size: 18),
-
     );
   }
 }

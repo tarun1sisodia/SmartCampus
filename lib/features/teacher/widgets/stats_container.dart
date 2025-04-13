@@ -20,21 +20,15 @@ class StatsContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     // Check if we're in dark mode
     final dark = THelperFunction.isDarkMode(context);
-    
+
     // Determine container and border colors based on theme
-    final containerColor = dark 
-        ? Theme.of(context).cardColor 
-        : Colors.white;
-    
-    final borderColor = dark 
-        ? Colors.grey.shade800 
-        : Colors.grey.shade300;
-    
+    final containerColor = dark ? Theme.of(context).cardColor : Colors.white;
+
+    final borderColor = dark ? Colors.grey.shade800 : Colors.grey.shade300;
+
     // Determine text color based on theme
-    final textColor = dark 
-        ? Colors.white 
-        : Colors.black87;
-    
+    final textColor = dark ? Colors.white : Colors.black87;
+
     return Container(
       padding: const EdgeInsets.all(TSizes.md),
       decoration: BoxDecoration(
@@ -43,9 +37,7 @@ class StatsContainer extends StatelessWidget {
         border: Border.all(color: borderColor, width: 1.5),
         boxShadow: [
           BoxShadow(
-            color: dark 
-                ? Colors.black12 
-                : Colors.grey.withOpacity(0.1),
+            color: dark ? Colors.black12 : Colors.grey.withAlpha(26),
             spreadRadius: 1,
             blurRadius: 5,
             offset: const Offset(0, 2),
@@ -59,12 +51,9 @@ class StatsContainer extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(TSizes.sm),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withAlpha(26),
               borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
-              border: Border.all(
-                color: color.withOpacity(0.3),
-                width: 1,
-              ),
+              border: Border.all(color: color.withAlpha(77), width: 1),
             ),
             child: Icon(icon, color: color),
           ),
@@ -84,7 +73,7 @@ class StatsContainer extends StatelessWidget {
 
           // Title with appropriate color
           Text(
-            title, 
+            title,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: dark ? Colors.grey.shade400 : Colors.grey.shade700,
             ),

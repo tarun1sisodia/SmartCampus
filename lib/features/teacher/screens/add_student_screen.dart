@@ -28,6 +28,12 @@ class AddStudentScreen extends StatelessWidget {
           'Add Students',
           style: Theme.of(context).textTheme.headlineSmall,
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Iconsax.import),
+            onPressed: () => _showImportStudentsDialog(context),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showAddStudentDialog(context),
@@ -101,8 +107,8 @@ class AddStudentScreen extends StatelessWidget {
                 title: Text(
                   student.name,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -225,6 +231,102 @@ class AddStudentScreen extends StatelessWidget {
             ),
             child: const Text('Add'),
           ),
+        ],
+      ),
+    );
+  }
+
+  // Show dialog to import students
+  void _showImportStudentsDialog(BuildContext context) {
+    final dark = THelperFunction.isDarkMode(context);
+
+    studentController.fetchAvailableStudents(); // Fetch students from Supabase
+
+    Get.dialog(
+      AlertDialog(
+        title: const Text('Import Students'),
+        content: Container(
+          width: double.maxFinite,
+          height: 400, // Fixed height to prevent layout errors
+          child: Obx(() {
+            if (studentController.isFetchingAvailableStudents.value) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            if (studentController.availableStudents.isEmpty) {
+              return const Text('No students available for import.');
+            }
+
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Sorting dropdown
+                DropdownButton<String>(
+                  value: studentController.sortOption.value,
+                  onChanged: (value) {
+                    if (value != null) {
+                      studentController.sortAvailableStudents(value);
+                    }
+                  },
+                  items: const [
+                    DropdownMenuItem(
+                      value: 'name',
+                      child: Text('Sort by Name'),
+                    ),
+                    DropdownMenuItem(
+                      value: 'rollNumber',
+                      child: Text('Sort by Roll Number'),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: TSizes.spaceBtwItems),
+
+                // List of available students
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: studentController.availableStudents.length,
+                    itemBuilder: (context, index) {
+                      final student =
+                          studentController.availableStudents[index];
+                      // Use Obx here to make each checkbox reactive
+                      return Obx(() => CheckboxListTile(
+                            value: studentController.selectedStudents
+                                .any((s) => s.id == student.id),
+                            onChanged: (isSelected) {
+                              if (isSelected == true) {
+                                studentController.selectStudent(student);
+                              } else {
+                                studentController.deselectStudent(student);
+                              }
+                            },
+                            title: Text(student.name),
+                            subtitle:
+                                Text('Roll Number: ${student.rollNumber}'),
+                          ));
+                    },
+                  ),
+                ),
+              ],
+            );
+          }),
+        ),
+        actions: [
+          TextButton(onPressed: () => Get.back(), child: const Text('Cancel')),
+          Obx(() => ElevatedButton(
+                onPressed: studentController.selectedStudents.isEmpty
+                    ? null // Disable button if no students selected
+                    : () {
+                        studentController.importSelectedStudents();
+                        Get.back();
+                      },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: dark ? TColors.yellow : TColors.deepPurple,
+                  foregroundColor: dark ? Colors.black : Colors.white,
+                  disabledBackgroundColor: Colors.grey,
+                ),
+                child: Text(
+                    'Import (${studentController.selectedStudents.length})'),
+              )),
         ],
       ),
     );

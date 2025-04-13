@@ -21,14 +21,14 @@ class TPrimaryHeaderContainer extends StatelessWidget {
                 top: -150,
                 right: -250,
                 child: TCircularContainer(
-                  backgroundColor: TColors.buttonDisabled.withOpacity(0.1),
+                  backgroundColor: TColors.buttonDisabled.withAlpha(26),
                 ),
               ),
               Positioned(
                 top: 100,
                 right: -300,
                 child: TCircularContainer(
-                  backgroundColor: TColors.buttonDisabled.withOpacity(0.1),
+                  backgroundColor: TColors.buttonDisabled.withAlpha(20),
                 ),
               ),
               child,

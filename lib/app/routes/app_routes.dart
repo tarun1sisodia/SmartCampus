@@ -15,7 +15,6 @@ import '../../features/teacher/screens/all_sessions_screen.dart';
 import '../../features/teacher/screens/attendance_reports_screen.dart';
 import '../../features/teacher/screens/calendar_screen.dart';
 import '../../features/teacher/screens/carousel_attendance_screen.dart';
-import '../../features/teacher/screens/export_data_screen.dart';
 import '../../features/teacher/screens/feedback_screen.dart';
 import '../../features/teacher/screens/help_screen.dart';
 import '../../features/teacher/screens/import_data_screen.dart';
@@ -57,6 +56,8 @@ class AppRoutes {
 
   /// Get all application routes
   static List<GetPage> routes = [
+    // Add this to your routes
+
     GetPage(
       name: splash,
       page: () => SplashScreen(),
@@ -125,7 +126,6 @@ class AppRoutes {
       transition: Transition.rightToLeft,
       transitionDuration: const Duration(milliseconds: 300),
     ),
-
     GetPage(
       name: reports,
       page: () => ReportsScreen(),
@@ -163,12 +163,6 @@ class AppRoutes {
       transition: Transition.rightToLeft,
     ),
     GetPage(
-      name: export,
-      page: () => const ExportDataScreen(),
-      binding: HomeBinding(),
-      transition: Transition.rightToLeft,
-    ),
-    GetPage(
       name: import,
       page: () => const ImportDataScreen(),
       binding: HomeBinding(),
@@ -186,7 +180,6 @@ class AppRoutes {
       binding: HomeBinding(),
       transition: Transition.rightToLeft,
     ),
-
     GetPage(
       name: attendanceReports,
       page: () => AttendanceReportsScreen(),

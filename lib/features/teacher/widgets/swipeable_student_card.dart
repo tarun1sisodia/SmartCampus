@@ -104,7 +104,7 @@ class SwipeableStudentCard extends StatelessWidget {
                     backgroundColor: _getStatusColor(
                       student.attendanceStatus,
                       dark,
-                    ).withOpacity(0.2),
+                    ).withAlpha(51),
                     child: Text(
                       student.name.isNotEmpty
                           ? student.name.substring(0, 1)
@@ -170,7 +170,7 @@ class SwipeableStudentCard extends StatelessWidget {
                           children: [
                             Icon(
                               Icons.swipe_left,
-                              color: Colors.red.withOpacity(0.7),
+                              color: Colors.red.withAlpha(179),
                               size: isMobile ? 16 : 20,
                             ),
                             SizedBox(width: TSizes.xs),
@@ -185,7 +185,7 @@ class SwipeableStudentCard extends StatelessWidget {
                             SizedBox(width: TSizes.xs),
                             Icon(
                               Icons.swipe_right,
-                              color: Colors.green.withOpacity(0.7),
+                              color: Colors.green.withAlpha(179),
                               size: isMobile ? 16 : 20,
                             ),
                           ],
@@ -197,7 +197,7 @@ class SwipeableStudentCard extends StatelessWidget {
                               children: [
                                 Icon(
                                   Icons.swipe_left,
-                                  color: Colors.red.withOpacity(0.7),
+                                  color: Colors.red.withAlpha(179),
                                   size: isMobile ? 16 : 20,
                                 ),
                                 SizedBox(width: TSizes.xs),
@@ -213,7 +213,7 @@ class SwipeableStudentCard extends StatelessWidget {
                               children: [
                                 Icon(
                                   Icons.swipe_right,
-                                  color: Colors.green.withOpacity(0.7),
+                                  color: Colors.green.withAlpha(179),
                                   size: isMobile ? 16 : 20,
                                 ),
                                 SizedBox(width: TSizes.xs),

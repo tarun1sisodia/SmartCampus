@@ -3,12 +3,9 @@ import 'package:iconsax/iconsax.dart';
 
 class AttendanceActionButtons extends StatelessWidget {
   final Function(String) onMarkAttendance;
-  
-  const AttendanceActionButtons({
-    super.key,
-    required this.onMarkAttendance,
-  });
-  
+
+  const AttendanceActionButtons({super.key, required this.onMarkAttendance});
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -45,7 +42,7 @@ class AttendanceActionButtons extends StatelessWidget {
       ],
     );
   }
-  
+
   Widget _buildActionButton(
     BuildContext context,
     String label,
@@ -60,15 +57,12 @@ class AttendanceActionButtons extends StatelessWidget {
           onPressed: onPressed,
           icon: Icon(icon, color: color),
           style: IconButton.styleFrom(
-            backgroundColor: color.withOpacity(0.1),
+            backgroundColor: color.withAlpha(26),
             padding: const EdgeInsets.all(12),
           ),
         ),
         const SizedBox(height: 4),
-        Text(
-          label,
-          style: Theme.of(context).textTheme.bodySmall,
-        ),
+        Text(label, style: Theme.of(context).textTheme.bodySmall),
       ],
     );
   }

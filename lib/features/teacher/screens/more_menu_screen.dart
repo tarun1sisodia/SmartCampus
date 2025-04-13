@@ -44,7 +44,7 @@ class MoreMenuScreen extends StatelessWidget {
         try {
           Get.toNamed(item.route);
         } catch (e) {
-          print('Error navigating to ${item.route}: $e');
+          ////print('Error navigating to ${item.route}: $e');
           // Show a snackbar with the error
           Get.snackbar(
             'Navigation Error',
@@ -62,7 +62,7 @@ class MoreMenuScreen extends StatelessWidget {
           borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.1),
+              color: Colors.grey.withAlpha(26),
               spreadRadius: 1,
               blurRadius: 5,
               offset: const Offset(0, 2),
@@ -75,7 +75,7 @@ class MoreMenuScreen extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(TSizes.md),
               decoration: BoxDecoration(
-                color: item.color.withOpacity(0.1),
+                color: item.color.withAlpha(26),
                 shape: BoxShape.circle,
               ),
               child: Icon(item.icon, color: item.color, size: 28),
@@ -96,14 +96,13 @@ class MoreMenuScreen extends StatelessWidget {
 
   // Define menu items with routes instead of callbacks
   static final List<MenuItem> _menuItems = [
-   
     MenuItem(
       title: 'Messages',
       icon: Iconsax.message,
       color: Colors.orange,
       route: AppRoutes.message,
     ),
-    
+
     MenuItem(
       title: 'Notifications',
       icon: Iconsax.notification,

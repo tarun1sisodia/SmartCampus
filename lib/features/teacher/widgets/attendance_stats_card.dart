@@ -11,7 +11,7 @@ class AttendanceStatsCard extends StatelessWidget {
   final int lateCount;
   final int excusedCount;
   final bool isCompact;
-  
+
   const AttendanceStatsCard({
     super.key,
     required this.totalStudents,
@@ -21,12 +21,13 @@ class AttendanceStatsCard extends StatelessWidget {
     required this.excusedCount,
     this.isCompact = false,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     final dark = THelperFunction.isDarkMode(context);
-    final unmarkedCount = totalStudents - (presentCount + absentCount + lateCount + excusedCount);
-    
+    final unmarkedCount =
+        totalStudents - (presentCount + absentCount + lateCount + excusedCount);
+
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(
@@ -39,64 +40,65 @@ class AttendanceStatsCard extends StatelessWidget {
           children: [
             Text(
               'Attendance Summary',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
-            
+
             const SizedBox(height: TSizes.spaceBtwItems),
-            
+
             // Progress indicator
             LinearProgressIndicator(
-              value: totalStudents > 0 
-                  ? (totalStudents - unmarkedCount) / totalStudents 
-                  : 0,
-              backgroundColor: Colors.grey.withOpacity(0.2),
+              value:
+                  totalStudents > 0
+                      ? (totalStudents - unmarkedCount) / totalStudents
+                      : 0,
+              backgroundColor: Colors.grey.withAlpha(51),
               valueColor: AlwaysStoppedAnimation<Color>(
                 dark ? TColors.yellow : TColors.deepPurple,
               ),
               minHeight: 8,
               borderRadius: BorderRadius.circular(4),
             ),
-            
+
             const SizedBox(height: TSizes.spaceBtwItems / 2),
-            
+
             Text(
               'Marked: ${totalStudents - unmarkedCount}/$totalStudents students',
               style: Theme.of(context).textTheme.bodySmall,
             ),
-            
+
             const SizedBox(height: TSizes.spaceBtwItems),
-            
+
             // Stats grid
             Row(
               children: [
                 _buildStatItem(
-                  context, 
-                  'Present', 
-                  presentCount, 
-                  Colors.green, 
+                  context,
+                  'Present',
+                  presentCount,
+                  Colors.green,
                   Iconsax.tick_circle,
                 ),
                 _buildStatItem(
-                  context, 
-                  'Absent', 
-                  absentCount, 
-                  Colors.red, 
+                  context,
+                  'Absent',
+                  absentCount,
+                  Colors.red,
                   Iconsax.close_circle,
                 ),
                 _buildStatItem(
-                  context, 
-                  'Late', 
-                  lateCount, 
-                  Colors.orange, 
+                  context,
+                  'Late',
+                  lateCount,
+                  Colors.orange,
                   Iconsax.timer_1,
                 ),
                 _buildStatItem(
-                  context, 
-                  'Excused', 
-                  excusedCount, 
-                  Colors.blue, 
+                  context,
+                  'Excused',
+                  excusedCount,
+                  Colors.blue,
                   Iconsax.note_1,
                 ),
               ],
@@ -106,12 +108,12 @@ class AttendanceStatsCard extends StatelessWidget {
       ),
     );
   }
-  
+
   Widget _buildStatItem(
-    BuildContext context, 
-    String label, 
-    int count, 
-    Color color, 
+    BuildContext context,
+    String label,
+    int count,
+    Color color,
     IconData icon,
   ) {
     return Expanded(
@@ -126,10 +128,7 @@ class AttendanceStatsCard extends StatelessWidget {
               color: color,
             ),
           ),
-          Text(
-            label,
-            style: Theme.of(context).textTheme.bodySmall,
-          ),
+          Text(label, style: Theme.of(context).textTheme.bodySmall),
         ],
       ),
     );

@@ -1,3 +1,4 @@
+import 'package:attedance__/models/course_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/class_controller.dart';
@@ -23,128 +24,125 @@ class CreateClassScreen extends StatelessWidget {
         ),
       ),
       body: Obx(
-        () =>
-            classController.isLoading.value
-                ? const Center(child: CircularProgressIndicator())
-                : Center(
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.all(TSizes.defaultSpace),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Class Details',
-                          style: Theme.of(context).textTheme.titleLarge,
-                        ),
-                        const SizedBox(height: TSizes.spaceBtwItems),
+        () => classController.isLoading.value
+            ? const Center(child: CircularProgressIndicator())
+            : Center(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(TSizes.defaultSpace),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Class Details',
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                      const SizedBox(height: TSizes.spaceBtwItems),
 
-                        // Subject Dropdown
-                        DropdownButtonFormField(
-                          decoration: InputDecoration(
-                            labelText: 'Subject',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(
-                                TSizes.inputFieldRadius,
-                              ),
-                            ),
-                          ),
-                          isExpanded: true,
-                          items:
-                              classController.subjects.map((subject) {
-                                return DropdownMenuItem(
-                                  value: subject,
-                                  child: Text(
-                                    subject.name,
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                  ),
-                                );
-                              }).toList(),
-                          onChanged: (value) {
-                            classController.selectedSubject.value = value;
-                          },
-                        ),
-                        const SizedBox(height: TSizes.spaceBtwInputFields),
-
-                        // Course Dropdown
-                        DropdownButtonFormField(
-                          decoration: InputDecoration(
-                            labelText: 'Course',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(
-                                TSizes.inputFieldRadius,
-                              ),
-                            ),
-                          ),
-                          isExpanded: true,
-                          // Displaying the courses based on the selected subject
-                          items:
-                              classController.courses.map((course) {
-                                return DropdownMenuItem(
-                                  value: course,
-                                  child: Text(
-                                    course.name,
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                  ),
-                                );
-                              }).toList(),
-                          onChanged: (value) {
-                            classController.selectedCourse.value = value;
-                          },
-                        ),
-                        const SizedBox(height: TSizes.spaceBtwInputFields),
-
-                        // Year TextField
-                        TextFormField(
-                          controller: classController.yearController,
-                          decoration: InputDecoration(
-                            labelText: 'Year',
-                            hintText: 'Enter year (1-5)',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(
-                                TSizes.inputFieldRadius,
-                              ),
-                            ),
-                          ),
-                          keyboardType: TextInputType.number,
-                        ),
-                        const SizedBox(height: TSizes.spaceBtwInputFields),
-
-                        // Section TextField
-                        TextFormField(
-                          controller: classController.sectionController,
-                          decoration: InputDecoration(
-                            labelText: 'Section (Optional)',
-                            hintText: 'Enter section (e.g., A, B, C)',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(
-                                TSizes.inputFieldRadius,
-                              ),
+                      // Subject Dropdown
+                      DropdownButtonFormField(
+                        decoration: InputDecoration(
+                          labelText: 'Subject',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(
+                              TSizes.inputFieldRadius,
                             ),
                           ),
                         ),
-                        const SizedBox(height: TSizes.spaceBtwSections),
-
-                        // Create Button
-                        SizedBox(
-                          width: double.infinity,
-                          height: 55,
-                          child: ElevatedButton(
-                            onPressed: classController.createClass,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  dark ? TColors.yellow : TColors.deepPurple,
-                              foregroundColor:
-                                  dark ? Colors.black : Colors.white,
+                        isExpanded: true,
+                        items: classController.subjects.map((subject) {
+                          return DropdownMenuItem(
+                            value: subject,
+                            child: Text(
+                              subject.name,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
                             ),
-                            child: const Text('Create Class'),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          classController.selectedSubject.value = value;
+                        },
+                      ),
+                      const SizedBox(height: TSizes.spaceBtwInputFields),
+
+                      // Course Dropdown
+                      DropdownButtonFormField(
+                        decoration: InputDecoration(
+                          labelText: 'Course',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(
+                              TSizes.inputFieldRadius,
+                            ),
                           ),
                         ),
-                      ],
-                    ),
+                        isExpanded: true,
+                        // Displaying the courses based on the selected subject
+                        items: classController.courses.map((course) {
+                          return DropdownMenuItem(
+                            value: course,
+                            child: Text(
+                              course.name,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          classController.selectedCourse.value =
+                              value as CourseModel?;
+                        },
+                      ),
+                      const SizedBox(height: TSizes.spaceBtwInputFields),
+
+                      // Year TextField
+                      TextFormField(
+                        controller: classController.yearController,
+                        decoration: InputDecoration(
+                          labelText: 'Year',
+                          hintText: 'Enter year',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(
+                              TSizes.inputFieldRadius,
+                            ),
+                          ),
+                        ),
+                        keyboardType: TextInputType.number,
+                      ),
+                      const SizedBox(height: TSizes.spaceBtwInputFields),
+
+                      // Section TextField
+                      TextFormField(
+                        controller: classController.sectionController,
+                        decoration: InputDecoration(
+                          labelText: 'Section (Optional)',
+                          hintText: 'Enter section (e.g., A, B, C)',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(
+                              TSizes.inputFieldRadius,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: TSizes.spaceBtwSections),
+
+                      // Create Button
+                      SizedBox(
+                        width: double.infinity,
+                        height: 55,
+                        child: ElevatedButton(
+                          onPressed: classController.createClass,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                dark ? TColors.yellow : TColors.deepPurple,
+                            foregroundColor: dark ? Colors.black : Colors.white,
+                          ),
+                          child: const Text('Create Class'),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
+              ),
       ),
     );
   }

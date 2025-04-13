@@ -1,4 +1,5 @@
 import 'package:attedance__/common/utils/constants/colors.dart';
+import 'package:attedance__/common/utils/constants/image_strings.dart';
 import 'package:attedance__/common/utils/constants/sized.dart';
 import 'package:attedance__/common/utils/helpers/helper_function.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +46,7 @@ class TeacherGreeting extends StatelessWidget {
               ),
               image: const DecorationImage(
                 image: AssetImage(
-                  'assets/logos/darkapplogo.png',
+                  TImageStrings.appLogo,
                 ), // Replace with your default image
                 fit: BoxFit.cover,
               ),

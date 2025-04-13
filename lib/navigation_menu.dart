@@ -67,10 +67,13 @@ class NavigationMenu extends StatelessWidget {
         () => Container(
           height: 80,
           decoration: BoxDecoration(
-            color: dark ? Theme.of(context).scaffoldBackgroundColor : Theme.of(context).scaffoldBackgroundColor,
+            color:
+                dark
+                    ? Theme.of(context).scaffoldBackgroundColor
+                    : Theme.of(context).scaffoldBackgroundColor,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: Colors.black.withAlpha(13),
                 blurRadius: 10,
                 offset: const Offset(0, -5),
               ),
@@ -80,8 +83,22 @@ class NavigationMenu extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _buildNavItem(context, 0, Iconsax.home, 'Home', dark, controller),
-              _buildNavItem(context, 1, Iconsax.book_1, 'Classes', dark, controller),
-              _buildNavItem(context, 2, Iconsax.timer_1, 'Sessions', dark, controller),
+              _buildNavItem(
+                context,
+                1,
+                Iconsax.book_1,
+                'Classes',
+                dark,
+                controller,
+              ),
+              _buildNavItem(
+                context,
+                2,
+                Iconsax.timer_1,
+                'Sessions',
+                dark,
+                controller,
+              ),
               _buildNavItem(context, 3, Iconsax.more, 'More', dark, controller),
             ],
           ),
@@ -91,9 +108,16 @@ class NavigationMenu extends StatelessWidget {
     );
   }
 
-  Widget _buildNavItem(BuildContext context, int index, IconData icon, String label, bool dark, NavigationController controller) {
+  Widget _buildNavItem(
+    BuildContext context,
+    int index,
+    IconData icon,
+    String label,
+    bool dark,
+    NavigationController controller,
+  ) {
     final isSelected = controller.selectedIndex.value == index;
-    
+
     return GestureDetector(
       onTap: () => controller.selectedIndex.value = index,
       child: Container(
@@ -104,9 +128,10 @@ class NavigationMenu extends StatelessWidget {
           children: [
             Icon(
               icon,
-              color: isSelected 
-                ? (dark ? Colors.orange : Colors.deepPurpleAccent)
-                : (dark ? Colors.grey : Colors.grey),
+              color:
+                  isSelected
+                      ? (dark ? Colors.orange : Colors.deepPurpleAccent)
+                      : (dark ? Colors.grey : Colors.grey),
               size: 28,
             ),
             const SizedBox(height: 4),
@@ -119,11 +144,13 @@ class NavigationMenu extends StatelessWidget {
                 child: Text(
                   label,
                   style: TextStyle(
-                    color: isSelected 
-                      ? (dark ? Colors.orange : Colors.deepPurpleAccent)
-                      : Colors.grey,
+                    color:
+                        isSelected
+                            ? (dark ? Colors.orange : Colors.deepPurpleAccent)
+                            : Colors.grey,
                     fontSize: 12,
-                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                    fontWeight:
+                        isSelected ? FontWeight.bold : FontWeight.normal,
                   ),
                 ),
               ),
@@ -141,14 +168,14 @@ class NavigationController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    print('NavigationController initialized');
+    //print('NavigationController initialized');
     Get.put(TeacherProfileController());
-    
+
     // Initialize the AttendanceController first
     if (!Get.isRegistered<AttendanceController>()) {
       Get.put(AttendanceController());
     }
-    
+
     // Then initialize the CarouselAttendanceController
     if (!Get.isRegistered<CarouselAttendanceController>()) {
       Get.put(CarouselAttendanceController());
