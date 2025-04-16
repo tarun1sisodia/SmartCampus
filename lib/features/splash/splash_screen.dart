@@ -1,3 +1,4 @@
+import 'package:attedance__/common/utils/constants/image_strings.dart';
 import 'package:attedance__/services/storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -103,7 +104,7 @@ class _SplashScreenState extends State<SplashScreen>
               width: 100,
               height: 100,
               child: Lottie.asset(
-                'assets/animations/loading-animation.json',
+                TImageStrings.hellorobo,
                 fit: BoxFit.cover,
               ),
             ),

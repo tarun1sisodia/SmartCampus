@@ -25,7 +25,7 @@ class Onboarding extends StatelessWidget {
             children: [
               Lottie.asset(
                 // TTexts.onboardingtitle3,
-                TImageStrings.hello_robo,
+                TImageStrings.hellorobo,
                 width: THelperFunction.screenWidth() * 0.6,
               ),
               Lottie.asset(
