@@ -1,5 +1,6 @@
 import 'package:attedance__/app/bindings/app_bindings.dart';
 import 'package:attedance__/myapp.dart';
+import 'package:attedance__/services/feedvack_service.dart';
 import 'package:attedance__/services/storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -42,6 +43,7 @@ Future<void> main() async {
 
   // Initialize services
   await Get.putAsync(() => StorageService().init());
+  await Get.putAsync(() => FeedbackService().init());
   await Get.putAsync(() => LanguageService().init());
 
   // Initialize global bindings
