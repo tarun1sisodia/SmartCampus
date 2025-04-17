@@ -9,8 +9,6 @@ import '../../features/authentication/screens/login/login.dart';
 import '../../features/authentication/screens/onboarding/onboarding.dart';
 import '../../features/authentication/screens/signup/signup.dart';
 import '../../features/authentication/screens/signup/singup_widgets/verify_email_screen.dart';
-import '../../features/teacher/bindings/all_sessions_binding.dart';
-import '../../features/teacher/bindings/carousel_attendance_binding.dart';
 import '../../features/teacher/screens/about_screen.dart';
 import '../../features/teacher/screens/all_sessions_screen.dart';
 import '../../features/teacher/screens/attendance_reports_screen.dart';

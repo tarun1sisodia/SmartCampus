@@ -1,3 +1,4 @@
+import 'package:attedance__/features/teacher/controllers/all_sessions_controller.dart';
 import 'package:attedance__/services/storage_service.dart';
 
 import '../../features/authentication/controllers/change_password_controller.dart';
@@ -24,7 +25,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class AppBindings {
   /// Initialize all bindings that should be available globally
   static void initGlobalBindings() {
-    print('Initializing global bindings');
+    print('Initializing global bindings by AppBindings');
     // Auth controllers with permanent: true will persist throughout the app lifecycle
     Get.put(SupabaseAuthController(), permanent: true);
   }
@@ -75,6 +76,7 @@ class AppBindings {
     print('Registering change password bindings');
     Get.lazyPut(() => ChangePasswordController(), fenix: true);
   }
+
 
 }
 class SplashBinding extends Bindings {
@@ -224,5 +226,37 @@ class SettingsBinding extends Bindings {
     // Instead, use the appropriate controller for settings
     // For now, we'll use HomeBinding since it has the necessary controllers
     HomeBinding().dependencies();
+  }
+}
+class CarouselAttendanceBinding extends Bindings {
+  @override
+  void dependencies() {
+    // Make sure the attendance controller is available
+    if (!Get.isRegistered<AttendanceController>()) {
+      print('Initializing AttendanceController...inside the bindings');
+      Get.put(AttendanceController());
+      print('AttendanceController initialized. inside the bindings ');
+    } else {
+      // If it's already registered, find it
+      Get.find<AttendanceController>();
+      print('AttendanceController found. inside the bindings');
+    }
+    
+    // Initialize the carousel attendance controller
+    Get.lazyPut(() => CarouselAttendanceController());
+  }
+}
+
+
+class AllSessionsBinding extends Bindings {
+  @override
+  void dependencies() {
+    // Make sure the attendance controller is available
+    if (!Get.isRegistered<AttendanceController>()) {
+      Get.put(AttendanceController());
+    }
+    
+    // Initialize the all sessions controller
+    Get.put(AllSessionsController());
   }
 }

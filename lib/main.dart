@@ -54,43 +54,12 @@ Future<void> main() async {
   print('LanguageService initialized.');
 
   // Initialize global bindings
-  print('Initializing global bindings...');
+  print('calling the file to initialize global bindings...');
   AppBindings.initGlobalBindings();
   print('Global bindings initialized.');
 
   // Running the App
-  final storageService = Get.find<StorageService>();
-  print('StorageService instance retrieved.');
-
-  // Check if user credentials are saved
-  final bool isLoggedIn =
-      storageService.getRememberUserStatus() &&
-      storageService.getUserEmail() != null &&
-      storageService.getUserPassword() != null;
-
-  print('Is user logged in? $isLoggedIn');
-
-  if (isLoggedIn) {
-    try {
-      final email = storageService.getUserEmail()!;
-      final password = storageService.getUserPassword()!;
-      print('Attempting auto-login with email: $email');
-
-      await Supabase.instance.client.auth.signInWithPassword(
-        email: email,
-        password: password,
-      );
-
-      print('Auto-login successful.');
-    } catch (e) {
-      print('Auto-login failed: $e');
-      Get.snackbar(
-        'Auto-login Failed',
-        'Unable to log in automatically. Please log in manually.',
-        snackPosition: SnackPosition.BOTTOM,
-      );
-    }
-  }
+  
 
   print('Launching MyApp...');
   runApp(MyApp());

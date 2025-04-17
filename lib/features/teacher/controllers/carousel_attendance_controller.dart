@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:async';
 import '../../../models/student_model.dart';
@@ -35,25 +36,31 @@ class CarouselAttendanceController extends GetxController {
   /// If a session ID is already set, it loads students for the current session.
   /// It then listens to changes in the students list to update statistics and
   /// listens to changes in the session ID to start/stop the timer.
-  void onInit() {
-    super.onInit();
+  @override
+void onInit() {
+  super.onInit();
+  
+  // Listen to changes in the students list to update statistics
+  ever(attendanceController.students, (_) => updateStatistics());
+
+  // Listen to changes in session ID to start/stop timer
+  ever(attendanceController.currentSessionId, (_) {
+    if (attendanceController.currentSessionId.value.isNotEmpty) {
+      _initializeSessionTimer();
+    } else {
+      _stopTimer();
+    }
+  });
+  
+  // Delay loading students until after the build phase
+  WidgetsBinding.instance.addPostFrameCallback((_) {
     // Load students for the current session if a session ID is already set
     if (attendanceController.currentSessionId.value.isNotEmpty) {
       attendanceController.loadStudentsForSession();
     }
-    
-    // Listen to changes in the students list to update statistics
-    ever(attendanceController.students, (_) => updateStatistics());
+  });
+}
 
-    // Listen to changes in session ID to start/stop timer
-    ever(attendanceController.currentSessionId, (_) {
-      if (attendanceController.currentSessionId.value.isNotEmpty) {
-        _initializeSessionTimer();
-      } else {
-        _stopTimer();
-      }
-    });
-  }
 
   @override
   /// Stops the session timer when the controller is about to be removed from the

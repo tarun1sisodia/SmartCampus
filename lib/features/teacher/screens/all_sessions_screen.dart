@@ -1,4 +1,4 @@
-import 'package:attedance__/features/teacher/bindings/carousel_attendance_binding.dart';
+import 'package:attedance__/app/bindings/app_bindings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
