@@ -1,10 +1,10 @@
-import 'package:attedance__/common/utils/constants/colors.dart';
-import 'package:attedance__/common/utils/constants/image_strings.dart';
-import 'package:attedance__/common/utils/constants/sized.dart';
-import 'package:attedance__/common/utils/helpers/helper_function.dart';
+import 'package:SmartCampus/common/utils/constants/colors.dart';
+import 'package:SmartCampus/common/utils/constants/image_strings.dart';
+import 'package:SmartCampus/common/utils/constants/sized.dart';
+import 'package:SmartCampus/common/utils/helpers/helper_function.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:attedance__/features/teacher/screens/teacher_profile_screen.dart';
+import 'package:SmartCampus/features/teacher/screens/teacher_profile_screen.dart';
 
 class TeacherGreeting extends StatelessWidget {
   const TeacherGreeting({super.key});
@@ -69,8 +69,8 @@ class TeacherGreeting extends StatelessWidget {
                 Text(
                   greeting,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: dark ? TColors.yellow : TColors.deepPurple,
-                  ),
+                        color: dark ? TColors.yellow : TColors.deepPurple,
+                      ),
                 ),
                 const SizedBox(height: TSizes.xs),
                 Obx(

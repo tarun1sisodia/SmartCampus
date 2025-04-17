@@ -1,9 +1,9 @@
 import 'dart:async';
-import 'package:attedance__/features/teacher/screens/feedback_dialog.dart';
-import 'package:attedance__/services/feedvack_service.dart';
+import 'package:SmartCampus/features/teacher/screens/feedback_dialog.dart';
+import 'package:SmartCampus/services/feedvack_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:attedance__/services/storage_service.dart';
+import 'package:SmartCampus/services/storage_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class FeedbackController extends GetxController {

@@ -1,11 +1,11 @@
-import 'package:attedance__/features/teacher/controllers/attendance_controller.dart';
-import 'package:attedance__/features/teacher/controllers/carousel_attendance_controller.dart';
-import 'package:attedance__/features/teacher/screens/all_sessions_screen.dart';
-import 'package:attedance__/features/teacher/screens/dashboard_screen.dart';
-import 'package:attedance__/features/teacher/screens/class_list_screen.dart';
-import 'package:attedance__/features/teacher/screens/more_menu_screen.dart';
-import 'package:attedance__/features/teacher/screens/teacher_profile_screen.dart';
-import 'package:attedance__/app/routes/app_routes.dart';
+import 'package:SmartCampus/features/teacher/controllers/attendance_controller.dart';
+import 'package:SmartCampus/features/teacher/controllers/carousel_attendance_controller.dart';
+import 'package:SmartCampus/features/teacher/screens/all_sessions_screen.dart';
+import 'package:SmartCampus/features/teacher/screens/dashboard_screen.dart';
+import 'package:SmartCampus/features/teacher/screens/class_list_screen.dart';
+import 'package:SmartCampus/features/teacher/screens/more_menu_screen.dart';
+import 'package:SmartCampus/features/teacher/screens/teacher_profile_screen.dart';
+import 'package:SmartCampus/app/routes/app_routes.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -90,7 +90,8 @@ class NavigationMenu extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildNavItem(context, 0, Iconsax.home, 'Home', dark, controller),
+                _buildNavItem(
+                    context, 0, Iconsax.home, 'Home', dark, controller),
                 _buildNavItem(
                   context,
                   1,
@@ -107,14 +108,16 @@ class NavigationMenu extends StatelessWidget {
                   dark,
                   controller,
                 ),
-                _buildNavItem(context, 3, Iconsax.more, 'More', dark, controller),
+                _buildNavItem(
+                    context, 3, Iconsax.more, 'More', dark, controller),
               ],
             ),
           );
         },
       ),
       body: Obx(() {
-        print('Displaying screen with index: ${controller.selectedIndex.value}');
+        print(
+            'Displaying screen with index: ${controller.selectedIndex.value}');
         return controller.screens[controller.selectedIndex.value];
       }),
     );
@@ -164,7 +167,8 @@ class NavigationMenu extends StatelessWidget {
                         ? (dark ? Colors.orange : Colors.deepPurpleAccent)
                         : Colors.grey,
                     fontSize: 12,
-                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                    fontWeight:
+                        isSelected ? FontWeight.bold : FontWeight.normal,
                   ),
                 ),
               ),

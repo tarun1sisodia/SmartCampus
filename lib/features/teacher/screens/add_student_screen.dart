@@ -1,4 +1,4 @@
-import 'package:attedance__/features/teacher/controllers/student_controller.dart';
+import 'package:SmartCampus/features/teacher/controllers/student_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -97,7 +97,8 @@ class AddStudentScreen extends StatelessWidget {
           );
         }
 
-        print('Building student list with ${studentController.students.length} students');
+        print(
+            'Building student list with ${studentController.students.length} students');
         return ListView.builder(
           padding: const EdgeInsets.all(TSizes.defaultSpace),
           itemCount: studentController.students.length,
@@ -159,7 +160,8 @@ class AddStudentScreen extends StatelessWidget {
                           ),
                           ElevatedButton(
                             onPressed: () {
-                              print('Confirming student deletion: ${student.id}');
+                              print(
+                                  'Confirming student deletion: ${student.id}');
                               Get.back();
                               studentController.removeStudentFromClass(
                                 student.id,
@@ -227,12 +229,11 @@ class AddStudentScreen extends StatelessWidget {
         ),
         actions: [
           TextButton(
-            onPressed: () {
-              print('Add student dialog cancelled');
-              Get.back();
-            },
-            child: const Text('Cancel')
-          ),
+              onPressed: () {
+                print('Add student dialog cancelled');
+                Get.back();
+              },
+              child: const Text('Cancel')),
           ElevatedButton(
             onPressed: () {
               print('Attempting to add student');
@@ -317,13 +318,15 @@ class AddStudentScreen extends StatelessWidget {
                   child: ListView.builder(
                     itemCount: studentController.availableStudents.length,
                     itemBuilder: (context, index) {
-                      final student = studentController.availableStudents[index];
+                      final student =
+                          studentController.availableStudents[index];
                       print('Building checkbox for student: ${student.name}');
                       return Obx(() => CheckboxListTile(
                             value: studentController.selectedStudents
                                 .any((s) => s.id == student.id),
                             onChanged: (isSelected) {
-                              print('Student selection changed: ${student.name}, selected: $isSelected');
+                              print(
+                                  'Student selection changed: ${student.name}, selected: $isSelected');
                               if (isSelected == true) {
                                 studentController.selectStudent(student);
                               } else {
@@ -331,7 +334,8 @@ class AddStudentScreen extends StatelessWidget {
                               }
                             },
                             title: Text(student.name),
-                            subtitle: Text('Roll Number: ${student.rollNumber}'),
+                            subtitle:
+                                Text('Roll Number: ${student.rollNumber}'),
                           ));
                     },
                   ),
@@ -342,17 +346,17 @@ class AddStudentScreen extends StatelessWidget {
         ),
         actions: [
           TextButton(
-            onPressed: () {
-              print('Import dialog cancelled');
-              Get.back();
-            },
-            child: const Text('Cancel')
-          ),
+              onPressed: () {
+                print('Import dialog cancelled');
+                Get.back();
+              },
+              child: const Text('Cancel')),
           Obx(() => ElevatedButton(
                 onPressed: studentController.selectedStudents.isEmpty
                     ? null
                     : () {
-                        print('Importing ${studentController.selectedStudents.length} students');
+                        print(
+                            'Importing ${studentController.selectedStudents.length} students');
                         studentController.importSelectedStudents();
                         Get.back();
                       },

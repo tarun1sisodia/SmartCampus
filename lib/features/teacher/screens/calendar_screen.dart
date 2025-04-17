@@ -1,4 +1,4 @@
-import 'package:attedance__/common/utils/constants/constants.dart';
+import 'package:SmartCampus/common/utils/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:table_calendar/table_calendar.dart';

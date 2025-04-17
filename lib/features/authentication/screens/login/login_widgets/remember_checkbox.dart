@@ -1,4 +1,4 @@
-import 'package:attedance__/features/authentication/screens/forgot_password/forgot_password_2.dart';
+import 'package:SmartCampus/features/authentication/screens/forgot_password/forgot_password_2.dart';
 import '../../../../../common/utils/constants/colors.dart';
 import '../../../../../common/utils/constants/text_strings.dart';
 import '../../../../../common/utils/helpers/helper_function.dart';

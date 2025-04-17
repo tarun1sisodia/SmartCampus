@@ -1,6 +1,6 @@
-import 'package:attedance__/common/utils/device/device_utility.dart';
-import 'package:attedance__/features/teacher/screens/class_list_screen.dart';
-import 'package:attedance__/features/teacher/widgets/session_timer_widget.dart';
+import 'package:SmartCampus/common/utils/device/device_utility.dart';
+import 'package:SmartCampus/features/teacher/screens/class_list_screen.dart';
+import 'package:SmartCampus/features/teacher/widgets/session_timer_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -40,7 +40,8 @@ class CarouselAttendanceScreen extends StatelessWidget {
           // Session timer in app bar
           Obx(
             () {
-              print('Timer running: ${carouselAttendanceController.isTimerRunning.value}');
+              print(
+                  'Timer running: ${carouselAttendanceController.isTimerRunning.value}');
               return carouselAttendanceController.isTimerRunning.value
                   ? Padding(
                       padding: const EdgeInsets.only(right: TSizes.sm),
@@ -48,9 +49,9 @@ class CarouselAttendanceScreen extends StatelessWidget {
                         child: SessionTimerWidget(
                           remainingTime:
                               carouselAttendanceController.remainingTime.value,
-                          isSessionActive:
-                              !carouselAttendanceController.remainingTime.value
-                                  .contains('Ended'),
+                          isSessionActive: !carouselAttendanceController
+                              .remainingTime.value
+                              .contains('Ended'),
                         ),
                       ),
                     )
@@ -62,10 +63,7 @@ class CarouselAttendanceScreen extends StatelessWidget {
               print('Refresh button pressed');
               // Only try to load students if a session is selected
               if (carouselAttendanceController
-                  .attendanceController
-                  .currentSessionId
-                  .value
-                  .isNotEmpty) {
+                  .attendanceController.currentSessionId.value.isNotEmpty) {
                 print('Loading students for session');
                 carouselAttendanceController.attendanceController
                     .loadStudentsForSession();
@@ -161,7 +159,8 @@ class CarouselAttendanceScreen extends StatelessWidget {
           );
         }
 
-        print('Building main content with ${attendanceController.students.length} students');
+        print(
+            'Building main content with ${attendanceController.students.length} students');
         return Column(
           children: [
             Obx(
@@ -184,35 +183,31 @@ class CarouselAttendanceScreen extends StatelessWidget {
                             TSizes.borderRadiusMd,
                           ),
                           border: Border.all(
-                            color:
-                                dark
-                                    ? TColors.yellow.withOpacity(0.3)
-                                    : TColors.deepPurple.withOpacity(0.3),
+                            color: dark
+                                ? TColors.yellow.withOpacity(0.3)
+                                : TColors.deepPurple.withOpacity(0.3),
                           ),
                         ),
                         child: SessionTimerWidget(
                           remainingTime:
                               carouselAttendanceController.remainingTime.value,
-                          isSessionActive:
-                              !carouselAttendanceController.remainingTime.value
-                                  .contains('Ended'),
+                          isSessionActive: !carouselAttendanceController
+                              .remainingTime.value
+                              .contains('Ended'),
                         ),
                       )
                     : const SizedBox.shrink();
               },
             ),
-
             Expanded(
               child: CarouselSlider.builder(
                 carouselController: carouselController,
                 itemCount: attendanceController.students.length,
                 options: CarouselOptions(
-                  height:
-                      isLandscape
-                          ? screenSize.height * 0.6
-                          : screenSize.height * 0.4,
-                  viewportFraction:
-                      isLandscape ? 0.6 : 0.85,
+                  height: isLandscape
+                      ? screenSize.height * 0.6
+                      : screenSize.height * 0.4,
+                  viewportFraction: isLandscape ? 0.6 : 0.85,
                   enlargeCenterPage: true,
                   enableInfiniteScroll: false,
                   onPageChanged: (index, reason) {
@@ -226,7 +221,8 @@ class CarouselAttendanceScreen extends StatelessWidget {
                   return SwipeableStudentCard(
                     student: student,
                     onStatusChanged: (status) {
-                      print('Status changed for student ${student.id} to $status');
+                      print(
+                          'Status changed for student ${student.id} to $status');
                       attendanceController.updateStudentStatus(
                         student.id,
                         status,
@@ -256,38 +252,36 @@ class CarouselAttendanceScreen extends StatelessWidget {
                 },
               ),
             ),
-
             Padding(
               padding: const EdgeInsets.symmetric(vertical: TSizes.sm),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   IconButton(
-                    onPressed:
-                        carouselAttendanceController.isFirstStudent
-                            ? null
-                            : () {
-                              print('Moving to previous student');
-                              carouselAttendanceController
-                                  .moveToPreviousStudent();
-                              carouselController.previousPage(
-                                duration: const Duration(milliseconds: 300),
-                                curve: Curves.easeInOut,
-                              );
-                            },
+                    onPressed: carouselAttendanceController.isFirstStudent
+                        ? null
+                        : () {
+                            print('Moving to previous student');
+                            carouselAttendanceController
+                                .moveToPreviousStudent();
+                            carouselController.previousPage(
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.easeInOut,
+                            );
+                          },
                     icon: Icon(
                       Icons.arrow_back_ios,
-                      color:
-                          carouselAttendanceController.isFirstStudent
-                              ? Colors.grey
-                              : dark
+                      color: carouselAttendanceController.isFirstStudent
+                          ? Colors.grey
+                          : dark
                               ? TColors.yellow
                               : TColors.deepPurple,
                     ),
                   ),
                   Obx(
                     () {
-                      print('Current index: ${carouselAttendanceController.currentIndex.value}');
+                      print(
+                          'Current index: ${carouselAttendanceController.currentIndex.value}');
                       return Text(
                         '${carouselAttendanceController.currentIndex.value + 1}/${attendanceController.students.length}',
                         style: Theme.of(context).textTheme.bodyMedium,
@@ -295,23 +289,21 @@ class CarouselAttendanceScreen extends StatelessWidget {
                     },
                   ),
                   IconButton(
-                    onPressed:
-                        carouselAttendanceController.isLastStudent
-                            ? null
-                            : () {
-                              print('Moving to next student');
-                              carouselAttendanceController.moveToNextStudent();
-                              carouselController.nextPage(
-                                duration: const Duration(milliseconds: 300),
-                                curve: Curves.easeInOut,
-                              );
-                            },
+                    onPressed: carouselAttendanceController.isLastStudent
+                        ? null
+                        : () {
+                            print('Moving to next student');
+                            carouselAttendanceController.moveToNextStudent();
+                            carouselController.nextPage(
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.easeInOut,
+                            );
+                          },
                     icon: Icon(
                       Icons.arrow_forward_ios,
-                      color:
-                          carouselAttendanceController.isLastStudent
-                              ? Colors.grey
-                              : dark
+                      color: carouselAttendanceController.isLastStudent
+                          ? Colors.grey
+                          : dark
                               ? TColors.yellow
                               : TColors.deepPurple,
                     ),
@@ -319,7 +311,6 @@ class CarouselAttendanceScreen extends StatelessWidget {
                 ],
               ),
             ),
-
             Padding(
               padding: const EdgeInsets.all(TSizes.defaultSpace),
               child: AttendanceActionButtons(
@@ -342,18 +333,16 @@ class CarouselAttendanceScreen extends StatelessWidget {
                 },
               ),
             ),
-
             Padding(
               padding: EdgeInsets.only(
                 bottom: isMobile ? TSizes.sm : TSizes.md,
               ),
               child: Obx(
                 () {
-                  print('Students loaded: ${carouselAttendanceController.attendanceController.isStudentsLoaded.value}');
+                  print(
+                      'Students loaded: ${carouselAttendanceController.attendanceController.isStudentsLoaded.value}');
                   return carouselAttendanceController
-                          .attendanceController
-                          .isStudentsLoaded
-                          .value
+                          .attendanceController.isStudentsLoaded.value
                       ? SizedBox(
                           width: isMobile ? 300 : 240,
                           height: isMobile ? 50 : 40,
@@ -399,12 +388,11 @@ class CarouselAttendanceScreen extends StatelessWidget {
         ),
         actions: [
           TextButton(
-            onPressed: () {
-              print('Submit dialog cancelled');
-              Get.back();
-            },
-            child: const Text('Cancel')
-          ),
+              onPressed: () {
+                print('Submit dialog cancelled');
+                Get.back();
+              },
+              child: const Text('Cancel')),
           ElevatedButton(
             onPressed: () {
               print('Submitting attendance');

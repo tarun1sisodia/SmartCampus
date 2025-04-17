@@ -1,40 +1,16 @@
 flutter_launcher_icons:
-  # Basic configuration
   android: true
   ios: true
   image_path: "assets/logos/smartcampus.png"
-  
-  # Android-specific configurations
-  adaptive_icon_background: "#FFFFFF"
-  adaptive_icon_foreground: "assets/logos/smartcampus_foreground.png"
-  min_sdk_android: 21
-  
-  # Create a separate icon for the Play Store (1024x1024)
-  android_play_store_icon: "assets/logos/smartcampus_play_store.png"
-  
-  # iOS-specific configurations
-  remove_alpha_ios: true
-  ios_content_mode: scaleAspectFit
-  
-  # Web configuration (disabled for now)
   web:
-    generate: false
-    image_path: "assets/logos/smartcampus_web.png"
-    background_color: "#FFFFFF"
-    theme_color: "#FFFFFF"
-  
-  # Windows configuration
+    generate: true
+    image_path: "assets/logos/smartcampus.png"
   windows:
     generate: true
     image_path: "assets/logos/smartcampus.png"
-    icon_size: 48 # Windows app icon size
-  
-  # macOS configuration
   macos:
     generate: true
     image_path: "assets/logos/smartcampus.png"
-  
-  # Additional options
-  # Uncomment if you want to keep the old launcher icon
-  # remove_old_launcher_icon: false
-x
+  linux:
+    generate: true
+    image_path: "assets/logos/smartcampus.png"

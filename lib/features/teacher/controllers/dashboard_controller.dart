@@ -1,4 +1,4 @@
-import 'package:attedance__/services/course_service.dart';
+import 'package:SmartCampus/services/course_service.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../models/class_model.dart';
@@ -164,14 +164,10 @@ class DashboardController extends GetxController {
     } else {
       filteredClasses.assignAll(
         classes.where((classModel) {
-          final matchesSubject = classModel.subjectName
-                  ?.toLowerCase()
-                  .contains(query) ??
-              false;
-          final matchesCourse = classModel.courseName
-                  ?.toLowerCase()
-                  .contains(query) ??
-              false;
+          final matchesSubject =
+              classModel.subjectName?.toLowerCase().contains(query) ?? false;
+          final matchesCourse =
+              classModel.courseName?.toLowerCase().contains(query) ?? false;
           final matchesSection =
               classModel.section?.toLowerCase().contains(query) ?? false;
 

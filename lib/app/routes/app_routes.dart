@@ -1,5 +1,5 @@
-import 'package:attedance__/features/splash/splash_screen.dart';
-import 'package:attedance__/features/teacher/controllers/calendar_controller.dart';
+import 'package:SmartCampus/features/splash/splash_screen.dart';
+import 'package:SmartCampus/features/teacher/controllers/calendar_controller.dart';
 
 import '../../app/bindings/app_bindings.dart';
 import '../../features/authentication/screens/change_password/change_password_screen.dart';

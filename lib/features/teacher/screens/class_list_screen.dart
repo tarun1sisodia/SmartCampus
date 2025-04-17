@@ -1,4 +1,4 @@
-import 'package:attedance__/app/routes/app_routes.dart';
+import 'package:SmartCampus/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -47,7 +47,6 @@ class ClassListScreen extends StatelessWidget {
           ),
         ],
       ),
-
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           print('Opening create class screen');
@@ -148,7 +147,9 @@ class ClassListScreen extends StatelessWidget {
                               children: [
                                 Text(
                                   classItem.subjectName ?? 'Unknown Subject',
-                                  style: Theme.of(context).textTheme.titleMedium
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleMedium
                                       ?.copyWith(fontWeight: FontWeight.bold),
                                 ),
                                 Text(
@@ -161,7 +162,8 @@ class ClassListScreen extends StatelessWidget {
                           IconButton(
                             icon: const Icon(Iconsax.more),
                             onPressed: () {
-                              print('Opening options for class ${classItem.id}');
+                              print(
+                                  'Opening options for class ${classItem.id}');
                               _showClassOptions(context, classItem);
                             },
                           ),
@@ -177,8 +179,10 @@ class ClassListScreen extends StatelessWidget {
                             icon: Iconsax.people,
                             label: 'Students',
                             onTap: () {
-                              print('Opening students for class ${classItem.id}');
-                              Get.to(() => AddStudentScreen(classModel: classItem));
+                              print(
+                                  'Opening students for class ${classItem.id}');
+                              Get.to(() =>
+                                  AddStudentScreen(classModel: classItem));
                             },
                           ),
                           _buildActionButton(
@@ -186,8 +190,10 @@ class ClassListScreen extends StatelessWidget {
                             icon: Iconsax.calendar_1,
                             label: 'Attendance',
                             onTap: () {
-                              print('Opening attendance for class ${classItem.id}');
-                              Get.to(() => AttendanceScreen(classModel: classItem));
+                              print(
+                                  'Opening attendance for class ${classItem.id}');
+                              Get.to(() =>
+                                  AttendanceScreen(classModel: classItem));
                             },
                           ),
                         ],
@@ -323,7 +329,6 @@ class ClassListScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: TSizes.spaceBtwInputFields),
-
                 Obx(
                   () => DropdownButtonFormField<String>(
                     decoration: InputDecoration(
@@ -354,9 +359,7 @@ class ClassListScreen extends StatelessWidget {
                     },
                   ),
                 ),
-
                 const SizedBox(height: TSizes.spaceBtwInputFields),
-
                 TextField(
                   controller: classController.yearController,
                   keyboardType: TextInputType.number,
@@ -369,9 +372,7 @@ class ClassListScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-
                 const SizedBox(height: TSizes.spaceBtwInputFields),
-
                 TextField(
                   controller: classController.sectionController,
                   decoration: InputDecoration(

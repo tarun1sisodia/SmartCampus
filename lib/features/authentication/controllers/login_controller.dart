@@ -1,5 +1,5 @@
-import 'package:attedance__/services/storage_service.dart';
-import 'package:attedance__/common/utils/helpers/snackbar_helper.dart';
+import 'package:SmartCampus/services/storage_service.dart';
+import 'package:SmartCampus/common/utils/helpers/snackbar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

@@ -1,14 +1,14 @@
-import 'package:attedance__/features/teacher/controllers/feedback_controller.dart';
+import 'package:SmartCampus/features/teacher/controllers/feedback_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class FeedbackDialog extends StatelessWidget {
   final FeedbackController controller = Get.find<FeedbackController>();
-  
+
   FeedbackDialog({super.key}) {
     print('FeedbackDialog initialized');
   }
-  
+
   @override
   Widget build(BuildContext context) {
     print('FeedbackDialog build method called');
@@ -21,7 +21,7 @@ class FeedbackDialog extends StatelessWidget {
       child: contentBox(context),
     );
   }
-  
+
   Widget contentBox(BuildContext context) {
     print('FeedbackDialog contentBox method called');
     return Container(
@@ -63,11 +63,11 @@ class FeedbackDialog extends StatelessWidget {
               children: List.generate(5, (index) {
                 return IconButton(
                   icon: Icon(
-                    index < controller.rating.value 
-                        ? Icons.star 
+                    index < controller.rating.value
+                        ? Icons.star
                         : Icons.star_border,
-                    color: index < controller.rating.value 
-                        ? Colors.amber 
+                    color: index < controller.rating.value
+                        ? Colors.amber
                         : Colors.grey,
                     size: 36,
                   ),
@@ -92,7 +92,8 @@ class FeedbackDialog extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               filled: true,
-              fillColor: Theme.of(context).inputDecorationTheme.fillColor ?? Colors.grey[100],
+              fillColor: Theme.of(context).inputDecorationTheme.fillColor ??
+                  Colors.grey[100],
             ),
           ),
           const SizedBox(height: 20),
@@ -107,10 +108,11 @@ class FeedbackDialog extends StatelessWidget {
                 child: const Text('Maybe Later'),
               ),
               Obx(() {
-                print('Submit button state updated: isSubmitting=${controller.isSubmitting.value}');
+                print(
+                    'Submit button state updated: isSubmitting=${controller.isSubmitting.value}');
                 return ElevatedButton(
-                  onPressed: controller.isSubmitting.value 
-                      ? null 
+                  onPressed: controller.isSubmitting.value
+                      ? null
                       : () {
                           print('Submit button clicked');
                           controller.submitFeedback();

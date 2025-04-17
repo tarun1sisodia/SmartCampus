@@ -1,8 +1,8 @@
-import 'package:attedance__/features/authentication/controllers/forgot_password_controller.dart';
-import 'package:attedance__/app/routes/app_routes.dart'; // Import the routes
-import 'package:attedance__/common/utils/constants/image_strings.dart';
-import 'package:attedance__/common/utils/constants/sized.dart';
-import 'package:attedance__/common/utils/helpers/helper_function.dart';
+import 'package:SmartCampus/features/authentication/controllers/forgot_password_controller.dart';
+import 'package:SmartCampus/app/routes/app_routes.dart'; // Import the routes
+import 'package:SmartCampus/common/utils/constants/image_strings.dart';
+import 'package:SmartCampus/common/utils/constants/sized.dart';
+import 'package:SmartCampus/common/utils/helpers/helper_function.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
@@ -22,8 +22,8 @@ class ResetPasswordConfirmationScreen extends StatelessWidget {
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
-            onPressed:
-                () => Get.offAllNamed(AppRoutes.login), // Use named route
+            onPressed: () =>
+                Get.offAllNamed(AppRoutes.login), // Use named route
             icon: Icon(CupertinoIcons.clear),
           ),
         ],
@@ -62,8 +62,8 @@ class ResetPasswordConfirmationScreen extends StatelessWidget {
                 height: TSizes.appBarHeight,
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed:
-                      () => Get.offAllNamed(AppRoutes.login), // Use named route
+                  onPressed: () =>
+                      Get.offAllNamed(AppRoutes.login), // Use named route
                   child: Text(
                     'Back to Login',
                     style: Theme.of(context).textTheme.headlineSmall,

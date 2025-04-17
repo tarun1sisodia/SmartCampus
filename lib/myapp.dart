@@ -1,11 +1,9 @@
-import 'package:attedance__/app/routes/app_routes.dart';
-import 'package:attedance__/app/theme/custom_themes/text_field_theme.dart';
-import 'package:attedance__/common/translations/app_translations.dart';
-import 'package:attedance__/services/language_service.dart';
-import 'package:attedance__/services/storage_service.dart';
+import 'package:SmartCampus/app/routes/app_routes.dart';
+import 'package:SmartCampus/app/theme/custom_themes/text_field_theme.dart';
+import 'package:SmartCampus/common/translations/app_translations.dart';
+import 'package:SmartCampus/services/language_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

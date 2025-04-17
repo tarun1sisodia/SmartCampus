@@ -1,11 +1,11 @@
-import 'package:attedance__/features/teacher/screens/student_detail_screen.dart';
-import 'package:attedance__/models/attendance_session_model.dart';
-import 'package:attedance__/models/class_model.dart';
-import 'package:attedance__/models/student_model.dart';
-import 'package:attedance__/services/attendance_service.dart';
-import 'package:attedance__/services/class_service.dart';
-import 'package:attedance__/services/student_service.dart';
-import 'package:attedance__/common/utils/helpers/snackbar_helper.dart';
+import 'package:SmartCampus/features/teacher/screens/student_detail_screen.dart';
+import 'package:SmartCampus/models/attendance_session_model.dart';
+import 'package:SmartCampus/models/class_model.dart';
+import 'package:SmartCampus/models/student_model.dart';
+import 'package:SmartCampus/services/attendance_service.dart';
+import 'package:SmartCampus/services/class_service.dart';
+import 'package:SmartCampus/services/student_service.dart';
+import 'package:SmartCampus/common/utils/helpers/snackbar_helper.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:csv/csv.dart'; // Ensure this import is present
@@ -86,12 +86,12 @@ class AttendanceReportsController extends GetxController {
       print('Loading attendance data for class: ${selectedClassId.value}');
       isLoading.value = true;
 
-      final classSessions = await attendanceService
-          .getAttendanceSessionsForDateRange(
-            classId: selectedClassId.value,
-            startDate: startDate.value,
-            endDate: endDate.value,
-          );
+      final classSessions =
+          await attendanceService.getAttendanceSessionsForDateRange(
+        classId: selectedClassId.value,
+        startDate: startDate.value,
+        endDate: endDate.value,
+      );
       print('Sessions fetched: ${classSessions.length}');
       sessions.assignAll(classSessions);
 
@@ -123,16 +123,17 @@ class AttendanceReportsController extends GetxController {
       lateCount.value = stats['lateCount'] ?? 0;
       averageAttendance.value = stats['averageAttendance'] ?? 0.0;
 
-      print('Overall stats - Present: ${presentCount.value}, Absent: ${absentCount.value}, Late: ${lateCount.value}, Average: ${averageAttendance.value}');
+      print(
+          'Overall stats - Present: ${presentCount.value}, Absent: ${absentCount.value}, Late: ${lateCount.value}, Average: ${averageAttendance.value}');
 
       for (var student in students) {
-        final studentStat = await attendanceService
-            .getAttendanceStatsForStudentInDateRange(
-              classId: selectedClassId.value,
-              studentId: student.id,
-              startDate: startDate.value,
-              endDate: endDate.value,
-            );
+        final studentStat =
+            await attendanceService.getAttendanceStatsForStudentInDateRange(
+          classId: selectedClassId.value,
+          studentId: student.id,
+          startDate: startDate.value,
+          endDate: endDate.value,
+        );
 
         studentStats[student.id] = studentStat;
         print('Stats for student ${student.name}: $studentStat');

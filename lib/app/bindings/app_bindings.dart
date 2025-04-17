@@ -1,5 +1,5 @@
-import 'package:attedance__/features/teacher/controllers/all_sessions_controller.dart';
-import 'package:attedance__/services/storage_service.dart';
+import 'package:SmartCampus/features/teacher/controllers/all_sessions_controller.dart';
+import 'package:SmartCampus/services/storage_service.dart';
 
 import '../../features/authentication/controllers/change_password_controller.dart';
 import '../../features/authentication/controllers/controllers_onboarding/onboarding_controller.dart';
@@ -18,8 +18,6 @@ import '../../navigation_menu.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-
-
 /// A class that manages all controller bindings for the app
 /// This centralizes dependency injection and improves performance
 class AppBindings {
@@ -35,7 +33,6 @@ class AppBindings {
     print('Registering onboarding bindings');
     Get.lazyPut(() => OnboardingController(), fenix: true);
   }
-  
 
   /// Login bindings
   static void registerLoginBindings() {
@@ -76,9 +73,8 @@ class AppBindings {
     print('Registering change password bindings');
     Get.lazyPut(() => ChangePasswordController(), fenix: true);
   }
-
-
 }
+
 class SplashBinding extends Bindings {
   @override
   void dependencies() {
@@ -228,6 +224,7 @@ class SettingsBinding extends Bindings {
     HomeBinding().dependencies();
   }
 }
+
 class CarouselAttendanceBinding extends Bindings {
   @override
   void dependencies() {
@@ -241,12 +238,11 @@ class CarouselAttendanceBinding extends Bindings {
       Get.find<AttendanceController>();
       print('AttendanceController found. inside the bindings');
     }
-    
+
     // Initialize the carousel attendance controller
     Get.lazyPut(() => CarouselAttendanceController());
   }
 }
-
 
 class AllSessionsBinding extends Bindings {
   @override
@@ -255,7 +251,7 @@ class AllSessionsBinding extends Bindings {
     if (!Get.isRegistered<AttendanceController>()) {
       Get.put(AttendanceController());
     }
-    
+
     // Initialize the all sessions controller
     Get.put(AllSessionsController());
   }

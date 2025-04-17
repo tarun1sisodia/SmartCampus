@@ -1,6 +1,6 @@
-import 'package:attedance__/app/routes/app_routes.dart';
-import 'package:attedance__/services/storage_service.dart';
-import 'package:attedance__/common/utils/helpers/snackbar_helper.dart';
+import 'package:SmartCampus/app/routes/app_routes.dart';
+import 'package:SmartCampus/services/storage_service.dart';
+import 'package:SmartCampus/common/utils/helpers/snackbar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -220,7 +220,8 @@ class SupabaseAuthController extends GetxController {
       final user = supabase.auth.currentUser;
 
       if (user != null) {
-        print('Storing user data: id=${user.id}, name=$_tempName, email=${user.email}, phone=$_tempPhone');
+        print(
+            'Storing user data: id=${user.id}, name=$_tempName, email=${user.email}, phone=$_tempPhone');
         await supabase.from('users').insert({
           'id': user.id,
           'name': _tempName,

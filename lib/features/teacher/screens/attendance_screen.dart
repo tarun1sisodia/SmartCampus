@@ -1,6 +1,6 @@
-import 'package:attedance__/app/bindings/app_bindings.dart';
-import 'package:attedance__/features/teacher/screens/carousel_attendance_screen.dart';
-import 'package:attedance__/features/teacher/screens/mark_attendance_screen.dart';
+import 'package:SmartCampus/app/bindings/app_bindings.dart';
+import 'package:SmartCampus/features/teacher/screens/carousel_attendance_screen.dart';
+import 'package:SmartCampus/features/teacher/screens/mark_attendance_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';

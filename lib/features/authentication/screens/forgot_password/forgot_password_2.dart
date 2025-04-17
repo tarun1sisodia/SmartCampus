@@ -1,11 +1,11 @@
-import 'package:attedance__/features/authentication/controllers/forgot_password_controller.dart';
-import 'package:attedance__/features/authentication/screens/signup/singup_widgets/textfields.dart';
-import 'package:attedance__/app/routes/app_routes.dart';
-import 'package:attedance__/common/utils/constants/colors.dart';
-import 'package:attedance__/common/utils/constants/image_strings.dart';
-import 'package:attedance__/common/utils/constants/sized.dart';
-import 'package:attedance__/common/utils/constants/text_strings.dart';
-import 'package:attedance__/common/utils/helpers/helper_function.dart';
+import 'package:SmartCampus/features/authentication/controllers/forgot_password_controller.dart';
+import 'package:SmartCampus/features/authentication/screens/signup/singup_widgets/textfields.dart';
+import 'package:SmartCampus/app/routes/app_routes.dart';
+import 'package:SmartCampus/common/utils/constants/colors.dart';
+import 'package:SmartCampus/common/utils/constants/image_strings.dart';
+import 'package:SmartCampus/common/utils/constants/sized.dart';
+import 'package:SmartCampus/common/utils/constants/text_strings.dart';
+import 'package:SmartCampus/common/utils/helpers/helper_function.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -82,18 +82,17 @@ class ForgotPasswordScreen extends StatelessWidget {
 
                     // Error message
                     Obx(
-                      () =>
-                          controller.errorMessage.value.isNotEmpty
-                              ? Padding(
-                                padding: const EdgeInsets.only(
-                                  top: TSizes.spaceBtwItems,
-                                ),
-                                child: Text(
-                                  controller.errorMessage.value,
-                                  style: const TextStyle(color: Colors.red),
-                                ),
-                              )
-                              : const SizedBox.shrink(),
+                      () => controller.errorMessage.value.isNotEmpty
+                          ? Padding(
+                              padding: const EdgeInsets.only(
+                                top: TSizes.spaceBtwItems,
+                              ),
+                              child: Text(
+                                controller.errorMessage.value,
+                                style: const TextStyle(color: Colors.red),
+                              ),
+                            )
+                          : const SizedBox.shrink(),
                     ),
 
                     const SizedBox(height: TSizes.spaceBtwSections),
@@ -104,29 +103,27 @@ class ForgotPasswordScreen extends StatelessWidget {
                         width: double.infinity,
                         height: TSizes.appBarHeight,
                         child: ElevatedButton(
-                          onPressed:
-                              controller.isLoading.value
-                                  ? null
-                                  : () async {
-                                    if (formKey.currentState!.validate()) {
-                                      try {
-                                        await controller.resetPassword();
-                                        // Navigate using named route and pass the email
-                                        Get.toNamed(
-                                          AppRoutes.resetConfirmation,
-                                          arguments:
-                                              controller.emailController.text
-                                                  .trim(),
-                                        );
-                                      } catch (e) {
-                                        // Error is already handled in the controller
-                                      }
+                          onPressed: controller.isLoading.value
+                              ? null
+                              : () async {
+                                  if (formKey.currentState!.validate()) {
+                                    try {
+                                      await controller.resetPassword();
+                                      // Navigate using named route and pass the email
+                                      Get.toNamed(
+                                        AppRoutes.resetConfirmation,
+                                        arguments: controller
+                                            .emailController.text
+                                            .trim(),
+                                      );
+                                    } catch (e) {
+                                      // Error is already handled in the controller
                                     }
-                                  },
-                          child:
-                              controller.isLoading.value
-                                  ? const CircularProgressIndicator()
-                                  : Text('Reset Password'),
+                                  }
+                                },
+                          child: controller.isLoading.value
+                              ? const CircularProgressIndicator()
+                              : Text('Reset Password'),
                         ),
                       ),
                     ),

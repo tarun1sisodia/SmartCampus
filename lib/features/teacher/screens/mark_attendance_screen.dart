@@ -1,5 +1,5 @@
-import 'package:attedance__/app/routes/app_routes.dart';
-import 'package:attedance__/common/utils/device/device_utility.dart';
+import 'package:SmartCampus/app/routes/app_routes.dart';
+import 'package:SmartCampus/common/utils/device/device_utility.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -26,14 +26,16 @@ class MarkAttendanceScreen extends StatelessWidget {
     final isTablet = screenSize.width < 1024 && screenSize.width > 500;
     final isMobile = screenSize.width <= 500;
     final isLandscape = DeviceUtility.isLandscapeOrientation(context);
-    print('Device type - isTablet: $isTablet, isMobile: $isMobile, isLandscape: $isLandscape');
+    print(
+        'Device type - isTablet: $isTablet, isMobile: $isMobile, isLandscape: $isLandscape');
 
     final cardPadding = isMobile
         ? (isLandscape ? TSizes.xs : TSizes.sm)
         : (isLandscape ? TSizes.sm : TSizes.md);
     print('Card padding: $cardPadding');
 
-    final avatarSize = isTablet ? (isLandscape ? 18.0 : 22.0) : (isLandscape ? 16.0 : 20.0);
+    final avatarSize =
+        isTablet ? (isLandscape ? 18.0 : 22.0) : (isLandscape ? 16.0 : 20.0);
     print('Avatar size: $avatarSize');
 
     return Scaffold(
@@ -200,9 +202,8 @@ class MarkAttendanceScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(
-                        height: isMobile
-                            ? TSizes.xs / 2
-                            : TSizes.spaceBtwItems / 2,
+                        height:
+                            isMobile ? TSizes.xs / 2 : TSizes.spaceBtwItems / 2,
                       ),
                       Text(
                         'Roll Number: ${student.rollNumber}',
@@ -220,7 +221,8 @@ class MarkAttendanceScreen extends StatelessWidget {
                       color: _getStatusColor(student.attendanceStatus, dark),
                     ),
                     onChanged: (value) {
-                      print('Updating attendance status for ${student.name} to $value');
+                      print(
+                          'Updating attendance status for ${student.name} to $value');
                       attendanceController.updateStudentStatus(
                         student.id,
                         value!,

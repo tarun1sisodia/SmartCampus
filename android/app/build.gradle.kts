@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.attedance__"
+    namespace = "com.example.smartcampus"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = "27.0.12077973"
 

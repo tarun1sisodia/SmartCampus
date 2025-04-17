@@ -1,4 +1,4 @@
-import 'package:attedance__/models/course_model.dart';
+import 'package:SmartCampus/models/course_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/class_controller.dart';
@@ -28,7 +28,8 @@ class CreateClassScreen extends StatelessWidget {
       ),
       body: Obx(
         () {
-          print('classController.isLoading: ${classController.isLoading.value}');
+          print(
+              'classController.isLoading: ${classController.isLoading.value}');
           return classController.isLoading.value
               ? const Center(child: CircularProgressIndicator())
               : Center(

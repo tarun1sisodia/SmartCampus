@@ -1,4 +1,4 @@
-import 'package:attedance__/common/utils/helpers/helper_function.dart';
+import 'package:SmartCampus/common/utils/helpers/helper_function.dart';
 import 'package:flutter/material.dart';
 import '../../../../../common/utils/constants/colors.dart';
 import '../../../../../common/utils/constants/sized.dart';

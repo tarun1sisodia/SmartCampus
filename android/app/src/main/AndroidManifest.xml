@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
     
     <application
-        android:label="attedance__"
+        android:label="SmartCampus"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

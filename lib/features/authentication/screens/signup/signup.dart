@@ -1,10 +1,10 @@
-import 'package:attedance__/features/authentication/screens/login/login_widgets/button_footer.dart';
-import 'package:attedance__/features/authentication/screens/login/login_widgets/divider_login.dart';
-import 'package:attedance__/features/authentication/screens/signup/singup_widgets/signup_form.dart';
+import 'package:SmartCampus/features/authentication/screens/login/login_widgets/button_footer.dart';
+import 'package:SmartCampus/features/authentication/screens/login/login_widgets/divider_login.dart';
+import 'package:SmartCampus/features/authentication/screens/signup/singup_widgets/signup_form.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:attedance__/common/utils/constants/sized.dart';
-import 'package:attedance__/common/utils/constants/text_strings.dart';
+import 'package:SmartCampus/common/utils/constants/sized.dart';
+import 'package:SmartCampus/common/utils/constants/text_strings.dart';
 
 class Signup extends StatelessWidget {
   const Signup({super.key});

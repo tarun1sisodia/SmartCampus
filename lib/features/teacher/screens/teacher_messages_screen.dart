@@ -1,6 +1,6 @@
-import 'package:attedance__/common/utils/constants/colors.dart';
-import 'package:attedance__/common/utils/constants/sized.dart';
-import 'package:attedance__/common/utils/helpers/helper_function.dart';
+import 'package:SmartCampus/common/utils/constants/colors.dart';
+import 'package:SmartCampus/common/utils/constants/sized.dart';
+import 'package:SmartCampus/common/utils/helpers/helper_function.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -174,27 +174,24 @@ class TeacherMessagesScreen extends StatelessWidget {
           vertical: TSizes.sm,
         ),
         decoration: BoxDecoration(
-          color:
-              isSelected
-                  ? (dark ? TColors.yellow : TColors.deepPurple)
-                  : Colors.transparent,
+          color: isSelected
+              ? (dark ? TColors.yellow : TColors.deepPurple)
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(TSizes.buttonRadius),
           border: Border.all(
-            color:
-                isSelected
-                    ? (dark ? TColors.yellow : TColors.deepPurple)
-                    : Colors.grey,
+            color: isSelected
+                ? (dark ? TColors.yellow : TColors.deepPurple)
+                : Colors.grey,
           ),
         ),
         child: Text(
           label,
           style: Theme.of(context).textTheme.labelLarge?.copyWith(
-            color:
-                isSelected
+                color: isSelected
                     ? (dark ? Colors.black : Colors.white)
                     : (dark ? Colors.white : Colors.black),
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-          ),
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+              ),
         ),
       ),
     );
@@ -213,12 +210,11 @@ class TeacherMessagesScreen extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: TSizes.spaceBtwItems),
       decoration: BoxDecoration(
-        color:
-            isUnread
-                ? (dark
-                    ? TColors.darkerGrey.withOpacity(0.3)
-                    : TColors.light.withOpacity(0.5))
-                : Colors.transparent,
+        color: isUnread
+            ? (dark
+                ? TColors.darkerGrey.withOpacity(0.3)
+                : TColors.light.withOpacity(0.5))
+            : Colors.transparent,
         borderRadius: BorderRadius.circular(TSizes.borderRadiusMd),
       ),
       child: ListTile(
@@ -243,8 +239,9 @@ class TeacherMessagesScreen extends StatelessWidget {
               child: Text(
                 name,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: isUnread ? FontWeight.bold : FontWeight.normal,
-                ),
+                      fontWeight:
+                          isUnread ? FontWeight.bold : FontWeight.normal,
+                    ),
               ),
             ),
             Text(
@@ -258,10 +255,11 @@ class TeacherMessagesScreen extends StatelessWidget {
         subtitle: Text(
           message,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            fontWeight: isUnread ? FontWeight.bold : FontWeight.normal,
-            color:
-                isUnread ? (dark ? Colors.white : Colors.black) : Colors.grey,
-          ),
+                fontWeight: isUnread ? FontWeight.bold : FontWeight.normal,
+                color: isUnread
+                    ? (dark ? Colors.white : Colors.black)
+                    : Colors.grey,
+              ),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
@@ -469,9 +467,9 @@ class _MessageDetailScreen extends StatelessWidget {
                 Text(
                   time,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Colors.grey,
-                    fontSize: 10,
-                  ),
+                        color: Colors.grey,
+                        fontSize: 10,
+                      ),
                 ),
               ],
             ),
@@ -509,8 +507,8 @@ class _MessageDetailScreen extends StatelessWidget {
                 Text(
                   message,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: dark ? Colors.black : Colors.white,
-                  ),
+                        color: dark ? Colors.black : Colors.white,
+                      ),
                 ),
                 const SizedBox(height: TSizes.xs),
                 Row(
@@ -519,9 +517,9 @@ class _MessageDetailScreen extends StatelessWidget {
                     Text(
                       time,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: dark ? Colors.black54 : Colors.white70,
-                        fontSize: 10,
-                      ),
+                            color: dark ? Colors.black54 : Colors.white70,
+                            fontSize: 10,
+                          ),
                     ),
                     const SizedBox(width: TSizes.xs),
                     Icon(
