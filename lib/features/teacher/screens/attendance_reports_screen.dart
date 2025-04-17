@@ -340,7 +340,7 @@ class AttendanceReportsScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.all(TSizes.md),
+                    padding: const EdgeInsets.all(TSizes.sm),
                     child: Column(
                       children: [
                         // Search field
