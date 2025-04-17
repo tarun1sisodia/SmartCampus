@@ -8,6 +8,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import '../controllers/student_detail_controller.dart';
+import '../../../common/utils/extensions/string_extensions.dart';
 
 class StudentDetailScreen extends StatelessWidget {
   final StudentModel student;
@@ -19,7 +20,8 @@ class StudentDetailScreen extends StatelessWidget {
     required this.student,
     required this.classId,
   }) {
-    print('Initializing StudentDetailScreen with student: $student and classId: $classId');
+    print(
+        'Initializing StudentDetailScreen with student: $student and classId: $classId');
     // Initialize controller with student and class data
     studentDetailController.setStudentAndClass(student, classId);
   }
@@ -87,7 +89,9 @@ class StudentDetailScreen extends StatelessWidget {
                           children: [
                             Text(
                               student.name,
-                              style: Theme.of(context).textTheme.titleLarge
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleLarge
                                   ?.copyWith(fontWeight: FontWeight.bold),
                             ),
                             const SizedBox(height: TSizes.xs),
@@ -125,7 +129,9 @@ class StudentDetailScreen extends StatelessWidget {
                     children: [
                       Text(
                         'Attendance Statistics',
-                        style: Theme.of(context).textTheme.titleMedium
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleMedium
                             ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: TSizes.spaceBtwItems),
@@ -136,23 +142,22 @@ class StudentDetailScreen extends StatelessWidget {
                             radius: 80.0,
                             lineWidth: 12.0,
                             animation: true,
-                            percent:
-                                studentDetailController
-                                    .attendancePercentage
-                                    .value /
+                            percent: studentDetailController
+                                    .attendancePercentage.value /
                                 100,
                             center: Text(
                               '${studentDetailController.attendancePercentage.value.toStringAsFixed(1)}%',
-                              style: Theme.of(context).textTheme.titleLarge
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleLarge
                                   ?.copyWith(fontWeight: FontWeight.bold),
                             ),
                             circularStrokeCap: CircularStrokeCap.round,
                             progressColor:
                                 dark ? TColors.yellow : TColors.deepPurple,
-                            backgroundColor:
-                                dark
-                                    ? Colors.grey.shade800
-                                    : Colors.grey.shade200,
+                            backgroundColor: dark
+                                ? Colors.grey.shade800
+                                : Colors.grey.shade200,
                           ),
                         ],
                       ),
@@ -210,7 +215,9 @@ class StudentDetailScreen extends StatelessWidget {
                     children: [
                       Text(
                         'Attendance History',
-                        style: Theme.of(context).textTheme.titleMedium
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleMedium
                             ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: TSizes.spaceBtwItems),
@@ -223,10 +230,9 @@ class StudentDetailScreen extends StatelessWidget {
                                 Icon(
                                   Iconsax.calendar_1,
                                   size: 48,
-                                  color:
-                                      dark
-                                          ? TColors.yellow
-                                          : TColors.deepPurple,
+                                  color: dark
+                                      ? TColors.yellow
+                                      : TColors.deepPurple,
                                 ),
                                 const SizedBox(
                                   height: TSizes.spaceBtwItems / 2,
@@ -248,9 +254,8 @@ class StudentDetailScreen extends StatelessWidget {
                               studentDetailController.attendanceHistory.length,
                           separatorBuilder: (context, index) => const Divider(),
                           itemBuilder: (context, index) {
-                            final record =
-                                studentDetailController
-                                    .attendanceHistory[index];
+                            final record = studentDetailController
+                                .attendanceHistory[index];
                             final session = record['session'];
                             final status = record['status'];
                             final remarks = record['remarks'];
@@ -289,29 +294,30 @@ class StudentDetailScreen extends StatelessWidget {
                                 ],
                               ),
                               trailing: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                  vertical: 4,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: _getStatusColor(status, dark),
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Text(
-                                  status.capitalize!,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 4,
                                   ),
-                                ),
+                                  decoration: BoxDecoration(
+                                    color: _getStatusColor(status, dark),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Text(
+                                    status.isNotEmpty
+                                        ? status[0].toUpperCase() +
+                                            status.substring(1)
+                                        : status,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  )),
+                              onTap: () => _showUpdateStatusDialog(
+                                context,
+                                session.id,
+                                status,
+                                remarks,
                               ),
-                              onTap:
-                                  () => _showUpdateStatusDialog(
-                                    context,
-                                    session.id,
-                                    status,
-                                    remarks,
-                                  ),
                             );
                           },
                         ),
@@ -478,14 +484,14 @@ class StudentDetailScreen extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () {
-              print('Updating attendance record for sessionId: $sessionId with status: ${selectedStatus.value} and remarks: ${remarksController.text}');
+              print(
+                  'Updating attendance record for sessionId: $sessionId with status: ${selectedStatus.value} and remarks: ${remarksController.text}');
               studentDetailController.updateAttendanceRecord(
                 sessionId: sessionId,
                 status: selectedStatus.value,
-                remarks:
-                    remarksController.text.isEmpty
-                        ? null
-                        : remarksController.text,
+                remarks: remarksController.text.isEmpty
+                    ? null
+                    : remarksController.text,
               );
               Get.back();
             },

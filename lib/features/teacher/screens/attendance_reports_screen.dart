@@ -25,6 +25,11 @@ class AttendanceReportsScreen extends StatelessWidget {
         ),
         actions: [
           IconButton(
+            onPressed: () => reportsController.loadAttendanceData(),
+            icon: const Icon(Iconsax.refresh),
+            tooltip: 'Refresh',
+          ),
+          IconButton(
             onPressed: () => reportsController.exportAttendanceReport(),
             icon: const Icon(Iconsax.export),
             tooltip: 'Export Report',
@@ -54,7 +59,9 @@ class AttendanceReportsScreen extends StatelessWidget {
                     children: [
                       Text(
                         'Select Class',
-                        style: Theme.of(context).textTheme.titleMedium
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleMedium
                             ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: TSizes.spaceBtwItems),
@@ -64,7 +71,7 @@ class AttendanceReportsScreen extends StatelessWidget {
                             'No classes available',
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
-                        ) 
+                        )
                       else
                         DropdownButtonFormField<String>(
                           decoration: InputDecoration(
@@ -79,22 +86,21 @@ class AttendanceReportsScreen extends StatelessWidget {
                             ),
                             isCollapsed: true,
                           ),
-                          isExpanded:true,
-                          iconSize:24,
-                          icon:const Icon(Iconsax.arrow),
+                          isExpanded: true,
+                          iconSize: 24,
+                          icon: const Icon(Iconsax.arrow),
                           value: reportsController.selectedClassId.value,
-                          items:
-                              reportsController.classes.map((classItem) {
-                                return DropdownMenuItem<String>(
-                                  value: classItem.id,
-                                  child: Text(
-                                    '${classItem.subjectName} - ${classItem.courseName} Year ${classItem.year}',
-                                    overflow:TextOverflow.ellipsis,
-                                    maxLines:1,
-                                    style:TextStyle(fontSize:14),
-                                  ),
-                                );
-                              }).toList(),
+                          items: reportsController.classes.map((classItem) {
+                            return DropdownMenuItem<String>(
+                              value: classItem.id,
+                              child: Text(
+                                '${classItem.subjectName} - ${classItem.courseName} Year ${classItem.year}',
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                                style: TextStyle(fontSize: 14),
+                              ),
+                            );
+                          }).toList(),
                           onChanged: (value) {
                             if (value != null) {
                               reportsController.selectedClassId.value = value;
@@ -122,7 +128,9 @@ class AttendanceReportsScreen extends StatelessWidget {
                     children: [
                       Text(
                         'Date Range',
-                        style: Theme.of(context).textTheme.titleMedium
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleMedium
                             ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: TSizes.spaceBtwItems),
@@ -239,10 +247,12 @@ class AttendanceReportsScreen extends StatelessWidget {
                               animation: true,
                               percent:
                                   reportsController.averageAttendance.value /
-                                  100,
+                                      100,
                               center: Text(
                                 '${reportsController.averageAttendance.value.toStringAsFixed(1)}%',
-                                style: Theme.of(context).textTheme.titleMedium
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium
                                     ?.copyWith(fontWeight: FontWeight.bold),
                               ),
                               footer: Padding(
@@ -255,10 +265,9 @@ class AttendanceReportsScreen extends StatelessWidget {
                               circularStrokeCap: CircularStrokeCap.round,
                               progressColor:
                                   dark ? TColors.yellow : TColors.deepPurple,
-                              backgroundColor:
-                                  dark
-                                      ? Colors.grey.shade800
-                                      : Colors.grey.shade200,
+                              backgroundColor: dark
+                                  ? Colors.grey.shade800
+                                  : Colors.grey.shade200,
                             ),
                             Column(
                               children: [
@@ -336,9 +345,8 @@ class AttendanceReportsScreen extends StatelessWidget {
                       children: [
                         // Search field
                         TextField(
-                          onChanged:
-                              (value) =>
-                                  reportsController.searchQuery.value = value,
+                          onChanged: (value) =>
+                              reportsController.searchQuery.value = value,
                           decoration: InputDecoration(
                             hintText: 'Search students...',
                             prefixIcon: const Icon(Iconsax.search_normal),
@@ -361,10 +369,9 @@ class AttendanceReportsScreen extends StatelessWidget {
                             vertical: TSizes.sm,
                           ),
                           decoration: BoxDecoration(
-                            color:
-                                dark
-                                    ? TColors.darkerGrey
-                                    : Colors.grey.shade200,
+                            color: dark
+                                ? const Color.fromARGB(255, 24, 117, 112)
+                                : const Color.fromARGB(255, 36, 11, 146),
                             borderRadius: BorderRadius.circular(
                               TSizes.borderRadiusSm,
                             ),
@@ -376,7 +383,9 @@ class AttendanceReportsScreen extends StatelessWidget {
                                 flex: 3,
                                 child: Text(
                                   'Student',
-                                  style: Theme.of(context).textTheme.titleSmall
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleSmall
                                       ?.copyWith(fontWeight: FontWeight.bold),
                                 ),
                               ),
@@ -384,8 +393,10 @@ class AttendanceReportsScreen extends StatelessWidget {
                                 flex: 1,
                                 child: Text(
                                   'Present',
-                                  style: Theme.of(context).textTheme.titleSmall
-                                      ?.copyWith(fontWeight: FontWeight.bold),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleSmall
+                                      ?.copyWith(fontWeight: FontWeight.normal),
                                   textAlign: TextAlign.center,
                                 ),
                               ),
@@ -393,8 +404,10 @@ class AttendanceReportsScreen extends StatelessWidget {
                                 flex: 1,
                                 child: Text(
                                   'Absent',
-                                  style: Theme.of(context).textTheme.titleSmall
-                                      ?.copyWith(fontWeight: FontWeight.bold),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleSmall
+                                      ?.copyWith(fontWeight: FontWeight.normal),
                                   textAlign: TextAlign.center,
                                 ),
                               ),
@@ -402,8 +415,10 @@ class AttendanceReportsScreen extends StatelessWidget {
                                 flex: 1,
                                 child: Text(
                                   'Late',
-                                  style: Theme.of(context).textTheme.titleSmall
-                                      ?.copyWith(fontWeight: FontWeight.bold),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleSmall
+                                      ?.copyWith(fontWeight: FontWeight.normal),
                                   textAlign: TextAlign.center,
                                 ),
                               ),
@@ -411,8 +426,10 @@ class AttendanceReportsScreen extends StatelessWidget {
                                 flex: 1,
                                 child: Text(
                                   '%',
-                                  style: Theme.of(context).textTheme.titleSmall
-                                      ?.copyWith(fontWeight: FontWeight.bold),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleSmall
+                                      ?.copyWith(fontWeight: FontWeight.normal),
                                   textAlign: TextAlign.center,
                                 ),
                               ),
@@ -424,11 +441,11 @@ class AttendanceReportsScreen extends StatelessWidget {
                         Obx(() {
                           final filteredStudents =
                               reportsController.students.where((student) {
-                                return student.name.toLowerCase().contains(
+                            return student.name.toLowerCase().contains(
                                   reportsController.searchQuery.value
                                       .toLowerCase(),
                                 );
-                              }).toList();
+                          }).toList();
 
                           if (filteredStudents.isEmpty) {
                             return Padding(
@@ -448,8 +465,8 @@ class AttendanceReportsScreen extends StatelessWidget {
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
                             itemCount: filteredStudents.length,
-                            separatorBuilder:
-                                (context, index) => const Divider(height: 1),
+                            separatorBuilder: (context, index) =>
+                                const Divider(height: 1),
                             itemBuilder: (context, index) {
                               final student = filteredStudents[index];
                               final stats =
@@ -464,9 +481,8 @@ class AttendanceReportsScreen extends StatelessWidget {
                                   stats['attendancePercentage'] as double;
 
                               return InkWell(
-                                onTap:
-                                    () => reportsController
-                                        .navigateToStudentDetail(student),
+                                onTap: () => reportsController
+                                    .navigateToStudentDetail(student),
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
                                     vertical: TSizes.sm,
@@ -485,15 +501,14 @@ class AttendanceReportsScreen extends StatelessWidget {
                                               style: Theme.of(
                                                 context,
                                               ).textTheme.bodyLarge?.copyWith(
-                                                fontWeight: FontWeight.bold,
-                                              ),
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
                                             ),
                                             Text(
                                               'Roll: ${student.rollNumber}',
-                                              style:
-                                                  Theme.of(
-                                                    context,
-                                                  ).textTheme.bodySmall,
+                                              style: Theme.of(
+                                                context,
+                                              ).textTheme.bodySmall,
                                             ),
                                           ],
                                         ),
@@ -505,9 +520,9 @@ class AttendanceReportsScreen extends StatelessWidget {
                                           style: Theme.of(
                                             context,
                                           ).textTheme.bodyMedium?.copyWith(
-                                            color: Colors.green,
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                                color: Colors.green,
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                           textAlign: TextAlign.center,
                                         ),
                                       ),
@@ -518,9 +533,9 @@ class AttendanceReportsScreen extends StatelessWidget {
                                           style: Theme.of(
                                             context,
                                           ).textTheme.bodyMedium?.copyWith(
-                                            color: Colors.red,
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                                color: Colors.red,
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                           textAlign: TextAlign.center,
                                         ),
                                       ),
@@ -531,9 +546,9 @@ class AttendanceReportsScreen extends StatelessWidget {
                                           style: Theme.of(
                                             context,
                                           ).textTheme.bodyMedium?.copyWith(
-                                            color: Colors.orange,
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                                color: Colors.orange,
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                           textAlign: TextAlign.center,
                                         ),
                                       ),
@@ -625,7 +640,7 @@ class AttendanceReportsScreen extends StatelessWidget {
           value,
           style: Theme.of(
             context,
-          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+          ).textTheme.titleMedium,
         ),
         Text(label, style: Theme.of(context).textTheme.bodySmall),
       ],
