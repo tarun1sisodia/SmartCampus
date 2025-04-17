@@ -4,6 +4,10 @@ import 'constants.dart';
 
 // Define AppDimensions class for UI dimensions
 class AppDimensions {
+  AppDimensions._()
+  {
+    print('AppDimensions initialized');
+  }
   static const double cardElevation = 2.0;
   static const double cardRadius = 12.0;
   static const double buttonRadius = 8.0;

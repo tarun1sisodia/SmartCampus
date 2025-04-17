@@ -13,58 +13,38 @@ import '../../../common/utils/helpers/helper_function.dart';
 import 'class_list_screen.dart';
 
 class DashboardScreen extends StatelessWidget {
-  DashboardScreen({super.key});
+  DashboardScreen({super.key}) {
+    print('DashboardScreen initialized');
+  }
 
   final dashboardController = Get.find<DashboardController>();
-
   final searchController = TextEditingController();
-
-  //using the existing controller
   final profileController = Get.put(TeacherProfileController());
-
   final RxBool isLoading = RxBool(true);
-
   final RxBool isSearching = RxBool(false);
 
   final String userName =
       Supabase.instance.client.auth.currentUser?.userMetadata?['name'] ??
-      'Teacher';
+          'Teacher';
 
   @override
-  /// Builds the main dashboard screen for teachers, displaying key information and interactions.
-  ///
-  /// This method constructs a [Scaffold] with an app bar showing the user's profile,
-  /// a search functionality, statistics cards, average attendance visualization,
-  /// and a list of recent classes. It handles different states such as loading,
-  /// empty data, and populated data using the [dashboardController].
-  ///
-  /// The screen adapts to dark and light themes and provides interactive elements
-  /// like profile navigation, settings access, and class exploration.
-  /// Builds and returns the dashboard screen's widget tree.
-  ///
-  /// Constructs a complex UI with an app bar, search functionality,
-  /// statistics cards, attendance visualization, and recent classes list.
-  /// Handles different states like loading, empty data, and populated data
-  /// using the [dashboardController].
-  ///
-  /// The method adapts to dark and light themes and provides interactive
-  /// elements for navigation and data exploration.
-  ///
-  /// Returns a [Scaffold] with the complete dashboard layout.
   Widget build(BuildContext context) {
+    print('Building DashboardScreen');
     final dark = THelperFunction.isDarkMode(context);
 
     return Scaffold(
       appBar: AppBar(
-        // Replace title with profile image on the left
-        // Replace the Hero widget in the appBar's leading section with this:
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Hero(
             tag: 'profileImage',
             child: GestureDetector(
-              onTap: () => Get.to(() =>  TeacherProfileScreen()),
+              onTap: () {
+                print('Navigating to TeacherProfileScreen');
+                Get.to(() => TeacherProfileScreen());
+              },
               child: Obx(() {
+                print('Profile image updated');
                 return Container(
                   width: 40,
                   height: 40,
@@ -74,63 +54,69 @@ class DashboardScreen extends StatelessWidget {
                       color: dark ? TColors.yellow : TColors.deepPurple,
                       width: 2,
                     ),
-                    image:
-                        profileController.user.value?.profileImageUrl != null &&
-                                profileController
-                                    .user
-                                    .value!
-                                    .profileImageUrl!
-                                    .isNotEmpty
-                            ? DecorationImage(
-                              image: NetworkImage(
-                                profileController.user.value!.profileImageUrl!,
-                              ),
-                              fit: BoxFit.cover,
-                              onError: (exception, stackTrace) {
-                                ////print('Error loading profile image: $exception',);
-                              },
-                            )
-                            : const DecorationImage(
-                              image: AssetImage(TImageStrings.appLogo),
-                              fit: BoxFit.contain,
+                    image: profileController.user.value?.profileImageUrl !=
+                                null &&
+                            profileController
+                                .user.value!.profileImageUrl!.isNotEmpty
+                        ? DecorationImage(
+                            image: NetworkImage(
+                              profileController.user.value!.profileImageUrl!,
                             ),
+                            fit: BoxFit.cover,
+                            onError: (exception, stackTrace) {
+                              print('Error loading profile image: $exception');
+                            },
+                          )
+                        : const DecorationImage(
+                            image: AssetImage(TImageStrings.appLogo),
+                            fit: BoxFit.contain,
+                          ),
                   ),
                 );
               }),
             ),
           ),
         ),
-        // Use the profileController's user name directly
         title: Obx(
-          () => Text(
-            'Hi, ${profileController.user.value?.name ?? 'Teacher'}',
-            style: Theme.of(
-              context,
-            ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-          ),
+          () {
+            print('User name updated: ${profileController.user.value?.name}');
+            return Text(
+              'Hi, ${profileController.user.value?.name ?? 'Teacher'}',
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge
+                  ?.copyWith(fontWeight: FontWeight.bold),
+            );
+          },
         ),
         actions: [
-          // Notification icon or other actions
           IconButton(
             icon: const Icon(Iconsax.setting),
             onPressed: () {
+              print('Navigating to TeacherSettingsScreen');
               Get.to(() => const TeacherSettingsScreen());
             },
           ),
           const SizedBox(width: TSizes.sm),
           IconButton(
-            onPressed: () => dashboardController.loadDashboardData(),
+            onPressed: () {
+              print('Refreshing dashboard data');
+              dashboardController.loadDashboardData();
+            },
             icon: const Icon(Iconsax.refresh),
             tooltip: 'Refresh',
           ),
         ],
       ),
       body: Obx(() {
+        print('Dashboard state updated');
         if (dashboardController.isLoading.value) {
+          print('Dashboard is loading');
           return const Center(child: CircularProgressIndicator());
         }
 
         if (dashboardController.classes.isEmpty) {
+          print('No data available');
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -141,7 +127,10 @@ class DashboardScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: TSizes.spaceBtwItems),
                 ElevatedButton(
-                  onPressed: () => dashboardController.createInitialData(),
+                  onPressed: () {
+                    print('Creating initial data');
+                    dashboardController.createInitialData();
+                  },
                   child: const Text('Create Sample Data'),
                 ),
               ],
@@ -150,12 +139,14 @@ class DashboardScreen extends StatelessWidget {
         }
 
         return RefreshIndicator(
-          onRefresh: () async => await dashboardController.loadDashboardData(),
+          onRefresh: () async {
+            print('Refreshing dashboard data');
+            await dashboardController.loadDashboardData();
+          },
           color: dark ? TColors.yellow : TColors.deepPurple,
           backgroundColor: dark ? TColors.darkerGrey : Colors.white,
           child: SingleChildScrollView(
-            physics:
-                const AlwaysScrollableScrollPhysics(), // Important to enable refresh even when content doesn't scroll
+            physics: const AlwaysScrollableScrollPhysics(),
             padding: const EdgeInsets.all(TSizes.defaultSpace),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -187,31 +178,29 @@ class DashboardScreen extends StatelessWidget {
                             color: dark ? Colors.white : Colors.black,
                           ),
                           onChanged: (value) {
+                            print('Search query: $value');
                             isSearching.value = value.isNotEmpty;
                             dashboardController.searchClasses(value);
-                            // Implement your search logic here
                           },
                         ),
                       ),
                       Obx(
-                        () =>
-                            isSearching.value
-                                ? IconButton(
-                                  icon: const Icon(Icons.clear),
-                                  onPressed: () {
-                                    searchController.clear();
-                                    isSearching.value = false;
-                                    dashboardController.searchClasses('');
-                                    // Clear search results
-                                  },
-                                )
-                                : const SizedBox.shrink(),
+                        () => isSearching.value
+                            ? IconButton(
+                                icon: const Icon(Icons.clear),
+                                onPressed: () {
+                                  print('Clearing search');
+                                  searchController.clear();
+                                  isSearching.value = false;
+                                  dashboardController.searchClasses('');
+                                },
+                              )
+                            : const SizedBox.shrink(),
                       ),
                     ],
                   ),
                 ),
                 SizedBox(height: TSizes.spaceBtwSections),
-                // Stats cards
                 Row(
                   children: [
                     _buildStatCard(
@@ -233,10 +222,7 @@ class DashboardScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-
                 const SizedBox(height: TSizes.spaceBtwItems),
-
-                // Attendance percentage card
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(TSizes.md),
@@ -256,7 +242,9 @@ class DashboardScreen extends StatelessWidget {
                     children: [
                       Text(
                         'Average Attendance',
-                        style: Theme.of(context).textTheme.titleMedium
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleMedium
                             ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: TSizes.spaceBtwItems),
@@ -268,7 +256,9 @@ class DashboardScreen extends StatelessWidget {
                             dashboardController.averageAttendance.value / 100,
                         center: Text(
                           '${dashboardController.averageAttendance.value.toStringAsFixed(1)}%',
-                          style: Theme.of(context).textTheme.titleLarge
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleLarge
                               ?.copyWith(fontWeight: FontWeight.bold),
                         ),
                         circularStrokeCap: CircularStrokeCap.round,
@@ -286,21 +276,22 @@ class DashboardScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-
                 const SizedBox(height: TSizes.spaceBtwSections),
-
-                // Recent classes header
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       'Recent Classes',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleMedium
+                          ?.copyWith(fontWeight: FontWeight.bold),
                     ),
                     TextButton(
-                      onPressed: () => Get.to(() => ClassListScreen()),
+                      onPressed: () {
+                        print('Navigating to ClassListScreen');
+                        Get.to(() => ClassListScreen());
+                      },
                       child: Text(
                         'View All',
                         style: TextStyle(
@@ -310,102 +301,109 @@ class DashboardScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-
                 const SizedBox(height: TSizes.spaceBtwItems),
-
-                // Recent classes list
                 dashboardController.classes.isEmpty
                     ? Center(
-                      child: Column(
-                        children: [
-                          Icon(
-                            Iconsax.book_1,
-                            size: 48,
-                            color: dark ? TColors.yellow : TColors.deepPurple,
-                          ),
-                          const SizedBox(height: TSizes.spaceBtwItems / 2),
-                          Text(
-                            'No Classes Yet',
-                            style: Theme.of(context).textTheme.titleMedium,
-                          ),
-                          const SizedBox(height: TSizes.spaceBtwItems / 2),
-                          ElevatedButton(
-                            onPressed: () => Get.to(() => ClassListScreen()),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  dark ? TColors.yellow : TColors.deepPurple,
-                              foregroundColor:
-                                  dark ? Colors.black : Colors.white,
+                        child: Column(
+                          children: [
+                            Icon(
+                              Iconsax.book_1,
+                              size: 48,
+                              color: dark ? TColors.yellow : TColors.deepPurple,
                             ),
-                            child: const Text('Create Class'),
-                          ),
-                        ],
-                      ),
-                    )
+                            const SizedBox(height: TSizes.spaceBtwItems / 2),
+                            Text(
+                              'No Classes Yet',
+                              style: Theme.of(context).textTheme.titleMedium,
+                            ),
+                            const SizedBox(height: TSizes.spaceBtwItems / 2),
+                            ElevatedButton(
+                              onPressed: () {
+                                print('Navigating to create class');
+                                Get.to(() => ClassListScreen());
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor:
+                                    dark ? TColors.yellow : TColors.deepPurple,
+                                foregroundColor:
+                                    dark ? Colors.black : Colors.white,
+                              ),
+                              child: const Text('Create Class'),
+                            ),
+                          ],
+                        ),
+                      )
                     : ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount:
-                          dashboardController.classes.length > 3
-                              ? 3
-                              : dashboardController.classes.length,
-                      itemBuilder: (context, index) {
-                        final classItem = dashboardController.classes[index];
-                        final stats =
-                            dashboardController.classStats[classItem.id];
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: dashboardController.classes.length > 3
+                            ? 3
+                            : dashboardController.classes.length,
+                        itemBuilder: (context, index) {
+                          final classItem = dashboardController.classes[index];
+                          final stats =
+                              dashboardController.classStats[classItem.id];
 
-                        return Card(
-                          margin: const EdgeInsets.only(
-                            bottom: TSizes.spaceBtwItems,
-                          ),
-                          elevation: 2,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(
-                              TSizes.cardRadiusMd,
+                          print('Rendering class: ${classItem.subjectName}');
+                          return Card(
+                            margin: const EdgeInsets.only(
+                              bottom: TSizes.spaceBtwItems,
                             ),
-                          ),
-                          child: ListTile(
-                            contentPadding: const EdgeInsets.all(TSizes.md),
-                            leading: CircleAvatar(
-                              backgroundColor:
-                                  dark ? TColors.yellow : TColors.deepPurple,
-                              child: Text(
-                                classItem.subjectName?.substring(0, 1) ?? 'C',
-                                style: TextStyle(
-                                  color: dark ? Colors.black : Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                            elevation: 2,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                TSizes.cardRadiusMd,
                               ),
                             ),
-                            title: Text(
-                              classItem.subjectName ?? 'Unknown Subject',
-                              style: Theme.of(context).textTheme.titleMedium
-                                  ?.copyWith(fontWeight: FontWeight.bold),
-                            ),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(
-                                  height: TSizes.spaceBtwItems / 2,
-                                ),
-                                Text(
-                                  '${classItem.courseName} - Year ${classItem.year}',
-                                  style: Theme.of(context).textTheme.bodyMedium,
-                                ),
-                                if (stats != null)
-                                  Text(
-                                    'Attendance: ${(stats['averageAttendance'] as double).toStringAsFixed(1)}% (${stats['totalSessions']} sessions)',
-                                    style:
-                                        Theme.of(context).textTheme.bodySmall,
+                            child: ListTile(
+                              contentPadding: const EdgeInsets.all(TSizes.md),
+                              leading: CircleAvatar(
+                                backgroundColor:
+                                    dark ? TColors.yellow : TColors.deepPurple,
+                                child: Text(
+                                  classItem.subjectName?.substring(0, 1) ?? 'C',
+                                  style: TextStyle(
+                                    color: dark ? Colors.black : Colors.white,
+                                    fontWeight: FontWeight.bold,
                                   ),
-                              ],
+                                ),
+                              ),
+                              title: Text(
+                                classItem.subjectName ?? 'Unknown Subject',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium
+                                    ?.copyWith(fontWeight: FontWeight.bold),
+                              ),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(
+                                    height: TSizes.spaceBtwItems / 2,
+                                  ),
+                                  Text(
+                                    '${classItem.courseName} - Year ${classItem.year}',
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium,
+                                  ),
+                                  if (stats != null)
+                                    Text(
+                                      'Attendance: ${(stats['averageAttendance'] as double).toStringAsFixed(1)}% (${stats['totalSessions']} sessions)',
+                                      style:
+                                          Theme.of(context).textTheme.bodySmall,
+                                    ),
+                                ],
+                              ),
+                              trailing: const Icon(Iconsax.arrow_right_3),
+                              onTap: () {
+                                print(
+                                    'Navigating to class details: ${classItem.subjectName}');
+                                Get.to(() => ClassListScreen());
+                              },
                             ),
-                            trailing: const Icon(Iconsax.arrow_right_3),
-                            onTap: () => Get.to(() => ClassListScreen()),
-                          ),
-                        );
-                      },
-                    ),
+                          );
+                        },
+                      ),
               ],
             ),
           ),
@@ -414,7 +412,6 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 
-  // Build a stat card widget
   Widget _buildStatCard(
     BuildContext context,
     bool dark, {
@@ -423,6 +420,7 @@ class DashboardScreen extends StatelessWidget {
     required IconData icon,
     required Color color,
   }) {
+    print('Building stat card: $title');
     return Expanded(
       child: Container(
         padding: const EdgeInsets.all(TSizes.md),
@@ -445,9 +443,10 @@ class DashboardScreen extends StatelessWidget {
             const SizedBox(height: TSizes.spaceBtwItems),
             Text(
               value,
-              style: Theme.of(
-                context,
-              ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(context)
+                  .textTheme
+                  .headlineMedium
+                  ?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: TSizes.spaceBtwItems / 2),
             Text(title, style: Theme.of(context).textTheme.bodyMedium),

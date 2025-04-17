@@ -7,12 +7,14 @@ class ClassService {
   // Get all classes for a teacher
   Future<List<ClassModel>> getTeacherClasses(String teacherId) async {
     try {
+      print('Fetching classes for teacher with ID: $teacherId');
       final response = await supabase
           .from('classes')
           .select('*, subjects(*), courses(*)')
           .eq('teacher_id', teacherId)
           .order('created_at', ascending: false);
 
+      print('Classes fetched successfully: $response');
       return response.map<ClassModel>((json) {
         final subjectData = json['subjects'] as Map<String, dynamic>;
         final courseData = json['courses'] as Map<String, dynamic>;
@@ -37,6 +39,7 @@ class ClassService {
         );
       }).toList();
     } catch (e) {
+      print('Error fetching classes: $e');
       throw 'Failed to get teacher classes: $e';
     }
   }
@@ -50,6 +53,7 @@ class ClassService {
     String? section,
   }) async {
     try {
+      print('Creating a new class for teacher ID: $teacherId');
       final data = {
         'teacher_id': teacherId,
         'subject_id': subjectId,
@@ -66,6 +70,7 @@ class ClassService {
               .select('*, subjects(*), courses(*)')
               .single();
 
+      print('Class created successfully: $response');
       final subjectData = response['subjects'] as Map<String, dynamic>;
       final courseData = response['courses'] as Map<String, dynamic>;
 
@@ -88,6 +93,7 @@ class ClassService {
                 : null,
       );
     } catch (e) {
+      print('Error creating class: $e');
       throw 'Failed to create class: $e';
     }
   }
@@ -101,6 +107,7 @@ class ClassService {
     String? section,
   }) async {
     try {
+      print('Updating class with ID: $classId');
       final data = {
         'subject_id': subjectId,
         'course_id': courseId,
@@ -117,6 +124,7 @@ class ClassService {
               .select('*, subjects(*), courses(*)')
               .single();
 
+      print('Class updated successfully: $response');
       final subjectData = response['subjects'] as Map<String, dynamic>;
       final courseData = response['courses'] as Map<String, dynamic>;
 
@@ -139,6 +147,7 @@ class ClassService {
                 : null,
       );
     } catch (e) {
+      print('Error updating class: $e');
       throw 'Failed to update class: $e';
     }
   }
@@ -146,6 +155,7 @@ class ClassService {
   // Delete a class
   Future<void> deleteClass(String classId) async {
     try {
+      print('Deleting class with ID: $classId');
       // First delete all related records
       await supabase
           .from('attendance_records')
@@ -169,7 +179,9 @@ class ClassService {
 
       // Finally delete the class
       await supabase.from('classes').delete().eq('id', classId);
+      print('Class deleted successfully');
     } catch (e) {
+      print('Error deleting class: $e');
       throw 'Failed to delete class: $e';
     }
   }
@@ -177,6 +189,7 @@ class ClassService {
   // Get a class by ID
   Future<ClassModel> getClassById(String classId) async {
     try {
+      print('Fetching class with ID: $classId');
       final response =
           await supabase
               .from('classes')
@@ -184,6 +197,7 @@ class ClassService {
               .eq('id', classId)
               .single();
 
+      print('Class fetched successfully: $response');
       final subjectData = response['subjects'] as Map<String, dynamic>;
       final courseData = response['courses'] as Map<String, dynamic>;
 
@@ -206,9 +220,8 @@ class ClassService {
                 : null,
       );
     } catch (e) {
+      print('Error fetching class: $e');
       throw 'Failed to get class: $e';
     }
   }
-
-  // Add this method to the ClassService class
 }

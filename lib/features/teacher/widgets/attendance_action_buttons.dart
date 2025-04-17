@@ -8,6 +8,7 @@ class AttendanceActionButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('Building AttendanceActionButtons');
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
@@ -16,28 +17,40 @@ class AttendanceActionButtons extends StatelessWidget {
           'Absent',
           Iconsax.close_circle,
           Colors.red,
-          () => onMarkAttendance('absent'),
+          () {
+            print('Marking attendance as absent');
+            onMarkAttendance('absent');
+          },
         ),
         _buildActionButton(
           context,
           'Late',
           Iconsax.timer_1,
           Colors.orange,
-          () => onMarkAttendance('late'),
+          () {
+            print('Marking attendance as late');
+            onMarkAttendance('late');
+          },
         ),
         _buildActionButton(
           context,
           'Excused',
           Iconsax.note_1,
           Colors.blue,
-          () => onMarkAttendance('excused'),
+          () {
+            print('Marking attendance as excused');
+            onMarkAttendance('excused');
+          },
         ),
         _buildActionButton(
           context,
           'Present',
           Iconsax.tick_circle,
           Colors.green,
-          () => onMarkAttendance('present'),
+          () {
+            print('Marking attendance as present');
+            onMarkAttendance('present');
+          },
         ),
       ],
     );
@@ -50,6 +63,7 @@ class AttendanceActionButtons extends StatelessWidget {
     Color color,
     VoidCallback onPressed,
   ) {
+    print('Building action button for $label');
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [

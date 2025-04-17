@@ -15,14 +15,19 @@ class AttendanceScreen extends StatelessWidget {
   final ClassModel classModel;
   final attendanceController = Get.put(AttendanceController());
 
-  AttendanceScreen({super.key, required this.classModel});
+  AttendanceScreen({super.key, required this.classModel}) {
+    print('AttendanceScreen initialized with classModel: $classModel');
+  }
 
   @override
   Widget build(BuildContext context) {
+    print('Building AttendanceScreen');
     final dark = THelperFunction.isDarkMode(context);
+    print('Dark mode: $dark');
 
     // Set the selected class when the screen is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      print('Setting selected class in post frame callback');
       attendanceController.setSelectedClass(classModel);
     });
 
@@ -34,26 +39,33 @@ class AttendanceScreen extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            onPressed:
-                () =>
-                    attendanceController.loadAttendanceSessions(classModel.id),
+            onPressed: () {
+              print('Refreshing attendance sessions');
+              attendanceController.loadAttendanceSessions(classModel.id);
+            },
             icon: const Icon(Iconsax.refresh),
           ),
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => _showCreateSessionDialog(context),
+        onPressed: () {
+          print('Opening create session dialog');
+          _showCreateSessionDialog(context);
+        },
         backgroundColor: dark ? TColors.blue : TColors.yellow,
         icon: const Icon(Iconsax.calendar_add),
         label: const Text('New Session'),
       ),
       body: Obx(() {
+        print('Building Obx body');
         if (attendanceController.isLoading.value) {
+          print('Showing loading indicator');
           return const Center(child: CircularProgressIndicator());
         }
 
         return RefreshIndicator(
           onRefresh: () async {
+            print('Refreshing attendance sessions');
             // Show loading indicator while refreshing
             attendanceController.attendanceSessions();
           },
@@ -78,8 +90,8 @@ class AttendanceScreen extends StatelessWidget {
                     Text(
                       '${classModel.courseName} - Year ${classModel.year}',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                            fontWeight: FontWeight.bold,
+                          ),
                     ),
                     if (classModel.section != null)
                       Text(
@@ -116,8 +128,8 @@ class AttendanceScreen extends StatelessWidget {
                     Text(
                       'Attendance Sessions',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                            fontWeight: FontWeight.bold,
+                          ),
                     ),
                     Text(
                       '${attendanceController.attendanceSessions.length} Sessions',
@@ -131,127 +143,125 @@ class AttendanceScreen extends StatelessWidget {
 
               // Sessions list
               Expanded(
-                child:
-                    attendanceController.attendanceSessions.isEmpty
-                        ? Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Iconsax.calendar_1,
-                                size: 64,
-                                color:
-                                    dark ? TColors.yellow : TColors.deepPurple,
-                              ),
-                              const SizedBox(height: TSizes.spaceBtwItems),
-                              Text(
-                                'No Attendance Sessions',
-                                style: Theme.of(context).textTheme.titleMedium,
-                              ),
-                              const SizedBox(height: TSizes.spaceBtwItems / 2),
-                              Text(
-                                'Create a new session to start taking attendance',
-                                style: Theme.of(context).textTheme.bodyMedium,
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
-                          ),
-                        )
-                        : ListView.builder(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: TSizes.defaultSpace,
-                          ),
-                          itemCount:
-                              attendanceController.attendanceSessions.length,
-                          itemBuilder: (context, index) {
-                            final session =
-                                attendanceController.attendanceSessions[index];
-                            final formattedDate = DateFormat(
-                              'EEEE, MMMM d, yyyy',
-                            ).format(session.date);
+                child: attendanceController.attendanceSessions.isEmpty
+                    ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Iconsax.calendar_1,
+                              size: 64,
+                              color: dark ? TColors.yellow : TColors.deepPurple,
+                            ),
+                            const SizedBox(height: TSizes.spaceBtwItems),
+                            Text(
+                              'No Attendance Sessions',
+                              style: Theme.of(context).textTheme.titleMedium,
+                            ),
+                            const SizedBox(height: TSizes.spaceBtwItems / 2),
+                            Text(
+                              'Create a new session to start taking attendance',
+                              style: Theme.of(context).textTheme.bodyMedium,
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                      )
+                    : ListView.builder(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: TSizes.defaultSpace,
+                        ),
+                        itemCount:
+                            attendanceController.attendanceSessions.length,
+                        itemBuilder: (context, index) {
+                          print('Building session item at index: $index');
+                          final session =
+                              attendanceController.attendanceSessions[index];
+                          final formattedDate = DateFormat('EEEE, MMMM d, yyyy')
+                              .format(session.date);
 
-                            return Card(
-                              margin: const EdgeInsets.only(
-                                bottom: TSizes.spaceBtwItems,
+                          return Card(
+                            margin: const EdgeInsets.only(
+                              bottom: TSizes.spaceBtwItems,
+                            ),
+                            elevation: 2,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                TSizes.cardRadiusMd,
                               ),
-                              elevation: 2,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                  TSizes.cardRadiusMd,
-                                ),
-                              ),
-                              child: ListTile(
-                                contentPadding: const EdgeInsets.all(TSizes.md),
-                                onTap: () {
-                                  // Set current session and navigate to mark attendance
-                                  attendanceController.currentSessionId.value =
-                                      session.id;
-                                  Get.to(() => MarkAttendanceScreen());
-                                },
-                                leading: CircleAvatar(
-                                  backgroundColor:
-                                      dark
-                                          ? TColors.yellow
-                                          : TColors.deepPurple,
-                                  child: Text(
-                                    DateFormat('d').format(session.date),
-                                    style: TextStyle(
-                                      color: dark ? Colors.black : Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                            ),
+                            child: ListTile(
+                              contentPadding: const EdgeInsets.all(TSizes.md),
+                              onTap: () {
+                                print('Navigating to mark attendance screen');
+                                // Set current session and navigate to mark attendance
+                                attendanceController.currentSessionId.value =
+                                    session.id;
+                                Get.to(() => MarkAttendanceScreen());
+                              },
+                              leading: CircleAvatar(
+                                backgroundColor:
+                                    dark ? TColors.yellow : TColors.deepPurple,
+                                child: Text(
+                                  DateFormat('d').format(session.date),
+                                  style: TextStyle(
+                                    color: dark ? Colors.black : Colors.white,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                title: Text(
-                                  formattedDate,
-                                  style: Theme.of(context).textTheme.titleMedium
-                                      ?.copyWith(fontWeight: FontWeight.bold),
-                                ),
-                                subtitle: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const SizedBox(
-                                      height: TSizes.spaceBtwItems / 2,
-                                    ),
-                                    if (session.startTime != null &&
-                                        session.endTime != null)
-                                      Text(
-                                        'Time: ${session.startTime} - ${session.endTime}',
-                                        style:
-                                            Theme.of(
-                                              context,
-                                            ).textTheme.bodySmall,
-                                      ),
+                              ),
+                              title: Text(
+                                formattedDate,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium
+                                    ?.copyWith(fontWeight: FontWeight.bold),
+                              ),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(
+                                    height: TSizes.spaceBtwItems / 2,
+                                  ),
+                                  if (session.startTime != null &&
+                                      session.endTime != null)
                                     Text(
-                                      'Created: ${DateFormat('MMM d, yyyy').format(session.createdAt ?? DateTime.now())}',
+                                      'Time: ${session.startTime} - ${session.endTime}',
                                       style:
                                           Theme.of(context).textTheme.bodySmall,
                                     ),
-                                  ],
-                                ),
-                                trailing: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    IconButton(
-                                      icon: const Icon(Iconsax.play_circle),
-                                      tooltip: 'Carousel View',
-                                      onPressed: () {
-                                        // Set current session and navigate to carousel attendance
-                                        attendanceController
-                                            .currentSessionId
-                                            .value = session.id;
-                                        Get.to(
-                                          () => CarouselAttendanceScreen(),
-                                          binding: CarouselAttendanceBinding(),
-                                        );
-                                      },
-                                    ),
-                                    const Icon(Iconsax.arrow_right_3),
-                                  ],
-                                ),
+                                  Text(
+                                    'Created: ${DateFormat('MMM d, yyyy').format(session.createdAt ?? DateTime.now())}',
+                                    style:
+                                        Theme.of(context).textTheme.bodySmall,
+                                  ),
+                                ],
                               ),
-                            );
-                          },
-                        ),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                    icon: const Icon(Iconsax.play_circle),
+                                    tooltip: 'Carousel View',
+                                    onPressed: () {
+                                      print(
+                                          'Navigating to carousel attendance screen');
+                                      // Set current session and navigate to carousel attendance
+                                      attendanceController
+                                          .currentSessionId.value = session.id;
+                                      Get.to(
+                                        () => CarouselAttendanceScreen(),
+                                        binding: CarouselAttendanceBinding(),
+                                      );
+                                    },
+                                  ),
+                                  const Icon(Iconsax.arrow_right_3),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
               ),
             ],
           ),
@@ -262,6 +272,7 @@ class AttendanceScreen extends StatelessWidget {
 
   // Show dialog to create a new attendance session
   void _showCreateSessionDialog(BuildContext context) {
+    print('Showing create session dialog');
     final dark = THelperFunction.isDarkMode(context);
 
     // Reset date to today
@@ -281,23 +292,23 @@ class AttendanceScreen extends StatelessWidget {
                 title: const Text('Date'),
                 subtitle: Obx(
                   () => Text(
-                    DateFormat(
-                      'EEEE, MMMM d, yyyy',
-                    ).format(attendanceController.sessionDate.value),
+                    DateFormat('EEEE, MMMM d, yyyy')
+                        .format(attendanceController.sessionDate.value),
                   ),
                 ),
                 trailing: const Icon(Iconsax.calendar),
                 onTap: () async {
+                  print('Opening date picker');
                   final pickedDate = await showDatePicker(
                     context: context,
                     initialDate: attendanceController.sessionDate.value,
-                    firstDate: DateTime.now().subtract(
-                      const Duration(days: 30),
-                    ),
+                    firstDate:
+                        DateTime.now().subtract(const Duration(days: 30)),
                     lastDate: DateTime.now().add(const Duration(days: 30)),
                   );
 
                   if (pickedDate != null) {
+                    print('Selected date: $pickedDate');
                     attendanceController.sessionDate.value = pickedDate;
                   }
                 },
@@ -312,22 +323,22 @@ class AttendanceScreen extends StatelessWidget {
                   labelText: 'Start Time (Optional)',
                   hintText: 'e.g., 9:00 AM',
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(
-                      TSizes.inputFieldRadius,
-                    ),
+                    borderRadius:
+                        BorderRadius.circular(TSizes.inputFieldRadius),
                   ),
                   suffixIcon: IconButton(
                     icon: const Icon(Iconsax.clock),
                     onPressed: () async {
+                      print('Opening start time picker');
                       final pickedTime = await showTimePicker(
                         context: context,
                         initialTime: TimeOfDay.now(),
                       );
 
                       if (pickedTime != null) {
-                        attendanceController
-                            .startTimeController
-                            .text = pickedTime.format(context);
+                        print('Selected start time: $pickedTime');
+                        attendanceController.startTimeController.text =
+                            pickedTime.format(context);
                       }
                     },
                   ),
@@ -343,21 +354,22 @@ class AttendanceScreen extends StatelessWidget {
                   labelText: 'End Time (Optional)',
                   hintText: 'e.g., 10:00 AM',
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(
-                      TSizes.inputFieldRadius,
-                    ),
+                    borderRadius:
+                        BorderRadius.circular(TSizes.inputFieldRadius),
                   ),
                   suffixIcon: IconButton(
                     icon: const Icon(Iconsax.clock),
                     onPressed: () async {
+                      print('Opening end time picker');
                       final pickedTime = await showTimePicker(
                         context: context,
                         initialTime: TimeOfDay.now(),
                       );
 
                       if (pickedTime != null) {
-                        attendanceController.endTimeController.text = pickedTime
-                            .format(context);
+                        print('Selected end time: $pickedTime');
+                        attendanceController.endTimeController.text =
+                            pickedTime.format(context);
                       }
                     },
                   ),
@@ -367,9 +379,17 @@ class AttendanceScreen extends StatelessWidget {
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Get.back(), child: const Text('Cancel')),
+          TextButton(
+              onPressed: () {
+                print('Canceling session creation');
+                Get.back();
+              },
+              child: const Text('Cancel')),
           ElevatedButton(
-            onPressed: () => attendanceController.createAttendanceSession(),
+            onPressed: () {
+              print('Creating new attendance session');
+              attendanceController.createAttendanceSession();
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: dark ? TColors.yellow : TColors.deepPurple,
               foregroundColor: dark ? Colors.black : Colors.white,

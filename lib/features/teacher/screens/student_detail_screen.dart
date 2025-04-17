@@ -19,12 +19,14 @@ class StudentDetailScreen extends StatelessWidget {
     required this.student,
     required this.classId,
   }) {
+    print('Initializing StudentDetailScreen with student: $student and classId: $classId');
     // Initialize controller with student and class data
     studentDetailController.setStudentAndClass(student, classId);
   }
 
   @override
   Widget build(BuildContext context) {
+    print('Building StudentDetailScreen');
     final dark = THelperFunction.isDarkMode(context);
 
     return Scaffold(
@@ -35,13 +37,18 @@ class StudentDetailScreen extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            onPressed: () => studentDetailController.loadStudentData(),
+            onPressed: () {
+              print('Refreshing student data');
+              studentDetailController.loadStudentData();
+            },
             icon: const Icon(Iconsax.refresh),
           ),
         ],
       ),
       body: Obx(() {
+        print('StudentDetailController state updated');
         if (studentDetailController.isLoading.value) {
+          print('Loading student data...');
           return const Center(child: CircularProgressIndicator());
         }
 
@@ -248,6 +255,8 @@ class StudentDetailScreen extends StatelessWidget {
                             final status = record['status'];
                             final remarks = record['remarks'];
 
+                            print('Rendering attendance record: $record');
+
                             return ListTile(
                               leading: CircleAvatar(
                                 backgroundColor: _getStatusColor(status, dark),
@@ -324,6 +333,7 @@ class StudentDetailScreen extends StatelessWidget {
     IconData icon,
     Color color,
   ) {
+    print('Building stat item: $label with value: $value');
     return Column(
       children: [
         Icon(icon, color: color, size: 24),
@@ -340,6 +350,7 @@ class StudentDetailScreen extends StatelessWidget {
   }
 
   Color _getStatusColor(String status, bool dark) {
+    print('Getting status color for status: $status');
     switch (status.toLowerCase()) {
       case 'present':
         return Colors.green;
@@ -355,6 +366,7 @@ class StudentDetailScreen extends StatelessWidget {
   }
 
   IconData _getStatusIcon(String status) {
+    print('Getting status icon for status: $status');
     switch (status.toLowerCase()) {
       case 'present':
         return Iconsax.tick_circle;
@@ -375,6 +387,7 @@ class StudentDetailScreen extends StatelessWidget {
     String currentStatus,
     String? currentRemarks,
   ) {
+    print('Showing update status dialog for sessionId: $sessionId');
     final dark = THelperFunction.isDarkMode(context);
     final remarksController = TextEditingController(text: currentRemarks);
     final selectedStatus = currentStatus.obs;
@@ -401,7 +414,10 @@ class StudentDetailScreen extends StatelessWidget {
                     Iconsax.tick_circle,
                     Colors.green,
                     selectedStatus.value.toLowerCase() == 'present',
-                    () => selectedStatus.value = 'present',
+                    () {
+                      print('Selected status: Present');
+                      selectedStatus.value = 'present';
+                    },
                   ),
                   _buildStatusButton(
                     context,
@@ -409,7 +425,10 @@ class StudentDetailScreen extends StatelessWidget {
                     Iconsax.close_circle,
                     Colors.red,
                     selectedStatus.value.toLowerCase() == 'absent',
-                    () => selectedStatus.value = 'absent',
+                    () {
+                      print('Selected status: Absent');
+                      selectedStatus.value = 'absent';
+                    },
                   ),
                   _buildStatusButton(
                     context,
@@ -417,7 +436,10 @@ class StudentDetailScreen extends StatelessWidget {
                     Iconsax.clock,
                     Colors.orange,
                     selectedStatus.value.toLowerCase() == 'late',
-                    () => selectedStatus.value = 'late',
+                    () {
+                      print('Selected status: Late');
+                      selectedStatus.value = 'late';
+                    },
                   ),
                   _buildStatusButton(
                     context,
@@ -425,7 +447,10 @@ class StudentDetailScreen extends StatelessWidget {
                     Iconsax.document,
                     Colors.blue,
                     selectedStatus.value.toLowerCase() == 'excused',
-                    () => selectedStatus.value = 'excused',
+                    () {
+                      print('Selected status: Excused');
+                      selectedStatus.value = 'excused';
+                    },
                   ),
                 ],
               ),
@@ -444,9 +469,16 @@ class StudentDetailScreen extends StatelessWidget {
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Get.back(), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () {
+              print('Cancelled update attendance');
+              Get.back();
+            },
+            child: const Text('Cancel'),
+          ),
           ElevatedButton(
             onPressed: () {
+              print('Updating attendance record for sessionId: $sessionId with status: ${selectedStatus.value} and remarks: ${remarksController.text}');
               studentDetailController.updateAttendanceRecord(
                 sessionId: sessionId,
                 status: selectedStatus.value,
@@ -476,6 +508,7 @@ class StudentDetailScreen extends StatelessWidget {
     bool isSelected,
     VoidCallback onTap,
   ) {
+    print('Building status button: $label');
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(TSizes.borderRadiusMd),

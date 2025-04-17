@@ -1,5 +1,9 @@
 /// TValidator: Robust validation utility for form inputs and data verification
 class TValidator {
+  TValidator._()
+  {
+    print('TValidator initialized');
+  } // Private constructor to prevent instantiation
   /// Validate email address
   static String? email(String? value) {
     if (value == null || value.isEmpty) {

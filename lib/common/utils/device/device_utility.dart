@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class DeviceUtility {
+  DeviceUtility._(){
+    print('DeviceUtility initialized');
+  }
   // Hides the keyboard
   static void hideKeyboard(BuildContext context) {
     FocusScope.of(context).requestFocus(FocusNode());

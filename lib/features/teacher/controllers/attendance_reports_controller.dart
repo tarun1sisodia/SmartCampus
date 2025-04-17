@@ -35,33 +35,24 @@ class AttendanceReportsController extends GetxController {
   final absentCount = 0.obs;
   final lateCount = 0.obs;
 
-  // Map to store attendance stats for each
   // Map to store attendance stats for each student
   final studentStats = <String, Map<String, dynamic>>{}.obs;
 
   @override
   void onInit() {
     super.onInit();
+    print('AttendanceReportsController initialized');
     loadClasses();
   }
 
-  // Load all classes for the current teacher
-  /// Loads all classes for the current teacher.
-  ///
-  /// This function is called when the controller is initialized. It fetches all
-  /// classes for the current user, and then sets the `classes` observable list
-  /// with the fetched data. If the `selectedClassId` is empty, the first class
-  /// is selected and the attendance data is loaded.
-  ///
-  /// If the user is not authenticated, the function will return early and show
-  /// an error message. Any other errors encountered during the process are
-  /// caught and logged to the console.
   Future<void> loadClasses() async {
     try {
+      print('Loading classes...');
       isLoading.value = true;
 
       final currentUser = Supabase.instance.client.auth.currentUser;
       if (currentUser == null) {
+        print('User not authenticated');
         TSnackBar.showError(message: 'You must be logged in to view reports');
         return;
       }
@@ -69,66 +60,58 @@ class AttendanceReportsController extends GetxController {
       final teacherClasses = await classService.getTeacherClasses(
         currentUser.id,
       );
+      print('Classes fetched: ${teacherClasses.length}');
       classes.assignAll(teacherClasses);
 
       if (classes.isNotEmpty && selectedClassId.isEmpty) {
         selectedClassId.value = classes[0].id;
+        print('Selected class ID: ${selectedClassId.value}');
         await loadAttendanceData();
       }
     } catch (e) {
+      print('Error loading classes: $e');
       TSnackBar.showError(message: 'Failed to load classes: ${e.toString()}');
     } finally {
       isLoading.value = false;
     }
   }
 
-  // Load attendance data for the selected class and date range
-  /// Loads attendance data for the selected class and date range.
-  ///
-  /// This function is called when the user selects a class and date range from
-  /// the dropdown menus. It fetches all attendance sessions for the selected
-  /// class and date range, loads the students for the class, and then calculates
-  /// overall statistics (present, absent, late, and average attendance) for the
-  /// selected class. Additionally, it calculates attendance statistics for each
-  /// student in the class.
-  ///
-  /// If the user is not authenticated, the function will return early and show
-  /// an error message. Any other errors encountered during the process are
-  /// caught and logged to the console.
   Future<void> loadAttendanceData() async {
     try {
-      if (selectedClassId.isEmpty) return;
+      if (selectedClassId.isEmpty) {
+        print('No class selected');
+        return;
+      }
 
+      print('Loading attendance data for class: ${selectedClassId.value}');
       isLoading.value = true;
 
-      // Load sessions for the selected date range
       final classSessions = await attendanceService
           .getAttendanceSessionsForDateRange(
             classId: selectedClassId.value,
             startDate: startDate.value,
             endDate: endDate.value,
           );
+      print('Sessions fetched: ${classSessions.length}');
       sessions.assignAll(classSessions);
 
-      // Load students for the class
       final classStudents = await studentService.getStudentsForClass(
         selectedClassId.value,
       );
+      print('Students fetched: ${classStudents.length}');
       students.assignAll(classStudents);
 
-      // Reset statistics
       presentCount.value = 0;
       absentCount.value = 0;
       lateCount.value = 0;
       studentStats.clear();
 
-      // If no sessions, return early
       if (sessions.isEmpty) {
+        print('No sessions found');
         averageAttendance.value = 0.0;
         return;
       }
 
-      // Calculate overall statistics
       final stats = await attendanceService.getAttendanceStatsForDateRange(
         classId: selectedClassId.value,
         startDate: startDate.value,
@@ -140,7 +123,8 @@ class AttendanceReportsController extends GetxController {
       lateCount.value = stats['lateCount'] ?? 0;
       averageAttendance.value = stats['averageAttendance'] ?? 0.0;
 
-      // Calculate statistics for each student
+      print('Overall stats - Present: ${presentCount.value}, Absent: ${absentCount.value}, Late: ${lateCount.value}, Average: ${averageAttendance.value}');
+
       for (var student in students) {
         final studentStat = await attendanceService
             .getAttendanceStatsForStudentInDateRange(
@@ -151,8 +135,10 @@ class AttendanceReportsController extends GetxController {
             );
 
         studentStats[student.id] = studentStat;
+        print('Stats for student ${student.name}: $studentStat');
       }
     } catch (e) {
+      print('Error loading attendance data: $e');
       TSnackBar.showError(
         message: 'Failed to load attendance data: ${e.toString()}',
       );
@@ -161,45 +147,31 @@ class AttendanceReportsController extends GetxController {
     }
   }
 
-  // Navigate to student detail screen
-  /// Navigate to the student detail screen.
-  ///
-  /// This function takes a `StudentModel` instance as a parameter and navigates
-  /// to the student detail screen, passing the student instance and the
-  /// selected class ID to the screen as parameters.
   void navigateToStudentDetail(StudentModel student) {
+    print('Navigating to student detail for: ${student.name}');
     Get.to(
       () =>
           StudentDetailScreen(student: student, classId: selectedClassId.value),
     );
   }
 
-  // Export attendance report as CSV
-  /// Export the attendance report as a CSV file.
-  ///
-  /// This function will first check if there is any data available to export. If
-  /// there is, it will then create a CSV file with the class details and the
-  /// attendance statistics for each student. The CSV file will be saved to the
-  /// temporary directory on the device and will be shared using the
-  /// [Share] package. If there is an error exporting the report, a snack bar
-  /// will be shown with the error message.
   Future<void> exportAttendanceReport() async {
     try {
       if (selectedClassId.isEmpty || students.isEmpty || sessions.isEmpty) {
+        print('No data available to export');
         TSnackBar.showInfo(message: 'No data available to export');
         return;
       }
 
+      print('Exporting attendance report...');
       isLoading.value = true;
 
-      // Get class details
       final classModel = classes.firstWhere(
         (c) => c.id == selectedClassId.value,
       );
       final className =
           '${classModel.subjectName} - ${classModel.courseName} Year ${classModel.year}';
 
-      // Create CSV header row
       final headerRow = [
         'Roll Number',
         'Student Name',
@@ -209,12 +181,10 @@ class AttendanceReportsController extends GetxController {
         'Attendance %',
       ];
 
-      // Add session dates to header
       for (var session in sessions) {
         headerRow.add(DateFormat('yyyy-MM-dd').format(session.date));
       }
 
-      // Create data rows
       final dataRows = <List<dynamic>>[];
 
       for (var student in students) {
@@ -230,7 +200,6 @@ class AttendanceReportsController extends GetxController {
           '${stats['attendancePercentage'].toStringAsFixed(1)}%',
         ];
 
-        // Add attendance status for each session
         for (var session in sessions) {
           final status = await attendanceService.getAttendanceStatusForSession(
             sessionId: session.id,
@@ -242,7 +211,6 @@ class AttendanceReportsController extends GetxController {
         dataRows.add(row);
       }
 
-      // Add summary row
       final summaryRow = [
         'TOTAL',
         '',
@@ -252,19 +220,16 @@ class AttendanceReportsController extends GetxController {
         '${averageAttendance.value.toStringAsFixed(1)}%',
       ];
 
-      // Add empty cells for session dates
       for (var i = 0; i < sessions.length; i++) {
         summaryRow.add('');
       }
 
       dataRows.add(summaryRow);
 
-      // Convert to CSV
       final csvData = [headerRow, ...dataRows];
 
       final csv = const ListToCsvConverter().convert(csvData);
 
-      // Save to temporary file
       final directory = await getTemporaryDirectory();
       final fileName =
           'Attendance_${className}_${DateFormat('yyyy-MM-dd').format(startDate.value)}_to_${DateFormat('yyyy-MM-dd').format(endDate.value)}.csv';
@@ -273,7 +238,8 @@ class AttendanceReportsController extends GetxController {
       final file = File(filePath);
       await file.writeAsString(csv);
 
-      // Share the file
+      print('CSV file saved at: $filePath');
+
       await Share.shareXFiles(
         [XFile(filePath)],
         text: 'Attendance Report for $className',
@@ -281,6 +247,7 @@ class AttendanceReportsController extends GetxController {
 
       TSnackBar.showSuccess(message: 'Report exported successfully');
     } catch (e) {
+      print('Error exporting report: $e');
       TSnackBar.showError(message: 'Failed to export report: ${e.toString()}');
     } finally {
       isLoading.value = false;

@@ -39,6 +39,7 @@ class SettingsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    print('onInit called');
     loadSettings();
     loadUserInfo();
   }
@@ -46,83 +47,80 @@ class SettingsController extends GetxController {
   // Load all saved settings
   void loadSettings() {
     try {
-      // Load theme settings
+      print('Loading settings...');
       final savedTheme = storage.read('selected_theme') ?? 'System Default';
       selectedTheme.value = savedTheme;
+      print('Saved theme: $savedTheme');
 
-      // Set dark mode based on theme or system
       if (savedTheme == 'Dark') {
         isDarkMode.value = true;
       } else if (savedTheme == 'Light') {
         isDarkMode.value = false;
       } else {
-        // Use system default
         final brightness = Get.mediaQuery.platformBrightness;
         isDarkMode.value = brightness == Brightness.dark;
       }
 
-      // Load other preferences
       notificationsEnabled.value =
           storage.read('notifications_enabled') ?? true;
       biometricsEnabled.value = storage.read('biometrics_enabled') ?? false;
       selectedLanguage.value = storage.read('selected_language') ?? 'English';
       isDeveloperMode.value = storage.read('developer_mode') ?? false;
 
+      print('Settings loaded: $selectedTheme, $isDarkMode, $notificationsEnabled, $biometricsEnabled, $selectedLanguage, $isDeveloperMode');
       logger.i('Settings loaded successfully');
     } catch (e) {
+      print('Error loading settings: $e');
       logger.e('Error loading settings: $e');
-      // Use defaults if loading fails
     }
   }
 
   // Load user information
   void loadUserInfo() {
     try {
+      print('Loading user info...');
       final user = supabase.auth.currentUser;
       if (user != null) {
         userEmail.value = user.email ?? '';
-
-        // Fetch additional user data from the database
+        print('User email: ${userEmail.value}');
         _fetchUserData(user.id);
       }
     } catch (e) {
+      print('Error loading user info: $e');
       logger.e('Error loading user info: $e');
     }
   }
 
-  // Fetch additional user data from the database
   Future<void> _fetchUserData(String userId) async {
     try {
+      print('Fetching user data for userId: $userId');
       final userData =
           await supabase.from('users').select().eq('id', userId).maybeSingle();
 
       if (userData != null) {
         userName.value = userData['name'] ?? '';
         userRole.value = userData['role'] ?? 'User';
+        print('User data fetched: $userName, $userRole');
       }
     } catch (e) {
+      print('Error fetching user data: $e');
       logger.e('Error fetching user data: $e');
     }
   }
 
-  // Toggle dark mode
   void toggleDarkMode(bool value) {
+    print('Toggling dark mode to: $value');
     isDarkMode.value = value;
 
-    // Update theme setting
     if (value) {
       selectedTheme.value = 'Dark';
     } else {
       selectedTheme.value = 'Light';
     }
 
-    // Save preference
     storage.write('selected_theme', selectedTheme.value);
-
-    // Apply theme
     Get.changeThemeMode(value ? ThemeMode.dark : ThemeMode.light);
 
-    // Show confirmation
     Get.snackbar(
       'Theme Updated',
       'App theme has been changed to ${value ? 'dark' : 'light'} mode',
@@ -131,12 +129,11 @@ class SettingsController extends GetxController {
     );
   }
 
-  // Change theme
   void changeTheme(String theme) {
+    print('Changing theme to: $theme');
     selectedTheme.value = theme;
     storage.write('selected_theme', theme);
 
-    // Apply the selected theme
     if (theme == 'Dark') {
       isDarkMode.value = true;
       Get.changeThemeMode(ThemeMode.dark);
@@ -144,20 +141,16 @@ class SettingsController extends GetxController {
       isDarkMode.value = false;
       Get.changeThemeMode(ThemeMode.light);
     } else {
-      // System default
       final brightness = Get.mediaQuery.platformBrightness;
       isDarkMode.value = brightness == Brightness.dark;
       Get.changeThemeMode(ThemeMode.system);
     }
   }
 
-  // Change language
   void changeLanguage(String language) {
+    print('Changing language to: $language');
     selectedLanguage.value = language;
     storage.write('selected_language', language);
-
-    // Apply the selected language (you would need to implement localization)
-    // For example: Get.updateLocale(Locale('en', 'US'));
 
     Get.snackbar(
       'Language Changed',
@@ -167,13 +160,10 @@ class SettingsController extends GetxController {
     );
   }
 
-  // Toggle notifications
   void toggleNotifications(bool value) {
+    print('Toggling notifications to: $value');
     notificationsEnabled.value = value;
     storage.write('notifications_enabled', value);
-
-    // Apply notification settings
-    // Your notification service implementation here
 
     Get.snackbar(
       'Notifications ${value ? 'Enabled' : 'Disabled'}',
@@ -183,13 +173,10 @@ class SettingsController extends GetxController {
     );
   }
 
-  // Toggle biometric authentication
   void toggleBiometrics(bool value) {
+    print('Toggling biometrics to: $value');
     biometricsEnabled.value = value;
     storage.write('biometrics_enabled', value);
-
-    // Apply biometric settings
-    // Your biometric service implementation here
 
     Get.snackbar(
       'Biometric Authentication ${value ? 'Enabled' : 'Disabled'}',
@@ -201,8 +188,8 @@ class SettingsController extends GetxController {
     );
   }
 
-  // Toggle developer mode
   void toggleDeveloperMode(bool value) {
+    print('Toggling developer mode to: $value');
     isDeveloperMode.value = value;
     storage.write('developer_mode', value);
 
@@ -224,17 +211,15 @@ class SettingsController extends GetxController {
     }
   }
 
-  // Sign out
   Future<void> signOut() async {
     try {
+      print('Signing out...');
       isLoading.value = true;
 
-      // Use the existing SupabaseAuthController for sign out
       final authController = Get.find<SupabaseAuthController>();
       await authController.signOut();
-
-      // Navigation is handled in the auth controller
     } catch (e) {
+      print('Error signing out: $e');
       logger.e('Error signing out: $e');
       Get.snackbar(
         'Error',
@@ -249,12 +234,11 @@ class SettingsController extends GetxController {
     }
   }
 
-  // Delete account
   Future<void> deleteAccount() async {
     try {
+      print('Deleting account...');
       isLoading.value = true;
 
-      // Show confirmation dialog
       final confirmed = await Get.dialog<bool>(
         AlertDialog(
           title: const Text('Delete Account'),
@@ -277,12 +261,8 @@ class SettingsController extends GetxController {
       if (confirmed == true) {
         final user = supabase.auth.currentUser;
         if (user != null) {
-          // First delete user data from the database
           await supabase.from('users').delete().eq('id', user.id);
 
-          // Then delete the authentication account
-          // Note: This requires server-side function or admin privileges
-          // For now, just sign out the user
           final authController = Get.find<SupabaseAuthController>();
           await authController.signOut();
 
@@ -295,6 +275,7 @@ class SettingsController extends GetxController {
         }
       }
     } catch (e) {
+      print('Error deleting account: $e');
       logger.e('Error deleting account: $e');
       Get.snackbar(
         'Error',
@@ -309,9 +290,8 @@ class SettingsController extends GetxController {
     }
   }
 
-  // Reset all settings to default
   void resetSettings() {
-    // Show confirmation dialog
+    print('Resetting settings...');
     Get.dialog(
       AlertDialog(
         title: const Text('Reset Settings'),
@@ -324,7 +304,6 @@ class SettingsController extends GetxController {
           ),
           TextButton(
             onPressed: () {
-              // Reset to defaults
               selectedTheme.value = 'System Default';
               isDarkMode.value =
                   Get.mediaQuery.platformBrightness == Brightness.dark;
@@ -333,7 +312,6 @@ class SettingsController extends GetxController {
               selectedLanguage.value = 'English';
               isDeveloperMode.value = false;
 
-              // Save defaults
               storage.write('selected_theme', selectedTheme.value);
               storage.write(
                   'notifications_enabled', notificationsEnabled.value);
@@ -341,7 +319,6 @@ class SettingsController extends GetxController {
               storage.write('selected_language', selectedLanguage.value);
               storage.write('developer_mode', isDeveloperMode.value);
 
-              // Apply theme
               Get.changeThemeMode(ThemeMode.system);
 
               Get.back();

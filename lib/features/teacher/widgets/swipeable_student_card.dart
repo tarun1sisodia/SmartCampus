@@ -22,33 +22,42 @@ class SwipeableStudentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('Building SwipeableStudentCard');
     final dark = THelperFunction.isDarkMode(context);
+    print('Dark mode: $dark');
 
     // Use MediaQuery directly to avoid potential class reference issues
     final screenSize = MediaQuery.of(context).size;
     final isTablet = screenSize.width < 1024 && screenSize.width > 500;
     final isMobile = screenSize.width <= 500;
     final isLandscape = DeviceUtility.isLandscapeOrientation(context);
+    print('Screen size: $screenSize, isTablet: $isTablet, isMobile: $isMobile, isLandscape: $isLandscape');
 
     // Calculate responsive sizes
     final avatarSize =
         isTablet ? (isLandscape ? 50.0 : 70.0) : (isLandscape ? 40.0 : 60.0);
+    print('Avatar size: $avatarSize');
 
     final cardPadding =
         isMobile
             ? (isLandscape ? TSizes.sm : TSizes.md)
             : (isLandscape ? TSizes.md : TSizes.lg);
+    print('Card padding: $cardPadding');
 
     final textScaleFactor = MediaQuery.of(context).textScaleFactor;
+    print('Text scale factor: $textScaleFactor');
 
     return GestureDetector(
       onHorizontalDragEnd: (details) {
+        print('Horizontal drag ended with velocity: ${details.primaryVelocity}');
         if (details.primaryVelocity! > 0) {
           // Swiped right - mark as present
+          print('Swiped right - marking as present');
           onStatusChanged('present');
           onSwipeRight();
         } else if (details.primaryVelocity! < 0) {
           // Swiped left - mark as absent
+          print('Swiped left - marking as absent');
           onStatusChanged('absent');
           onSwipeLeft();
         }
@@ -70,6 +79,7 @@ class SwipeableStudentCard extends StatelessWidget {
               // Calculate available height for content
               final availableHeight = constraints.maxHeight;
               final isCompactHeight = availableHeight < 300;
+              print('Available height: $availableHeight, isCompactHeight: $isCompactHeight');
 
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -236,6 +246,7 @@ class SwipeableStudentCard extends StatelessWidget {
   }
 
   String _getStatusText(String? status) {
+    print('Getting status text for: $status');
     switch (status) {
       case 'present':
         return 'Present';
@@ -251,6 +262,7 @@ class SwipeableStudentCard extends StatelessWidget {
   }
 
   Color _getStatusColor(String? status, bool dark) {
+    print('Getting status color for: $status, dark mode: $dark');
     switch (status) {
       case 'present':
         return Colors.green;

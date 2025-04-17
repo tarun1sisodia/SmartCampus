@@ -22,12 +22,16 @@ class CarouselAttendanceScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('Building CarouselAttendanceScreen');
     final dark = THelperFunction.isDarkMode(context);
     // Inside the build method, add these responsive variables
     final screenSize = MediaQuery.of(context).size;
+    print('Screen size: $screenSize');
     final isTablet = screenSize.width < 1024 && screenSize.width > 500;
     final isMobile = screenSize.width <= 500;
+    print('Is mobile: $isMobile');
     final isLandscape = DeviceUtility.isLandscapeOrientation(context);
+    print('Is landscape: $isLandscape');
 
     return Scaffold(
       appBar: AppBar(
@@ -35,9 +39,10 @@ class CarouselAttendanceScreen extends StatelessWidget {
         actions: [
           // Session timer in app bar
           Obx(
-            () =>
-                carouselAttendanceController.isTimerRunning.value
-                    ? Padding(
+            () {
+              print('Timer running: ${carouselAttendanceController.isTimerRunning.value}');
+              return carouselAttendanceController.isTimerRunning.value
+                  ? Padding(
                       padding: const EdgeInsets.only(right: TSizes.sm),
                       child: Center(
                         child: SessionTimerWidget(
@@ -49,19 +54,23 @@ class CarouselAttendanceScreen extends StatelessWidget {
                         ),
                       ),
                     )
-                    : const SizedBox.shrink(),
+                  : const SizedBox.shrink();
+            },
           ),
           IconButton(
             onPressed: () {
+              print('Refresh button pressed');
               // Only try to load students if a session is selected
               if (carouselAttendanceController
                   .attendanceController
                   .currentSessionId
                   .value
                   .isNotEmpty) {
+                print('Loading students for session');
                 carouselAttendanceController.attendanceController
                     .loadStudentsForSession();
               } else {
+                print('No session selected');
                 // Show a message if no session is selected
                 Get.snackbar(
                   'No Session Selected',
@@ -75,14 +84,17 @@ class CarouselAttendanceScreen extends StatelessWidget {
         ],
       ),
       body: Obx(() {
+        print('Building body with Obx');
         final attendanceController =
             carouselAttendanceController.attendanceController;
 
         if (attendanceController.isLoading.value) {
+          print('Loading state');
           return const Center(child: CircularProgressIndicator());
         }
 
         if (attendanceController.currentSessionId.value.isEmpty) {
+          print('No session selected');
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -107,6 +119,7 @@ class CarouselAttendanceScreen extends StatelessWidget {
                 // Add this button to allow selecting a session
                 ElevatedButton(
                   onPressed: () {
+                    print('Navigating to class list');
                     // Navigate to class list to select a class first
                     Get.to(() => ClassListScreen());
                   },
@@ -122,6 +135,7 @@ class CarouselAttendanceScreen extends StatelessWidget {
         }
 
         if (attendanceController.students.isEmpty) {
+          print('No students found');
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -147,38 +161,14 @@ class CarouselAttendanceScreen extends StatelessWidget {
           );
         }
 
+        print('Building main content with ${attendanceController.students.length} students');
         return Column(
           children: [
-            // Attendance stats card
-            /*Padding(
-              padding: EdgeInsets.all(
-                isMobile
-                    ? (isLandscape ? TSizes.sm : TSizes.md)
-                    : TSizes.defaultSpace,
-              ),
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  // Calculate if we need a compact layout
-                  final isCompact = constraints.maxWidth < 400 || isLandscape;
-                  return AttendanceStatsCard(
-                    totalStudents: attendanceController.students.length,
-                    presentCount:
-                        carouselAttendanceController.presentCount.value,
-                    absentCount: carouselAttendanceController.absentCount.value,
-                    lateCount: carouselAttendanceController.lateCount.value,
-                    excusedCount:
-                        carouselAttendanceController.excusedCount.value,
-                    isCompact: isCompact,
-                  );
-                },
-              ),
-            ),
-*/
-            // Session timer above carousel - make it more visible
             Obx(
-              () =>
-                  carouselAttendanceController.isTimerRunning.value
-                      ? Container(
+              () {
+                print('Building timer widget');
+                return carouselAttendanceController.isTimerRunning.value
+                    ? Container(
                         margin: const EdgeInsets.symmetric(
                           horizontal: TSizes.defaultSpace,
                           vertical: TSizes.sm,
@@ -208,10 +198,10 @@ class CarouselAttendanceScreen extends StatelessWidget {
                                   .contains('Ended'),
                         ),
                       )
-                      : const SizedBox.shrink(),
+                    : const SizedBox.shrink();
+              },
             ),
 
-            // Carousel of student cards
             Expanded(
               child: CarouselSlider.builder(
                 carouselController: carouselController,
@@ -219,33 +209,32 @@ class CarouselAttendanceScreen extends StatelessWidget {
                 options: CarouselOptions(
                   height:
                       isLandscape
-                          ? screenSize.height *
-                              0.6 // Adjust height in landscape
-                          : screenSize.height *
-                              0.4, // Adjust height in portrait
+                          ? screenSize.height * 0.6
+                          : screenSize.height * 0.4,
                   viewportFraction:
-                      isLandscape
-                          ? 0.6 // Show more of adjacent cards in landscape
-                          : 0.85,
+                      isLandscape ? 0.6 : 0.85,
                   enlargeCenterPage: true,
                   enableInfiniteScroll: false,
                   onPageChanged: (index, reason) {
+                    print('Carousel page changed to index: $index');
                     carouselAttendanceController.currentIndex.value = index;
                   },
                 ),
                 itemBuilder: (context, index, realIndex) {
                   final student = attendanceController.students[index];
+                  print('Building card for student: ${student.id}');
                   return SwipeableStudentCard(
                     student: student,
                     onStatusChanged: (status) {
+                      print('Status changed for student ${student.id} to $status');
                       attendanceController.updateStudentStatus(
                         student.id,
                         status,
                       );
                     },
                     onSwipeLeft: () {
+                      print('Swipe left detected');
                       carouselAttendanceController.moveToNextStudent();
-                      // Add this line to move the carousel
                       if (!carouselAttendanceController.isLastStudent) {
                         carouselController.nextPage(
                           duration: const Duration(milliseconds: 300),
@@ -254,8 +243,8 @@ class CarouselAttendanceScreen extends StatelessWidget {
                       }
                     },
                     onSwipeRight: () {
+                      print('Swipe right detected');
                       carouselAttendanceController.moveToNextStudent();
-                      // Add this line to move the carousel
                       if (!carouselAttendanceController.isLastStudent) {
                         carouselController.nextPage(
                           duration: const Duration(milliseconds: 300),
@@ -268,7 +257,6 @@ class CarouselAttendanceScreen extends StatelessWidget {
               ),
             ),
 
-            // Navigation indicators
             Padding(
               padding: const EdgeInsets.symmetric(vertical: TSizes.sm),
               child: Row(
@@ -279,6 +267,7 @@ class CarouselAttendanceScreen extends StatelessWidget {
                         carouselAttendanceController.isFirstStudent
                             ? null
                             : () {
+                              print('Moving to previous student');
                               carouselAttendanceController
                                   .moveToPreviousStudent();
                               carouselController.previousPage(
@@ -297,16 +286,20 @@ class CarouselAttendanceScreen extends StatelessWidget {
                     ),
                   ),
                   Obx(
-                    () => Text(
-                      '${carouselAttendanceController.currentIndex.value + 1}/${attendanceController.students.length}',
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
+                    () {
+                      print('Current index: ${carouselAttendanceController.currentIndex.value}');
+                      return Text(
+                        '${carouselAttendanceController.currentIndex.value + 1}/${attendanceController.students.length}',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      );
+                    },
                   ),
                   IconButton(
                     onPressed:
                         carouselAttendanceController.isLastStudent
                             ? null
                             : () {
+                              print('Moving to next student');
                               carouselAttendanceController.moveToNextStudent();
                               carouselController.nextPage(
                                 duration: const Duration(milliseconds: 300),
@@ -327,11 +320,11 @@ class CarouselAttendanceScreen extends StatelessWidget {
               ),
             ),
 
-            // Bottom action buttons
             Padding(
               padding: const EdgeInsets.all(TSizes.defaultSpace),
               child: AttendanceActionButtons(
                 onMarkAttendance: (status) {
+                  print('Marking attendance with status: $status');
                   final student = carouselAttendanceController.currentStudent;
                   if (student != null) {
                     attendanceController.updateStudentStatus(
@@ -350,20 +343,20 @@ class CarouselAttendanceScreen extends StatelessWidget {
               ),
             ),
 
-            // Replace the existing submit button with this more compact version
             Padding(
               padding: EdgeInsets.only(
                 bottom: isMobile ? TSizes.sm : TSizes.md,
               ),
               child: Obx(
-                () =>
-                    carouselAttendanceController
-                            .attendanceController
-                            .isStudentsLoaded
-                            .value
-                        ? SizedBox(
-                          width: isMobile ? 300 : 240, // Control the width
-                          height: isMobile ? 50 : 40, // Control the height
+                () {
+                  print('Students loaded: ${carouselAttendanceController.attendanceController.isStudentsLoaded.value}');
+                  return carouselAttendanceController
+                          .attendanceController
+                          .isStudentsLoaded
+                          .value
+                      ? SizedBox(
+                          width: isMobile ? 300 : 240,
+                          height: isMobile ? 50 : 40,
                           child: ElevatedButton.icon(
                             onPressed: () => _showSubmitConfirmation(context),
                             icon: const Icon(Iconsax.tick_square, size: 20),
@@ -384,7 +377,8 @@ class CarouselAttendanceScreen extends StatelessWidget {
                             ),
                           ),
                         )
-                        : const SizedBox.shrink(),
+                      : const SizedBox.shrink();
+                },
               ),
             ),
           ],
@@ -394,6 +388,7 @@ class CarouselAttendanceScreen extends StatelessWidget {
   }
 
   void _showSubmitConfirmation(BuildContext context) {
+    print('Showing submit confirmation dialog');
     final dark = THelperFunction.isDarkMode(context);
 
     Get.dialog(
@@ -403,9 +398,16 @@ class CarouselAttendanceScreen extends StatelessWidget {
           'Are you sure you want to submit the attendance for this session?',
         ),
         actions: [
-          TextButton(onPressed: () => Get.back(), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () {
+              print('Submit dialog cancelled');
+              Get.back();
+            },
+            child: const Text('Cancel')
+          ),
           ElevatedButton(
             onPressed: () {
+              print('Submitting attendance');
               Get.back();
               carouselAttendanceController.submitAttendance();
             },

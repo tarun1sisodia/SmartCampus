@@ -12,48 +12,48 @@ class StudentController extends GetxController {
   final selectedClass = Rxn<ClassModel>();
   final students = <StudentModel>[].obs;
 
-  // Add these new properties for student import functionality
   final availableStudents = <StudentModel>[].obs;
   final selectedStudents = <StudentModel>[].obs;
   final isFetchingAvailableStudents = false.obs;
   final sortOption = 'name'.obs;
 
-  // Form controllers
   final nameController = TextEditingController();
   final rollNumberController = TextEditingController();
 
   @override
   void onClose() {
+    print('Disposing controllers');
     nameController.dispose();
     rollNumberController.dispose();
     super.onClose();
   }
 
-  // Set the selected class and load its students
   void setSelectedClass(ClassModel classModel) {
+    print('Setting selected class: ${classModel.id}');
     selectedClass.value = classModel;
     loadStudentsForClass(classModel.id);
   }
 
-  // Load students for a class
   Future<void> loadStudentsForClass(String classId) async {
+    print('Loading students for class: $classId');
     try {
       isLoading.value = true;
-
       final classStudents = await studentService.getStudentsForClass(classId);
-
+      print('Loaded students: $classStudents');
       students.assignAll(classStudents);
     } catch (e) {
+      print('Error loading students: $e');
       TSnackBar.showError(message: 'Failed to load students: ${e.toString()}');
     } finally {
       isLoading.value = false;
     }
   }
 
-  // Add a student to the class
   Future<void> addStudentToClass() async {
+    print('Adding student to class');
     try {
       if (selectedClass.value == null) {
+        print('No class selected');
         TSnackBar.showError(message: 'No class selected');
         return;
       }
@@ -66,25 +66,26 @@ class StudentController extends GetxController {
         classId: selectedClass.value!.id,
       );
 
-      // Reload students after adding
+      print('Student added successfully');
       await loadStudentsForClass(selectedClass.value!.id);
 
-      // Reset form
       nameController.clear();
       rollNumberController.clear();
 
       TSnackBar.showSuccess(message: 'Student added successfully');
     } catch (e) {
+      print('Error adding student: $e');
       TSnackBar.showError(message: 'Failed to add student: ${e.toString()}');
     } finally {
       isLoading.value = false;
     }
   }
 
-  // Remove a student from the class
   Future<void> removeStudentFromClass(String studentId) async {
+    print('Removing student: $studentId');
     try {
       if (selectedClass.value == null) {
+        print('No class selected');
         TSnackBar.showError(message: 'No class selected');
         return;
       }
@@ -96,21 +97,22 @@ class StudentController extends GetxController {
         classId: selectedClass.value!.id,
       );
 
-      // Remove from the list
       students.removeWhere((s) => s.id == studentId);
-
+      print('Student removed successfully');
       TSnackBar.showSuccess(message: 'Student removed successfully');
     } catch (e) {
+      print('Error removing student: $e');
       TSnackBar.showError(message: 'Failed to remove student: ${e.toString()}');
     } finally {
       isLoading.value = false;
     }
   }
 
-  // Fetch available students from Supabase that aren't already in this class
   Future<void> fetchAvailableStudents() async {
+    print('Fetching available students');
     try {
       if (selectedClass.value == null) {
+        print('No class selected');
         TSnackBar.showError(message: 'No class selected');
         return;
       }
@@ -118,20 +120,20 @@ class StudentController extends GetxController {
       isFetchingAvailableStudents.value = true;
       selectedStudents.clear();
 
-      // Get all students from Supabase
       final allStudents = await studentService.getAllStudents();
+      print('All students: $allStudents');
 
-      // Filter out students that are already in this class
       final currentStudentIds = students.map((s) => s.id).toSet();
       final filteredStudents = allStudents
           .where((student) => !currentStudentIds.contains(student.id))
           .toList();
 
-      // Sort students by name initially
+      print('Filtered students: $filteredStudents');
       filteredStudents.sort((a, b) => a.name.compareTo(b.name));
 
       availableStudents.assignAll(filteredStudents);
     } catch (e) {
+      print('Error fetching available students: $e');
       TSnackBar.showError(
           message: 'Failed to fetch available students: ${e.toString()}');
     } finally {
@@ -139,8 +141,8 @@ class StudentController extends GetxController {
     }
   }
 
-  // Sort available students by the selected option
   void sortAvailableStudents(String option) {
+    print('Sorting available students by: $option');
     sortOption.value = option;
 
     if (option == 'name') {
@@ -150,38 +152,37 @@ class StudentController extends GetxController {
     }
   }
 
-  // Select a student for import// Select a student for import
   void selectStudent(StudentModel student) {
-    // Check if the student is already selected by ID to avoid duplicates
+    print('Selecting student: ${student.id}');
     if (!selectedStudents.any((s) => s.id == student.id)) {
       selectedStudents.add(student);
     }
   }
 
-// Deselect a student
   void deselectStudent(StudentModel student) {
-    // Remove by ID comparison
+    print('Deselecting student: ${student.id}');
     selectedStudents.removeWhere((s) => s.id == student.id);
   }
 
-
-  // Import selected students to the current class
   Future<void> importSelectedStudents() async {
+    print('Importing selected students');
     try {
       if (selectedClass.value == null) {
+        print('No class selected');
         TSnackBar.showError(message: 'No class selected');
         return;
       }
 
       if (selectedStudents.isEmpty) {
+        print('No students selected for import');
         TSnackBar.showInfo(message: 'No students selected for import');
         return;
       }
 
       isLoading.value = true;
 
-      // Add each selected student to the class
       for (final student in selectedStudents) {
+        print('Importing student: ${student.id}');
         await studentService.addStudentToClass(
           name: student.name,
           rollNumber: student.rollNumber,
@@ -189,15 +190,15 @@ class StudentController extends GetxController {
         );
       }
 
-      // Reload students after adding
       await loadStudentsForClass(selectedClass.value!.id);
 
-      // Clear selections
+      print('Imported ${selectedStudents.length} students');
       selectedStudents.clear();
 
       TSnackBar.showSuccess(
           message: 'Successfully imported ${selectedStudents.length} students');
     } catch (e) {
+      print('Error importing students: $e');
       TSnackBar.showError(
           message: 'Failed to import students: ${e.toString()}');
     } finally {

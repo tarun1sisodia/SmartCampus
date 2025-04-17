@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 class TAppbarTheme {
   //Private Constructor preventing instantiation
-  TAppbarTheme._();
+  TAppbarTheme._() {
+    print('TAppbarTheme initialized');
+  }
 
   static final lightAppBarTheme = AppBarTheme(
      // Removes shadow
@@ -34,4 +36,8 @@ class TAppbarTheme {
       color: Colors.white,
     ),
   );
+
+  static void printThemeUsage() {
+    print('TAppbarTheme is being used');
+  }
 }

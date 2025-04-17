@@ -7,12 +7,14 @@ class StudentService {
   // Get all students for a class
   Future<List<StudentModel>> getStudentsForClass(String classId) async {
     try {
+      print('Fetching students for class: $classId');
       final response = await supabase
           .from('class_students')
           .select('*, students(*)')
           .eq('class_id', classId)
           .order('created_at');
 
+      print('Fetched students successfully: $response');
       return response.map<StudentModel>((json) {
         final studentData = json['students'] as Map<String, dynamic>;
 
@@ -32,6 +34,7 @@ class StudentService {
         );
       }).toList();
     } catch (e) {
+      print('Failed to get students for class: $e');
       throw 'Failed to get students: $e';
     }
   }
@@ -43,7 +46,7 @@ class StudentService {
     required String classId,
   }) async {
     try {
-      // First, check if student with this roll number already exists
+      print('Adding student to class: $classId, Name: $name, Roll Number: $rollNumber');
       final existingStudents = await supabase
           .from('students')
           .select()
@@ -52,18 +55,17 @@ class StudentService {
       String studentId;
 
       if (existingStudents.isNotEmpty) {
-        // Student exists, use existing ID
         studentId = existingStudents[0]['id'];
+        print('Student exists with ID: $studentId');
 
-        // Update student name if needed
         if (existingStudents[0]['name'] != name) {
           await supabase
               .from('students')
               .update({'name': name})
               .eq('id', studentId);
+          print('Updated student name to: $name');
         }
       } else {
-        // Create new student
         final studentData = {
           'name': name,
           'roll_number': rollNumber,
@@ -78,9 +80,9 @@ class StudentService {
                 .single();
 
         studentId = response['id'];
+        print('Created new student with ID: $studentId');
       }
 
-      // Check if student is already in this class
       final existingClassStudents = await supabase
           .from('class_students')
           .select()
@@ -88,14 +90,15 @@ class StudentService {
           .eq('student_id', studentId);
 
       if (existingClassStudents.isEmpty) {
-        // Add student to class
         await supabase.from('class_students').insert({
           'class_id': classId,
           'student_id': studentId,
           'created_at': DateTime.now().toIso8601String(),
         });
+        print('Added student to class: $classId');
       }
     } catch (e) {
+      print('Failed to add student to class: $e');
       throw 'Failed to add student to class: $e';
     }
   }
@@ -106,15 +109,16 @@ class StudentService {
     required String classId,
   }) async {
     try {
-      // Delete class-student relationship
+      print('Removing student with ID: $studentId from class: $classId');
       await supabase
           .from('class_students')
           .delete()
           .eq('class_id', classId)
           .eq('student_id', studentId);
 
-      // Note: We don't delete the student record itself, as they might be in other classes
+      print('Removed student from class successfully');
     } catch (e) {
+      print('Failed to remove student from class: $e');
       throw 'Failed to remove student from class: $e';
     }
   }
@@ -122,9 +126,11 @@ class StudentService {
   // Get a student by ID
   Future<StudentModel> getStudentById(String studentId) async {
     try {
+      print('Fetching student with ID: $studentId');
       final response =
           await supabase.from('students').select().eq('id', studentId).single();
 
+      print('Fetched student successfully: $response');
       return StudentModel(
         id: response['id'],
         name: response['name'],
@@ -140,16 +146,18 @@ class StudentService {
                 : null,
       );
     } catch (e) {
+      print('Failed to get student: $e');
       throw 'Failed to get student: $e';
     }
   }
-  // Add this method to the StudentService class
 
-// Get all students
+  // Get all students
   Future<List<StudentModel>> getAllStudents() async {
     try {
+      print('Fetching all students');
       final response = await supabase.from('students').select().order('name');
 
+      print('Fetched all students successfully: $response');
       return response.map<StudentModel>((json) {
         return StudentModel(
           id: json['id'],
@@ -165,9 +173,8 @@ class StudentService {
         );
       }).toList();
     } catch (e) {
+      print('Failed to get all students: $e');
       throw 'Failed to get all students: $e';
     }
   }
-
 }
-

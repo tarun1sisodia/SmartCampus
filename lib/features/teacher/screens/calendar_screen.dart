@@ -1,260 +1,429 @@
+import 'package:attedance__/common/utils/constants/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:table_calendar/table_calendar.dart';
+import '../controllers/calendar_controller.dart';
+import '../../../models/attendance_session_model.dart';
 
 class CalendarScreen extends StatelessWidget {
-  const CalendarScreen({super.key});
+  final CalendarController controller = Get.put(CalendarController());
+
+  CalendarScreen({super.key}) {
+    print('CalendarScreen constructor called');
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar());
-  }
-}
-  // @override
- /* Widget build(BuildContext context) {
-
-    final dark = THelperFunction.isDarkMode(context);
-    final Rx<DateTime> selectedDay = DateTime.now().obs;
-    final Rx<DateTime> focusedDay = DateTime.now().obs;
-    final RxMap<DateTime, List<CalendarEvent>> events = <DateTime, List<CalendarEvent>>{
-      DateTime.now().subtract(const Duration(days: 2)): [
-        CalendarEvent(
-          title: 'Mathematics 101',
-          description: 'Attendance session',
-          time: '9:00 AM - 10:30 AM',
-          type: EventType.attendance,
-        ),
-      ],
-      DateTime.now().subtract(const Duration(days: 1)): [
-        CalendarEvent(
-          title: 'Physics 202',
-          description: 'Attendance session',
-          time: '11:00 AM - 12:30 PM',
-          type: EventType.attendance,
-        ),
-        CalendarEvent(
-          title: 'Faculty Meeting',
-          description: 'Monthly department meeting',
-          time: '2:00 PM - 3:30 PM',
-          type: EventType.meeting,
-        ),
-      ],
-      DateTime.now(): [
-        CalendarEvent(
-          title: 'Computer Science 301',
-          description: 'Attendance session',
-          time: '10:00 AM - 11:30 AM',
-          type: EventType.attendance,
-        ),
-        CalendarEvent(
-          title: 'Report Due',
-          description: 'Submit monthly attendance report',
-          time: '5:00 PM',
-          type: EventType.deadline,
-        ),
-      ],
-      DateTime.now().add(const Duration(days: 1)): [
-        CalendarEvent(
-          title: 'Mathematics 101',
-          description: 'Attendance session',
-          time: '9:00 AM - 10:30 AM',
-          type: EventType.attendance,
-        ),
-      ],
-      DateTime.now().add(const Duration(days: 3)): [
-        CalendarEvent(
-          title: 'Physics 202',
-          description: 'Attendance session',
-          time: '11:00 AM - 12:30 PM',
-          type: EventType.attendance,
-        ),
-      ],
-    }.obs;
-
+    print('Building CalendarScreen');
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Calendar',
-          style: Theme.of(context).textTheme.headlineSmall,
-        ),
+        title: Text('Class Calendar'),
         actions: [
           IconButton(
-            icon: const Icon(Iconsax.calendar_add),
+            icon: const Icon(Icons.filter_list),
             onPressed: () {
-              // Add new event
-              _showAddEventDialog(context, selectedDay.value, events);
+              print('Filter button pressed');
+              _showFilterBottomSheet(context);
             },
           ),
           IconButton(
-            icon: const Icon(Iconsax.calendar_search),
+            icon: const Icon(Icons.refresh),
             onPressed: () {
-              // Search events
+              print('Refresh button pressed');
+              controller.refreshData();
             },
           ),
         ],
       ),
-      body: Column(
-        children: [
-          // Calendar
-          Obx(() => TableCalendar(
-            firstDay: DateTime.utc(2021, 1, 1),
-            lastDay: DateTime.utc(2030, 12, 31),
-            focusedDay: focusedDay.value,
-            selectedDayPredicate: (day) {
-              return isSameDay(selectedDay.value, day);
-            },
-            onDaySelected: (selected, focused) {
-              selectedDay.value = selected;
-              focusedDay.value = focused;
-            },
-            eventLoader: (day) {
-              return events[DateTime(day.year, day.month, day.day)] ?? [];
-            },
-            calendarStyle: CalendarStyle(
-              markersMaxCount: 3,
-              markerDecoration: BoxDecoration(
-                color: dark ? TColors.yellow : TColors.deepPurple,
-                shape: BoxShape.circle,
-              ),
-              selectedDecoration: BoxDecoration(
-                color: dark ? TColors.yellow : TColors.deepPurple,
-                shape: BoxShape.circle,
-              ),
-              todayDecoration: BoxDecoration(
-                color: (dark ? TColors.yellow : TColors.deepPurple).withOpacity(0.5),
+      body: Obx(() {
+        print('Building body with Obx');
+        if (controller.isLoading.value) {
+          print('Showing loading indicator');
+          return CircularProgressIndicator();
+        }
+
+        return Column(
+          children: [
+            _buildActiveSessionsIndicator(),
+            _buildCalendar(),
+            _buildSessionsList(),
+          ],
+        );
+      }),
+    );
+  }
+
+  Widget _buildActiveSessionsIndicator() {
+    print('Building active sessions indicator');
+    return Obx(() {
+      final activeCount = controller.activeSessionsCount.value;
+      print('Active sessions count: $activeCount');
+
+      if (activeCount == 0) {
+        return const SizedBox.shrink();
+      }
+
+      return Container(
+        margin: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+        decoration: BoxDecoration(
+          color: AppColors.primary.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 12,
+              height: 12,
+              decoration: BoxDecoration(
+                color: Colors.green,
                 shape: BoxShape.circle,
               ),
             ),
-            headerStyle: HeaderStyle(
-              formatButtonVisible: false,
-              titleCentered: true,
-              titleTextStyle: Theme.of(context).textTheme.titleLarge!.copyWith(
+            const SizedBox(width: 8),
+            Text(
+              '$activeCount active ${activeCount == 1 ? 'session' : 'sessions'} right now',
+              style: TextStyle(
                 fontWeight: FontWeight.bold,
+                color: AppColors.primary,
               ),
             ),
-          )),
-          
-          const Divider(),
-          
-          // Events for selected day
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: TSizes.defaultSpace,
-              vertical: TSizes.sm,
+          ],
+        ),
+      );
+    });
+  }
+
+  Widget _buildCalendar() {
+    print('Building calendar');
+    return Obx(() {
+      print('Calendar focused day: ${controller.focusedDay.value}');
+      return TableCalendar(
+        firstDay: DateTime.utc(2020, 1, 1),
+        lastDay: DateTime.utc(2030, 12, 31),
+        focusedDay: controller.focusedDay.value,
+        calendarFormat: controller.calendarFormat.value,
+        selectedDayPredicate: (day) {
+          return isSameDay(controller.selectedDay.value, day);
+        },
+        onDaySelected: (selectedDay, focusedDay) {
+          print('Day selected: $selectedDay');
+          controller.selectedDay.value = selectedDay;
+          controller.focusedDay.value = focusedDay;
+        },
+        onFormatChanged: (format) {
+          print('Calendar format changed: $format');
+          controller.calendarFormat.value = format;
+        },
+        onPageChanged: (focusedDay) {
+          print('Calendar page changed: $focusedDay');
+          controller.focusedDay.value = focusedDay;
+        },
+        eventLoader: (day) {
+          final sessions = controller.getSessionsForDay(day);
+          print('Loading events for day: $day, count: ${sessions.length}');
+          return sessions;
+        },
+        calendarStyle: CalendarStyle(
+          markerDecoration: BoxDecoration(
+            color: AppColors.primary,
+            shape: BoxShape.circle,
+          ),
+          todayDecoration: BoxDecoration(
+            color: AppColors.primary.withOpacity(0.5),
+            shape: BoxShape.circle,
+          ),
+          selectedDecoration: BoxDecoration(
+            color: AppColors.primary,
+            shape: BoxShape.circle,
+          ),
+        ),
+      );
+    });
+  }
+
+  Widget _buildSessionsList() {
+    print('Building sessions list');
+    return Obx(() {
+      final sessionsForSelectedDay = controller.getSessionsForDay(
+        controller.selectedDay.value,
+      );
+      print('Sessions for selected day: ${sessionsForSelectedDay.length}');
+
+      if (sessionsForSelectedDay.isEmpty) {
+        return Expanded(
+          child: Center(
+            child: Text(
+              'No sessions scheduled for this day',
+              style: TextStyle(color: Colors.grey),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          ),
+        );
+      }
+
+      return Expanded(
+        child: ListView.builder(
+          padding: const EdgeInsets.all(8.0),
+          itemCount: sessionsForSelectedDay.length,
+          itemBuilder: (context, index) {
+            print('Building session card at index: $index');
+            return _buildSessionCard(sessionsForSelectedDay[index]);
+          },
+        ),
+      );
+    });
+  }
+
+  Widget _buildSessionCard(AttendanceSessionModel session) {
+    print('Building session card for session ID: ${session.id}');
+    final isActive = controller.isSessionActive(session);
+    print('Session active status: $isActive');
+
+    final classDetails = controller.userClasses.firstWhereOrNull(
+      (c) => c.id == session.classId,
+    );
+    print('Class details found: ${classDetails?.subjectName}');
+
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 4.0),
+      elevation: 2.0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8.0),
+        side: isActive
+            ? BorderSide(color: Colors.green, width: 2.0)
+            : BorderSide.none,
+      ),
+      child: ListTile(
+        contentPadding: const EdgeInsets.all(16.0),
+        title: Row(
+          children: [
+            if (isActive)
+              Container(
+                width: 12,
+                height: 12,
+                margin: const EdgeInsets.only(right: 8.0),
+                decoration: BoxDecoration(
+                  color: Colors.green,
+                  shape: BoxShape.circle,
+                ),
+              ),
+            Expanded(
+              child: Text(
+                classDetails?.subjectName ?? 'Unknown Subject',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.primary,
+                ),
+              ),
+            ),
+          ],
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 8.0),
+            if (classDetails?.courseName != null)
+              Text('Course: ${classDetails!.courseName}'),
+            if (classDetails?.year != null) Text('Year: ${classDetails!.year}'),
+            if (classDetails?.section != null)
+              Text('Section: ${classDetails!.section}'),
+            const SizedBox(height: 4.0),
+            Row(
               children: [
-                Obx(() => Text(
-                  'Events for ${DateFormat('MMMM d, yyyy').format(selectedDay.value)}',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                )),
-                TextButton(
-                  onPressed: () {
-                    // View all events
-                  },
-                  child: Text(
-                    'View All',
-                    style: TextStyle(
-                      color: dark ? TColors.yellow : TColors.deepPurple,
-                    ),
-                  ),
+                Icon(Icons.access_time, size: 16.0, color: Colors.grey),
+                const SizedBox(width: 4.0),
+                Text(
+                  session.startTime != null && session.endTime != null
+                      ? '${session.startTime} - ${session.endTime}'
+                      : 'Time not specified',
+                  style: TextStyle(color: Colors.grey[700]),
                 ),
               ],
             ),
-          ),
-          
-          // Event list
-          Expanded(
-            child: Obx(() {
-              final dayEvents = events[DateTime(
-                selectedDay.value.year,
-                selectedDay.value.month,
-                selectedDay.value.day,
-              )] ?? [];
-              
-              if (dayEvents.isEmpty) {
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Iconsax.calendar,
-                        size: 48,
-                        color: dark ? TColors.yellow : TColors.deepPurple,
-                      ),
-                      const SizedBox(height: TSizes.spaceBtwItems),
-                      Text(
-                        'No Events',
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                      const SizedBox(height: TSizes.spaceBtwItems / 2),
-                      Text(
-                        'There are no events scheduled for this day',
-                        style: Theme.of(context).textTheme.bodyMedium,
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: TSizes.spaceBtwItems),
-                      ElevatedButton.icon(
-                        onPressed: () {
-                          // Add new event
-                          _showAddEventDialog(context, selectedDay.value, events);
-                        },
-                        icon: const Icon(Iconsax.add),
-                        label: const Text('Add Event'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: dark ? TColors.yellow : TColors.deepPurple,
-                          foregroundColor: dark ? Colors.black : Colors.white,
-                        ),
-                      ),
-                    ],
+            if (isActive)
+              Container(
+                margin: const EdgeInsets.only(top: 8.0),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8.0,
+                  vertical: 4.0,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.green.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(4.0),
+                ),
+                child: Text(
+                  'ACTIVE NOW',
+                  style: TextStyle(
+                    color: Colors.green,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12.0,
                   ),
-                );
-              }
-              
-              return ListView.builder(
-                padding: const EdgeInsets.symmetric(horizontal: TSizes.defaultSpace),
-                itemCount: dayEvents.length,
-                itemBuilder: (context, index) {
-                  final event = dayEvents[index];
-                  return Card(
-                    margin: const EdgeInsets.only(bottom: TSizes.spaceBtwItems),
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
-                    ),
-                    child: ListTile(
-                      contentPadding: const EdgeInsets.all(TSizes.md),
-                      leading: _buildEventTypeIcon(event.type, dark),
-                      title: Text(
-                        event.title,
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: TSizes.spaceBtwItems / 2),
-                          Text(event.description),
-                          const SizedBox(height: TSizes.spaceBtwItems / 2),
-                          Text(
-                            event.time,
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ],
-                      ),
-                      trailing: IconButton(
-                        icon: const Icon(Iconsax.more),
-                        onPressed: () {
-                          // Show event options
-                          _showEventOptions(context, event, selectedDay.value, events, index);
-                        },
-                      ),
-                      onTap: () {
-                        // Show event details
-                        _showEventDetails(context, event, selectedDay.
+                ),
+              ),
+          ],
+        ),
+        trailing: Icon(Icons.arrow_forward_ios, size: 16.0),
+        onTap: () {
+          print(
+              'Session card tapped, navigating to details. Session ID: ${session.id}');
+          Get.toNamed('/session-details', arguments: {
+            'sessionId': session.id,
+            'classDetails': classDetails,
+          });
+        },
+      ),
+    );
+  }
 
-*/
+  void _showFilterBottomSheet(BuildContext context) {
+    print('Showing filter bottom sheet');
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16.0)),
+      ),
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+            left: 16.0,
+            right: 16.0,
+            top: 16.0,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Filter Sessions',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.close),
+                    onPressed: () {
+                      print('Closing filter bottom sheet');
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16.0),
+              Obx(() => SwitchListTile(
+                    title: Text('Show only my classes'),
+                    value: controller.showOnlyMyClasses.value,
+                    onChanged: (value) {
+                      print('Show only my classes changed: $value');
+                      controller.showOnlyMyClasses.value = value;
+                    },
+                  )),
+              const SizedBox(height: 8.0),
+              Text(
+                'Course',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              Obx(() => DropdownButton<String>(
+                    isExpanded: true,
+                    hint: Text('Select Course'),
+                    value: controller.selectedCourse.value,
+                    items: [
+                      DropdownMenuItem<String>(
+                        value: null,
+                        child: Text('All Courses'),
+                      ),
+                      ...controller.availableCourses.map((course) {
+                        return DropdownMenuItem<String>(
+                          value: course,
+                          child: Text(course),
+                        );
+                      }),
+                    ],
+                    onChanged: (value) {
+                      print('Course filter changed: $value');
+                      controller.selectedCourse.value = value;
+                    },
+                  )),
+              const SizedBox(height: 8.0),
+              Text(
+                'Year',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              Obx(() => DropdownButton<int>(
+                    isExpanded: true,
+                    hint: Text('Select Year'),
+                    value: controller.selectedYear.value,
+                    items: [
+                      DropdownMenuItem<int>(
+                        value: null,
+                        child: Text('All Years'),
+                      ),
+                      ...controller.availableYears.map((year) {
+                        return DropdownMenuItem<int>(
+                          value: year,
+                          child: Text('Year $year'),
+                        );
+                      }),
+                    ],
+                    onChanged: (value) {
+                      print('Year filter changed: $value');
+                      controller.selectedYear.value = value;
+                    },
+                  )),
+              const SizedBox(height: 8.0),
+              Text(
+                'Section',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              Obx(() => DropdownButton<String>(
+                    isExpanded: true,
+                    hint: Text('Select Section'),
+                    value: controller.selectedSection.value,
+                    items: [
+                      DropdownMenuItem<String>(
+                        value: null,
+                        child: Text('All Sections'),
+                      ),
+                      ...controller.availableSections.map((section) {
+                        return DropdownMenuItem<String>(
+                          value: section,
+                          child: Text('Section $section'),
+                        );
+                      }),
+                    ],
+                    onChanged: (value) {
+                      print('Section filter changed: $value');
+                      controller.selectedSection.value = value;
+                    },
+                  )),
+              const SizedBox(height: 16.0),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    print('Resetting all filters');
+                    controller.showOnlyMyClasses.value = false;
+                    controller.selectedCourse.value = null;
+                    controller.selectedYear.value = null;
+                    controller.selectedSection.value = null;
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.grey[300],
+                    foregroundColor: Colors.black,
+                  ),
+                  child: Text('Reset Filters'),
+                ),
+              ),
+              const SizedBox(height: 16.0),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}

@@ -32,6 +32,7 @@ class ChangePasswordController extends GetxController {
 
     // Add listeners to text controllers
     newPasswordController.addListener(() {
+      print('New password changed: ${newPasswordController.text}');
       calculatePasswordStrength(newPasswordController.text);
       if (confirmPasswordController.text.isNotEmpty) {
         checkPasswordsMatch();
@@ -39,6 +40,7 @@ class ChangePasswordController extends GetxController {
     });
 
     confirmPasswordController.addListener(() {
+      print('Confirm password changed: ${confirmPasswordController.text}');
       checkPasswordsMatch();
     });
   }
@@ -53,12 +55,24 @@ class ChangePasswordController extends GetxController {
   }
 
   // Toggle password visibility
-  void toggleCurrentPasswordVisibility() => isCurrentPasswordVisible.toggle();
-  void toggleNewPasswordVisibility() => isNewPasswordVisible.toggle();
-  void toggleConfirmPasswordVisibility() => isConfirmPasswordVisible.toggle();
+  void toggleCurrentPasswordVisibility() {
+    isCurrentPasswordVisible.toggle();
+    print('Current password visibility toggled: ${isCurrentPasswordVisible.value}');
+  }
+
+  void toggleNewPasswordVisibility() {
+    isNewPasswordVisible.toggle();
+    print('New password visibility toggled: ${isNewPasswordVisible.value}');
+  }
+
+  void toggleConfirmPasswordVisibility() {
+    isConfirmPasswordVisible.toggle();
+    print('Confirm password visibility toggled: ${isConfirmPasswordVisible.value}');
+  }
 
   // Calculate password strength
   void calculatePasswordStrength(String password) {
+    print('Calculating password strength for: $password');
     if (password.isEmpty) {
       passwordStrength.value = 0.0;
       passwordStrengthText.value = '';
@@ -94,10 +108,13 @@ class ChangePasswordController extends GetxController {
       passwordStrengthText.value = 'Strong';
       passwordStrengthColor.value = Colors.green;
     }
+
+    print('Password strength: ${passwordStrength.value}, Text: ${passwordStrengthText.value}');
   }
 
   // Check if passwords match
   void checkPasswordsMatch() {
+    print('Checking if passwords match');
     if (confirmPasswordController.text.isEmpty) {
       doPasswordsMatch.value = true;
       return;
@@ -105,10 +122,12 @@ class ChangePasswordController extends GetxController {
 
     doPasswordsMatch.value =
         newPasswordController.text == confirmPasswordController.text;
+    print('Passwords match: ${doPasswordsMatch.value}');
   }
 
   // Validate password fields
   bool validateFields() {
+    print('Validating fields');
     // Check if fields are empty
     if (currentPasswordController.text.isEmpty ||
         newPasswordController.text.isEmpty ||
@@ -144,6 +163,7 @@ class ChangePasswordController extends GetxController {
 
   // Change password
   Future<void> changePassword() async {
+    print('Attempting to change password');
     if (!validateFields()) return;
 
     try {
@@ -203,6 +223,7 @@ class ChangePasswordController extends GetxController {
       );
     } finally {
       isLoading.value = false;
+      print('Password change process completed');
     }
   }
 }

@@ -1,4 +1,7 @@
 class TImageStrings {
+  TImageStrings._() {
+    print('TImageStrings initialized');
+  }
   static const String appLogo = "assets/logos/smartcampus.png";
   static const String darkApplogo = "assets/logos/1.png";
   static const String lightApplogo = "assets/logos/2.png";

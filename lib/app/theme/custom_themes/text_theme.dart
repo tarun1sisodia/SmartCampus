@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 // ignore: camel_case_types
 class TtextTheme {
-  TtextTheme._();
+  TtextTheme._(){
+    print('TtextTheme initialized');
+  }
 
   static TextTheme lighttextTheme = TextTheme(
     labelSmall: TextStyle(fontSize: 12, color: Colors.black),

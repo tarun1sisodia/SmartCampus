@@ -3,6 +3,10 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class THelperFunction {
+  THelperFunction._()
+  {
+    print('THelperFunction initialized');
+  }
   static Color? getColor(String value) {
     switch (value.toLowerCase()) {
       case 'green':

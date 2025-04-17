@@ -11,6 +11,7 @@ class MoreMenuScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('Building MoreMenuScreen');
     final dark = THelperFunction.isDarkMode(context);
 
     return Scaffold(
@@ -30,6 +31,7 @@ class MoreMenuScreen extends StatelessWidget {
         ),
         itemCount: _menuItems.length,
         itemBuilder: (context, index) {
+          print('Building menu item at index: $index');
           final item = _menuItems[index];
           return _buildMenuItem(context, item, dark);
         },
@@ -38,13 +40,16 @@ class MoreMenuScreen extends StatelessWidget {
   }
 
   Widget _buildMenuItem(BuildContext context, MenuItem item, bool dark) {
+    print('Building menu item: ${item.title}');
     return InkWell(
       onTap: () {
+        print('Tapped on menu item: ${item.title}');
         // Use named routes with proper error handling
         try {
+          print('Attempting to navigate to route: ${item.route}');
           Get.toNamed(item.route);
         } catch (e) {
-          ////print('Error navigating to ${item.route}: $e');
+          print('Error navigating to ${item.route}: $e');
           // Show a snackbar with the error
           Get.snackbar(
             'Navigation Error',
@@ -135,5 +140,7 @@ class MenuItem {
     required this.icon,
     required this.color,
     required this.route,
-  });
+  }) {
+    print('Created MenuItem: $title with route: $route');
+  }
 }

@@ -17,6 +17,7 @@ class ClassListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('Building ClassListScreen');
     final dark = THelperFunction.isDarkMode(context);
 
     return Scaffold(
@@ -28,13 +29,19 @@ class ClassListScreen extends StatelessWidget {
         actions: [
           // Add refresh button here
           IconButton(
-            onPressed: () => classController.loadClasses(),
+            onPressed: () {
+              print('Refreshing classes');
+              classController.loadClasses();
+            },
             icon: const Icon(Iconsax.refresh),
             tooltip: 'Refresh',
           ),
           const SizedBox(width: TSizes.sm),
           IconButton(
-            onPressed: () => Get.toNamed(AppRoutes.reports),
+            onPressed: () {
+              print('Navigating to reports');
+              Get.toNamed(AppRoutes.reports);
+            },
             icon: const Icon(Iconsax.chart),
             tooltip: 'Reports',
           ),
@@ -42,16 +49,22 @@ class ClassListScreen extends StatelessWidget {
       ),
 
       floatingActionButton: FloatingActionButton(
-        onPressed: () => Get.to(() => CreateClassScreen()),
+        onPressed: () {
+          print('Opening create class screen');
+          Get.to(() => CreateClassScreen());
+        },
         backgroundColor: dark ? TColors.blue : TColors.yellow,
         child: const Icon(Iconsax.add),
       ),
       body: Obx(() {
+        print('Building Obx body');
         if (classController.isLoading.value) {
+          print('Loading classes...');
           return const Center(child: CircularProgressIndicator());
         }
 
         if (classController.classes.isEmpty) {
+          print('No classes found');
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -74,8 +87,10 @@ class ClassListScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: TSizes.spaceBtwItems),
                 ElevatedButton.icon(
-                  // onPressed: () => _showAddClassDialog(context),
-                  onPressed: () => Get.to(() => CreateClassScreen()),
+                  onPressed: () {
+                    print('Opening create class screen from empty state');
+                    Get.to(() => CreateClassScreen());
+                  },
                   icon: const Icon(Iconsax.add),
                   label: const Text('Create Class'),
                   style: ElevatedButton.styleFrom(
@@ -89,7 +104,10 @@ class ClassListScreen extends StatelessWidget {
         }
 
         return RefreshIndicator(
-          onRefresh: () => classController.loadClasses(),
+          onRefresh: () {
+            print('Refreshing classes via pull-to-refresh');
+            return classController.loadClasses();
+          },
           color: dark ? TColors.yellow : TColors.deepPurple,
           backgroundColor: dark ? TColors.darkerGrey : Colors.white,
           child: ListView.builder(
@@ -97,6 +115,7 @@ class ClassListScreen extends StatelessWidget {
             padding: const EdgeInsets.all(TSizes.defaultSpace),
             itemCount: classController.classes.length,
             itemBuilder: (context, index) {
+              print('Building class item at index $index');
               final classItem = classController.classes[index];
               return Card(
                 margin: const EdgeInsets.only(bottom: TSizes.spaceBtwItems),
@@ -141,8 +160,10 @@ class ClassListScreen extends StatelessWidget {
                           ),
                           IconButton(
                             icon: const Icon(Iconsax.more),
-                            onPressed:
-                                () => _showClassOptions(context, classItem),
+                            onPressed: () {
+                              print('Opening options for class ${classItem.id}');
+                              _showClassOptions(context, classItem);
+                            },
                           ),
                         ],
                       ),
@@ -155,19 +176,19 @@ class ClassListScreen extends StatelessWidget {
                             context,
                             icon: Iconsax.people,
                             label: 'Students',
-                            onTap:
-                                () => Get.to(
-                                  () => AddStudentScreen(classModel: classItem),
-                                ),
+                            onTap: () {
+                              print('Opening students for class ${classItem.id}');
+                              Get.to(() => AddStudentScreen(classModel: classItem));
+                            },
                           ),
                           _buildActionButton(
                             context,
                             icon: Iconsax.calendar_1,
                             label: 'Attendance',
-                            onTap:
-                                () => Get.to(
-                                  () => AttendanceScreen(classModel: classItem),
-                                ),
+                            onTap: () {
+                              print('Opening attendance for class ${classItem.id}');
+                              Get.to(() => AttendanceScreen(classModel: classItem));
+                            },
                           ),
                         ],
                       ),
@@ -182,13 +203,13 @@ class ClassListScreen extends StatelessWidget {
     );
   }
 
-  // Build an action button
   Widget _buildActionButton(
     BuildContext context, {
     required IconData icon,
     required String label,
     required VoidCallback onTap,
   }) {
+    print('Building action button for $label');
     final dark = THelperFunction.isDarkMode(context);
 
     return Expanded(
@@ -209,144 +230,8 @@ class ClassListScreen extends StatelessWidget {
     );
   }
 
-  // Show dialog to add a new class
-  /* void _showAddClassDialog(BuildContext context) {
-    final dark = THelperFunction.isDarkMode(context);
-
-    // Reset form controllers
-    classController.yearController.clear();
-    classController.sectionController.clear();
-
-    Get.dialog(
-      AlertDialog(
-        title: const Text('Create New Class'),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Obx(
-                () => DropdownButtonFormField<String>(
-                  decoration: InputDecoration(
-                    labelText: 'Course',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(
-                        TSizes.inputFieldRadius,
-                      ),
-                    ),
-                  ),
-                  value:
-                      classController.courses.isNotEmpty
-                          ? classController.selectedCourseId.value
-                          : null,
-                  items:
-                      classController.courses.map((course) {
-                        return DropdownMenuItem<String>(
-                          value: course.id,
-                          child: Text(course.name),
-                        );
-                      }).toList(),
-                  onChanged: (value) {
-                    if (value != null) {
-                      classController.selectedCourseId.value = value;
-                    }
-                  },
-                ),
-              ),
-
-              const SizedBox(height: TSizes.spaceBtwInputFields),
-              // Subject dropdown
-              Obx(
-                () => DropdownButtonFormField<String>(
-                  decoration: InputDecoration(
-                    labelText: 'Subject',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(
-                        TSizes.inputFieldRadius,
-                      ),
-                    ),
-                  ),
-                  value:
-                      classController.subjects.isNotEmpty
-                          ? classController.selectedSubjectId.value
-                          : null,
-                  items:
-                      classController.subjects.map((subject) {
-                        return DropdownMenuItem<String>(
-                          value: subject.id,
-                          child: Text(subject.name),
-                        );
-                      }).toList(),
-                  onChanged: (value) {
-                    if (value != null) {
-                      classController.selectedSubjectId.value = value;
-                    }
-                  },
-                ),
-              ),
-
-              const SizedBox(height: TSizes.spaceBtwInputFields),
-
-              // Course dropdown
-
-              // Year field
-              TextField(
-                controller: classController.yearController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  labelText: 'Year',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(
-                      TSizes.inputFieldRadius,
-                    ),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: TSizes.spaceBtwInputFields),
-
-              // Section field
-              TextField(
-                controller: classController.sectionController,
-                decoration: InputDecoration(
-                  labelText: 'Section (Optional)',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(
-                      TSizes.inputFieldRadius,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Get.back(),
-            child: Text(
-              'Cancel',
-              style: TextStyle(color: dark ? Colors.white70 : Colors.black54),
-            ),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              if (classController.validateClassForm()) {
-                classController.createClass();
-                Get.back();
-              }
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: dark ? TColors.yellow : TColors.deepPurple,
-              foregroundColor: dark ? Colors.black : Colors.white,
-            ),
-            child: const Text('Create'),
-          ),
-        ],
-      ),
-    );
-  }
-*/
-  // Show options for a class
   void _showClassOptions(BuildContext context, dynamic classItem) {
+    print('Showing options for class ${classItem.id}');
     final dark = THelperFunction.isDarkMode(context);
 
     Get.bottomSheet(
@@ -369,6 +254,7 @@ class ClassListScreen extends StatelessWidget {
               ),
               title: const Text('Edit Class'),
               onTap: () {
+                print('Opening edit dialog for class ${classItem.id}');
                 Get.back();
                 _showEditClassDialog(context, classItem);
               },
@@ -377,6 +263,7 @@ class ClassListScreen extends StatelessWidget {
               leading: Icon(Iconsax.trash, color: Colors.red),
               title: const Text('Delete Class'),
               onTap: () {
+                print('Opening delete confirmation for class ${classItem.id}');
                 Get.back();
                 _showDeleteConfirmation(context, classItem);
               },
@@ -387,11 +274,10 @@ class ClassListScreen extends StatelessWidget {
     );
   }
 
-  // Show dialog to edit a class
   void _showEditClassDialog(BuildContext context, dynamic classItem) {
+    print('Showing edit dialog for class ${classItem.id}');
     final dark = THelperFunction.isDarkMode(context);
 
-    // Set form controllers with current values
     classController.yearController.text = classItem.year.toString();
     classController.sectionController.text = classItem.section ?? '';
     classController.selectedSubjectId.value = classItem.subjectId;
@@ -417,21 +303,20 @@ class ClassListScreen extends StatelessWidget {
                       ),
                     ),
                     isExpanded: true,
-                    // Ensure the dropdown is expanded to fit the screen
                     value: classController.selectedCourseId.value,
-                    items:
-                        classController.courses.map((course) {
-                          return DropdownMenuItem<String>(
-                            value: course.id,
-                            child: Text(
-                              course.name,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                            ),
-                          );
-                        }).toList(),
+                    items: classController.courses.map((course) {
+                      return DropdownMenuItem<String>(
+                        value: course.id,
+                        child: Text(
+                          course.name,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
+                      );
+                    }).toList(),
                     onChanged: (value) {
                       if (value != null) {
+                        print('Selected course: $value');
                         classController.selectedCourseId.value = value;
                       }
                     },
@@ -439,7 +324,6 @@ class ClassListScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: TSizes.spaceBtwInputFields),
 
-                // Subject dropdown
                 Obx(
                   () => DropdownButtonFormField<String>(
                     decoration: InputDecoration(
@@ -451,32 +335,28 @@ class ClassListScreen extends StatelessWidget {
                       ),
                     ),
                     isExpanded: true,
-
-                    // Ensure the dropdown is expanded to fit the screen
                     value: classController.selectedSubjectId.value,
-                    items:
-                        classController.subjects.map((subject) {
-                          return DropdownMenuItem<String>(
-                            value: subject.id,
-                            child: Text(
-                              subject.name,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                            ),
-                          );
-                        }).toList(),
+                    items: classController.subjects.map((subject) {
+                      return DropdownMenuItem<String>(
+                        value: subject.id,
+                        child: Text(
+                          subject.name,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
+                      );
+                    }).toList(),
                     onChanged: (value) {
                       if (value != null) {
+                        print('Selected subject: $value');
                         classController.selectedSubjectId.value = value;
                       }
                     },
                   ),
                 ),
 
-                // Course dropdown
                 const SizedBox(height: TSizes.spaceBtwInputFields),
 
-                // Year field
                 TextField(
                   controller: classController.yearController,
                   keyboardType: TextInputType.number,
@@ -492,7 +372,6 @@ class ClassListScreen extends StatelessWidget {
 
                 const SizedBox(height: TSizes.spaceBtwInputFields),
 
-                // Section field
                 TextField(
                   controller: classController.sectionController,
                   decoration: InputDecoration(
@@ -518,6 +397,7 @@ class ClassListScreen extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () {
+              print('Attempting to update class ${classItem.id}');
               if (classController.validateClassForm()) {
                 classController.updateClass(classItem.id);
                 Get.back();
@@ -534,8 +414,8 @@ class ClassListScreen extends StatelessWidget {
     );
   }
 
-  // Show delete confirmation dialog
   void _showDeleteConfirmation(BuildContext context, dynamic classItem) {
+    print('Showing delete confirmation for class ${classItem.id}');
     final dark = THelperFunction.isDarkMode(context);
 
     Get.dialog(
@@ -554,6 +434,7 @@ class ClassListScreen extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () {
+              print('Deleting class ${classItem.id}');
               classController.deleteClass(classItem.id);
               Get.back();
             },

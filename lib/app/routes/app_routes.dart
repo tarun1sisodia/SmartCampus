@@ -1,4 +1,5 @@
 import 'package:attedance__/features/splash/splash_screen.dart';
+import 'package:attedance__/features/teacher/controllers/calendar_controller.dart';
 
 import '../../app/bindings/app_bindings.dart';
 import '../../features/authentication/screens/change_password/change_password_screen.dart';
@@ -60,44 +61,63 @@ class AppRoutes {
 
     GetPage(
       name: splash,
-      page: () => SplashScreen(),
+      page: () {
+        print('Navigating to Splash Screen');
+        return SplashScreen();
+      },
       binding: SplashBinding(),
       transition: Transition.fadeIn,
     ),
     GetPage(
       name: onboarding,
-      page: () => Onboarding(),
+      page: () {
+        print('Navigating to Onboarding Screen');
+        return Onboarding();
+      },
       binding: OnboardingBinding(),
       transition: Transition.fadeIn,
     ),
     GetPage(
       name: changePassword,
-      page: () => ChangePasswordScreen(),
+      page: () {
+        print('Navigating to Change Password Screen');
+        return ChangePasswordScreen();
+      },
       binding: ChangePasswordBinding(),
       transition: Transition.rightToLeft,
       transitionDuration: const Duration(milliseconds: 300),
     ),
     GetPage(
       name: login,
-      page: () => Login(),
+      page: () {
+        print('Navigating to Login Screen');
+        return Login();
+      },
       binding: LoginBinding(),
       transition: Transition.fadeIn,
     ),
     GetPage(
       name: signup,
-      page: () => Signup(),
+      page: () {
+        print('Navigating to Signup Screen');
+        return Signup();
+      },
       binding: SignupBinding(),
       transition: Transition.rightToLeft,
     ),
     GetPage(
       name: forgotPassword,
-      page: () => ForgotPasswordScreen(),
+      page: () {
+        print('Navigating to Forgot Password Screen');
+        return ForgotPasswordScreen();
+      },
       binding: ForgotPasswordBinding(),
       transition: Transition.rightToLeft,
     ),
     GetPage(
       name: resetConfirmation,
       page: () {
+        print('Navigating to Reset Password Confirmation Screen');
         final email = Get.arguments as String;
         return ResetPasswordConfirmationScreen(email: email);
       },
@@ -107,6 +127,7 @@ class AppRoutes {
     GetPage(
       name: verifyEmail,
       page: () {
+        print('Navigating to Verify Email Screen');
         final email = Get.arguments as String;
         return VerifyEmailScreen(email: email);
       },
@@ -115,80 +136,118 @@ class AppRoutes {
     ),
     GetPage(
       name: home,
-      page: () => NavigationMenu(),
+      page: () {
+        print('Navigating to Home Screen');
+        return NavigationMenu();
+      },
       binding: HomeBinding(),
       transition: Transition.fadeIn,
     ),
     GetPage(
       name: carouselAttendance,
-      page: () => CarouselAttendanceScreen(),
+      page: () {
+        print('Navigating to Carousel Attendance Screen');
+        return CarouselAttendanceScreen();
+      },
       binding: CarouselAttendanceBinding(),
       transition: Transition.rightToLeft,
       transitionDuration: const Duration(milliseconds: 300),
     ),
     GetPage(
       name: reports,
-      page: () => ReportsScreen(),
+      page: () {
+        print('Navigating to Reports Screen');
+        return ReportsScreen();
+      },
       binding: ReportsBinding(),
       transition: Transition.rightToLeft,
     ),
     GetPage(
       name: message,
-      page: () => const TeacherMessagesScreen(),
+      page: () {
+        print('Navigating to Messages Screen');
+        return const TeacherMessagesScreen();
+      },
       binding: MessagesBinding(),
       transition: Transition.rightToLeft,
     ),
     GetPage(
       name: settings,
-      page: () => const TeacherSettingsScreen(),
+      page: () {
+        print('Navigating to Settings Screen');
+        return const TeacherSettingsScreen();
+      },
       binding: SettingsBinding(),
       transition: Transition.rightToLeft,
     ),
     GetPage(
       name: help,
-      page: () => const HelpScreen(),
+      page: () {
+        print('Navigating to Help Screen');
+        return const HelpScreen();
+      },
       binding: HomeBinding(),
       transition: Transition.rightToLeft,
     ),
     GetPage(
       name: feedback,
-      page: () => const FeedbackScreen(),
+      page: () {
+        print('Navigating to Feedback Screen');
+        return const FeedbackScreen();
+      },
       binding: HomeBinding(),
       transition: Transition.rightToLeft,
     ),
     GetPage(
       name: about,
-      page: () => const AboutScreen(),
+      page: () {
+        print('Navigating to About Screen');
+        return const AboutScreen();
+      },
       binding: HomeBinding(),
       transition: Transition.rightToLeft,
     ),
     GetPage(
       name: import,
-      page: () => const ImportDataScreen(),
+      page: () {
+        print('Navigating to Import Data Screen');
+        return const ImportDataScreen();
+      },
       binding: HomeBinding(),
       transition: Transition.rightToLeft,
     ),
     GetPage(
       name: notifications,
-      page: () => const NotificationsScreen(),
+      page: () {
+        print('Navigating to Notifications Screen');
+        return const NotificationsScreen();
+      },
       binding: HomeBinding(),
       transition: Transition.rightToLeft,
     ),
     GetPage(
-      name: calendar,
-      page: () => const CalendarScreen(),
-      binding: HomeBinding(),
-      transition: Transition.rightToLeft,
+      name: '/calendar',
+      page: () {
+        print('Navigating to Calendar Screen');
+        return CalendarScreen();
+      },
+      binding: BindingsBuilder(() {
+        Get.lazyPut(() => CalendarController());
+      }),
     ),
     GetPage(
       name: attendanceReports,
-      page: () => AttendanceReportsScreen(),
+      page: () {
+        print('Navigating to Attendance Reports Screen');
+        return AttendanceReportsScreen();
+      },
       binding: ReportsBinding(),
       transition: Transition.rightToLeft,
     ),
     GetPage(
       name: studentDetail,
       page: () {
+        print('Navigating to Student Detail Screen');
         final args = Get.arguments as Map<String, dynamic>;
         return StudentDetailScreen(
           student: args['student'],
@@ -200,13 +259,17 @@ class AppRoutes {
     ),
     GetPage(
       name: AppRoutes.allSessions,
-      page: () => AllSessionsScreen(),
+      page: () {
+        print('Navigating to All Sessions Screen');
+        return AllSessionsScreen();
+      },
       binding: AllSessionsBinding(),
     ),
   ];
 
   /// Navigate to the initial route based on app state
   static String getInitialRoute() {
+    print('Getting initial route');
     return splash; // Change this to the desired initial route
   }
 }

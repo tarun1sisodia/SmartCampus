@@ -11,14 +11,18 @@ class AddStudentScreen extends StatelessWidget {
   final ClassModel classModel;
   final studentController = Get.put(StudentController());
 
-  AddStudentScreen({super.key, required this.classModel});
+  AddStudentScreen({super.key, required this.classModel}) {
+    print('AddStudentScreen initialized with class: ${classModel.toString()}');
+  }
 
   @override
   Widget build(BuildContext context) {
+    print('Building AddStudentScreen');
     final dark = THelperFunction.isDarkMode(context);
 
     // Set the selected class when the screen is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      print('Setting selected class in post frame callback');
       studentController.setSelectedClass(classModel);
     });
 
@@ -31,21 +35,30 @@ class AddStudentScreen extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Iconsax.import),
-            onPressed: () => _showImportStudentsDialog(context),
+            onPressed: () {
+              print('Import students button pressed');
+              _showImportStudentsDialog(context);
+            },
           ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _showAddStudentDialog(context),
+        onPressed: () {
+          print('Add student FAB pressed');
+          _showAddStudentDialog(context);
+        },
         backgroundColor: dark ? TColors.blue : TColors.yellow,
         child: const Icon(Iconsax.add),
       ),
       body: Obx(() {
+        print('Building Obx body');
         if (studentController.isLoading.value) {
+          print('Loading state: true');
           return const Center(child: CircularProgressIndicator());
         }
 
         if (studentController.students.isEmpty) {
+          print('No students found');
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -68,7 +81,10 @@ class AddStudentScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: TSizes.spaceBtwItems),
                 ElevatedButton.icon(
-                  onPressed: () => _showAddStudentDialog(context),
+                  onPressed: () {
+                    print('Add student button pressed');
+                    _showAddStudentDialog(context);
+                  },
                   icon: const Icon(Iconsax.add),
                   label: const Text('Add Student'),
                   style: ElevatedButton.styleFrom(
@@ -81,11 +97,13 @@ class AddStudentScreen extends StatelessWidget {
           );
         }
 
+        print('Building student list with ${studentController.students.length} students');
         return ListView.builder(
           padding: const EdgeInsets.all(TSizes.defaultSpace),
           itemCount: studentController.students.length,
           itemBuilder: (context, index) {
             final student = studentController.students[index];
+            print('Building list item for student: ${student.name}');
             return Card(
               margin: const EdgeInsets.only(bottom: TSizes.spaceBtwItems),
               elevation: 2,
@@ -124,6 +142,7 @@ class AddStudentScreen extends StatelessWidget {
                   icon: const Icon(Iconsax.trash),
                   color: Colors.red,
                   onPressed: () {
+                    print('Delete button pressed for student: ${student.name}');
                     Get.dialog(
                       AlertDialog(
                         title: const Text('Remove Student'),
@@ -132,11 +151,15 @@ class AddStudentScreen extends StatelessWidget {
                         ),
                         actions: [
                           TextButton(
-                            onPressed: () => Get.back(),
+                            onPressed: () {
+                              print('Delete dialog cancelled');
+                              Get.back();
+                            },
                             child: const Text('Cancel'),
                           ),
                           ElevatedButton(
                             onPressed: () {
+                              print('Confirming student deletion: ${student.id}');
                               Get.back();
                               studentController.removeStudentFromClass(
                                 student.id,
@@ -161,13 +184,13 @@ class AddStudentScreen extends StatelessWidget {
     );
   }
 
-  // Show dialog to add a new student
   void _showAddStudentDialog(BuildContext context) {
+    print('Opening add student dialog');
     final dark = THelperFunction.isDarkMode(context);
 
-    // Reset form controllers
     studentController.nameController.clear();
     studentController.rollNumberController.clear();
+    print('Form controllers reset');
 
     Get.dialog(
       AlertDialog(
@@ -176,7 +199,6 @@ class AddStudentScreen extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Name field
               TextField(
                 controller: studentController.nameController,
                 decoration: InputDecoration(
@@ -188,10 +210,7 @@ class AddStudentScreen extends StatelessWidget {
                   ),
                 ),
               ),
-
               const SizedBox(height: TSizes.spaceBtwInputFields),
-
-              // Roll Number field
               TextField(
                 controller: studentController.rollNumberController,
                 decoration: InputDecoration(
@@ -207,11 +226,19 @@ class AddStudentScreen extends StatelessWidget {
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Get.back(), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () {
+              print('Add student dialog cancelled');
+              Get.back();
+            },
+            child: const Text('Cancel')
+          ),
           ElevatedButton(
             onPressed: () {
+              print('Attempting to add student');
               if (studentController.nameController.text.trim().isEmpty ||
                   studentController.rollNumberController.text.trim().isEmpty) {
+                print('Validation failed: Empty fields');
                 Get.snackbar(
                   'Error',
                   'Please fill in all fields',
@@ -222,6 +249,7 @@ class AddStudentScreen extends StatelessWidget {
                 return;
               }
 
+              print('Adding student to class');
               studentController.addStudentToClass();
               Get.back();
             },
@@ -236,35 +264,40 @@ class AddStudentScreen extends StatelessWidget {
     );
   }
 
-  // Show dialog to import students
   void _showImportStudentsDialog(BuildContext context) {
+    print('Opening import students dialog');
     final dark = THelperFunction.isDarkMode(context);
 
-    studentController.fetchAvailableStudents(); // Fetch students from Supabase
+    print('Fetching available students');
+    studentController.fetchAvailableStudents();
 
     Get.dialog(
       AlertDialog(
         title: const Text('Import Students'),
-        content: Container(
+        content: SizedBox(
           width: double.maxFinite,
-          height: 400, // Fixed height to prevent layout errors
+          height: 400,
           child: Obx(() {
+            print('Building import dialog content');
             if (studentController.isFetchingAvailableStudents.value) {
+              print('Fetching available students: Loading');
               return const Center(child: CircularProgressIndicator());
             }
 
             if (studentController.availableStudents.isEmpty) {
+              print('No available students found');
               return const Text('No students available for import.');
             }
 
+            print('Building available students list');
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Sorting dropdown
                 DropdownButton<String>(
                   value: studentController.sortOption.value,
                   onChanged: (value) {
                     if (value != null) {
+                      print('Sorting students by: $value');
                       studentController.sortAvailableStudents(value);
                     }
                   },
@@ -280,19 +313,17 @@ class AddStudentScreen extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: TSizes.spaceBtwItems),
-
-                // List of available students
                 Expanded(
                   child: ListView.builder(
                     itemCount: studentController.availableStudents.length,
                     itemBuilder: (context, index) {
-                      final student =
-                          studentController.availableStudents[index];
-                      // Use Obx here to make each checkbox reactive
+                      final student = studentController.availableStudents[index];
+                      print('Building checkbox for student: ${student.name}');
                       return Obx(() => CheckboxListTile(
                             value: studentController.selectedStudents
                                 .any((s) => s.id == student.id),
                             onChanged: (isSelected) {
+                              print('Student selection changed: ${student.name}, selected: $isSelected');
                               if (isSelected == true) {
                                 studentController.selectStudent(student);
                               } else {
@@ -300,8 +331,7 @@ class AddStudentScreen extends StatelessWidget {
                               }
                             },
                             title: Text(student.name),
-                            subtitle:
-                                Text('Roll Number: ${student.rollNumber}'),
+                            subtitle: Text('Roll Number: ${student.rollNumber}'),
                           ));
                     },
                   ),
@@ -311,11 +341,18 @@ class AddStudentScreen extends StatelessWidget {
           }),
         ),
         actions: [
-          TextButton(onPressed: () => Get.back(), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () {
+              print('Import dialog cancelled');
+              Get.back();
+            },
+            child: const Text('Cancel')
+          ),
           Obx(() => ElevatedButton(
                 onPressed: studentController.selectedStudents.isEmpty
-                    ? null // Disable button if no students selected
+                    ? null
                     : () {
+                        print('Importing ${studentController.selectedStudents.length} students');
                         studentController.importSelectedStudents();
                         Get.back();
                       },

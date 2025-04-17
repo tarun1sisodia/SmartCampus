@@ -12,12 +12,17 @@ class EmailSuccess extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("EmailSuccess screen built"); // Debugging print
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
-            onPressed: () => Get.offAll(() => Login()),
+            onPressed: () {
+              print("Clear button pressed"); // Debugging print
+              Get.offAll(() => Login());
+            },
             icon: Icon(CupertinoIcons.clear),
           ),
         ],
@@ -29,10 +34,8 @@ class EmailSuccess extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image(
-                // fit: BoxFit.contain,
                 image: AssetImage(TImageStrings.successemail),
                 width: THelperFunction.screenWidth() * 0.8,
-                // height: THelperFunction.screenHeight() * 0.3,
               ),
               const SizedBox(height: TSizes.spaceBtwSections),
               Text(
@@ -40,7 +43,6 @@ class EmailSuccess extends StatelessWidget {
                 style: Theme.of(context).textTheme.headlineMedium,
                 textAlign: TextAlign.center,
               ),
-
               const SizedBox(height: TSizes.spaceBtwItems),
               Text(
                 TTexts.emailVerified,
@@ -52,11 +54,13 @@ class EmailSuccess extends StatelessWidget {
                 height: TSizes.appBarHeight,
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () => Get.to(() => Login()),
+                  onPressed: () {
+                    print("Continue button pressed"); // Debugging print
+                    Get.to(() => Login());
+                  },
                   child: Text(
                     TTexts.continueText,
                     style: Theme.of(context).textTheme.headlineSmall,
-                    // style: TextStyle().copyWith(fontSize: 15),
                   ),
                 ),
               ),

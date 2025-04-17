@@ -9,15 +9,20 @@ class OnboardingController extends GetxController {
   final pageController = PageController();
   final currentPageIndex = 0.obs;
 
-  void updatePageIndicator(index) => currentPageIndex.value = index;
+  void updatePageIndicator(index) {
+    print('Updating page indicator to index: $index');
+    currentPageIndex.value = index;
+  }
 
   void dotNavigationClick(index) {
+    print('Dot navigation clicked, navigating to index: $index');
     currentPageIndex.value = index;
     pageController.jumpToPage(index);
   }
 
   void nextPage() {
     if (currentPageIndex.value == 2) {
+      print('Onboarding completed, navigating to login page');
       // Mark onboarding as completed
       StorageService.instance.setOnboardingStatus(true);
       
@@ -30,11 +35,13 @@ class OnboardingController extends GetxController {
       Get.offAllNamed(AppRoutes.login);
     } else {
       int page = currentPageIndex.value + 1;
+      print('Navigating to next page: $page');
       pageController.jumpToPage(page);
     }
   }
 
   void skipPage() {
+    print('Skipping onboarding, navigating to login page');
     // Mark onboarding as completed
     StorageService.instance.setOnboardingStatus(true);
     
@@ -47,6 +54,7 @@ class OnboardingController extends GetxController {
     Get.offAllNamed(AppRoutes.login);
   }
 
-
-  void checkIfOnboardingCompleted() {}
+  void checkIfOnboardingCompleted() {
+    print('Checking if onboarding is completed');
+  }
 }

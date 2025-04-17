@@ -11,11 +11,15 @@ class TeacherGreeting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('Building TeacherGreeting widget');
     final dark = THelperFunction.isDarkMode(context);
+    print('Dark mode: $dark');
     final controller = Get.find<TeacherProfileController>();
+    print('Controller initialized');
 
     // Get the current time to display appropriate greeting
     final hour = DateTime.now().hour;
+    print('Current hour: $hour');
     String greeting;
 
     if (hour < 12) {
@@ -25,9 +29,11 @@ class TeacherGreeting extends StatelessWidget {
     } else {
       greeting = 'Good Evening';
     }
+    print('Selected greeting: $greeting');
 
     // Handle null user gracefully
     final userName = controller.user.value?.name ?? 'Teacher';
+    print('User name: $userName');
 
     return Container(
       padding: const EdgeInsets.all(0),
@@ -68,11 +74,14 @@ class TeacherGreeting extends StatelessWidget {
                 ),
                 const SizedBox(height: TSizes.xs),
                 Obx(
-                  () => Text(
-                    userName,
-                    style: Theme.of(context).textTheme.headlineSmall,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                  () {
+                    print('Rebuilding user name text');
+                    return Text(
+                      userName,
+                      style: Theme.of(context).textTheme.headlineSmall,
+                      overflow: TextOverflow.ellipsis,
+                    );
+                  },
                 ),
               ],
             ),
@@ -81,6 +90,7 @@ class TeacherGreeting extends StatelessWidget {
           // Notification icon
           IconButton(
             onPressed: () {
+              print('Notification button pressed');
               // Navigate to notifications
             },
             icon: const Icon(Icons.notifications_outlined),

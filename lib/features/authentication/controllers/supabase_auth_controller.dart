@@ -11,8 +11,6 @@ class SupabaseAuthController extends GetxController {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  // Store these temporarily during the signup process
-  // These will be used after email verification to store user data in the database
   String _tempName = '';
   String _tempPhone = '';
 
@@ -24,11 +22,13 @@ class SupabaseAuthController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    print('SupabaseAuthController initialized');
     loadSavedCredentials();
   }
 
   @override
   void onClose() {
+    print('SupabaseAuthController disposed');
     emailController.dispose();
     passwordController.dispose();
     super.onClose();
@@ -37,6 +37,7 @@ class SupabaseAuthController extends GetxController {
   final rememberMe = false.obs;
 
   void loadSavedCredentials() {
+    print('Loading saved credentials');
     final remember = StorageService.instance.getRememberUserStatus();
     if (remember) {
       final email = StorageService.instance.getUserEmail();
@@ -46,29 +47,29 @@ class SupabaseAuthController extends GetxController {
         emailController.text = email;
         passwordController.text = password;
         rememberMe.value = true;
+        print('Loaded saved credentials: email=$email');
       }
     }
   }
 
   void setRememberMe(bool value) {
+    print('Setting remember me: $value');
     rememberMe.value = value;
     StorageService.instance.setRememberUserStatus(value);
 
     if (value) {
-      // Save current credentials
       StorageService.instance.saveUserCredentials(
         emailController.text,
         passwordController.text,
       );
-      // Show a confirmation message
+      print('Credentials saved');
       TSnackBar.showInfo(
         message: 'Your credentials will be remembered for next login',
         title: 'Remember Me',
       );
     } else {
-      // Clear saved credentials
       StorageService.instance.clearUserCredentials();
-      // Show a confirmation message
+      print('Credentials cleared');
       TSnackBar.showInfo(
         message: 'Your credentials will not be saved',
         title: 'Remember Me',
@@ -77,6 +78,7 @@ class SupabaseAuthController extends GetxController {
   }
 
   Future<void> signInWithEmail() async {
+    print('Signing in with email');
     try {
       isLoading.value = true;
       errorMessage.value = '';
@@ -87,7 +89,7 @@ class SupabaseAuthController extends GetxController {
       );
 
       if (response.user != null) {
-        // Save credentials if remember me is checked
+        print('Sign-in successful: user=${response.user}');
         if (rememberMe.value) {
           StorageService.instance.saveUserCredentials(
             emailController.text.trim(),
@@ -95,17 +97,15 @@ class SupabaseAuthController extends GetxController {
           );
         }
 
-        // Check if user exists in the users table, if not create a new entry
         try {
-          final userData =
-              await supabase
-                  .from('users')
-                  .select()
-                  .eq('id', response.user!.id)
-                  .maybeSingle();
+          final userData = await supabase
+              .from('users')
+              .select()
+              .eq('id', response.user!.id)
+              .maybeSingle();
 
           if (userData == null) {
-            // User doesn't exist in the database yet, create a new entry
+            print('User not found in database, creating new entry');
             await supabase.from('users').insert({
               'id': response.user!.id,
               'name': response.user!.userMetadata?['name'] ?? 'New User',
@@ -115,28 +115,25 @@ class SupabaseAuthController extends GetxController {
             });
           }
         } catch (e) {
-          ////print('Error checking/creating user data: $e');
-          // Continue with navigation even if there's an error here
+          print('Error checking/creating user data: $e');
         }
 
-        // Show success message
         TSnackBar.showSuccess(
           message: 'You have successfully logged in',
           title: 'Welcome Back',
         );
 
-        // Navigate to home using named route
         Get.offAllNamed(AppRoutes.home);
       } else {
         errorMessage.value = 'Authentication failed';
+        print('Authentication failed');
         TSnackBar.showAuthError(
           message: 'Authentication failed. Please try again.',
         );
       }
     } catch (e) {
       errorMessage.value = e.toString();
-
-      // Enhanced error handling with specific messages
+      print('Error during sign-in: $e');
       if (e is AuthException) {
         if (e.message.contains('Invalid login credentials')) {
           TSnackBar.showAuthError(
@@ -162,15 +159,14 @@ class SupabaseAuthController extends GetxController {
   }
 
   Future<void> signUpWithEmail(String name, String phone) async {
+    print('Signing up with email: name=$name, phone=$phone');
     try {
       isLoading.value = true;
       errorMessage.value = '';
 
-      // Store these temporarily for later use after email verification
       _tempName = name;
       _tempPhone = phone;
 
-      // Sign up the user with Supabase Auth
       final response = await supabase.auth.signUp(
         email: emailController.text.trim(),
         password: passwordController.text,
@@ -178,22 +174,21 @@ class SupabaseAuthController extends GetxController {
 
       if (response.user == null) {
         errorMessage.value = 'Registration failed';
+        print('Registration failed');
         TSnackBar.showAuthError(
           message: 'Registration failed. Please try again.',
         );
       } else {
-        // Show success message
+        print('Registration successful: user=${response.user}');
         TSnackBar.showSuccess(
           message:
               'Registration successful! Please check your email to verify your account.',
           title: 'Account Created',
         );
       }
-      // We don't store user data yet - we'll do that after email verification
     } catch (e) {
       errorMessage.value = e.toString();
-
-      // Enhanced error handling with specific messages
+      print('Error during sign-up: $e');
       if (e is AuthException) {
         if (e.message.contains('already registered')) {
           TSnackBar.showAuthError(
@@ -211,25 +206,21 @@ class SupabaseAuthController extends GetxController {
         TSnackBar.showServerError(message: e.toString());
       }
 
-      rethrow; // Rethrow to handle in the UI
+      rethrow;
     } finally {
       isLoading.value = false;
     }
   }
 
-  // This method will be called after email verification is confirmed
   Future<void> storeUserData() async {
+    print('Storing user data');
     try {
       isLoading.value = true;
 
-      // Get the current user
       final user = supabase.auth.currentUser;
 
       if (user != null) {
-        // Log the user data being stored
-        ////print('Storing user data: id=${user.id}, name=$_tempName, email=${user.email}, phone=$_tempPhone',);
-
-        // Store user data in the Supabase table
+        print('Storing user data: id=${user.id}, name=$_tempName, email=${user.email}, phone=$_tempPhone');
         await supabase.from('users').insert({
           'id': user.id,
           'name': _tempName,
@@ -238,18 +229,16 @@ class SupabaseAuthController extends GetxController {
           'created_at': DateTime.now().toIso8601String(),
         });
 
-        // Clear temporary data
         _tempName = '';
         _tempPhone = '';
 
-        // Show success message
         TSnackBar.showSuccess(
           message: 'Your account has been fully set up!',
           title: 'Setup Complete',
         );
       }
     } catch (e) {
-      ////print('Error storing user data: $e');
+      print('Error storing user data: $e');
       errorMessage.value = 'Failed to store user data';
 
       if (e.toString().contains('network') ||
@@ -272,18 +261,18 @@ class SupabaseAuthController extends GetxController {
   }
 
   Future<void> resendVerificationEmail(String email) async {
+    print('Resending verification email to $email');
     try {
       isLoading.value = true;
       await supabase.auth.resend(type: OtpType.signup, email: email);
 
-      // Show success message
       TSnackBar.showSuccess(
         message: 'Verification email has been resent to $email',
         title: 'Email Sent',
       );
     } catch (e) {
       errorMessage.value = e.toString();
-
+      print('Error resending verification email: $e');
       if (e.toString().contains('network') ||
           e.toString().contains('connection')) {
         TSnackBar.showNetworkError();
@@ -305,12 +294,15 @@ class SupabaseAuthController extends GetxController {
     }
   }
 
-  // Check if user's email is verified
   Future<bool> checkEmailVerified() async {
+    print('Checking if email is verified');
     try {
       final response = await supabase.auth.getUser();
-      return response.user?.emailConfirmedAt != null;
+      final isVerified = response.user?.emailConfirmedAt != null;
+      print('Email verification status: $isVerified');
+      return isVerified;
     } catch (e) {
+      print('Error checking email verification: $e');
       TSnackBar.showServerError(
         message: 'Failed to check email verification status: ${e.toString()}',
       );
@@ -319,21 +311,20 @@ class SupabaseAuthController extends GetxController {
   }
 
   Future<void> resetPassword() async {
+    print('Resetting password for email: ${emailController.text.trim()}');
     try {
       isLoading.value = true;
       errorMessage.value = '';
 
-      // Request password reset email from Supabase
       await supabase.auth.resetPasswordForEmail(emailController.text.trim());
 
-      // Show success message
       TSnackBar.showSuccess(
         message: 'Password reset instructions have been sent to your email',
         title: 'Reset Email Sent',
       );
     } catch (e) {
       errorMessage.value = e.toString();
-
+      print('Error resetting password: $e');
       if (e.toString().contains('network') ||
           e.toString().contains('connection')) {
         TSnackBar.showNetworkError();
@@ -348,32 +339,32 @@ class SupabaseAuthController extends GetxController {
         );
       }
 
-      rethrow; // Rethrow to handle in the UI
+      rethrow;
     } finally {
       isLoading.value = false;
     }
   }
 
   Future<void> signOut() async {
+    print('Signing out');
     try {
       isLoading.value = true;
 
       await supabase.auth.signOut();
 
-      // Clear saved credentials if not using remember me
       if (!rememberMe.value) {
         StorageService.instance.clearUserCredentials();
+        print('Cleared saved credentials');
       }
 
-      // Show success message
       TSnackBar.showSuccess(
         message: 'You have been successfully logged out',
         title: 'Signed Out',
       );
 
-      // Navigate to login screen
       Get.offAllNamed(AppRoutes.login);
     } catch (e) {
+      print('Error signing out: $e');
       TSnackBar.showServerError(message: 'Failed to sign out: ${e.toString()}');
     } finally {
       isLoading.value = false;

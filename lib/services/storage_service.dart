@@ -17,76 +17,94 @@ class StorageService extends GetxService {
 
   // Initialize storage service
   Future<StorageService> init() async {
+    print('Initializing StorageService...');
     await GetStorage.init();
+    print('StorageService initialized.');
     return this;
   }
 
   // Onboarding
   bool getOnboardingStatus() {
-    return _storage.read(onboardingCompletedKey) ?? false;
+    print('Getting onboarding status...');
+    final status = _storage.read(onboardingCompletedKey) ?? false;
+    print('Onboarding status: $status');
+    return status;
   }
 
   Future<void> setOnboardingStatus(bool status) async {
+    print('Setting onboarding status to $status...');
     await _storage.write(onboardingCompletedKey, status);
+    print('Onboarding status set.');
   }
 
   // Remember User
   bool getRememberUserStatus() {
-    return _storage.read(rememberUserKey) ?? false;
+    print('Getting remember user status...');
+    final status = _storage.read(rememberUserKey) ?? false;
+    print('Remember user status: $status');
+    return status;
   }
 
   Future<void> setRememberUserStatus(bool status) async {
+    print('Setting remember user status to $status...');
     await _storage.write(rememberUserKey, status);
+    print('Remember user status set.');
   }
 
   // User Credentials
   Future<void> saveUserCredentials(String email, String password) async {
+    print('Saving user credentials...');
     await _storage.write(userEmailKey, email);
     await _storage.write(userPasswordKey, password);
+    print('User credentials saved.');
   }
 
   String? getUserEmail() {
-    return _storage.read(userEmailKey);
+    print('Getting user email...');
+    final email = _storage.read(userEmailKey);
+    print('User email: $email');
+    return email;
   }
 
   String? getUserPassword() {
-    return _storage.read(userPasswordKey);
+    print('Getting user password...');
+    final password = _storage.read(userPasswordKey);
+    print('User password: $password');
+    return password;
   }
 
   Future<void> clearUserCredentials() async {
+    print('Clearing user credentials...');
     await _storage.remove(userEmailKey);
     await _storage.remove(userPasswordKey);
+    print('User credentials cleared.');
   }
 
   // Get cache size in MB - optimized for mobile platforms
   Future<double> getCacheSize() async {
+    print('Calculating cache size...');
     try {
-      // For mobile platforms (Android and iOS)
       if (Platform.isAndroid || Platform.isIOS) {
-        // Get app cache directory
         final cacheDir = await getTemporaryDirectory();
-
-        // Get app documents directory
         final appDocDir = await getApplicationDocumentsDirectory();
-
-        // Calculate total size
         final cacheSize = await _calculateDirectorySize(cacheDir);
         final docSize = await _calculateDirectorySize(appDocDir);
-
-        // Return total size in MB
-        return (cacheSize + docSize) / (1024 * 1024);
+        final totalSize = (cacheSize + docSize) / (1024 * 1024);
+        print('Cache size: $totalSize MB');
+        return totalSize;
       } else {
-        // For other platforms, return an estimated value
-        return 15.0; // Default estimated value
+        print('Returning default cache size for non-mobile platform.');
+        return 15.0;
       }
     } catch (e) {
-      ////print('Error calculating cache size: $e');
+      print('Error calculating cache size: $e');
       return 0.0;
     }
   }
 
   // Calculate directory size - optimized for mobile
   Future<int> _calculateDirectorySize(Directory dir) async {
+    print('Calculating size for directory: ${dir.path}');
     int totalSize = 0;
     try {
       if (await dir.exists()) {
@@ -96,29 +114,29 @@ class StorageService extends GetxService {
         )) {
           try {
             if (entity is File) {
-              totalSize += await entity.length();
+              final fileSize = await entity.length();
+              totalSize += fileSize;
             }
           } catch (e) {
-            // Skip files that can't be accessed
-            ////print('Skipping file: ${entity.path}');
+            print('Skipping file: ${entity.path}');
           }
         }
       }
+      print('Total size for directory ${dir.path}: $totalSize bytes');
       return totalSize;
     } catch (e) {
-      ////print('Error calculating directory size: $e');
+      print('Error calculating directory size: $e');
       return totalSize;
     }
   }
 
   // Clear cache - optimized for mobile platforms
   Future<void> clearCache() async {
+    print('Clearing cache...');
     try {
       if (Platform.isAndroid || Platform.isIOS) {
-        // Clear temp directory
         final tempDir = await getTemporaryDirectory();
         if (await tempDir.exists()) {
-          // On Android and iOS, we can safely clear the entire temp directory
           final entities = await tempDir.list().toList();
           for (var entity in entities) {
             try {
@@ -128,122 +146,93 @@ class StorageService extends GetxService {
                 await entity.delete();
               }
             } catch (e) {
-              ////print('Could not delete ${entity.path}: $e');
+              print('Could not delete ${entity.path}: $e');
             }
           }
         }
 
-        // For Android, also clear the app cache directory
         if (Platform.isAndroid) {
-          try {
-            final appCacheDir = await getExternalCacheDirectories();
-            if (appCacheDir != null) {
-              for (var dir in appCacheDir) {
-                if (await dir.exists()) {
-                  await dir.delete(recursive: true);
-                }
+          final appCacheDir = await getExternalCacheDirectories();
+          if (appCacheDir != null) {
+            for (var dir in appCacheDir) {
+              if (await dir.exists()) {
+                await dir.delete(recursive: true);
               }
             }
-          } catch (e) {
-            ////print('Error clearing Android external cache: $e');
           }
         }
       } else {
-        // For other platforms, just clear the temp directory
         final tempDir = await getTemporaryDirectory();
         if (await tempDir.exists()) {
-          try {
-            // Create a new directory for app-specific cache
-            final appCacheDir = Directory('${tempDir.path}/flutter_cache');
-            if (await appCacheDir.exists()) {
-              await appCacheDir.delete(recursive: true);
-            }
-          } catch (e) {
-            ////print('Error clearing cache on non-mobile platform: $e');
+          final appCacheDir = Directory('${tempDir.path}/flutter_cache');
+          if (await appCacheDir.exists()) {
+            await appCacheDir.delete(recursive: true);
           }
         }
       }
+      print('Cache cleared.');
     } catch (e) {
-      ////print('Error clearing cache: $e');
+      print('Error clearing cache: $e');
     }
   }
 
   // Clear all stored data
   Future<void> clearAllData() async {
+    print('Clearing all data...');
     try {
-      // Clear all data in GetStorage
       await _storage.erase();
-
-      // Clear cache
       await clearCache();
 
-      // On Android, clear app data directories
       if (Platform.isAndroid) {
-        try {
-          final appDir = await getApplicationDocumentsDirectory();
-          final entities = await appDir.list().toList();
-          for (var entity in entities) {
-            try {
-              if (entity is Directory) {
-                await entity.delete(recursive: true);
-              } else if (entity is File) {
-                await entity.delete();
-              }
-            } catch (e) {
-              ////print('Could not delete ${entity.path}: $e');
+        final appDir = await getApplicationDocumentsDirectory();
+        final entities = await appDir.list().toList();
+        for (var entity in entities) {
+          try {
+            if (entity is Directory) {
+              await entity.delete(recursive: true);
+            } else if (entity is File) {
+              await entity.delete();
             }
+          } catch (e) {
+            print('Could not delete ${entity.path}: $e');
           }
-        } catch (e) {
-          ////print('Error clearing Android app data: $e');
         }
       }
-
-      return;
+      print('All data cleared.');
     } catch (e) {
-      ////print('Error clearing all data: $e');
+      print('Error clearing all data: $e');
       rethrow;
     }
   }
 
   // Export user data - optimized for mobile
   Future<void> exportUserData() async {
+    print('Exporting user data...');
     try {
-      // Create a map to store all data
       final Map<String, dynamic> allData = {};
-
-      // Get all keys from GetStorage
       final keys = _storage.getKeys();
 
-      // Manually build the map
       for (final key in keys) {
-        // Skip sensitive data like passwords
         if (key == userPasswordKey) continue;
-
-        // Add the value to our map
         allData[key] = _storage.read(key);
       }
 
-      // Add timestamp and device info
       allData['exportDate'] = DateTime.now().toIso8601String();
       allData['platform'] = Platform.operatingSystem;
       allData['version'] = Platform.operatingSystemVersion;
 
-      // Convert to JSON
       final String jsonData = jsonEncode(allData);
-
-      // Create a temporary file
       final tempDir = await getTemporaryDirectory();
       final file = File('${tempDir.path}/attendance_app_data_export.json');
       await file.writeAsString(jsonData);
 
-      // Share the file
       await Share.shareXFiles([
         XFile(file.path),
       ], text: 'Attendance App Data Export');
 
-      return;
+      print('User data exported successfully.');
     } catch (e) {
-      ////print('Error exporting data: $e');
+      print('Error exporting data: $e');
       rethrow;
     }
   }

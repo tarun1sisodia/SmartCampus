@@ -3,11 +3,17 @@ import 'package:logger/web.dart';
 /// TLogger: A powerful logging utility with multiple severity levels
 /// Built on top of the Logger package with optimized configuration
 class TLogger {
+  // Private constructor to prevent instantiation   
+  TLogger._()
+  {
+    print('TLogger initialized');
+  } // Added private constructor
   // Single logger instance with pretty printing and debug level configuration
   static final Logger _logger = Logger(
     printer: PrettyPrinter(),
     level: Level.debug,
   );
+
 
   /// Debug level logging for development information
   /// Usage: TLogger.debug("Fetching user data...")

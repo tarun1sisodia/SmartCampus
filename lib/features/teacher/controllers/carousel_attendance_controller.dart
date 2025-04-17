@@ -228,21 +228,25 @@ class CarouselAttendanceController extends GetxController {
   /// sets the `hasCompletedAttendance` state variable to true if all students have
   /// been marked, false otherwise.
   void updateStatistics() {
+    // Count number of students marked as present
     presentCount.value =
         attendanceController.students
             .where((s) => s.attendanceStatus == 'present')
             .length;
 
+    // Count number of students marked as absent
     absentCount.value =
         attendanceController.students
             .where((s) => s.attendanceStatus == 'absent')
             .length;
 
+    // Count number of students marked as late
     lateCount.value =
         attendanceController.students
             .where((s) => s.attendanceStatus == 'late')
             .length;
 
+    // Count number of students marked as excused
     excusedCount.value =
         attendanceController.students
             .where((s) => s.attendanceStatus == 'excused')
@@ -253,7 +257,6 @@ class CarouselAttendanceController extends GetxController {
       (s) => s.attendanceStatus != null,
     );
   }
-
   // Mark attendance for current student
   /// Marks the current student with the given attendance status.
   ///

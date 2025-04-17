@@ -1,5 +1,8 @@
 /// A collection of validation functions for forms in the app.
 class Validators {
+  Validators._(){
+    print('Validators initialized');
+  }
   /// Validates an email address.
   /// Returns an error message if invalid, or null if valid.
   static String? validateEmail(String? value) {

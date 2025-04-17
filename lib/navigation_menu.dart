@@ -19,13 +19,17 @@ class NavigationMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('Building NavigationMenu...');
     final dark = THelperFunction.isDarkMode(context);
+    print('Dark mode: $dark');
     final controller = Get.put(NavigationController());
+    print('NavigationController initialized.');
 
     // Check if user is authenticated
     final currentUser = Supabase.instance.client.auth.currentUser;
+    print('Current user: $currentUser');
     if (currentUser == null) {
-      // If not authenticated, show a message and provide a button to go to login
+      print('User not logged in. Showing login prompt.');
       return Scaffold(
         body: Center(
           child: Column(
@@ -52,7 +56,10 @@ class NavigationMenu extends StatelessWidget {
                 width: 200,
                 height: 50,
                 child: ElevatedButton(
-                  onPressed: () => Get.offAllNamed(AppRoutes.login),
+                  onPressed: () {
+                    print('Navigating to login screen...');
+                    Get.offAllNamed(AppRoutes.login);
+                  },
                   child: const Text('Go to Login'),
                 ),
               ),
@@ -64,47 +71,52 @@ class NavigationMenu extends StatelessWidget {
 
     return Scaffold(
       bottomNavigationBar: Obx(
-        () => Container(
-          height: 80,
-          decoration: BoxDecoration(
-            color:
-                dark
-                    ? Theme.of(context).scaffoldBackgroundColor
-                    : Theme.of(context).scaffoldBackgroundColor,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withAlpha(13),
-                blurRadius: 10,
-                offset: const Offset(0, -5),
-              ),
-            ],
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildNavItem(context, 0, Iconsax.home, 'Home', dark, controller),
-              _buildNavItem(
-                context,
-                1,
-                Iconsax.book_1,
-                'Classes',
-                dark,
-                controller,
-              ),
-              _buildNavItem(
-                context,
-                2,
-                Iconsax.timer_1,
-                'Sessions',
-                dark,
-                controller,
-              ),
-              _buildNavItem(context, 3, Iconsax.more, 'More', dark, controller),
-            ],
-          ),
-        ),
+        () {
+          print('Building bottom navigation bar...');
+          return Container(
+            height: 80,
+            decoration: BoxDecoration(
+              color: dark
+                  ? Theme.of(context).scaffoldBackgroundColor
+                  : Theme.of(context).scaffoldBackgroundColor,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withAlpha(13),
+                  blurRadius: 10,
+                  offset: const Offset(0, -5),
+                ),
+              ],
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _buildNavItem(context, 0, Iconsax.home, 'Home', dark, controller),
+                _buildNavItem(
+                  context,
+                  1,
+                  Iconsax.book_1,
+                  'Classes',
+                  dark,
+                  controller,
+                ),
+                _buildNavItem(
+                  context,
+                  2,
+                  Iconsax.timer_1,
+                  'Sessions',
+                  dark,
+                  controller,
+                ),
+                _buildNavItem(context, 3, Iconsax.more, 'More', dark, controller),
+              ],
+            ),
+          );
+        },
       ),
-      body: Obx(() => controller.screens[controller.selectedIndex.value]),
+      body: Obx(() {
+        print('Displaying screen with index: ${controller.selectedIndex.value}');
+        return controller.screens[controller.selectedIndex.value];
+      }),
     );
   }
 
@@ -116,10 +128,15 @@ class NavigationMenu extends StatelessWidget {
     bool dark,
     NavigationController controller,
   ) {
+    print('Building navigation item: $label');
     final isSelected = controller.selectedIndex.value == index;
+    print('Is selected: $isSelected');
 
     return GestureDetector(
-      onTap: () => controller.selectedIndex.value = index,
+      onTap: () {
+        print('Tapped on $label');
+        controller.selectedIndex.value = index;
+      },
       child: Container(
         width: 70,
         color: Colors.transparent,
@@ -128,10 +145,9 @@ class NavigationMenu extends StatelessWidget {
           children: [
             Icon(
               icon,
-              color:
-                  isSelected
-                      ? (dark ? Colors.orange : Colors.deepPurpleAccent)
-                      : (dark ? Colors.grey : Colors.grey),
+              color: isSelected
+                  ? (dark ? Colors.orange : Colors.deepPurpleAccent)
+                  : (dark ? Colors.grey : Colors.grey),
               size: 28,
             ),
             const SizedBox(height: 4),
@@ -144,13 +160,11 @@ class NavigationMenu extends StatelessWidget {
                 child: Text(
                   label,
                   style: TextStyle(
-                    color:
-                        isSelected
-                            ? (dark ? Colors.orange : Colors.deepPurpleAccent)
-                            : Colors.grey,
+                    color: isSelected
+                        ? (dark ? Colors.orange : Colors.deepPurpleAccent)
+                        : Colors.grey,
                     fontSize: 12,
-                    fontWeight:
-                        isSelected ? FontWeight.bold : FontWeight.normal,
+                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                   ),
                 ),
               ),
@@ -168,16 +182,18 @@ class NavigationController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    //print('NavigationController initialized');
+    print('NavigationController initialized.');
     Get.put(TeacherProfileController());
 
     // Initialize the AttendanceController first
     if (!Get.isRegistered<AttendanceController>()) {
+      print('Initializing AttendanceController...');
       Get.put(AttendanceController());
     }
 
     // Then initialize the CarouselAttendanceController
     if (!Get.isRegistered<CarouselAttendanceController>()) {
+      print('Initializing CarouselAttendanceController...');
       Get.put(CarouselAttendanceController());
     }
   }

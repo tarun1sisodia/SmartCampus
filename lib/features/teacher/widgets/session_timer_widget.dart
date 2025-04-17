@@ -15,7 +15,12 @@ class SessionTimerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('Building SessionTimerWidget');
+    print('Remaining Time: $remainingTime');
+    print('Is Session Active: $isSessionActive');
+
     final dark = THelperFunction.isDarkMode(context);
+    print('Is Dark Mode: $dark');
     
     return Row(
       mainAxisSize: MainAxisSize.min,

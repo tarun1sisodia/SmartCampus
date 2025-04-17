@@ -15,6 +15,7 @@ class TeacherSettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('TeacherSettingsScreen build method called');
     final dark = THelperFunction.isDarkMode(context);
     final controller = Get.put(
       TeacherProfileController(),
@@ -43,6 +44,7 @@ class TeacherSettingsScreen extends StatelessWidget {
                   icon: Iconsax.user,
                   dark: dark,
                   onTap: () {
+                    print('Navigating to TeacherProfileScreen');
                     Get.to(() => TeacherProfileScreen());
                   },
                 ),
@@ -51,6 +53,7 @@ class TeacherSettingsScreen extends StatelessWidget {
                   icon: Iconsax.password_check,
                   dark: dark,
                   onTap: () {
+                    print('Navigating to Change Password');
                     Get.toNamed(AppRoutes.changePassword);
                   },
                 ),
@@ -59,11 +62,14 @@ class TeacherSettingsScreen extends StatelessWidget {
                   icon: Iconsax.notification,
                   dark: dark,
                   trailing: Obx(
-                    () => Switch(
-                      value: controller.emailNotifications.value,
-                      onChanged: controller.toggleEmailNotifications,
-                      activeColor: dark ? TColors.yellow : TColors.deepPurple,
-                    ),
+                    () {
+                      print('Email Notifications switch updated');
+                      return Switch(
+                        value: controller.emailNotifications.value,
+                        onChanged: controller.toggleEmailNotifications,
+                        activeColor: dark ? TColors.yellow : TColors.deepPurple,
+                      );
+                    },
                   ),
                 ),
               ],
@@ -82,7 +88,10 @@ class TeacherSettingsScreen extends StatelessWidget {
                   dark: dark,
                   trailing: Switch(
                     value: dark,
-                    onChanged: (_) => controller.toggleTheme(),
+                    onChanged: (_) {
+                      print('Dark Mode toggled');
+                      controller.toggleTheme();
+                    },
                     activeColor: dark ? TColors.yellow : TColors.deepPurple,
                   ),
                 ),
@@ -91,9 +100,13 @@ class TeacherSettingsScreen extends StatelessWidget {
                   icon: Iconsax.language_square,
                   dark: dark,
                   trailing: Obx(
-                    () => Text(languageService.getCurrentLanguageName()),
+                    () {
+                      print('Language updated');
+                      return Text(languageService.getCurrentLanguageName());
+                    },
                   ),
                   onTap: () {
+                    print('Opening Language Selection Dialog');
                     _showLanguageSelectionDialog(context, languageService);
                   },
                 ),
@@ -102,6 +115,7 @@ class TeacherSettingsScreen extends StatelessWidget {
                   icon: Iconsax.notification,
                   dark: dark,
                   onTap: () {
+                    print('Navigating to Notifications');
                     Get.toNamed(AppRoutes.notifications);
                   },
                 ),
@@ -110,6 +124,7 @@ class TeacherSettingsScreen extends StatelessWidget {
                   icon: Iconsax.import_1, // Updated icon for Data Import
                   dark: dark,
                   onTap: () {
+                    print('Navigating to Data Import');
                     Get.toNamed(AppRoutes.import);
                   },
                 ),
@@ -118,6 +133,7 @@ class TeacherSettingsScreen extends StatelessWidget {
                   icon: Iconsax.export_3, // Updated icon for Data Export
                   dark: dark,
                   onTap: () {
+                    print('Navigating to Data Export');
                     Get.toNamed(AppRoutes.export);
                   },
                 ),
@@ -126,6 +142,7 @@ class TeacherSettingsScreen extends StatelessWidget {
                   icon: Iconsax.cloud,
                   dark: dark,
                   onTap: () async {
+                    print('Opening Storage & Data Dialog');
                     // Get the storage service
                     final storageService = Get.find<StorageService>();
 
@@ -153,6 +170,7 @@ class TeacherSettingsScreen extends StatelessWidget {
                               subtitle: Text(cacheSizeText),
                               trailing: TextButton(
                                 onPressed: () {
+                                  print('Clearing Cache');
                                   // Clear cache implementation
                                   Get.back();
                                   Get.dialog(
@@ -169,6 +187,7 @@ class TeacherSettingsScreen extends StatelessWidget {
                                         ElevatedButton(
                                           onPressed: () async {
                                             try {
+                                              print('Clearing Cache Confirmed');
                                               // Show loading indicator
                                               Get.back();
                                               Get.dialog(
@@ -191,6 +210,8 @@ class TeacherSettingsScreen extends StatelessWidget {
                                                     'Cache cleared successfully',
                                               );
                                             } catch (e) {
+                                              print(
+                                                  'Failed to clear cache: ${e.toString()}');
                                               // Dismiss loading dialog
                                               Get.back();
 
@@ -222,6 +243,7 @@ class TeacherSettingsScreen extends StatelessWidget {
                                 'Reset app to default state',
                               ),
                               onTap: () {
+                                print('Clearing All Data');
                                 // Show confirmation dialog for clearing all data
                                 Get.back();
                                 Get.dialog(
@@ -242,6 +264,7 @@ class TeacherSettingsScreen extends StatelessWidget {
                                         ),
                                         onPressed: () async {
                                           try {
+                                            print('Clearing All Data Confirmed');
                                             // Show loading indicator
                                             Get.back();
                                             Get.dialog(
@@ -269,6 +292,8 @@ class TeacherSettingsScreen extends StatelessWidget {
                                               AppRoutes.onboarding,
                                             );
                                           } catch (e) {
+                                            print(
+                                                'Failed to clear all data: ${e.toString()}');
                                             // Dismiss loading dialog
                                             Get.back();
 
@@ -299,6 +324,7 @@ class TeacherSettingsScreen extends StatelessWidget {
                               ),
                               onTap: () async {
                                 try {
+                                  print('Exporting Data');
                                   // Close the dialog
                                   Get.back();
 
@@ -321,6 +347,8 @@ class TeacherSettingsScreen extends StatelessWidget {
                                     message: 'Data exported successfully',
                                   );
                                 } catch (e) {
+                                  print(
+                                      'Failed to export data: ${e.toString()}');
                                   // Dismiss loading dialog
                                   Get.back();
 
@@ -361,6 +389,7 @@ class TeacherSettingsScreen extends StatelessWidget {
                   icon: Iconsax.support,
                   dark: dark,
                   onTap: () {
+                    print('Navigating to Help & Support');
                     Get.toNamed(AppRoutes.help);
                   },
                 ),
@@ -369,6 +398,7 @@ class TeacherSettingsScreen extends StatelessWidget {
                   icon: Iconsax.message_question,
                   dark: dark,
                   onTap: () {
+                    print('Navigating to Feedback');
                     Get.toNamed(AppRoutes.feedback);
                   },
                 ),
@@ -377,6 +407,7 @@ class TeacherSettingsScreen extends StatelessWidget {
                   icon: Iconsax.security_safe,
                   dark: dark,
                   onTap: () {
+                    print('Navigating to Privacy Policy');
                     // Implement privacy policy
                   },
                 ),
@@ -385,6 +416,7 @@ class TeacherSettingsScreen extends StatelessWidget {
                   icon: Iconsax.info_circle,
                   dark: dark,
                   onTap: () {
+                    print('Navigating to About');
                     Get.toNamed(AppRoutes.about);
                   },
                 ),
@@ -399,6 +431,7 @@ class TeacherSettingsScreen extends StatelessWidget {
               height: 55,
               child: ElevatedButton.icon(
                 onPressed: () {
+                  print('Sign Out button pressed');
                   Get.defaultDialog(
                     title: 'Sign Out',
                     middleText: 'Are you sure you want to sign out?',
@@ -406,6 +439,7 @@ class TeacherSettingsScreen extends StatelessWidget {
                     textCancel: 'No',
                     confirmTextColor: Colors.white,
                     onConfirm: () {
+                      print('Sign Out confirmed');
                       Get.back();
                       controller.logout();
                     },
@@ -438,6 +472,7 @@ class TeacherSettingsScreen extends StatelessWidget {
     BuildContext context,
     LanguageService languageService,
   ) {
+    print('Language Selection Dialog opened');
     final dark = THelperFunction.isDarkMode(context);
 
     Get.dialog(
@@ -463,6 +498,7 @@ class TeacherSettingsScreen extends StatelessWidget {
                       )
                     : null,
                 onTap: () {
+                  print('Language changed to ${language['name']}');
                   languageService.changeLanguage(language['code']);
                   Get.back();
                   TSnackBar.showSuccess(message: 'language_changed'.tr);
@@ -483,6 +519,7 @@ class TeacherSettingsScreen extends StatelessWidget {
     required String title,
     required List<Widget> items,
   }) {
+    print('Building section: $title');
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -522,6 +559,7 @@ class TeacherSettingsScreen extends StatelessWidget {
     VoidCallback? onTap,
     required bool dark,
   }) {
+    print('Building profile menu item: $title');
     return ListTile(
       onTap: onTap,
       leading: Container(

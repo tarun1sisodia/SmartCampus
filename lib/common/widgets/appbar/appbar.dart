@@ -27,23 +27,28 @@ class TAppbar extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: TSizes.md),
       child: AppBar(
         automaticallyImplyLeading: false,
-        leading:
-            showBackArrow
+        leading: showBackArrow
+            ? IconButton(
+                onPressed: () {
+                  print('Back arrow pressed');
+                  Get.back();
+                },
+                icon: Icon(
+                  Iconsax.arrow_left,
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                ),
+              )
+            : leadingIcon != null
                 ? IconButton(
-                  onPressed: () => Get.back(),
-                  icon: Icon(
-                    Iconsax.arrow_left,
-                    color: Theme.of(context).scaffoldBackgroundColor,
-                  ),
-                )
-                : leadingIcon != null
-                ? IconButton(
-                  onPressed: () => Get.back(),
-                  icon: Icon(
-                    leadingIcon,
-                    color: Theme.of(context).scaffoldBackgroundColor,
-                  ),
-                )
+                    onPressed: () {
+                      print('Leading icon pressed');
+                      Get.back();
+                    },
+                    icon: Icon(
+                      leadingIcon,
+                      color: Theme.of(context).scaffoldBackgroundColor,
+                    ),
+                  )
                 : null,
         title: title,
         actions: actions,

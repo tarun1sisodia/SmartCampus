@@ -26,31 +26,41 @@ import 'services/language_service.dart';
 ///
 /// Handles auto-login gracefully, continuing app startup even if login fails.
 Future<void> main() async {
-  //Intializing the binding for the app .
+  print('Starting app initialization...');
+  
+  // Intializing the binding for the app.
   WidgetsFlutterBinding.ensureInitialized();
-  await GetStorage.init();
+  print('Flutter bindings initialized.');
 
-  // Initialize Supabase by directly providing the url and key . they are very secret and import for app to run with backend properly .
+  await GetStorage.init();
+  print('GetStorage initialized.');
+
+  // Initialize Supabase by directly providing the url and key.
+  print('Initializing Supabase...');
   await Supabase.initialize(
     url: 'https://lbcmezrvrmbsaqoqxjnm.supabase.co',
     anonKey:
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxiY21lenJ2cm1ic2Fxb3F4am5tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI5ODM1MzQsImV4cCI6MjA1ODU1OTUzNH0.-7_C8OG_ws5qNaCZd6UBIPGl_RYeWsz_EGjixi09zQU',
   );
-  /* await Supabase.initialize(
-    url: 'https://bwlbpkasioafzfbtzytj.supabase.co',
-    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ3bGJwa2FzaW9hZnpmYnR6eXRqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQyMTMzMjQsImV4cCI6MjA1OTc4OTMyNH0.wuknuC3aGiDXP4Yn4SJp6iBP3rgzolr4knrpsT5ha9E',
-  );*/
+  print('Supabase initialized.');
 
   // Initialize services
+  print('Initializing services...');
   await Get.putAsync(() => StorageService().init());
+  print('StorageService initialized.');
   await Get.putAsync(() => FeedbackService().init());
+  print('FeedbackService initialized.');
   await Get.putAsync(() => LanguageService().init());
+  print('LanguageService initialized.');
 
   // Initialize global bindings
+  print('Initializing global bindings...');
   AppBindings.initGlobalBindings();
-  // await attemptAutoLogin();
+  print('Global bindings initialized.');
+
   // Running the App
   final storageService = Get.find<StorageService>();
+  print('StorageService instance retrieved.');
 
   // Check if user credentials are saved
   final bool isLoggedIn =
@@ -58,19 +68,22 @@ Future<void> main() async {
       storageService.getUserEmail() != null &&
       storageService.getUserPassword() != null;
 
+  print('Is user logged in? $isLoggedIn');
+
   if (isLoggedIn) {
     try {
       final email = storageService.getUserEmail()!;
       final password = storageService.getUserPassword()!;
+      print('Attempting auto-login with email: $email');
 
       await Supabase.instance.client.auth.signInWithPassword(
         email: email,
         password: password,
       );
 
-      //print('Auto-login successful');
+      print('Auto-login successful.');
     } catch (e) {
-      //print('Auto-login failed: $e');
+      print('Auto-login failed: $e');
       Get.snackbar(
         'Auto-login Failed',
         'Unable to log in automatically. Please log in manually.',
@@ -78,10 +91,7 @@ Future<void> main() async {
       );
     }
   }
+
+  print('Launching MyApp...');
   runApp(MyApp());
 }
-// Future<void> attemptAutoLogin() async {
-  
-// }
-
-

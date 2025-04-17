@@ -14,7 +14,10 @@ enum MessageSource {
 
 /// A utility class for showing consistent, styled snackbars throughout the app
 class TSnackBar {
-  TSnackBar._(); // Private constructor to prevent instantiation
+  TSnackBar._()
+  {
+    print('TSnackBar initialized');
+  } // Private constructor to prevent instantiation
 
   /// Enum defining different message types
 

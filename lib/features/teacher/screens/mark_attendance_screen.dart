@@ -11,27 +11,31 @@ import '../../../common/utils/helpers/helper_function.dart';
 class MarkAttendanceScreen extends StatelessWidget {
   final attendanceController = Get.find<AttendanceController>();
 
-  MarkAttendanceScreen({super.key});
+  MarkAttendanceScreen({super.key}) {
+    print('MarkAttendanceScreen initialized');
+  }
 
   @override
   Widget build(BuildContext context) {
+    print('Building MarkAttendanceScreen');
     final dark = THelperFunction.isDarkMode(context);
+    print('Dark mode: $dark');
 
-    // Add responsive sizing variables
     final screenSize = MediaQuery.of(context).size;
+    print('Screen size: $screenSize');
     final isTablet = screenSize.width < 1024 && screenSize.width > 500;
     final isMobile = screenSize.width <= 500;
     final isLandscape = DeviceUtility.isLandscapeOrientation(context);
+    print('Device type - isTablet: $isTablet, isMobile: $isMobile, isLandscape: $isLandscape');
 
-    // Calculate responsive padding
-    final cardPadding =
-        isMobile
-            ? (isLandscape ? TSizes.xs : TSizes.sm)
-            : (isLandscape ? TSizes.sm : TSizes.md);
+    final cardPadding = isMobile
+        ? (isLandscape ? TSizes.xs : TSizes.sm)
+        : (isLandscape ? TSizes.sm : TSizes.md);
+    print('Card padding: $cardPadding');
 
-    // Calculate avatar size based on device
-    final avatarSize =
-        isTablet ? (isLandscape ? 18.0 : 22.0) : (isLandscape ? 16.0 : 20.0);
+    final avatarSize = isTablet ? (isLandscape ? 18.0 : 22.0) : (isLandscape ? 16.0 : 20.0);
+    print('Avatar size: $avatarSize');
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -40,33 +44,47 @@ class MarkAttendanceScreen extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            onPressed: () => attendanceController.loadStudentsForSession(),
+            onPressed: () {
+              print('Refresh button pressed');
+              attendanceController.loadStudentsForSession();
+            },
             icon: const Icon(Iconsax.refresh),
           ),
           IconButton(
-            onPressed: () => Get.toNamed(AppRoutes.carouselAttendance),
+            onPressed: () {
+              print('Carousel View button pressed');
+              Get.toNamed(AppRoutes.carouselAttendance);
+            },
             icon: const Icon(Iconsax.slider_horizontal_1),
             tooltip: 'Carousel View',
           ),
         ],
       ),
       floatingActionButton: Obx(
-        () =>
-            attendanceController.isStudentsLoaded.value
-                ? FloatingActionButton.extended(
-                  onPressed: () => _showSubmitConfirmation(context),
+        () {
+          print('FloatingActionButton state updated');
+          return attendanceController.isStudentsLoaded.value
+              ? FloatingActionButton.extended(
+                  onPressed: () {
+                    print('Submit Attendance button pressed');
+                    _showSubmitConfirmation(context);
+                  },
                   backgroundColor: dark ? TColors.blue : TColors.yellow,
                   icon: const Icon(Iconsax.tick_square),
                   label: const Text('Submit Attendance'),
                 )
-                : const SizedBox.shrink(),
+              : const SizedBox.shrink();
+        },
       ),
       body: Obx(() {
+        print('Body state updated');
         if (attendanceController.isLoading.value) {
+          print('Loading students...');
           return const Center(child: CircularProgressIndicator());
         }
 
         if (attendanceController.currentSessionId.value.isEmpty) {
+          print('No session selected');
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -93,6 +111,7 @@ class MarkAttendanceScreen extends StatelessWidget {
         }
 
         if (attendanceController.students.isEmpty) {
+          print('No students found');
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -118,9 +137,10 @@ class MarkAttendanceScreen extends StatelessWidget {
           );
         }
 
+        print('Displaying student list');
         return RefreshIndicator(
           onRefresh: () async {
-            // Show loading indicator while refreshing
+            print('Refreshing student list');
             await attendanceController.loadStudentsForSession();
           },
           color: dark ? TColors.yellow : TColors.deepPurple,
@@ -133,6 +153,7 @@ class MarkAttendanceScreen extends StatelessWidget {
             itemCount: attendanceController.students.length,
             itemBuilder: (context, index) {
               final student = attendanceController.students[index];
+              print('Rendering student: ${student.name}');
               return Card(
                 margin: EdgeInsets.only(
                   bottom: isMobile ? TSizes.xs : TSizes.spaceBtwItems,
@@ -167,12 +188,11 @@ class MarkAttendanceScreen extends StatelessWidget {
                   title: Text(
                     student.name,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      fontSize:
-                          isMobile
+                          fontWeight: FontWeight.bold,
+                          fontSize: isMobile
                               ? (isLandscape ? 14.0 : 16.0)
                               : (isLandscape ? 16.0 : 18.0),
-                    ),
+                        ),
                     maxLines: index > 0 ? 1 : 2,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -180,15 +200,15 @@ class MarkAttendanceScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(
-                        height:
-                            isMobile ? TSizes.xs / 2 : TSizes.spaceBtwItems / 2,
+                        height: isMobile
+                            ? TSizes.xs / 2
+                            : TSizes.spaceBtwItems / 2,
                       ),
                       Text(
                         'Roll Number: ${student.rollNumber}',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          // color: dark ? Colors.white70 : Colors.black54,
-                          fontSize: isMobile ? 10.0 : 12.0,
-                        ),
+                              fontSize: isMobile ? 10.0 : 12.0,
+                            ),
                       ),
                     ],
                   ),
@@ -200,6 +220,7 @@ class MarkAttendanceScreen extends StatelessWidget {
                       color: _getStatusColor(student.attendanceStatus, dark),
                     ),
                     onChanged: (value) {
+                      print('Updating attendance status for ${student.name} to $value');
                       attendanceController.updateStudentStatus(
                         student.id,
                         value!,
@@ -228,6 +249,7 @@ class MarkAttendanceScreen extends StatelessWidget {
   }
 
   Color _getStatusColor(String? status, bool dark) {
+    print('Getting status color for status: $status');
     switch (status) {
       case 'present':
         return Colors.green;
@@ -243,6 +265,7 @@ class MarkAttendanceScreen extends StatelessWidget {
   }
 
   void _showSubmitConfirmation(BuildContext context) {
+    print('Showing submit confirmation dialog');
     final dark = THelperFunction.isDarkMode(context);
 
     Get.dialog(
@@ -252,9 +275,16 @@ class MarkAttendanceScreen extends StatelessWidget {
           'Are you sure you want to submit the attendance for this session?',
         ),
         actions: [
-          TextButton(onPressed: () => Get.back(), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () {
+              print('Cancel button pressed in dialog');
+              Get.back();
+            },
+            child: const Text('Cancel'),
+          ),
           ElevatedButton(
             onPressed: () {
+              print('Submit button pressed in dialog');
               Get.back();
               attendanceController.submitAttendance();
             },

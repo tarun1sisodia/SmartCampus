@@ -24,46 +24,55 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class AppBindings {
   /// Initialize all bindings that should be available globally
   static void initGlobalBindings() {
+    print('Initializing global bindings');
     // Auth controllers with permanent: true will persist throughout the app lifecycle
     Get.put(SupabaseAuthController(), permanent: true);
   }
 
   /// Onboarding bindings
   static void registerOnboardingBindings() {
+    print('Registering onboarding bindings');
     Get.lazyPut(() => OnboardingController(), fenix: true);
   }
   
 
   /// Login bindings
   static void registerLoginBindings() {
+    print('Registering login bindings');
     Get.lazyPut(() => LoginController(), fenix: true);
   }
 
   /// Signup bindings
   static void registerSignupBindings() {
+    print('Registering signup bindings');
     Get.lazyPut(() => SignupController(), fenix: true);
   }
 
   /// Forgot password bindings
   static void registerForgotPasswordBindings() {
+    print('Registering forgot password bindings');
     Get.lazyPut(() => ForgotPasswordController(), fenix: true);
   }
 
   /// Teacher profile bindings
   static void registerTeacherProfileBindings() {
+    print('Registering teacher profile bindings');
     Get.lazyPut(() => TeacherProfileController(), fenix: true);
   }
 
   /// Home screen bindings (includes all controllers needed for the home screen)
   static void registerHomeBindings() {
+    print('Registering home bindings');
     Get.lazyPut(() => TeacherProfileController(), fenix: true);
   }
 
   static void createClassScreen() {
+    print('Creating class screen');
     Get.lazyPut(() => ClassController(), fenix: true);
   }
 
   static void registerChangePasswordBindings() {
+    print('Registering change password bindings');
     Get.lazyPut(() => ChangePasswordController(), fenix: true);
   }
 
@@ -71,6 +80,7 @@ class AppBindings {
 class SplashBinding extends Bindings {
   @override
   void dependencies() {
+    print('Initializing splash bindings');
     // Only initialize services needed for the splash screen
     Get.put(StorageService(), permanent: true);
     // You could also initialize any controllers specific to the splash screen
@@ -82,6 +92,7 @@ class SplashBinding extends Bindings {
 class OnboardingBinding extends Bindings {
   @override
   void dependencies() {
+    print('Initializing onboarding dependencies');
     AppBindings.registerOnboardingBindings();
   }
 }
@@ -89,6 +100,7 @@ class OnboardingBinding extends Bindings {
 class SignupBinding extends Bindings {
   @override
   void dependencies() {
+    print('Initializing signup dependencies');
     // First remove any existing instance to prevent dependency conflicts
     if (Get.isRegistered<SignupController>()) {
       Get.delete<SignupController>(force: true);
@@ -101,6 +113,7 @@ class SignupBinding extends Bindings {
 class LoginBinding extends Bindings {
   @override
   void dependencies() {
+    print('Initializing login dependencies');
     // First remove any existing instance to prevent dependency conflicts
     if (Get.isRegistered<LoginController>()) {
       Get.delete<LoginController>(force: true);
@@ -113,6 +126,7 @@ class LoginBinding extends Bindings {
 class ForgotPasswordBinding extends Bindings {
   @override
   void dependencies() {
+    print('Initializing forgot password dependencies');
     AppBindings.registerForgotPasswordBindings();
   }
 }
@@ -120,6 +134,7 @@ class ForgotPasswordBinding extends Bindings {
 class TeacherProfileBinding extends Bindings {
   @override
   void dependencies() {
+    print('Initializing teacher profile dependencies');
     AppBindings.registerTeacherProfileBindings();
   }
 }
@@ -127,9 +142,11 @@ class TeacherProfileBinding extends Bindings {
 class HomeBinding extends Bindings {
   @override
   void dependencies() {
+    print('Initializing home dependencies');
     // Check if user is authenticated before binding controllers
     final currentUser = Supabase.instance.client.auth.currentUser;
     if (currentUser != null) {
+      print('User authenticated, initializing controllers');
       Get.lazyPut(() => DashboardController(), fenix: true);
       Get.lazyPut(() => ClassController(), fenix: true);
       Get.lazyPut(() => AttendanceController(), fenix: true);
@@ -143,6 +160,7 @@ class HomeBinding extends Bindings {
 class ChangePasswordBinding extends Bindings {
   @override
   void dependencies() {
+    print('Initializing change password dependencies');
     // First remove any existing instance to prevent dependency conflicts
     if (Get.isRegistered<ChangePasswordController>()) {
       Get.delete<ChangePasswordController>(force: true);
@@ -155,6 +173,7 @@ class ChangePasswordBinding extends Bindings {
 class CreateClassScreen extends Bindings {
   @override
   void dependencies() {
+    print('Initializing create class dependencies');
     Get.lazyPut(() => ClassController(), fenix: true);
   }
 }
@@ -163,6 +182,7 @@ class CreateClassScreen extends Bindings {
 class ReportsBinding extends Bindings {
   @override
   void dependencies() {
+    print('Initializing reports dependencies');
     Get.lazyPut(() => AttendanceReportsController(), fenix: true);
   }
 }
@@ -170,6 +190,7 @@ class ReportsBinding extends Bindings {
 class StudentDetailBinding extends Bindings {
   @override
   void dependencies() {
+    print('Initializing student detail dependencies');
     Get.lazyPut(() => StudentDetailController(), fenix: true);
   }
 }
@@ -177,6 +198,7 @@ class StudentDetailBinding extends Bindings {
 class AttendanceBinding extends Bindings {
   @override
   void dependencies() {
+    print('Initializing attendance dependencies');
     Get.lazyPut(() => AttendanceController(), fenix: true);
   }
 }
@@ -185,6 +207,7 @@ class AttendanceBinding extends Bindings {
 class MessagesBinding extends Bindings {
   @override
   void dependencies() {
+    print('Initializing messages dependencies');
     // Don't initialize OnboardingController here!
     // Instead, use the appropriate controller for messages
     // For now, we'll use HomeBinding since it has the necessary controllers
@@ -196,6 +219,7 @@ class MessagesBinding extends Bindings {
 class SettingsBinding extends Bindings {
   @override
   void dependencies() {
+    print('Initializing settings dependencies');
     // Don't initialize OnboardingController here!
     // Instead, use the appropriate controller for settings
     // For now, we'll use HomeBinding since it has the necessary controllers

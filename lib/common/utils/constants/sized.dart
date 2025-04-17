@@ -1,5 +1,7 @@
 class TSizes {
-  TSizes._();
+  TSizes._() {
+    print('TSizes initialized');
+  }
 
   // Padding and margin sizes (reduced)
   static const double xs = 3.0; // was 4.0
