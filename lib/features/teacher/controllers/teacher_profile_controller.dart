@@ -1,13 +1,13 @@
 import 'dart:io';
 
-import 'package:SmartCampus/features/teacher/controllers/dashboard_controller.dart';
-import 'package:SmartCampus/features/teacher/screens/profile_image_view_screen.dart';
-import 'package:SmartCampus/models/user_model.dart';
-import 'package:SmartCampus/app/routes/app_routes.dart';
-import 'package:SmartCampus/services/attendance_service.dart';
-import 'package:SmartCampus/services/class_service.dart';
-import 'package:SmartCampus/common/utils/helpers/snackbar_helper.dart';
-import 'package:SmartCampus/services/storage_service.dart';
+import 'package:attedance__/features/teacher/controllers/dashboard_controller.dart';
+import 'package:attedance__/features/teacher/screens/profile_image_view_screen.dart';
+import 'package:attedance__/models/user_model.dart';
+import 'package:attedance__/app/routes/app_routes.dart';
+import 'package:attedance__/services/attendance_service.dart';
+import 'package:attedance__/services/class_service.dart';
+import 'package:attedance__/common/utils/helpers/snackbar_helper.dart';
+import 'package:attedance__/services/storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';

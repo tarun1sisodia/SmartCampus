@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:SmartCampus/common/utils/constants/colors.dart';
-import 'package:SmartCampus/common/utils/helpers/helper_function.dart';
+import 'package:attedance__/common/utils/constants/colors.dart';
+import 'package:attedance__/common/utils/helpers/helper_function.dart';
 
 class ProfileImageViewScreen extends StatelessWidget {
   final String imageUrl;
