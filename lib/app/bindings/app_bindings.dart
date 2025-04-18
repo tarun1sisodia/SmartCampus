@@ -1,4 +1,6 @@
 import 'package:SmartCampus/features/teacher/controllers/all_sessions_controller.dart';
+import 'package:SmartCampus/features/teacher/controllers/feedback_controller.dart';
+import 'package:SmartCampus/services/feedback_service.dart';
 import 'package:SmartCampus/services/storage_service.dart';
 
 import '../../features/authentication/controllers/change_password_controller.dart';
@@ -72,6 +74,11 @@ class AppBindings {
   static void registerChangePasswordBindings() {
     print('Registering change password bindings');
     Get.lazyPut(() => ChangePasswordController(), fenix: true);
+  }
+
+  static void feedbackDialog() {
+    print('Registering feedback dialog bindings');
+    Get.lazyPut(() => FeedbackController(), fenix: true);
   }
 }
 
@@ -149,7 +156,6 @@ class HomeBinding extends Bindings {
       Get.lazyPut(() => ClassController(), fenix: true);
       Get.lazyPut(() => AttendanceController(), fenix: true);
       Get.lazyPut(() => NavigationController(), fenix: true);
-      // Add this line to initialize CarouselAttendanceController
       Get.lazyPut(() => CarouselAttendanceController(), fenix: true);
     }
   }
@@ -253,6 +259,26 @@ class AllSessionsBinding extends Bindings {
     }
 
     // Initialize the all sessions controller
-    Get.put(AllSessionsController());
+    Get.lazyPut(() => AllSessionsController());
+  }
+}
+
+class FeedbackBinding extends Bindings {
+  @override
+  void dependencies() {
+    print('Initializing feedback dependencies');
+
+    // Initialize FeedbackService
+    if (!Get.isRegistered<FeedbackService>()) {
+      print('Initializing FeedbackService');
+      Get.lazyPut(() => FeedbackService());
+    }
+
+    // Initialize FeedbackController
+    if (Get.isRegistered<FeedbackController>()) {
+      print('FeedbackController already registered, deleting it');
+      Get.delete<FeedbackController>();
+    }
+    Get.lazyPut(() => FeedbackController());
   }
 }

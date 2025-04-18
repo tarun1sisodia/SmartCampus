@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class FeedbackDialog extends StatelessWidget {
-  final FeedbackController controller = Get.find<FeedbackController>();
+  final FeedbackController controller = Get.put(FeedbackController());
 
   FeedbackDialog({super.key}) {
     print('FeedbackDialog initialized');

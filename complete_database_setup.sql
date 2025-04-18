@@ -100,6 +100,7 @@ CREATE TABLE IF NOT EXISTS attendance_records (
 CREATE TABLE IF NOT EXISTS user_feedback (
     id SERIAL PRIMARY KEY,
     user_id UUID REFERENCES users(id) ON DELETE SET NULL,
+    user_email TEXT,
     rating INTEGER NOT NULL CHECK (rating BETWEEN 1 AND 5),
     feedback TEXT,
     created_at TIMESTAMPTZ DEFAULT NOW()

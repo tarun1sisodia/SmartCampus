@@ -1,5 +1,6 @@
 import 'package:SmartCampus/features/splash/splash_screen.dart';
 import 'package:SmartCampus/features/teacher/controllers/calendar_controller.dart';
+import 'package:SmartCampus/features/teacher/screens/feedback_screen.dart';
 
 import '../../app/bindings/app_bindings.dart';
 import '../../features/authentication/screens/change_password/change_password_screen.dart';
@@ -14,7 +15,6 @@ import '../../features/teacher/screens/all_sessions_screen.dart';
 import '../../features/teacher/screens/attendance_reports_screen.dart';
 import '../../features/teacher/screens/calendar_screen.dart';
 import '../../features/teacher/screens/carousel_attendance_screen.dart';
-import '../../features/teacher/screens/feedback_screen.dart';
 import '../../features/teacher/screens/help_screen.dart';
 import '../../features/teacher/screens/import_data_screen.dart';
 import '../../features/teacher/screens/notifications_screen.dart';
@@ -191,7 +191,7 @@ class AppRoutes {
       name: feedback,
       page: () {
         print('Navigating to Feedback Screen');
-        return const FeedbackScreen();
+        return FeedbackScreen();
       },
       binding: HomeBinding(),
       transition: Transition.rightToLeft,
@@ -224,7 +224,7 @@ class AppRoutes {
       transition: Transition.rightToLeft,
     ),
     GetPage(
-      name: '/calendar',
+      name: calendar,
       page: () {
         print('Navigating to Calendar Screen');
         return CalendarScreen();
@@ -256,7 +256,7 @@ class AppRoutes {
       transition: Transition.rightToLeft,
     ),
     GetPage(
-      name: AppRoutes.allSessions,
+      name: allSessions,
       page: () {
         print('Navigating to All Sessions Screen');
         return AllSessionsScreen();
