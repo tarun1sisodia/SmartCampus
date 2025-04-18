@@ -80,7 +80,7 @@ Tracks attendance with detailed information:
    ```
 2. Navigate to the project directory:
    ```bash
-   cd attedance__
+   cd smartcampus
    ```
 3. Update Supabase secrets:
    Replace the placeholder Supabase URL and API key in the `lib/main.dart` file with your own.

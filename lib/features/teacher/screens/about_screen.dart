@@ -47,7 +47,7 @@ class AboutScreen extends StatelessWidget {
             ),
             const SizedBox(height: TSizes.xs),
             Text(
-              'Version 1.0.0',
+              'Version 0.0.1',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: TSizes.spaceBtwSections),

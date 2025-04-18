@@ -25,20 +25,20 @@ class EnvService extends GetxService {
 
   // App Configuration
   String get appName => dotenv.env['APP_NAME'] ?? 'SmartCampus';
-  String get appVersion => dotenv.env['APP_VERSION'] ?? '1.0.0';
+  String get appVersion => dotenv.env['APP_VERSION'] ?? '0.0.1';
   String get appEnvironment => dotenv.env['APP_ENV'] ?? 'development';
   bool get isProduction => appEnvironment == 'production';
   bool get isDevelopment => appEnvironment == 'development';
   bool get isStaging => appEnvironment == 'staging';
 
   // Storage Configuration
-  String get storageEncryptionKey => 
+  String get storageEncryptionKey =>
       dotenv.env['STORAGE_ENCRYPTION_KEY'] ?? 'AttendanceAppSecretKey';
 
   // Feature Flags
-  bool get enableOfflineMode => 
+  bool get enableOfflineMode =>
       dotenv.env['ENABLE_OFFLINE_MODE']?.toLowerCase() == 'true';
-  bool get enablePushNotifications => 
+  bool get enablePushNotifications =>
       dotenv.env['ENABLE_PUSH_NOTIFICATIONS']?.toLowerCase() == 'true';
 
   // Helper method to get any environment variable with a fallback

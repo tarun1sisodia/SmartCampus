@@ -1,6 +1,6 @@
 {
-    "name": "attedance__",
-    "short_name": "attedance__",
+    "name": "smartcampus",
+    "short_name": "smartcampus",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

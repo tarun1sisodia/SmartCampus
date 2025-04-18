@@ -488,7 +488,7 @@ class ReportsScreen extends StatelessWidget {
           fileName: fileName,
         );
 
-        final file = File(outputFile!);
+        final File file = File(outputFile!);
         await file.writeAsBytes(bytes);
         TSnackBar.showSuccess(message: 'PDF saved to: $outputFile');
       }

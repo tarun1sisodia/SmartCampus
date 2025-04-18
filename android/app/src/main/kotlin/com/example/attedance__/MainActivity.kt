@@ -1,4 +1,4 @@
-package com.example.attedance__
+package com.example.smartcampus
 
 import io.flutter.embedding.android.FlutterActivity
 
