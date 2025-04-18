@@ -1,5 +1,5 @@
-import 'package:SmartCampus/common/utils/constants/image_strings.dart';
-import 'package:SmartCampus/services/storage_service.dart';
+import 'package:attedance__/common/utils/constants/image_strings.dart';
+import 'package:attedance__/services/storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';

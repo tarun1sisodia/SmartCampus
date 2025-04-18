@@ -1,13 +1,14 @@
-import 'package:SmartCampus/models/student_model.dart';
-import 'package:SmartCampus/common/utils/constants/colors.dart';
-import 'package:SmartCampus/common/utils/constants/sized.dart';
-import 'package:SmartCampus/common/utils/helpers/helper_function.dart';
+import 'package:attedance__/models/student_model.dart';
+import 'package:attedance__/common/utils/constants/colors.dart';
+import 'package:attedance__/common/utils/constants/sized.dart';
+import 'package:attedance__/common/utils/helpers/helper_function.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import '../controllers/student_detail_controller.dart';
+import '../../../common/utils/extensions/string_extensions.dart';
 
 class StudentDetailScreen extends StatelessWidget {
   final StudentModel student;

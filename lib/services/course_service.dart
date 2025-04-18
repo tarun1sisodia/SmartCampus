@@ -1,4 +1,4 @@
-import 'package:SmartCampus/models/course_model.dart';
+import 'package:attedance__/models/course_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class CourseService {

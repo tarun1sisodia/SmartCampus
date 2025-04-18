@@ -1,7 +1,7 @@
-import 'package:SmartCampus/common/utils/constants/image_strings.dart';
-import 'package:SmartCampus/features/teacher/controllers/teacher_profile_controller.dart';
-import 'package:SmartCampus/features/teacher/screens/teacher_profile_screen.dart';
-import 'package:SmartCampus/features/teacher/screens/teacher_settings_screen.dart';
+import 'package:attedance__/common/utils/constants/image_strings.dart';
+import 'package:attedance__/features/teacher/controllers/teacher_profile_controller.dart';
+import 'package:attedance__/features/teacher/screens/teacher_profile_screen.dart';
+import 'package:attedance__/features/teacher/screens/teacher_settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';

@@ -1,8 +1,8 @@
-import 'package:SmartCampus/app/routes/app_routes.dart';
+import 'package:attedance__/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../services/storage_service.dart';
-import 'package:SmartCampus/common/utils/helpers/snackbar_helper.dart';
+import 'package:attedance__/common/utils/helpers/snackbar_helper.dart';
 
 class OnboardingController extends GetxController {
   static OnboardingController get instance => Get.find();
@@ -25,14 +25,13 @@ class OnboardingController extends GetxController {
       print('Onboarding completed, navigating to login page');
       // Mark onboarding as completed
       StorageService.instance.setOnboardingStatus(true);
-
+      
       // Show welcome message
       TSnackBar.showSuccess(
-        message:
-            'You\'re all set! Let\'s get started with your attendance tracking.',
+        message: 'You\'re all set! Let\'s get started with your attendance tracking.',
         title: 'Setup Complete',
       );
-
+      
       Get.offAllNamed(AppRoutes.login);
     } else {
       int page = currentPageIndex.value + 1;
@@ -45,13 +44,13 @@ class OnboardingController extends GetxController {
     print('Skipping onboarding, navigating to login page');
     // Mark onboarding as completed
     StorageService.instance.setOnboardingStatus(true);
-
+    
     // Show welcome message
     TSnackBar.showInfo(
       message: 'Welcome to the Attendance App! Please log in to continue.',
       title: 'Welcome',
     );
-
+    
     Get.offAllNamed(AppRoutes.login);
   }
 

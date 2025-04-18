@@ -1,7 +1,7 @@
-import 'package:SmartCampus/app/bindings/app_bindings.dart';
-import 'package:SmartCampus/myapp.dart';
-import 'package:SmartCampus/services/feedback_service.dart';
-import 'package:SmartCampus/services/storage_service.dart';
+import 'package:attedance__/app/bindings/app_bindings.dart';
+import 'package:attedance__/myapp.dart';
+import 'package:attedance__/services/feedback_service.dart';
+import 'package:attedance__/services/storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';

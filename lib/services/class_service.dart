@@ -1,4 +1,4 @@
-import 'package:SmartCampus/models/class_model.dart';
+import 'package:attedance__/models/class_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ClassService {
@@ -28,12 +28,14 @@ class ClassService {
           section: json['section'],
           subjectName: subjectData['name'],
           courseName: courseData['name'],
-          createdAt: json['created_at'] != null
-              ? DateTime.parse(json['created_at'])
-              : null,
-          updatedAt: json['updated_at'] != null
-              ? DateTime.parse(json['updated_at'])
-              : null,
+          createdAt:
+              json['created_at'] != null
+                  ? DateTime.parse(json['created_at'])
+                  : null,
+          updatedAt:
+              json['updated_at'] != null
+                  ? DateTime.parse(json['updated_at'])
+                  : null,
         );
       }).toList();
     } catch (e) {
@@ -61,11 +63,12 @@ class ClassService {
         'created_at': DateTime.now().toIso8601String(),
       };
 
-      final response = await supabase
-          .from('classes')
-          .insert(data)
-          .select('*, subjects(*), courses(*)')
-          .single();
+      final response =
+          await supabase
+              .from('classes')
+              .insert(data)
+              .select('*, subjects(*), courses(*)')
+              .single();
 
       print('Class created successfully: $response');
       final subjectData = response['subjects'] as Map<String, dynamic>;
@@ -80,12 +83,14 @@ class ClassService {
         section: response['section'],
         subjectName: subjectData['name'],
         courseName: courseData['name'],
-        createdAt: response['created_at'] != null
-            ? DateTime.parse(response['created_at'])
-            : null,
-        updatedAt: response['updated_at'] != null
-            ? DateTime.parse(response['updated_at'])
-            : null,
+        createdAt:
+            response['created_at'] != null
+                ? DateTime.parse(response['created_at'])
+                : null,
+        updatedAt:
+            response['updated_at'] != null
+                ? DateTime.parse(response['updated_at'])
+                : null,
       );
     } catch (e) {
       print('Error creating class: $e');
@@ -111,12 +116,13 @@ class ClassService {
         'updated_at': DateTime.now().toIso8601String(),
       };
 
-      final response = await supabase
-          .from('classes')
-          .update(data)
-          .eq('id', classId)
-          .select('*, subjects(*), courses(*)')
-          .single();
+      final response =
+          await supabase
+              .from('classes')
+              .update(data)
+              .eq('id', classId)
+              .select('*, subjects(*), courses(*)')
+              .single();
 
       print('Class updated successfully: $response');
       final subjectData = response['subjects'] as Map<String, dynamic>;
@@ -131,12 +137,14 @@ class ClassService {
         section: response['section'],
         subjectName: subjectData['name'],
         courseName: courseData['name'],
-        createdAt: response['created_at'] != null
-            ? DateTime.parse(response['created_at'])
-            : null,
-        updatedAt: response['updated_at'] != null
-            ? DateTime.parse(response['updated_at'])
-            : null,
+        createdAt:
+            response['created_at'] != null
+                ? DateTime.parse(response['created_at'])
+                : null,
+        updatedAt:
+            response['updated_at'] != null
+                ? DateTime.parse(response['updated_at'])
+                : null,
       );
     } catch (e) {
       print('Error updating class: $e');
@@ -149,7 +157,10 @@ class ClassService {
     try {
       print('Deleting class with ID: $classId');
       // First delete all related records
-      await supabase.from('attendance_records').delete().eq(
+      await supabase
+          .from('attendance_records')
+          .delete()
+          .eq(
             'session_id',
             supabase
                 .from('attendance_sessions')
@@ -179,11 +190,12 @@ class ClassService {
   Future<ClassModel> getClassById(String classId) async {
     try {
       print('Fetching class with ID: $classId');
-      final response = await supabase
-          .from('classes')
-          .select('*, subjects(*), courses(*)')
-          .eq('id', classId)
-          .single();
+      final response =
+          await supabase
+              .from('classes')
+              .select('*, subjects(*), courses(*)')
+              .eq('id', classId)
+              .single();
 
       print('Class fetched successfully: $response');
       final subjectData = response['subjects'] as Map<String, dynamic>;
@@ -198,12 +210,14 @@ class ClassService {
         section: response['section'],
         subjectName: subjectData['name'],
         courseName: courseData['name'],
-        createdAt: response['created_at'] != null
-            ? DateTime.parse(response['created_at'])
-            : null,
-        updatedAt: response['updated_at'] != null
-            ? DateTime.parse(response['updated_at'])
-            : null,
+        createdAt:
+            response['created_at'] != null
+                ? DateTime.parse(response['created_at'])
+                : null,
+        updatedAt:
+            response['updated_at'] != null
+                ? DateTime.parse(response['updated_at'])
+                : null,
       );
     } catch (e) {
       print('Error fetching class: $e');
