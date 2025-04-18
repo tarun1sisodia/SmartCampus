@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../models/class_model.dart';
 import '../../../models/attendance_session_model.dart';
@@ -170,6 +171,68 @@ class AllSessionsController extends GetxController {
     } finally {
       isLoading.value = false;
       print('Finished deleting session');
+    }
+  }
+
+  bool isSessionRunning(AttendanceSessionWithClass session) {
+    try {
+      final now = DateTime.now();
+      final sessionDate = session.date;
+
+      // Check if the session is today
+      if (sessionDate.year == now.year &&
+          sessionDate.month == now.month &&
+          sessionDate.day == now.day) {
+        // If there's no specific time, consider it running all day
+        if (session.startTime == null || session.endTime == null) {
+          return true;
+        }
+
+        // Parse the time strings with AM/PM format
+        DateTime? sessionStart;
+        DateTime? sessionEnd;
+
+        // Try to parse different time formats
+        try {
+          // First try format like "10:00 AM"
+          final startDateTime = DateFormat("h:mm a").parse(session.startTime!);
+          final endDateTime = DateFormat("h:mm a").parse(session.endTime!);
+
+          sessionStart = DateTime(now.year, now.month, now.day,
+              startDateTime.hour, startDateTime.minute);
+
+          sessionEnd = DateTime(now.year, now.month, now.day, endDateTime.hour,
+              endDateTime.minute);
+        } catch (e) {
+          // If that fails, try 24-hour format like "14:30"
+          try {
+            final startTimeParts = session.startTime!.split(':');
+            final endTimeParts = session.endTime!.split(':');
+
+            final startHour = int.parse(startTimeParts[0]);
+            final startMinute = int.parse(startTimeParts[1]);
+
+            final endHour = int.parse(endTimeParts[0]);
+            final endMinute = int.parse(endTimeParts[1]);
+
+            sessionStart =
+                DateTime(now.year, now.month, now.day, startHour, startMinute);
+            sessionEnd =
+                DateTime(now.year, now.month, now.day, endHour, endMinute);
+          } catch (e) {
+            print('Error parsing session time: $e');
+            return false;
+          }
+        }
+
+        // Check if current time is between start and end
+        return now.isAfter(sessionStart) && now.isBefore(sessionEnd);
+      }
+
+      return false;
+    } catch (e) {
+      print('Error in isSessionRunning: $e');
+      return false;
     }
   }
 }

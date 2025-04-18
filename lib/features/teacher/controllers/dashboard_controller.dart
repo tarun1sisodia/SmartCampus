@@ -40,7 +40,7 @@ class DashboardController extends GetxController {
     initializeGreeting();
   }
 
-  // Add this method to initialize greeting
+  // initialize greeting
   void initializeGreeting() {
     final baseGreeting = _getTimeBasedGreeting();
     final message = _getRandomGreetingMessage();
@@ -52,7 +52,7 @@ class DashboardController extends GetxController {
     });
   }
 
-  // Add this method to get time-based greeting
+  // get time-based greeting
   String _getTimeBasedGreeting() {
     final hour = DateTime.now().hour;
     if (hour < 12) {
@@ -72,7 +72,7 @@ class DashboardController extends GetxController {
     'Making a difference every day',
   ];
 
-  // Add this method to get a random greeting message
+  // get a random greeting message
   String _getRandomGreetingMessage() {
     final random = Random();
     return _greetingMessages[random.nextInt(_greetingMessages.length)];

@@ -1,4 +1,5 @@
 import 'package:attedance__/app/bindings/app_bindings.dart';
+import 'package:attedance__/common/utils/helpers/snackbar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -141,17 +142,49 @@ class AllSessionsScreen extends StatelessWidget {
                           TSizes.cardRadiusMd,
                         ),
                       ),
+                      // In the ListView.builder, modify the ExpansionTile's leading widget
+// This is around line 144-155 in the file
+
                       child: ExpansionTile(
-                        leading: CircleAvatar(
-                          backgroundColor:
-                              dark ? TColors.yellow : TColors.deepPurple,
-                          child: Text(
-                            DateFormat('d').format(session.date),
-                            style: TextStyle(
-                              color: dark ? Colors.black : Colors.white,
-                              fontWeight: FontWeight.bold,
+                        leading: Stack(
+                          children: [
+                            CircleAvatar(
+                              backgroundColor:
+                                  dark ? TColors.yellow : TColors.deepPurple,
+                              child: Text(
+                                DateFormat('d').format(session.date),
+                                style: TextStyle(
+                                  color: dark ? Colors.black : Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
-                          ),
+                            // Status indicator dot
+                            Builder(builder: (context) {
+                              // Pre-compute the status to avoid calling during build
+                              final isRunning = allSessionsController
+                                  .isSessionRunning(session);
+                              return Positioned(
+                                right: 0,
+                                bottom: 0,
+                                child: Container(
+                                  width: 10,
+                                  height: 10,
+                                  decoration: BoxDecoration(
+                                    color:
+                                        isRunning ? Colors.green : Colors.red,
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: dark
+                                          ? TColors.darkerGrey
+                                          : Colors.white,
+                                      width: 1.5,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }),
+                          ],
                         ),
                         title: Text(
                           session.className ?? 'Unknown Class',
@@ -204,6 +237,17 @@ class AllSessionsScreen extends StatelessWidget {
                                         onPressed: () {
                                           print(
                                               'Standard button pressed for session: ${session.id}');
+                                          // Check if session is running before allowing access
+                                          if (!allSessionsController
+                                              .isSessionRunning(session)) {
+                                            // Show a message that the session is closed
+                                            TSnackBar.showInfo(
+                                              message:
+                                                  'This session is currently closed',
+                                              title: 'Session Closed',
+                                            );
+                                            return; // Don't proceed further
+                                          }
                                           allSessionsController
                                               .attendanceController
                                               .currentSessionId
@@ -240,6 +284,17 @@ class AllSessionsScreen extends StatelessWidget {
                                       onPressed: () {
                                         print(
                                             'Carousel button pressed for session: ${session.id}');
+                                        // Check if session is running before allowing access
+                                        if (!allSessionsController
+                                            .isSessionRunning(session)) {
+                                          // Show a message that the session is closed
+                                          TSnackBar.showInfo(
+                                            message:
+                                                'This session is currently closed',
+                                            title: 'Session Closed',
+                                          );
+                                          return; // Don't proceed further
+                                        }
                                         allSessionsController
                                             .attendanceController
                                             .currentSessionId

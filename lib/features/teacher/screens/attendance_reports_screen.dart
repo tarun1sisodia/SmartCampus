@@ -81,8 +81,8 @@ class AttendanceReportsScreen extends StatelessWidget {
                               ),
                             ),
                             contentPadding: const EdgeInsets.symmetric(
-                              horizontal: TSizes.sm,
-                              vertical: TSizes.sm,
+                              horizontal: TSizes.md,
+                              vertical: TSizes.md,
                             ),
                             isCollapsed: true,
                           ),
@@ -339,254 +339,252 @@ class AttendanceReportsScreen extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(TSizes.sm),
-                    child: Column(
-                      children: [
-                        // Search field
-                        TextField(
-                          onChanged: (value) =>
-                              reportsController.searchQuery.value = value,
-                          decoration: InputDecoration(
-                            hintText: 'Search students...',
-                            prefixIcon: const Icon(Iconsax.search_normal),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(
-                                TSizes.inputFieldRadius,
-                              ),
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: TSizes.md,
-                              vertical: TSizes.sm,
+                  child: Column(
+                    children: [
+                      // Search field
+                      TextField(
+                        onChanged: (value) =>
+                            reportsController.searchQuery.value = value,
+                        decoration: InputDecoration(
+                          hintText:
+                              'Search students by their Roll,Name,Branch...etc',
+                          prefixIcon: const Icon(Iconsax.search_normal),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(
+                              TSizes.inputFieldRadius,
                             ),
                           ),
-                        ),
-                        const SizedBox(height: TSizes.spaceBtwItems),
-
-                        // Table header
-                        Container(
-                          padding: const EdgeInsets.symmetric(
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: TSizes.md,
                             vertical: TSizes.sm,
                           ),
-                          decoration: BoxDecoration(
-                            color: dark
-                                ? const Color.fromARGB(255, 24, 117, 112)
-                                : const Color.fromARGB(255, 36, 11, 146),
-                            borderRadius: BorderRadius.circular(
-                              TSizes.borderRadiusSm,
-                            ),
-                          ),
-                          child: Row(
-                            children: [
-                              const SizedBox(width: TSizes.sm),
-                              Expanded(
-                                flex: 3,
-                                child: Text(
-                                  'Student',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleSmall
-                                      ?.copyWith(fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Text(
-                                  'Present',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleSmall
-                                      ?.copyWith(fontWeight: FontWeight.normal),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Text(
-                                  'Absent',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleSmall
-                                      ?.copyWith(fontWeight: FontWeight.normal),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Text(
-                                  'Late',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleSmall
-                                      ?.copyWith(fontWeight: FontWeight.normal),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Text(
-                                  '%',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleSmall
-                                      ?.copyWith(fontWeight: FontWeight.normal),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ],
+                        ),
+                      ),
+                      const SizedBox(height: TSizes.spaceBtwItems),
+
+                      // Table header
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: TSizes.sm,
+                        ),
+                        decoration: BoxDecoration(
+                          color: dark
+                              ? const Color.fromARGB(255, 24, 117, 112)
+                              : const Color.fromARGB(255, 36, 11, 146),
+                          borderRadius: BorderRadius.circular(
+                            TSizes.borderRadiusSm,
                           ),
                         ),
-
-                        // Table rows
-                        Obx(() {
-                          final filteredStudents =
-                              reportsController.students.where((student) {
-                            return student.name.toLowerCase().contains(
-                                  reportsController.searchQuery.value
-                                      .toLowerCase(),
-                                );
-                          }).toList();
-
-                          if (filteredStudents.isEmpty) {
-                            return Padding(
-                              padding: const EdgeInsets.all(
-                                TSizes.defaultSpace,
+                        child: Row(
+                          children: [
+                            const SizedBox(width: TSizes.sm),
+                            Expanded(
+                              flex: 3,
+                              child: Text(
+                                'Student\'s name',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleSmall
+                                    ?.copyWith(fontWeight: FontWeight.bold),
                               ),
-                              child: Center(
-                                child: Text(
-                                  'No students found',
-                                  style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: Text(
+                                'P',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleSmall
+                                    ?.copyWith(fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: Text(
+                                'A',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleSmall
+                                    ?.copyWith(fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: Text(
+                                'L',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleSmall
+                                    ?.copyWith(fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: Text(
+                                '%',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleSmall
+                                    ?.copyWith(fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      // Table rows
+                      Obx(() {
+                        final filteredStudents =
+                            reportsController.students.where((student) {
+                          return student.name.toLowerCase().contains(
+                                reportsController.searchQuery.value
+                                    .toLowerCase(),
+                              );
+                        }).toList();
+
+                        if (filteredStudents.isEmpty) {
+                          return Padding(
+                            padding: const EdgeInsets.all(
+                              TSizes.defaultSpace,
+                            ),
+                            child: Center(
+                              child: Text(
+                                'No students found',
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
+                            ),
+                          );
+                        }
+
+                        return ListView.separated(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: filteredStudents.length,
+                          separatorBuilder: (context, index) =>
+                              const Divider(height: 1),
+                          itemBuilder: (context, index) {
+                            final student = filteredStudents[index];
+                            final stats =
+                                reportsController.studentStats[student.id];
+
+                            if (stats == null) return const SizedBox.shrink();
+
+                            final presentCount = stats['presentCount'] as int;
+                            final absentCount = stats['absentCount'] as int;
+                            final lateCount = stats['lateCount'] as int;
+                            final attendancePercentage =
+                                stats['attendancePercentage'] as double;
+
+                            return InkWell(
+                              onTap: () => reportsController
+                                  .navigateToStudentDetail(student),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: TSizes.sm,
+                                ),
+                                child: Row(
+                                  children: [
+                                    const SizedBox(width: TSizes.sm),
+                                    Expanded(
+                                      flex: 3,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            student.name,
+                                            style: Theme.of(
+                                              context,
+                                            ).textTheme.bodyLarge?.copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                          ),
+                                          Text(
+                                            'Roll: ${student.rollNumber}',
+                                            style: Theme.of(
+                                              context,
+                                            ).textTheme.bodySmall,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: Text(
+                                        presentCount.toString(),
+                                        style: Theme.of(
+                                          context,
+                                        ).textTheme.bodyMedium?.copyWith(
+                                              color: Colors.green,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: Text(
+                                        absentCount.toString(),
+                                        style: Theme.of(
+                                          context,
+                                        ).textTheme.bodyMedium?.copyWith(
+                                              color: Colors.red,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: Text(
+                                        lateCount.toString(),
+                                        style: Theme.of(
+                                          context,
+                                        ).textTheme.bodyMedium?.copyWith(
+                                              color: Colors.orange,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 8,
+                                          vertical: 4,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: _getAttendanceColor(
+                                            attendancePercentage,
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
+                                        ),
+                                        child: Text(
+                                          '${attendancePercentage.toStringAsFixed(1)}%',
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 12,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             );
-                          }
-
-                          return ListView.separated(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: filteredStudents.length,
-                            separatorBuilder: (context, index) =>
-                                const Divider(height: 1),
-                            itemBuilder: (context, index) {
-                              final student = filteredStudents[index];
-                              final stats =
-                                  reportsController.studentStats[student.id];
-
-                              if (stats == null) return const SizedBox.shrink();
-
-                              final presentCount = stats['presentCount'] as int;
-                              final absentCount = stats['absentCount'] as int;
-                              final lateCount = stats['lateCount'] as int;
-                              final attendancePercentage =
-                                  stats['attendancePercentage'] as double;
-
-                              return InkWell(
-                                onTap: () => reportsController
-                                    .navigateToStudentDetail(student),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: TSizes.sm,
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      const SizedBox(width: TSizes.sm),
-                                      Expanded(
-                                        flex: 3,
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              student.name,
-                                              style: Theme.of(
-                                                context,
-                                              ).textTheme.bodyLarge?.copyWith(
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                            ),
-                                            Text(
-                                              'Roll: ${student.rollNumber}',
-                                              style: Theme.of(
-                                                context,
-                                              ).textTheme.bodySmall,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Expanded(
-                                        flex: 1,
-                                        child: Text(
-                                          presentCount.toString(),
-                                          style: Theme.of(
-                                            context,
-                                          ).textTheme.bodyMedium?.copyWith(
-                                                color: Colors.green,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ),
-                                      Expanded(
-                                        flex: 1,
-                                        child: Text(
-                                          absentCount.toString(),
-                                          style: Theme.of(
-                                            context,
-                                          ).textTheme.bodyMedium?.copyWith(
-                                                color: Colors.red,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ),
-                                      Expanded(
-                                        flex: 1,
-                                        child: Text(
-                                          lateCount.toString(),
-                                          style: Theme.of(
-                                            context,
-                                          ).textTheme.bodyMedium?.copyWith(
-                                                color: Colors.orange,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ),
-                                      Expanded(
-                                        flex: 1,
-                                        child: Container(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 8,
-                                            vertical: 4,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: _getAttendanceColor(
-                                              attendancePercentage,
-                                            ),
-                                            borderRadius: BorderRadius.circular(
-                                              12,
-                                            ),
-                                          ),
-                                          child: Text(
-                                            '${attendancePercentage.toStringAsFixed(1)}%',
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 12,
-                                            ),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          );
-                        }),
-                      ],
-                    ),
+                          },
+                        );
+                      }),
+                    ],
                   ),
                 ),
               ] else if (!reportsController.isLoading.value) ...[

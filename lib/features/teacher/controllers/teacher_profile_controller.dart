@@ -24,7 +24,7 @@ class TeacherProfileController extends GetxController {
   final averageAttendance = 0.0.obs;
   final isStatsLoading = false.obs;
 
-  // Add this method to fetch statistics
+  // fetch statistics
   Future<void> loadTeacherStats() async {
     try {
       isStatsLoading.value = true;
@@ -152,12 +152,11 @@ class TeacherProfileController extends GetxController {
 
       // Try to fetch user data from the users table
       try {
-        final userData =
-            await supabase
-                .from('users')
-                .select()
-                .eq('id', currentUser.id)
-                .maybeSingle();
+        final userData = await supabase
+            .from('users')
+            .select()
+            .eq('id', currentUser.id)
+            .maybeSingle();
 
         if (userData != null) {
           // User exists in the database
@@ -237,14 +236,11 @@ class TeacherProfileController extends GetxController {
       }
 
       // Update user data in the users table
-      await supabase
-          .from('users')
-          .update({
-            'name': nameController.text.trim(),
-            'phone': phoneController.text.trim(),
-            'updated_at': DateTime.now().toIso8601String(),
-          })
-          .eq('id', currentUser.id);
+      await supabase.from('users').update({
+        'name': nameController.text.trim(),
+        'phone': phoneController.text.trim(),
+        'updated_at': DateTime.now().toIso8601String(),
+      }).eq('id', currentUser.id);
 
       // Refresh user data
       await loadUserData();
@@ -325,7 +321,7 @@ class TeacherProfileController extends GetxController {
         source: source,
         maxWidth: 512,
         maxHeight: 512,
-        imageQuality: 75,
+        imageQuality: 100,
       );
 
       if (image == null) {
@@ -345,15 +341,13 @@ class TeacherProfileController extends GetxController {
           .upload(filePath, file, fileOptions: const FileOptions(upsert: true));
 
       // Get the public URL
-      final imageUrl = supabase.storage
-          .from('profile_images')
-          .getPublicUrl(filePath);
+      final imageUrl =
+          supabase.storage.from('profile_images').getPublicUrl(filePath);
 
       // Update user record with the image URL
       await supabase
           .from('users')
-          .update({'profile_image_url': imageUrl})
-          .eq('id', currentUser.id);
+          .update({'profile_image_url': imageUrl}).eq('id', currentUser.id);
 
       // Refresh user data
       await loadUserData();
@@ -453,22 +447,20 @@ class TeacherProfileController extends GetxController {
     }
   }
 
-  // Add this method to your TeacherProfileController class
+  // your TeacherProfileController class
 
-void viewProfileImage() {
-  if (user.value?.profileImageUrl != null && 
-      user.value!.profileImageUrl!.isNotEmpty) {
-    Get.to(
-      () => ProfileImageViewScreen(
-        imageUrl: user.value!.profileImageUrl!,
-      ),
-      transition: Transition.fadeIn,
-    );
-  } else {
-    // If no profile image, show a message
-    TSnackBar.showInfo(message: 'No profile image available');
+  void viewProfileImage() {
+    if (user.value?.profileImageUrl != null &&
+        user.value!.profileImageUrl!.isNotEmpty) {
+      Get.to(
+        () => ProfileImageViewScreen(
+          imageUrl: user.value!.profileImageUrl!,
+        ),
+        transition: Transition.fadeIn,
+      );
+    } else {
+      // If no profile image, show a message
+      TSnackBar.showInfo(message: 'No profile image available');
+    }
   }
-}
-
-
 }

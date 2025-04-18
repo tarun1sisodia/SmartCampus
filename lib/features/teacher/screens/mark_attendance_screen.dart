@@ -7,12 +7,33 @@ import '../controllers/attendance_controller.dart';
 import '../../../common/utils/constants/colors.dart';
 import '../../../common/utils/constants/sized.dart';
 import '../../../common/utils/helpers/helper_function.dart';
+import '../../../common/utils/helpers/snackbar_helper.dart';
 
 class MarkAttendanceScreen extends StatelessWidget {
   final attendanceController = Get.find<AttendanceController>();
 
   MarkAttendanceScreen({super.key}) {
     print('MarkAttendanceScreen initialized');
+    
+    // Check if the session is running when the screen is initialized
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkSessionStatus();
+    });
+  }
+  
+  // Method to check if the session is running
+  void _checkSessionStatus() {
+    if (attendanceController.currentSessionId.value.isNotEmpty &&
+        !attendanceController.isSessionRunning(attendanceController.currentSessionId.value)) {
+      // Show a message that the session is closed
+      TSnackBar.showInfo(
+        message: 'This session is currently closed. You can view but not modify attendance.',
+        title: 'Session Closed',
+      );
+      
+      // Optionally, you could navigate back or disable editing
+      // For now, we'll just show a warning and keep the screen in read-only mode
+    }
   }
 
   @override
@@ -36,6 +57,10 @@ class MarkAttendanceScreen extends StatelessWidget {
     final avatarSize = isTablet ? (isLandscape ? 18.0 : 22.0) : (isLandscape ? 16.0 : 20.0);
     print('Avatar size: $avatarSize');
 
+    // Check if session is running
+    final isSessionRunning = attendanceController.currentSessionId.value.isNotEmpty &&
+        attendanceController.isSessionRunning(attendanceController.currentSessionId.value);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -53,6 +78,16 @@ class MarkAttendanceScreen extends StatelessWidget {
           IconButton(
             onPressed: () {
               print('Carousel View button pressed');
+              
+              // Check if session is running before allowing access to carousel view
+              if (!isSessionRunning) {
+                TSnackBar.showInfo(
+                  message: 'This session is currently closed',
+                  title: 'Session Closed',
+                );
+                return;
+              }
+              
               Get.toNamed(AppRoutes.carouselAttendance);
             },
             icon: const Icon(Iconsax.slider_horizontal_1),
@@ -67,6 +102,16 @@ class MarkAttendanceScreen extends StatelessWidget {
               ? FloatingActionButton.extended(
                   onPressed: () {
                     print('Submit Attendance button pressed');
+                    
+                    // Check if session is running before allowing submission
+                    if (!isSessionRunning) {
+                      TSnackBar.showInfo(
+                        message: 'Cannot submit attendance for a closed session',
+                        title: 'Session Closed',
+                      );
+                      return;
+                    }
+                    
                     _showSubmitConfirmation(context);
                   },
                   backgroundColor: dark ? TColors.blue : TColors.yellow,
@@ -219,13 +264,13 @@ class MarkAttendanceScreen extends StatelessWidget {
                       height: 1,
                       color: _getStatusColor(student.attendanceStatus, dark),
                     ),
-                    onChanged: (value) {
+                    onChanged: isSessionRunning ? (value) {
                       print('Updating attendance status for ${student.name} to $value');
                       attendanceController.updateStudentStatus(
                         student.id,
                         value!,
                       );
-                    },
+                    } : null, // Disable dropdown if session is not running
                     items: const [
                       DropdownMenuItem(
                         value: 'present',

@@ -1,4 +1,5 @@
 import 'package:attedance__/app/bindings/app_bindings.dart';
+import 'package:attedance__/common/utils/helpers/snackbar_helper.dart';
 import 'package:attedance__/features/teacher/screens/carousel_attendance_screen.dart';
 import 'package:attedance__/features/teacher/screens/mark_attendance_screen.dart';
 import 'package:flutter/material.dart';
@@ -246,6 +247,17 @@ class AttendanceScreen extends StatelessWidget {
                                     onPressed: () {
                                       print(
                                           'Navigating to carousel attendance screen');
+                                      // Check if session is running before allowing access
+                                      if (!attendanceController
+                                          .isSessionRunning(session.id)) {
+                                        // Show a message that the session is closed
+                                        TSnackBar.showInfo(
+                                          message:
+                                              'This session is currently closed',
+                                          title: 'Session Closed',
+                                        );
+                                        return; // Don't proceed further
+                                      }
                                       // Set current session and navigate to carousel attendance
                                       attendanceController
                                           .currentSessionId.value = session.id;

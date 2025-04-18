@@ -55,7 +55,7 @@ class AppRoutes {
 
   /// Get all application routes
   static List<GetPage> routes = [
-    // Add this to your routes
+    //to your routes
 
     GetPage(
       name: splash,
@@ -191,7 +191,7 @@ class AppRoutes {
       name: feedback,
       page: () {
         print('Navigating to Feedback Screen');
-        return  FeedbackScreen();
+        return FeedbackScreen();
       },
       binding: HomeBinding(),
       transition: Transition.rightToLeft,

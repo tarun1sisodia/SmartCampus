@@ -265,7 +265,8 @@ class TeacherSettingsScreen extends StatelessWidget {
                                         ),
                                         onPressed: () async {
                                           try {
-                                            print('Clearing All Data Confirmed');
+                                            print(
+                                                'Clearing All Data Confirmed');
                                             // Show loading indicator
                                             Get.back();
                                             Get.dialog(
@@ -362,7 +363,7 @@ class TeacherSettingsScreen extends StatelessWidget {
                               },
                             ),
 
-                            // Add this to your existing settings screen
+                            //to your existing settings screen
                           ],
                         ),
                         actions: [

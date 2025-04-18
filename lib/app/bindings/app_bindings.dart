@@ -19,8 +19,6 @@ import '../../navigation_menu.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-
-
 /// A class that manages all controller bindings for the app
 /// This centralizes dependency injection and improves performance
 class AppBindings {
@@ -36,7 +34,6 @@ class AppBindings {
     print('Registering onboarding bindings');
     Get.lazyPut(() => OnboardingController(), fenix: true);
   }
-  
 
   /// Login bindings
   static void registerLoginBindings() {
@@ -71,13 +68,13 @@ class AppBindings {
     print('Registering change password bindings');
     Get.lazyPut(() => ChangePasswordController(), fenix: true);
   }
+
   static void feedbackDialog() {
     print('Registering feedback dialog bindings');
     Get.lazyPut(() => FeedbackController(), fenix: true);
   }
-
-
 }
+
 class SplashBinding extends Bindings {
   @override
   void dependencies() {
@@ -152,7 +149,7 @@ class HomeBinding extends Bindings {
       Get.lazyPut(() => ClassController(), fenix: true);
       Get.lazyPut(() => AttendanceController(), fenix: true);
       Get.lazyPut(() => NavigationController(), fenix: true);
-      // Add this line to initialize CarouselAttendanceController
+      //line to initialize CarouselAttendanceController
       Get.lazyPut(() => CarouselAttendanceController(), fenix: true);
     }
   }
@@ -204,7 +201,7 @@ class AttendanceBinding extends Bindings {
   }
 }
 
-// Add this for the Messages screen
+//for the Messages screen
 class MessagesBinding extends Bindings {
   @override
   void dependencies() {
@@ -216,7 +213,7 @@ class MessagesBinding extends Bindings {
   }
 }
 
-// Add this for the Settings screen
+//for the Settings screen
 class SettingsBinding extends Bindings {
   @override
   void dependencies() {
@@ -227,6 +224,7 @@ class SettingsBinding extends Bindings {
     HomeBinding().dependencies();
   }
 }
+
 class CarouselAttendanceBinding extends Bindings {
   @override
   void dependencies() {
@@ -240,12 +238,11 @@ class CarouselAttendanceBinding extends Bindings {
       Get.find<AttendanceController>();
       print('AttendanceController found. inside the bindings');
     }
-    
+
     // Initialize the carousel attendance controller
     Get.lazyPut(() => CarouselAttendanceController());
   }
 }
-
 
 class AllSessionsBinding extends Bindings {
   @override
@@ -254,10 +251,8 @@ class AllSessionsBinding extends Bindings {
     if (!Get.isRegistered<AttendanceController>()) {
       Get.put(AttendanceController());
     }
-    
+
     // Initialize the all sessions controller
     Get.put(AllSessionsController());
   }
 }
-
-
