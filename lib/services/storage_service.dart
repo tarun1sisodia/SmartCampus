@@ -12,22 +12,16 @@ import 'package:share_plus/share_plus.dart';
 /// using GetStorage as the underlying storage mechanism with extended capabilities
 /// for handling complex data types, images, and encrypted sensitive data.
 class StorageService extends GetxService {
-  // Singleton pattern implementation ensures single instance throughout the app
-  static final StorageService _instance = StorageService._internal();
-
-  // GetX service accessor
-  static StorageService get instance => Get.find<StorageService>();
-
-  // Factory constructor returns the singleton instance
-  factory StorageService() {
-    return _instance;
-  }
-
-  // Private constructor for singleton pattern
-  StorageService._internal();
-
   // GetStorage instance for persistent storage operations
   final _storage = GetStorage();
+
+  // Static accessor that ensures the service is registered with Get
+  static StorageService get instance {
+    if (!Get.isRegistered<StorageService>()) {
+      Get.put(StorageService());
+    }
+    return Get.find<StorageService>();
+  }
 
   // Storage keys
   static const String _cacheDirectoryName = 'app_cache';

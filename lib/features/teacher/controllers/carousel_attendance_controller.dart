@@ -330,7 +330,8 @@ void onInit() {
     try {
       isSubmitting.value = true;
       await attendanceController.submitAttendance();
-      Get.back(); // Return to previous screen after submission
+      // Navigate to attendance report screen after submission
+      Get.toNamed('/attendance-reports');
     } catch (e) {
       TSnackBar.showError(
         message: 'Failed to submit attendance: ${e.toString()}',

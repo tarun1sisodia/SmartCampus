@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:SmartCampus/features/teacher/screens/feedback_dialog.dart';
-import 'package:SmartCampus/services/feedvack_service.dart';
+import 'package:SmartCampus/services/feedback_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:SmartCampus/services/storage_service.dart';

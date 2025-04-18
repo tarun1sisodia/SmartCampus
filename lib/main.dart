@@ -1,6 +1,6 @@
 import 'package:SmartCampus/app/bindings/app_bindings.dart';
 import 'package:SmartCampus/myapp.dart';
-import 'package:SmartCampus/services/feedvack_service.dart';
+import 'package:SmartCampus/services/feedback_service.dart';
 import 'package:SmartCampus/services/storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -38,9 +38,10 @@ Future<void> main() async {
   // Initialize Supabase by directly providing the url and key.
   print('Initializing Supabase...');
   await Supabase.initialize(
-    url: 'https://lbcmezrvrmbsaqoqxjnm.supabase.co',
-    anonKey:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxiY21lenJ2cm1ic2Fxb3F4am5tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI5ODM1MzQsImV4cCI6MjA1ODU1OTUzNH0.-7_C8OG_ws5qNaCZd6UBIPGl_RYeWsz_EGjixi09zQU',
+    url: 'https://iudnkcysaeyikkbkazoh.supabase.co',
+
+    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1ZG5rY3lzYWV5aWtrYmthem9oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ5NTMwNzQsImV4cCI6MjA2MDUyOTA3NH0.aaDLHp1TOQA24ZIFleT3yu3QpCxvY1AqfubGMb1Ju4g',
+    
   );
   print('Supabase initialized.');
 
