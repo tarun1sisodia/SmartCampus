@@ -75,7 +75,7 @@ Future<void> main() async {
 class FallbackErrorApp extends StatelessWidget {
   final String error;
 
-  const FallbackErrorApp({Key? key, required this.error}) : super(key: key);
+  const FallbackErrorApp({super.key, required this.error});
 
   @override
   Widget build(BuildContext context) {

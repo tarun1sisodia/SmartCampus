@@ -7,9 +7,9 @@ class ProfileImageViewScreen extends StatelessWidget {
   final String imageUrl;
   
   const ProfileImageViewScreen({
-    Key? key, 
+    super.key, 
     required this.imageUrl,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

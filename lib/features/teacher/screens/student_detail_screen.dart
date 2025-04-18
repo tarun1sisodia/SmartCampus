@@ -8,7 +8,6 @@ import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import '../controllers/student_detail_controller.dart';
-import '../../../common/utils/extensions/string_extensions.dart';
 
 class StudentDetailScreen extends StatelessWidget {
   final StudentModel student;
