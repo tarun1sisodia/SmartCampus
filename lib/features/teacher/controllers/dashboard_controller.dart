@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:SmartCampus/services/course_service.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -26,11 +28,69 @@ class DashboardController extends GetxController {
   final searchQuery = ''.obs;
   final filteredClasses = <ClassModel>[].obs;
 
+  // Add these for greeting animation
+  final greeting = ''.obs;
+  final showGreetingAnimation = true.obs;
+
   @override
   void onInit() {
     super.onInit();
     print('DashboardController initialized');
     loadDashboardData();
+    initializeGreeting();
+  }
+
+  // Add this method to initialize greeting
+  void initializeGreeting() {
+    final baseGreeting = _getTimeBasedGreeting();
+    final message = _getRandomGreetingMessage();
+    greeting.value = '$baseGreeting! $message';
+
+    // Auto-hide greeting animation after 5 seconds
+    Future.delayed(const Duration(seconds: 3), () {
+      showGreetingAnimation.value = false;
+    });
+  }
+
+  // Add this method to get time-based greeting
+  String _getTimeBasedGreeting() {
+    final hour = DateTime.now().hour;
+    if (hour < 12) {
+      return 'Good Morning';
+    } else if (hour < 17) {
+      return 'Good Afternoon';
+    } else {
+      return 'Good Evening';
+    }
+  }
+
+  // Add these random greeting messages
+  final List<String> _greetingMessages = [
+    'Welcome back',
+    'Great to see you again',
+    'Hope your classes go well today',
+    'Making a difference every day',
+  ];
+
+  // Add this method to get a random greeting message
+  String _getRandomGreetingMessage() {
+    final random = Random();
+    return _greetingMessages[random.nextInt(_greetingMessages.length)];
+  }
+
+  // Add method to reset greeting animation (can be called when revisiting the screen)
+  void resetGreetingAnimation() {
+    showGreetingAnimation.value = true;
+
+    // Update greeting text
+    final baseGreeting = _getTimeBasedGreeting();
+    final message = _getRandomGreetingMessage();
+    greeting.value = '$baseGreeting! $message';
+
+    // Auto-hide after 5 seconds
+    Future.delayed(const Duration(seconds: 5), () {
+      showGreetingAnimation.value = false;
+    });
   }
 
   Future<void> loadDashboardData() async {

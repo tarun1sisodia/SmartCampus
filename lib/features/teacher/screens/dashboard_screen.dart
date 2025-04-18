@@ -31,82 +31,25 @@ class DashboardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     print('Building DashboardScreen');
     final dark = THelperFunction.isDarkMode(context);
+    // Make sure profile data is loaded
+    if (profileController.user.value == null) {
+      profileController.loadUserData();
+    }
 
     return Scaffold(
-      appBar: AppBar(
-        leading: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Hero(
-            tag: 'profileImage',
-            child: GestureDetector(
-              onTap: () {
-                print('Navigating to TeacherProfileScreen');
-                Get.to(() => TeacherProfileScreen());
-              },
-              child: Obx(() {
-                print('Profile image updated');
-                return Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: dark ? TColors.yellow : TColors.deepPurple,
-                      width: 2,
-                    ),
-                    image: profileController.user.value?.profileImageUrl !=
-                                null &&
-                            profileController
-                                .user.value!.profileImageUrl!.isNotEmpty
-                        ? DecorationImage(
-                            image: NetworkImage(
-                              profileController.user.value!.profileImageUrl!,
-                            ),
-                            fit: BoxFit.cover,
-                            onError: (exception, stackTrace) {
-                              print('Error loading profile image: $exception');
-                            },
-                          )
-                        : const DecorationImage(
-                            image: AssetImage(TImageStrings.appLogo),
-                            fit: BoxFit.contain,
-                          ),
-                  ),
-                );
-              }),
-            ),
-          ),
-        ),
-        title: Obx(
-          () {
-            print('User name updated: ${profileController.user.value?.name}');
-            return Text(
-              'Hi, ${profileController.user.value?.name ?? 'Teacher'}',
-              style: Theme.of(context)
-                  .textTheme
-                  .titleLarge
-                  ?.copyWith(fontWeight: FontWeight.bold),
-            );
-          },
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Iconsax.setting),
-            onPressed: () {
-              print('Navigating to TeacherSettingsScreen');
-              Get.to(() => const TeacherSettingsScreen());
-            },
-          ),
-          const SizedBox(width: TSizes.sm),
-          IconButton(
-            onPressed: () {
-              print('Refreshing dashboard data');
-              dashboardController.loadDashboardData();
-            },
-            icon: const Icon(Iconsax.refresh),
-            tooltip: 'Refresh',
-          ),
-        ],
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: Obx(() {
+          // Animated app bar with greeting
+          return AnimatedCrossFade(
+            duration: const Duration(milliseconds: 800),
+            firstChild: _buildGreetingAppBar(context, dark),
+            secondChild: _buildRegularAppBar(context, dark),
+            crossFadeState: dashboardController.showGreetingAnimation.value
+                ? CrossFadeState.showFirst
+                : CrossFadeState.showSecond,
+          );
+        }),
       ),
       body: Obx(() {
         print('Dashboard state updated');
@@ -409,6 +352,190 @@ class DashboardScreen extends StatelessWidget {
           ),
         );
       }),
+    );
+  }
+
+  // Add these new methods for the animated app bars
+  // Modify the _buildGreetingAppBar method to remove the name display
+  Widget _buildGreetingAppBar(BuildContext context, bool dark) {
+    return AppBar(
+      automaticallyImplyLeading: false, // Remove back button during animation
+      title: Row(
+        children: [
+          // Animated profile image
+          TweenAnimationBuilder<double>(
+            tween: Tween(begin: 0.0, end: 1.0),
+            duration: const Duration(milliseconds: 800),
+            builder: (context, value, child) {
+              return Opacity(
+                opacity: value,
+                child: Transform.scale(
+                  scale:
+                      0.5 + (value * 0.5), // Start at 50% size and grow to 100%
+                  child: GestureDetector(
+                    onTap: () {
+                      print('Navigating to TeacherProfileScreen');
+                      Get.to(() => TeacherProfileScreen());
+                    },
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: dark ? TColors.yellow : TColors.deepPurple,
+                          width: 2,
+                        ),
+                        image: profileController.user.value?.profileImageUrl !=
+                                    null &&
+                                profileController
+                                    .user.value!.profileImageUrl!.isNotEmpty
+                            ? DecorationImage(
+                                image: NetworkImage(
+                                  profileController
+                                      .user.value!.profileImageUrl!,
+                                ),
+                                fit: BoxFit.cover,
+                                onError: (exception, stackTrace) {
+                                  print(
+                                      'Error loading profile image: $exception');
+                                },
+                              )
+                            : const DecorationImage(
+                                image: AssetImage(TImageStrings.appLogo),
+                                fit: BoxFit.contain,
+                              ),
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+          const SizedBox(width: 12),
+
+          // Animated greeting text - REMOVE THE NAME PART
+          Expanded(
+            child: TweenAnimationBuilder<double>(
+              tween: Tween(begin: 0.0, end: 1.0),
+              duration: const Duration(milliseconds: 1000),
+              builder: (context, value, child) {
+                return Opacity(
+                  opacity: value,
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 20 * (1 - value)),
+                    child: Text(
+                      dashboardController.greeting.value,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+      actions: [
+        // Animated settings icon
+        TweenAnimationBuilder<double>(
+          tween: Tween(begin: 0.0, end: 1.0),
+          duration: const Duration(milliseconds: 1200),
+          builder: (context, value, child) {
+            return Opacity(
+              opacity: value,
+              child: IconButton(
+                icon: const Icon(Iconsax.setting),
+                onPressed: () {
+                  print('Navigating to TeacherSettingsScreen');
+                  Get.to(() => const TeacherSettingsScreen());
+                },
+              ),
+            );
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRegularAppBar(BuildContext context, bool dark) {
+    return AppBar(
+      leading: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Hero(
+          tag: 'profileImage',
+          child: GestureDetector(
+            onTap: () {
+              print('Navigating to TeacherProfileScreen');
+              Get.to(() => TeacherProfileScreen());
+            },
+            child: Obx(() {
+              print('Profile image updated');
+              return Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: dark ? TColors.yellow : TColors.deepPurple,
+                    width: 2,
+                  ),
+                  image: profileController.user.value?.profileImageUrl !=
+                              null &&
+                          profileController
+                              .user.value!.profileImageUrl!.isNotEmpty
+                      ? DecorationImage(
+                          image: NetworkImage(
+                            profileController.user.value!.profileImageUrl!,
+                          ),
+                          fit: BoxFit.cover,
+                          onError: (exception, stackTrace) {
+                            print('Error loading profile image: $exception');
+                          },
+                        )
+                      : const DecorationImage(
+                          image: AssetImage(TImageStrings.appLogo),
+                          fit: BoxFit.contain,
+                        ),
+                ),
+              );
+            }),
+          ),
+        ),
+      ),
+      title: Obx(
+        () {
+          print('User name updated: ${profileController.user.value?.name}');
+          return Text(
+            'Hi, ${profileController.user.value?.name ?? 'Teacher'}',
+            style: Theme.of(context)
+                .textTheme
+                .titleLarge
+                ?.copyWith(fontWeight: FontWeight.bold),
+          );
+        },
+      ),
+      actions: [
+        IconButton(
+          icon: const Icon(Iconsax.setting),
+          onPressed: () {
+            print('Navigating to TeacherSettingsScreen');
+            Get.to(() => const TeacherSettingsScreen());
+          },
+        ),
+        const SizedBox(width: TSizes.sm),
+        IconButton(
+          onPressed: () {
+            print('Refreshing dashboard data');
+            dashboardController.loadDashboardData();
+          },
+          icon: const Icon(Iconsax.refresh),
+          tooltip: 'Refresh',
+        ),
+      ],
     );
   }
 
