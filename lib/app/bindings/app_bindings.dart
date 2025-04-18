@@ -1,4 +1,5 @@
 import 'package:attedance__/features/teacher/controllers/all_sessions_controller.dart';
+import 'package:attedance__/features/teacher/controllers/teacher_profile_controller.dart';
 import 'package:attedance__/services/storage_service.dart';
 
 import '../../features/authentication/controllers/change_password_controller.dart';
@@ -53,12 +54,6 @@ class AppBindings {
   static void registerForgotPasswordBindings() {
     print('Registering forgot password bindings');
     Get.lazyPut(() => ForgotPasswordController(), fenix: true);
-  }
-
-  /// Teacher profile bindings
-  static void registerTeacherProfileBindings() {
-    print('Registering teacher profile bindings');
-    Get.lazyPut(() => TeacherProfileController(), fenix: true);
   }
 
   /// Home screen bindings (includes all controllers needed for the home screen)
@@ -137,7 +132,7 @@ class TeacherProfileBinding extends Bindings {
   @override
   void dependencies() {
     print('Initializing teacher profile dependencies');
-    AppBindings.registerTeacherProfileBindings();
+    AppBindings.registerHomeBindings();
   }
 }
 

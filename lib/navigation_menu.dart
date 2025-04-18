@@ -1,10 +1,10 @@
 import 'package:attedance__/features/teacher/controllers/attendance_controller.dart';
 import 'package:attedance__/features/teacher/controllers/carousel_attendance_controller.dart';
+import 'package:attedance__/features/teacher/controllers/teacher_profile_controller.dart';
 import 'package:attedance__/features/teacher/screens/all_sessions_screen.dart';
 import 'package:attedance__/features/teacher/screens/dashboard_screen.dart';
 import 'package:attedance__/features/teacher/screens/class_list_screen.dart';
 import 'package:attedance__/features/teacher/screens/more_menu_screen.dart';
-import 'package:attedance__/features/teacher/screens/teacher_profile_screen.dart';
 import 'package:attedance__/app/routes/app_routes.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';

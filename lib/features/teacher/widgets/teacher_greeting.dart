@@ -2,9 +2,9 @@ import 'package:attedance__/common/utils/constants/colors.dart';
 import 'package:attedance__/common/utils/constants/image_strings.dart';
 import 'package:attedance__/common/utils/constants/sized.dart';
 import 'package:attedance__/common/utils/helpers/helper_function.dart';
+import 'package:attedance__/features/teacher/controllers/teacher_profile_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:attedance__/features/teacher/screens/teacher_profile_screen.dart';
 
 class TeacherGreeting extends StatelessWidget {
   const TeacherGreeting({super.key});

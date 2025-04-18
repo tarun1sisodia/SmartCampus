@@ -1,3 +1,4 @@
+import 'package:attedance__/features/teacher/controllers/teacher_profile_controller.dart';
 import 'package:attedance__/features/teacher/screens/teacher_profile_screen.dart';
 import 'package:attedance__/app/routes/app_routes.dart';
 import 'package:attedance__/services/language_service.dart';
