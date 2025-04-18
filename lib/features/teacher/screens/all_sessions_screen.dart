@@ -1,4 +1,4 @@
-import 'package:SmartCampus/app/bindings/app_bindings.dart';
+import 'package:attedance__/app/bindings/app_bindings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';

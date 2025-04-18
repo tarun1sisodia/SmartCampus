@@ -1,5 +1,5 @@
-import 'package:SmartCampus/common/utils/constants/sized.dart';
-import 'package:SmartCampus/common/utils/helpers/helper_function.dart';
+import 'package:attedance__/common/utils/constants/sized.dart';
+import 'package:attedance__/common/utils/helpers/helper_function.dart';
 import 'package:flutter/material.dart';
 
 class StatsContainer extends StatelessWidget {
@@ -69,9 +69,9 @@ class StatsContainer extends StatelessWidget {
           Text(
             value,
             style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: textColor,
-                ),
+              fontWeight: FontWeight.bold,
+              color: textColor,
+            ),
           ),
 
           const SizedBox(height: TSizes.xs),
@@ -80,8 +80,8 @@ class StatsContainer extends StatelessWidget {
           Text(
             title,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: dark ? Colors.grey.shade400 : Colors.grey.shade700,
-                ),
+              color: dark ? Colors.grey.shade400 : Colors.grey.shade700,
+            ),
           ),
         ],
       ),
