@@ -1,9 +1,9 @@
 
-import 'package:attedance__/features/teacher/controllers/teacher_profile_controller.dart';
 import 'package:attedance__/app/routes/app_routes.dart';
 import 'package:attedance__/common/utils/constants/colors.dart';
 import 'package:attedance__/common/utils/constants/sized.dart';
 import 'package:attedance__/common/utils/helpers/helper_function.dart';
+import 'package:attedance__/features/teacher/controllers/teacher_profile_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -210,7 +210,7 @@ class TeacherProfileScreen extends StatelessWidget {
 
                 // App version
                 Text(
-                  'App Version 1.0.0',
+                  'App Version 0.0.1',
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
 
@@ -237,33 +237,36 @@ class TeacherProfileScreen extends StatelessWidget {
             // Replace the profile image section in _buildProfileHeader method with this:
 
             // Profile image with Hero animation
-            Hero(
-              tag: 'profileImage',
-              child: Container(
-                width: 120,
-                height: 120,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: dark ? TColors.yellow : TColors.deepPurple,
-                    width: 2,
-                  ),
-                  image:
-                      controller.user.value?.profileImageUrl != null &&
-                              controller.user.value!.profileImageUrl!.isNotEmpty
-                          ? DecorationImage(
-                            image: NetworkImage(
-                              controller.user.value!.profileImageUrl!,
+            GestureDetector(
+                onTap: () => controller.viewProfileImage(),
+              child: Hero(
+                tag: 'profileImage',
+                child: Container(
+                  width: 120,
+                  height: 120,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: dark ? TColors.yellow : TColors.deepPurple,
+                      width: 2,
+                    ),
+                    image:
+                        controller.user.value?.profileImageUrl != null &&
+                                controller.user.value!.profileImageUrl!.isNotEmpty
+                            ? DecorationImage(
+                              image: NetworkImage(
+                                controller.user.value!.profileImageUrl!,
+                              ),
+                              fit: BoxFit.cover,
+                              onError: (exception, stackTrace) {
+                                print('Error loading profile image: $exception');
+                              },
+                            )
+                            : const DecorationImage(
+                              image: AssetImage('assets/logos/smartcampus.png'),
+                              fit: BoxFit.cover,
                             ),
-                            fit: BoxFit.cover,
-                            onError: (exception, stackTrace) {
-                              print('Error loading profile image: $exception');
-                            },
-                          )
-                          : const DecorationImage(
-                            image: AssetImage('assets/logos/smartcampus.png'),
-                            fit: BoxFit.cover,
-                          ),
+                  ),
                 ),
               ),
             ),
@@ -533,3 +536,4 @@ class TeacherProfileScreen extends StatelessWidget {
   }
 }
 
+// Consolidated TeacherProfileController

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:attedance__/features/teacher/screens/profile_image_view_screen.dart';
 import 'package:attedance__/models/user_model.dart';
 import 'package:attedance__/app/routes/app_routes.dart';
 import 'package:attedance__/services/attendance_service.dart';
@@ -451,4 +452,23 @@ class TeacherProfileController extends GetxController {
       isLoading.value = false;
     }
   }
+
+  // Add this method to your TeacherProfileController class
+
+void viewProfileImage() {
+  if (user.value?.profileImageUrl != null && 
+      user.value!.profileImageUrl!.isNotEmpty) {
+    Get.to(
+      () => ProfileImageViewScreen(
+        imageUrl: user.value!.profileImageUrl!,
+      ),
+      transition: Transition.fadeIn,
+    );
+  } else {
+    // If no profile image, show a message
+    TSnackBar.showInfo(message: 'No profile image available');
+  }
+}
+
+
 }
