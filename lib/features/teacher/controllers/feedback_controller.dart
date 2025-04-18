@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:attedance__/features/teacher/screens/feedback_dialog.dart';
+import 'package:attedance__/features/teacher/screens/feedback_screen.dart';
 import 'package:attedance__/services/feedback_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -54,7 +54,7 @@ class FeedbackController extends GetxController {
     print('Showing feedback dialog');
     _feedbackService.markFeedbackAsShown();
     Get.dialog(
-      FeedbackDialog(),
+      FeedbackScreen(),
       barrierDismissible: true,
     );
   }
@@ -96,13 +96,20 @@ class FeedbackController extends GetxController {
       }
       print('User ID: $userId');
 
-      await Supabase.instance.client.from('user_feedback').insert({
+      final feedbackData = {
         'user_id': userId,
         'user_email': userEmail,
         'rating': rating.value,
         'feedback': feedbackText.value,
         'created_at': DateTime.now().toIso8601String(),
-      });
+      };
+      // Only add user_email if it's not anonymous (to avoid potential column issues)
+      if (userEmail != 'anonymous') {
+        feedbackData['user_email'] = userEmail;
+      }
+
+      // Submit the feedback
+      await Supabase.instance.client.from('user_feedback').insert(feedbackData);
 
       print('Feedback submitted successfully');
       _feedbackService.markFeedbackAsSubmitted();
@@ -117,6 +124,36 @@ class FeedbackController extends GetxController {
       );
     } catch (e) {
       print('Error submitting feedback: $e');
+
+      // Try a fallback approach without user_email if that was the issue
+      if (e.toString().contains('user_email')) {
+        try {
+          final userId =
+              Supabase.instance.client.auth.currentUser?.id ?? 'anonymous';
+          await Supabase.instance.client.from('user_feedback').insert({
+            'user_id': userId,
+            'rating': rating.value,
+            'feedback': feedbackText.value,
+            'created_at': DateTime.now().toIso8601String(),
+          });
+
+          print('Feedback submitted successfully with fallback approach');
+          _feedbackService.markFeedbackAsSubmitted();
+          Get.back(); // Close dialog
+
+          Get.snackbar(
+            'Thank You!',
+            'Your feedback has been submitted successfully.',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.green[100],
+            colorText: Colors.green[800],
+          );
+          return;
+        } catch (fallbackError) {
+          print('Fallback approach also failed: $fallbackError');
+        }
+      }
+
       Get.snackbar(
         'Error',
         'Failed to submit feedback. Please try again later.',

@@ -191,7 +191,7 @@ class AppRoutes {
       name: feedback,
       page: () {
         print('Navigating to Feedback Screen');
-        return const FeedbackScreen();
+        return  FeedbackScreen();
       },
       binding: HomeBinding(),
       transition: Transition.rightToLeft,
@@ -224,7 +224,7 @@ class AppRoutes {
       transition: Transition.rightToLeft,
     ),
     GetPage(
-      name: '/calendar',
+      name: calendar,
       page: () {
         print('Navigating to Calendar Screen');
         return CalendarScreen();
@@ -256,7 +256,7 @@ class AppRoutes {
       transition: Transition.rightToLeft,
     ),
     GetPage(
-      name: AppRoutes.allSessions,
+      name: allSessions,
       page: () {
         print('Navigating to All Sessions Screen');
         return AllSessionsScreen();

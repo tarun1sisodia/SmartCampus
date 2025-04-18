@@ -1,4 +1,5 @@
 import 'package:attedance__/features/teacher/controllers/all_sessions_controller.dart';
+import 'package:attedance__/features/teacher/controllers/feedback_controller.dart';
 import 'package:attedance__/features/teacher/controllers/teacher_profile_controller.dart';
 import 'package:attedance__/services/storage_service.dart';
 
@@ -69,6 +70,10 @@ class AppBindings {
   static void registerChangePasswordBindings() {
     print('Registering change password bindings');
     Get.lazyPut(() => ChangePasswordController(), fenix: true);
+  }
+  static void feedbackDialog() {
+    print('Registering feedback dialog bindings');
+    Get.lazyPut(() => FeedbackController(), fenix: true);
   }
 
 
@@ -254,3 +259,5 @@ class AllSessionsBinding extends Bindings {
     Get.put(AllSessionsController());
   }
 }
+
+

@@ -5,16 +5,24 @@ import '../../../common/utils/constants/colors.dart';
 import '../../../common/utils/constants/sized.dart';
 import '../../../common/utils/helpers/helper_function.dart';
 import '../../../common/utils/helpers/snackbar_helper.dart';
+import '../controllers/feedback_controller.dart';
 
 class FeedbackScreen extends StatelessWidget {
-  const FeedbackScreen({super.key});
+  final FeedbackController controller = Get.put(FeedbackController());
+  
+  FeedbackScreen({super.key}) {
+    print('FeedbackScreen initialized');
+  }
 
   @override
   Widget build(BuildContext context) {
     final dark = THelperFunction.isDarkMode(context);
-    final feedbackController = TextEditingController();
-    final RxBool isSubmitting = false.obs;
-    final RxInt selectedRating = 0.obs;
+    final textController = TextEditingController();
+    
+    // Set up listener to update controller when text changes
+    textController.addListener(() {
+      controller.updateFeedbackText(textController.text);
+    });
 
     return Scaffold(
       appBar: AppBar(
@@ -55,10 +63,10 @@ class FeedbackScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(5, (index) {
                 return IconButton(
-                  onPressed: () => selectedRating.value = index + 1,
+                  onPressed: () => controller.setRating(index + 1),
                   icon: Icon(
-                    index < selectedRating.value ? Iconsax.star1 : Iconsax.star,
-                    color: index < selectedRating.value ? Colors.amber : Colors.grey,
+                    index < controller.rating.value ? Iconsax.star1 : Iconsax.star,
+                    color: index < controller.rating.value ? Colors.amber : Colors.grey,
                     size: 32,
                   ),
                 );
@@ -76,7 +84,7 @@ class FeedbackScreen extends StatelessWidget {
             ),
             const SizedBox(height: TSizes.spaceBtwItems),
             TextField(
-              controller: feedbackController,
+              controller: textController,
               maxLines: 5,
               decoration: InputDecoration(
                 hintText: 'Tell us what you think...',
@@ -100,40 +108,31 @@ class FeedbackScreen extends StatelessWidget {
               width: double.infinity,
               height: 55,
               child: Obx(() => ElevatedButton(
-                onPressed: isSubmitting.value
+                onPressed: controller.isSubmitting.value
                     ? null
                     : () {
-                        if (feedbackController.text.trim().isEmpty) {
+                        if (textController.text.trim().isEmpty) {
                           TSnackBar.showError(
                             message: 'Please enter your feedback',
                           );
                           return;
                         }
                         
-                        if (selectedRating.value == 0) {
+                        if (controller.rating.value == 0) {
                           TSnackBar.showError(
                             message: 'Please select a rating',
                           );
                           return;
                         }
                         
-                        // Submit feedback
-                        isSubmitting.value = true;
-                        
-                        // Simulate API call
-                        Future.delayed(const Duration(seconds: 2), () {
-                          isSubmitting.value = false;
-                          TSnackBar.showSuccess(
-                            message: 'Thank you for your feedback!',
-                          );
-                          Get.back();
-                        });
+                        // Submit feedback using the controller
+                        controller.submitFeedback();
                       },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: dark ? TColors.yellow : TColors.deepPurple,
                   foregroundColor: dark ? Colors.black : Colors.white,
                 ),
-                child: isSubmitting.value
+                child: controller.isSubmitting.value
                     ? const CircularProgressIndicator()
                     : const Text('Submit Feedback'),
               )),
