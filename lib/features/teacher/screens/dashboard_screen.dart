@@ -473,37 +473,33 @@ class DashboardScreen extends StatelessWidget {
               print('Navigating to TeacherProfileScreen');
               Get.to(() => TeacherProfileScreen());
             },
-            child: Obx(() {
-              print('Profile image updated');
-              return Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: dark ? TColors.yellow : TColors.deepPurple,
-                    width: 2,
-                  ),
-                  image: profileController.user.value?.profileImageUrl !=
-                              null &&
-                          profileController
-                              .user.value!.profileImageUrl!.isNotEmpty
-                      ? DecorationImage(
-                          image: NetworkImage(
-                            profileController.user.value!.profileImageUrl!,
-                          ),
-                          fit: BoxFit.cover,
-                          onError: (exception, stackTrace) {
-                            print('Error loading profile image: $exception');
-                          },
-                        )
-                      : const DecorationImage(
-                          image: AssetImage(TImageStrings.appLogo),
-                          fit: BoxFit.contain,
-                        ),
+            child: Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: dark ? TColors.yellow : TColors.deepPurple,
+                  width: 2,
                 ),
-              );
-            }),
+                image: profileController.user.value?.profileImageUrl != null &&
+                        profileController
+                            .user.value!.profileImageUrl!.isNotEmpty
+                    ? DecorationImage(
+                        image: NetworkImage(
+                          profileController.user.value!.profileImageUrl!,
+                        ),
+                        fit: BoxFit.cover,
+                        onError: (exception, stackTrace) {
+                          print('Error loading profile image: $exception');
+                        },
+                      )
+                    : const DecorationImage(
+                        image: AssetImage(TImageStrings.appLogo),
+                        fit: BoxFit.contain,
+                      ),
+              ),
+            ),
           ),
         ),
       ),

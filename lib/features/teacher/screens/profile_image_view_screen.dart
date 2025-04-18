@@ -5,11 +5,13 @@ import 'package:SmartCampus/common/utils/helpers/helper_function.dart';
 
 class ProfileImageViewScreen extends StatelessWidget {
   final String imageUrl;
+  final String heroTag;
   
   const ProfileImageViewScreen({
-    Key? key, 
+    super.key, 
     required this.imageUrl,
-  }) : super(key: key);
+    this.heroTag = 'profileImage',
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +33,7 @@ class ProfileImageViewScreen extends StatelessWidget {
         onTap: () => Get.back(),
         child: Center(
           child: Hero(
-            tag: 'profileImageFull',
+            tag: heroTag,
             child: Container(
               width: imageSize,
               height: imageSize,

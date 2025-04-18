@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:SmartCampus/features/teacher/controllers/dashboard_controller.dart';
 import 'package:SmartCampus/features/teacher/screens/profile_image_view_screen.dart';
 import 'package:SmartCampus/models/user_model.dart';
 import 'package:SmartCampus/app/routes/app_routes.dart';
@@ -386,8 +387,15 @@ class TeacherProfileController extends GetxController {
           .from('users')
           .update({'profile_image_url': imageUrl}).eq('id', currentUser.id);
 
+      // Update the local user model immediately
+      if (user.value != null) {
+        user.value = user.value!.copyWith(profileImageUrl: imageUrl);
+        user.refresh(); // Force UI update
+      }
       // Refresh user data
       await loadUserData();
+      // Notify any other controllers that might be using the profile image
+      Get.find<DashboardController>().update();
 
       TSnackBar.showSuccess(message: 'Profile image updated successfully');
     } catch (e) {
@@ -488,20 +496,19 @@ class TeacherProfileController extends GetxController {
 
   // Add this method to your TeacherProfileController class
 
-void viewProfileImage() {
-  if (user.value?.profileImageUrl != null && 
-      user.value!.profileImageUrl!.isNotEmpty) {
-    Get.to(
-      () => ProfileImageViewScreen(
-        imageUrl: user.value!.profileImageUrl!,
-      ),
-      transition: Transition.fadeIn,
-    );
-  } else {
-    // If no profile image, show a message
-    TSnackBar.showInfo(message: 'No profile image available');
+  void viewProfileImage() {
+    if (user.value?.profileImageUrl != null &&
+        user.value!.profileImageUrl!.isNotEmpty) {
+      Get.to(
+        () => ProfileImageViewScreen(
+          imageUrl: user.value!.profileImageUrl!,
+          heroTag: 'profileImageFull',
+        ),
+        transition: Transition.fadeIn,
+      );
+    } else {
+      // If no profile image, show a message
+      TSnackBar.showInfo(message: 'No profile image available');
+    }
   }
-}
-
-
 }

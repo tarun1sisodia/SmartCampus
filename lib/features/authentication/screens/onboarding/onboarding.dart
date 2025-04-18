@@ -36,7 +36,7 @@ class Onboarding extends StatelessWidget {
 
               // OnboardingPage(
               //   image: TImageStrings.searching,
-              //   title: TTexts.attedancetitle3,
+              //   title: TTexts.attendancetitle3,
               //   subtitle: TTexts.attendanceSubtitle3,
               // ),
               Lottie.asset(

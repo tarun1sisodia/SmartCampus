@@ -3,10 +3,10 @@ class TTexts {
   static const String onboardingtitle1 = "Choose Your product";
   static const String onboardingtitle2 = "Select Payment method";
   static const String onboardingtitle3 = "Deliever at your Door Step";
-  static const String attedancetitle1 = "Welcome to SmartCampus";
-  static const String attedancetitle2 = "Esay to use no more shouting";
-  static const String attedancetitle3 = "Swipe to Present and Absent";
-  static const String attedanceSubtitle1 =
+  static const String attendancetitle1 = "Welcome to SmartCampus";
+  static const String attendancetitle2 = "Esay to use no more shouting";
+  static const String attendancetitle3 = "Swipe to Present and Absent";
+  static const String attendanceSubtitle1 =
       "Dolor officia nulla nulla aliqua excepteur culpa voluptate. Veniam deserunt sunt duis cillum Lorem. Culpa mollit do et deserunt dolor elit. Sint magna occaecat ea cillum do eu ad ad.";
 
   static const String attendanceSubtitle2 =

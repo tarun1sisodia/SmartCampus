@@ -8,7 +8,7 @@ class UserModel {
   final String? phone;
   final String? profileImageUrl;
   final DateTime? createdAt;
-  
+  final DateTime? updatedAt;
 
   UserModel({
     required this.id,
@@ -17,6 +17,7 @@ class UserModel {
     this.phone,
     this.profileImageUrl,
     this.createdAt,
+    this.updatedAt,
   });
 
   // Getter for uid (to match Firebase auth user structure)
@@ -30,6 +31,7 @@ class UserModel {
       'phone': phone,
       'profileImageUrl': profileImageUrl,
       'createdAt': createdAt?.millisecondsSinceEpoch,
+      'updatedAt': updatedAt?.millisecondsSinceEpoch,
     };
   }
 
@@ -39,14 +41,15 @@ class UserModel {
       name: map['name'] as String,
       email: map['email'] as String,
       phone: map['phone'] != null ? map['phone'] as String : null,
-      profileImageUrl:
-          map['profileImageUrl'] != null
-              ? map['profileImageUrl'] as String
-              : null,
-      createdAt:
-          map['createdAt'] != null
-              ? DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int)
-              : null,
+      profileImageUrl: map['profileImageUrl'] != null
+          ? map['profileImageUrl'] as String
+          : null,
+      createdAt: map['createdAt'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int)
+          : null,
+      updatedAt: map['updatedAt'] != null ?
+          DateTime.fromMillisecondsSinceEpoch(map['updatedAt'] as int)
+          : null,
     );
   }
 
@@ -59,10 +62,12 @@ class UserModel {
       email: json['email'] ?? '',
       phone: json['phone'],
       profileImageUrl: json['profile_image_url'],
-      createdAt:
-          json['created_at'] != null
-              ? DateTime.parse(json['created_at'])
-              : null,
+      createdAt: json['created_at'] != null
+          ? DateTime.parse(json['created_at'])
+          : null,
+      updatedAt: json['updated_at'] != null
+          ? DateTime.parse(json['updated_at'])
+          : null,
     );
   }
 
@@ -73,6 +78,7 @@ class UserModel {
     String? phone,
     String? profileImageUrl,
     DateTime? createdAt,
+    DateTime? updatedAt,
   }) {
     return UserModel(
       id: id ?? this.id,
@@ -81,12 +87,13 @@ class UserModel {
       phone: phone ?? this.phone,
       profileImageUrl: profileImageUrl ?? this.profileImageUrl,
       createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 
   @override
   String toString() {
-    return 'UserModel(id: $id, name: $name, email: $email, phone: $phone, profileImageUrl: $profileImageUrl, createdAt: $createdAt)';
+    return 'UserModel(id: $id, name: $name, email: $email, phone: $phone, profileImageUrl: $profileImageUrl, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -98,7 +105,8 @@ class UserModel {
         other.email == email &&
         other.phone == phone &&
         other.profileImageUrl == profileImageUrl &&
-        other.createdAt == createdAt;
+        other.createdAt == createdAt &&
+        other.updatedAt == updatedAt;
   }
 
   @override
@@ -108,6 +116,7 @@ class UserModel {
         email.hashCode ^
         phone.hashCode ^
         profileImageUrl.hashCode ^
-        createdAt.hashCode;
+        createdAt.hashCode ^
+        updatedAt.hashCode;
   }
 }
