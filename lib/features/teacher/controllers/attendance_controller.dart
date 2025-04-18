@@ -286,7 +286,7 @@ class AttendanceController extends GetxController {
         createdBy: currentUser.id,
       );
 
-      print('Session created successfully');
+      print('Session created successfully : $session');
 
       // Reload sessions
       await loadAttendanceSessions(selectedClass.value!.id);
