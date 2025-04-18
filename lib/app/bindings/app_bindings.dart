@@ -14,7 +14,6 @@ import '../../features/teacher/controllers/carousel_attendance_controller.dart';
 import '../../features/teacher/controllers/class_controller.dart';
 import '../../features/teacher/controllers/dashboard_controller.dart';
 import '../../features/teacher/controllers/student_detail_controller.dart';
-import '../../features/teacher/screens/teacher_profile_screen.dart';
 import '../../navigation_menu.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';

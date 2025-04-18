@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:attedance__/features/teacher/screens/feedback_dialog.dart';
-import 'package:attedance__/services/feedvack_service.dart';
+import 'package:attedance__/services/feedback_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:attedance__/services/storage_service.dart';
