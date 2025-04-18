@@ -1,3 +1,4 @@
+import 'package:SmartCampus/features/teacher/controllers/teacher_profile_controller.dart';
 import 'package:SmartCampus/features/teacher/screens/teacher_profile_screen.dart';
 import 'package:SmartCampus/app/routes/app_routes.dart';
 import 'package:SmartCampus/services/language_service.dart';
