@@ -27,7 +27,7 @@ class ClassListScreen extends StatelessWidget {
           style: Theme.of(context).textTheme.headlineSmall,
         ),
         actions: [
-          // Add refresh button here
+          // refresh button here
           IconButton(
             onPressed: () {
               print('Refreshing classes');

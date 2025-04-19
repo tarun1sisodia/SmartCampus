@@ -7,6 +7,12 @@ class AttendanceSessionModel {
   final String createdBy;
   final DateTime? createdAt;
   final DateTime? updatedAt;
+  
+  // Add these fields to store class details
+  final String? subjectName;
+  final String? courseName;
+  final int? year;
+  final String? section;
 
   AttendanceSessionModel({
     required this.id,
@@ -17,6 +23,10 @@ class AttendanceSessionModel {
     required this.createdBy,
     this.createdAt,
     this.updatedAt,
+    this.subjectName,
+    this.courseName,
+    this.year,
+    this.section,
   });
 
   factory AttendanceSessionModel.fromJson(Map<String, dynamic> json) {
@@ -35,6 +45,11 @@ class AttendanceSessionModel {
           json['updated_at'] != null
               ? DateTime.parse(json['updated_at'])
               : null,
+      // Add these fields from the attendance_session_details view
+      subjectName: json['subject_name'],
+      courseName: json['course_name'],
+      year: json['year'],
+      section: json['section'],
     );
   }
 
@@ -48,6 +63,10 @@ class AttendanceSessionModel {
       'created_by': createdBy,
       'created_at': createdAt?.toIso8601String(),
       'updated_at': updatedAt?.toIso8601String(),
+      'subject_name': subjectName,
+      'course_name': courseName,
+      'year': year,
+      'section': section,
     };
   }
 }

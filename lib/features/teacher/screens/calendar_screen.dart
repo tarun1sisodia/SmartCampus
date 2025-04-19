@@ -138,6 +138,23 @@ class CalendarScreen extends StatelessWidget {
             shape: BoxShape.circle,
           ),
         ),
+        // Add this to customize the format button text
+        availableCalendarFormats: const {
+          CalendarFormat.month: 'week',
+          CalendarFormat.twoWeeks: 'Month',
+          CalendarFormat.week: '2 Week',
+        },
+        // Optional: You can also customize the header style
+        headerStyle: HeaderStyle(
+          formatButtonTextStyle: TextStyle(
+            color: AppColors.primary,
+            fontSize: 14.0,
+          ),
+          formatButtonDecoration: BoxDecoration(
+            border: Border.all(color: AppColors.primary),
+            borderRadius: BorderRadius.circular(12.0),
+          ),
+        ),
       );
     });
   }
@@ -179,10 +196,9 @@ class CalendarScreen extends StatelessWidget {
     final isActive = controller.isSessionActive(session);
     print('Session active status: $isActive');
 
-    final classDetails = controller.userClasses.firstWhereOrNull(
-      (c) => c.id == session.classId,
-    );
-    print('Class details found: ${classDetails?.subjectName}');
+    // Use the properties directly from the session model instead of looking up class details
+    final hasClassDetails = session.subjectName != null;
+    print('Has class details: $hasClassDetails');
 
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 4.0),
@@ -209,7 +225,7 @@ class CalendarScreen extends StatelessWidget {
               ),
             Expanded(
               child: Text(
-                classDetails?.subjectName ?? 'Unknown Subject',
+                session.subjectName ?? 'Unknown Subject',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: AppColors.primary,
@@ -222,11 +238,10 @@ class CalendarScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 8.0),
-            if (classDetails?.courseName != null)
-              Text('Course: ${classDetails!.courseName}'),
-            if (classDetails?.year != null) Text('Year: ${classDetails!.year}'),
-            if (classDetails?.section != null)
-              Text('Section: ${classDetails!.section}'),
+            if (session.courseName != null)
+              Text('Course: ${session.courseName}'),
+            if (session.year != null) Text('Year: ${session.year}'),
+            if (session.section != null) Text('Section: ${session.section}'),
             const SizedBox(height: 4.0),
             Row(
               children: [
@@ -268,7 +283,12 @@ class CalendarScreen extends StatelessWidget {
               'Session card tapped, navigating to details. Session ID: ${session.id}');
           Get.toNamed('/session-details', arguments: {
             'sessionId': session.id,
-            'classDetails': classDetails,
+            'classDetails': {
+              'subjectName': session.subjectName,
+              'courseName': session.courseName,
+              'year': session.year,
+              'section': session.section,
+            },
           });
         },
       ),

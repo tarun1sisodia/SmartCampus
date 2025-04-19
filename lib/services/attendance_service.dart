@@ -559,13 +559,16 @@ class AttendanceService {
   /// Add these methods to your existing AttendanceService class
 
   /// Fetches all attendance sessions from the database
+  /// Fetches all attendance sessions from the database
   Future<List<AttendanceSessionModel>> getAllAttendanceSessions() async {
     try {
+      // Use the attendance_session_details view which already has all the joined data
       final response = await supabase
-          .from('attendance_sessions')
-          .select(
-              '*, classes(id, teacher_id, subject_id, course_id, year, section, subject_name, course_name)')
+          .from('attendance_session_details')
+          .select()
           .order('date', ascending: false);
+
+      print('Attendance sessions response: ${response.length} sessions loaded');
 
       return (response as List)
           .map((data) => AttendanceSessionModel.fromJson(data))

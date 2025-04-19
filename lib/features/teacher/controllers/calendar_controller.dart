@@ -7,57 +7,71 @@ import 'package:table_calendar/table_calendar.dart';
 
 class CalendarController extends GetxController {
   final AttendanceService attendanceService = AttendanceService();
-  
+
   // Calendar related variables
   final selectedDay = DateTime.now().obs;
   final focusedDay = DateTime.now().obs;
   final calendarFormat = CalendarFormat.month.obs;
-  
+
   // Sessions and classes data
   final allSessions = <AttendanceSessionModel>[].obs;
   final filteredSessions = <AttendanceSessionModel>[].obs;
   final userClasses = <ClassModel>[].obs;
   final isLoading = true.obs;
   final activeSessionsCount = 0.obs;
-  
+
   // Filter options
   final showOnlyMyClasses = false.obs;
   final selectedCourse = Rx<String?>(null);
   final selectedYear = Rx<int?>(null);
   final selectedSection = Rx<String?>(null);
-  
+
   @override
   void onInit() {
     super.onInit();
     loadData();
-    
+
     // Listen to filter changes
     ever(showOnlyMyClasses, (_) => applyFilters());
     ever(selectedCourse, (_) => applyFilters());
     ever(selectedYear, (_) => applyFilters());
     ever(selectedSection, (_) => applyFilters());
   }
-  
+
   Future<void> loadData() async {
     try {
       isLoading.value = true;
-      
+
+      print('Loading calendar data...');
+
       // Load all sessions and user's classes in parallel
       final results = await Future.wait([
         attendanceService.getAllAttendanceSessions(),
         attendanceService.getTeacherClasses(),
       ]);
-      
+
       allSessions.value = results[0] as List<AttendanceSessionModel>;
       userClasses.value = results[1] as List<ClassModel>;
-      
+
+      print(
+          'Loaded ${allSessions.length} sessions and ${userClasses.length} classes');
+
+      // Sample the first session to check data
+      if (allSessions.isNotEmpty) {
+        final sample = allSessions.first;
+        print(
+            'Sample session - ID: ${sample.id}, Subject: ${sample.subjectName}, Course: ${sample.courseName}');
+      }
+
       // Count active sessions (sessions happening today)
-       // Count active sessions (sessions happening today)
       _updateActiveSessionsCount();
+      print('Active sessions count: ${activeSessionsCount.value}');
 
       // Apply initial filters
       applyFilters();
+      print('Applied filters, filtered sessions: ${filteredSessions.length}');
     } catch (e) {
+      print('Error loading calendar data: $e');
       TSnackBar.showError(
         message: 'Failed to load calendar data: ${e.toString()}',
       );
@@ -81,13 +95,57 @@ class CalendarController extends GetxController {
       if (session.startTime == null || session.endTime == null) return false;
 
       try {
-        final startTimeParts = session.startTime!.split(':');
-        final endTimeParts = session.endTime!.split(':');
+        // Parse time in format "06 AM" or "07 PM"
+        int startHour = 0;
+        int startMinute = 0;
+        int endHour = 0;
+        int endMinute = 0;
 
-        final startHour = int.parse(startTimeParts[0]);
-        final startMinute = int.parse(startTimeParts[1]);
-        final endHour = int.parse(endTimeParts[0]);
-        final endMinute = int.parse(endTimeParts[1]);
+        // Parse start time
+        final startTimeParts = session.startTime!.split(' ');
+        if (startTimeParts.length == 2) {
+          final timePart = startTimeParts[0];
+          final amPm = startTimeParts[1].toUpperCase();
+
+          if (timePart.contains(':')) {
+            final parts = timePart.split(':');
+            startHour = int.parse(parts[0]);
+            startMinute = int.parse(parts[1]);
+          } else {
+            startHour = int.parse(timePart);
+            startMinute = 0;
+          }
+
+          // Convert to 24-hour format
+          if (amPm == 'PM' && startHour < 12) {
+            startHour += 12;
+          } else if (amPm == 'AM' && startHour == 12) {
+            startHour = 0;
+          }
+        }
+
+        // Parse end time
+        final endTimeParts = session.endTime!.split(' ');
+        if (endTimeParts.length == 2) {
+          final timePart = endTimeParts[0];
+          final amPm = endTimeParts[1].toUpperCase();
+
+          if (timePart.contains(':')) {
+            final parts = timePart.split(':');
+            endHour = int.parse(parts[0]);
+            endMinute = int.parse(parts[1]);
+          } else {
+            endHour = int.parse(timePart);
+            endMinute = 0;
+          }
+
+          // Convert to 24-hour format
+          if (amPm == 'PM' && endHour < 12) {
+            endHour += 12;
+          } else if (amPm == 'AM' && endHour == 12) {
+            endHour = 0;
+          }
+        }
 
         final sessionStart = DateTime(
             today.year, today.month, today.day, startHour, startMinute);
@@ -172,13 +230,57 @@ class CalendarController extends GetxController {
     if (sessionDate != today) return false;
 
     try {
-      final startTimeParts = session.startTime!.split(':');
-      final endTimeParts = session.endTime!.split(':');
+      // Parse time in format "06 AM" or "07 PM"
+      int startHour = 0;
+      int startMinute = 0;
+      int endHour = 0;
+      int endMinute = 0;
 
-      final startHour = int.parse(startTimeParts[0]);
-      final startMinute = int.parse(startTimeParts[1]);
-      final endHour = int.parse(endTimeParts[0]);
-      final endMinute = int.parse(endTimeParts[1]);
+      // Parse start time
+      final startTimeParts = session.startTime!.split(' ');
+      if (startTimeParts.length == 2) {
+        final timePart = startTimeParts[0];
+        final amPm = startTimeParts[1].toUpperCase();
+
+        if (timePart.contains(':')) {
+          final parts = timePart.split(':');
+          startHour = int.parse(parts[0]);
+          startMinute = int.parse(parts[1]);
+        } else {
+          startHour = int.parse(timePart);
+          startMinute = 0;
+        }
+
+        // Convert to 24-hour format
+        if (amPm == 'PM' && startHour < 12) {
+          startHour += 12;
+        } else if (amPm == 'AM' && startHour == 12) {
+          startHour = 0;
+        }
+      }
+
+      // Parse end time
+      final endTimeParts = session.endTime!.split(' ');
+      if (endTimeParts.length == 2) {
+        final timePart = endTimeParts[0];
+        final amPm = endTimeParts[1].toUpperCase();
+
+        if (timePart.contains(':')) {
+          final parts = timePart.split(':');
+          endHour = int.parse(parts[0]);
+          endMinute = int.parse(parts[1]);
+        } else {
+          endHour = int.parse(timePart);
+          endMinute = 0;
+        }
+
+        // Convert to 24-hour format
+        if (amPm == 'PM' && endHour < 12) {
+          endHour += 12;
+        } else if (amPm == 'AM' && endHour == 12) {
+          endHour = 0;
+        }
+      }
 
       final sessionStart =
           DateTime(today.year, today.month, today.day, startHour, startMinute);
