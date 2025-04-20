@@ -25,6 +25,11 @@ class AllSessionsController extends GetxController {
   final endDate = DateTime.now().obs;
   final selectedClassIds = <String>[].obs;
 
+  // New properties for multi-select
+  final isSelectionMode = false.obs;
+  final selectedSessionIds = <String>{}.obs;
+  final isAllSelected = false.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -205,6 +210,7 @@ class AllSessionsController extends GetxController {
               endDateTime.minute);
         } catch (e) {
           // If that fails, try 24-hour format like "14:30"
+          // If that fails, try 24-hour format like "14:30"
           try {
             final startTimeParts = session.startTime!.split(':');
             final endTimeParts = session.endTime!.split(':');
@@ -233,6 +239,92 @@ class AllSessionsController extends GetxController {
     } catch (e) {
       print('Error in isSessionRunning: $e');
       return false;
+    }
+  }
+
+  // New methods for multi-select functionality
+
+  void toggleSelectionMode(String? initialSessionId) {
+    isSelectionMode.value = !isSelectionMode.value;
+
+    if (!isSelectionMode.value) {
+      // Clear selections when exiting selection mode
+      clearSelections();
+    } else if (initialSessionId != null) {
+      // If entering selection mode with an initial selection
+      selectedSessionIds.add(initialSessionId);
+    }
+  }
+
+  void toggleSessionSelection(String sessionId) {
+    if (selectedSessionIds.contains(sessionId)) {
+      selectedSessionIds.remove(sessionId);
+      // If no sessions are selected, exit selection mode
+      if (selectedSessionIds.isEmpty) {
+        isSelectionMode.value = false;
+      }
+    } else {
+      selectedSessionIds.add(sessionId);
+    }
+
+    // Update "all selected" state
+    isAllSelected.value = selectedSessionIds.length == filteredSessions.length;
+  }
+
+  void toggleSelectAll() {
+    if (isAllSelected.value) {
+      // Deselect all
+      selectedSessionIds.clear();
+      isSelectionMode.value = false;
+    } else {
+      // Select all
+      selectedSessionIds.clear();
+      for (var session in filteredSessions) {
+        selectedSessionIds.add(session.id);
+      }
+    }
+    isAllSelected.value = !isAllSelected.value;
+  }
+
+  void clearSelections() {
+    selectedSessionIds.clear();
+    isAllSelected.value = false;
+  }
+
+  Future<void> deleteSelectedSessions() async {
+    try {
+      isLoading.value = true;
+
+      // Create a copy to avoid modification during iteration
+      final sessionsToDelete = Set<String>.from(selectedSessionIds);
+
+      for (var sessionId in sessionsToDelete) {
+        await attendanceService.deleteSession(sessionId);
+      }
+
+      // Remove deleted sessions from lists
+      allSessions
+          .removeWhere((session) => sessionsToDelete.contains(session.id));
+      filteredSessions
+          .removeWhere((session) => sessionsToDelete.contains(session.id));
+
+      // Exit selection mode
+      isSelectionMode.value = false;
+      clearSelections();
+
+      // Show success message
+      final count = sessionsToDelete.length;
+      TSnackBar.showSuccess(
+        message:
+            '$count ${count == 1 ? 'session' : 'sessions'} deleted successfully',
+        title: 'Success',
+      );
+    } catch (e) {
+      print('Error deleting selected sessions: $e');
+      TSnackBar.showError(
+          message: 'Failed to delete sessions: ${e.toString()}');
+    } finally {
+      isLoading.value = false;
     }
   }
 }

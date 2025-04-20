@@ -280,11 +280,13 @@ class DashboardScreen extends StatelessWidget {
                     : ListView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        itemCount: dashboardController.classes.length > 3
-                            ? 3
-                            : dashboardController.classes.length,
+                        itemCount:
+                            dashboardController.filteredClasses.length > 3
+                                ? 3
+                                : dashboardController.filteredClasses.length,
                         itemBuilder: (context, index) {
-                          final classItem = dashboardController.classes[index];
+                          final classItem =
+                              dashboardController.filteredClasses[index];
                           final stats =
                               dashboardController.classStats[classItem.id];
 

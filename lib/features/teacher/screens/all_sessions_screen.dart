@@ -24,13 +24,49 @@ class AllSessionsScreen extends StatelessWidget {
     final dark = THelperFunction.isDarkMode(context);
     print('Dark mode: $dark');
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'All Sessions',
-          style: Theme.of(context).textTheme.headlineSmall,
-        ),
-        actions: [
+    return Obx(() {
+      return Scaffold(
+        appBar: _buildAppBar(context, dark),
+        body: _buildBody(context, dark),
+        // Add bottom action bar when in selection mode
+        bottomNavigationBar: allSessionsController.isSelectionMode.value
+            ? _buildSelectionActionBar(context, dark)
+            : null,
+      );
+    });
+  }
+
+  PreferredSizeWidget _buildAppBar(BuildContext context, bool dark) {
+    return AppBar(
+      title: Text(
+        allSessionsController.isSelectionMode.value
+            ? '${allSessionsController.selectedSessionIds.length} Selected'
+            : 'All Sessions',
+        style: Theme.of(context).textTheme.headlineSmall,
+      ),
+      leading: allSessionsController.isSelectionMode.value
+          ? IconButton(
+              onPressed: () {
+                allSessionsController.toggleSelectionMode(null);
+              },
+              icon: const Icon(Icons.close),
+            )
+          : null,
+      actions: [
+        // Show select all button in selection mode
+        if (allSessionsController.isSelectionMode.value)
+          IconButton(
+            onPressed: () {
+              allSessionsController.toggleSelectAll();
+            },
+            icon: Icon(
+              allSessionsController.isAllSelected.value
+                  ? Icons.select_all
+                  : Icons.select_all_outlined,
+            ),
+          ),
+        // Show normal actions when not in selection mode
+        if (!allSessionsController.isSelectionMode.value)
           IconButton(
             onPressed: () {
               print('Refresh button pressed');
@@ -38,52 +74,56 @@ class AllSessionsScreen extends StatelessWidget {
             },
             icon: const Icon(Iconsax.refresh),
           ),
-        ],
-      ),
-      body: Obx(() {
-        print(
-            'Obx triggered: isLoading=${allSessionsController.isLoading.value}');
-        if (allSessionsController.isLoading.value) {
-          return const Center(child: CircularProgressIndicator());
-        }
+      ],
+    );
+  }
 
-        if (allSessionsController.allSessions.isEmpty) {
-          print('No sessions found');
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Iconsax.calendar_1,
-                  size: 64,
-                  color: dark ? TColors.yellow : TColors.deepPurple,
-                ),
-                const SizedBox(height: TSizes.spaceBtwItems),
-                Text(
-                  'No Sessions Found',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                const SizedBox(height: TSizes.spaceBtwItems / 2),
-                Text(
-                  'Create attendance sessions in your classes',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-          );
-        }
+  Widget _buildBody(BuildContext context, bool dark) {
+    return Obx(() {
+      print(
+          'Obx triggered: isLoading=${allSessionsController.isLoading.value}');
+      if (allSessionsController.isLoading.value) {
+        return const Center(child: CircularProgressIndicator());
+      }
 
-        return RefreshIndicator(
-          onRefresh: () async {
-            print('RefreshIndicator triggered');
-            await allSessionsController.loadAllSessions();
-          },
-          color: dark ? TColors.yellow : TColors.deepPurple,
-          backgroundColor: dark ? TColors.darkerGrey : Colors.white,
+      if (allSessionsController.allSessions.isEmpty) {
+        print('No sessions found');
+        return Center(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Filter options
+              Icon(
+                Iconsax.calendar_1,
+                size: 64,
+                color: dark ? TColors.yellow : TColors.deepPurple,
+              ),
+              const SizedBox(height: TSizes.spaceBtwItems),
+              Text(
+                'No Sessions Found',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              const SizedBox(height: TSizes.spaceBtwItems / 2),
+              Text(
+                'Create attendance sessions in your classes',
+                style: Theme.of(context).textTheme.bodyMedium,
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        );
+      }
+
+      return RefreshIndicator(
+        onRefresh: () async {
+          print('RefreshIndicator triggered');
+          await allSessionsController.loadAllSessions();
+        },
+        color: dark ? TColors.yellow : TColors.deepPurple,
+        backgroundColor: dark ? TColors.darkerGrey : Colors.white,
+        child: Column(
+          children: [
+            // Filter options
+            if (!allSessionsController.isSelectionMode.value)
               Padding(
                 padding: const EdgeInsets.all(TSizes.defaultSpace),
                 child: Row(
@@ -117,22 +157,39 @@ class AllSessionsScreen extends StatelessWidget {
                 ),
               ),
 
-              // Sessions list
-              Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: TSizes.defaultSpace,
-                  ),
-                  itemCount: allSessionsController.filteredSessions.length,
-                  itemBuilder: (context, index) {
-                    final session =
-                        allSessionsController.filteredSessions[index];
-                    print('Rendering session: ${session.id}');
-                    final formattedDate = DateFormat(
-                      'EEEE, MMMM d, yyyy',
-                    ).format(session.date);
+            // Sessions list
+            Expanded(
+              child: ListView.builder(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: TSizes.defaultSpace,
+                ),
+                itemCount: allSessionsController.filteredSessions.length,
+                itemBuilder: (context, index) {
+                  final session = allSessionsController.filteredSessions[index];
+                  print('Rendering session: ${session.id}');
+                  final formattedDate = DateFormat(
+                    'EEEE, MMMM d, yyyy',
+                  ).format(session.date);
 
-                    return Card(
+                  // Check if this session is selected
+                  final isSelected = allSessionsController.selectedSessionIds
+                      .contains(session.id);
+
+                  return GestureDetector(
+                    onLongPress: () {
+                      // Enter selection mode on long press
+                      if (!allSessionsController.isSelectionMode.value) {
+                        allSessionsController.toggleSelectionMode(session.id);
+                      }
+                    },
+                    onTap: () {
+                      // Toggle selection if in selection mode
+                      if (allSessionsController.isSelectionMode.value) {
+                        allSessionsController
+                            .toggleSessionSelection(session.id);
+                      }
+                    },
+                    child: Card(
                       margin: const EdgeInsets.only(
                         bottom: TSizes.spaceBtwItems,
                       ),
@@ -141,11 +198,21 @@ class AllSessionsScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(
                           TSizes.cardRadiusMd,
                         ),
+                        // Add border when selected
+                        side: isSelected
+                            ? BorderSide(
+                                color:
+                                    dark ? TColors.yellow : TColors.deepPurple,
+                                width: 2,
+                              )
+                            : BorderSide.none,
                       ),
-                      // In the ListView.builder, modify the ExpansionTile's leading widget
-// This is around line 144-155 in the file
-
                       child: ExpansionTile(
+                        // Disable expansion when in selection mode
+                        onExpansionChanged:
+                            allSessionsController.isSelectionMode.value
+                                ? (_) => false
+                                : null,
                         leading: Stack(
                           children: [
                             CircleAvatar(
@@ -346,179 +413,42 @@ class AllSessionsScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                    );
-                  },
-                ),
+                    ),
+                  );
+                },
               ),
-            ],
-          ),
-        );
-      }),
-    );
+            ),
+          ],
+        ),
+      );
+    });
   }
 
-  void _showFilterOptions(BuildContext context) {
-    print('Showing filter options');
-    final dark = THelperFunction.isDarkMode(context);
-
-    Get.bottomSheet(
-      Container(
-        padding: const EdgeInsets.all(TSizes.defaultSpace),
-        decoration: BoxDecoration(
-          color: dark ? Colors.grey[900] : Colors.white,
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(TSizes.cardRadiusLg),
-            topRight: Radius.circular(TSizes.cardRadiusLg),
-          ),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+  // Add bottom action bar for selection mode
+  Widget _buildSelectionActionBar(BuildContext context, bool dark) {
+    return BottomAppBar(
+      color: dark ? TColors.darkerGrey : Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Filter Sessions',
-              style: Theme.of(context).textTheme.titleLarge,
+              '${allSessionsController.selectedSessionIds.length} selected',
+              style: Theme.of(context).textTheme.titleMedium,
             ),
-            const SizedBox(height: TSizes.spaceBtwItems),
-
-            // Date filter
-            Text('Date Range', style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: TSizes.spaceBtwItems / 2),
-            Row(
-              children: [
-                Expanded(
-                  child: Obx(
-                    () => OutlinedButton(
-                      onPressed: () async {
-                        print('Start date picker opened');
-                        final pickedDate = await showDatePicker(
-                          context: context,
-                          initialDate: allSessionsController.startDate.value,
-                          firstDate: DateTime(2020),
-                          lastDate: DateTime.now().add(
-                            const Duration(days: 365),
-                          ),
-                        );
-                        if (pickedDate != null) {
-                          print('Start date selected: $pickedDate');
-                          allSessionsController.startDate.value = pickedDate;
-                          allSessionsController.filterSessions();
-                        }
-                      },
-                      child: Text(
-                        DateFormat(
-                          'MMM d, yyyy',
-                        ).format(allSessionsController.startDate.value),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: TSizes.spaceBtwItems),
-                Expanded(
-                  child: Obx(
-                    () => OutlinedButton(
-                      onPressed: () async {
-                        print('End date picker opened');
-                        final pickedDate = await showDatePicker(
-                          context: context,
-                          initialDate: allSessionsController.endDate.value,
-                          firstDate: DateTime(2020),
-                          lastDate: DateTime.now().add(
-                            const Duration(days: 365),
-                          ),
-                        );
-                        if (pickedDate != null) {
-                          print('End date selected: $pickedDate');
-                          allSessionsController.endDate.value = pickedDate;
-                          allSessionsController.filterSessions();
-                        }
-                      },
-                      child: Text(
-                        DateFormat(
-                          'MMM d, yyyy',
-                        ).format(allSessionsController.endDate.value),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: TSizes.spaceBtwItems),
-
-            // Class filter
-            Text('Classes', style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: TSizes.spaceBtwItems / 2),
-            SizedBox(
-              height: 50,
-              child: Obx(
-                () => ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: allSessionsController.classes.length,
-                  itemBuilder: (context, index) {
-                    final classItem = allSessionsController.classes[index];
-                    final isSelected = allSessionsController.selectedClassIds
-                        .contains(classItem.id);
-
-                    return Padding(
-                      padding: const EdgeInsets.only(right: TSizes.sm),
-                      child: FilterChip(
-                        selected: isSelected,
-                        label: Text(classItem.subjectName ?? 'Unknown'),
-                        onSelected: (selected) {
-                          print(
-                              'Class filter toggled: ${classItem.id}, selected: $selected');
-                          if (selected) {
-                            allSessionsController.selectedClassIds.add(
-                              classItem.id,
-                            );
-                          } else {
-                            allSessionsController.selectedClassIds.remove(
-                              classItem.id,
-                            );
-                          }
-                          allSessionsController.filterSessions();
-                        },
-                        backgroundColor:
-                            dark ? TColors.darkerGrey : Colors.grey.shade200,
-                        selectedColor:
-                            dark ? TColors.yellow : TColors.deepPurple,
-                        checkmarkColor: dark ? Colors.black : Colors.white,
-                      ),
-                    );
-                  },
-                ),
+            ElevatedButton.icon(
+              onPressed: allSessionsController.selectedSessionIds.isEmpty
+                  ? null
+                  : () {
+                      _showDeleteSelectedConfirmation(context);
+                    },
+              icon: const Icon(Iconsax.trash),
+              label: const Text('Delete'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
               ),
-            ),
-
-            const SizedBox(height: TSizes.spaceBtwSections),
-
-            // Action buttons
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton(
-                  onPressed: () {
-                    print('Reset filters button pressed');
-                    allSessionsController.resetFilters();
-                    Get.back();
-                  },
-                  child: const Text('Reset Filters'),
-                ),
-                const SizedBox(width: TSizes.spaceBtwItems),
-                ElevatedButton(
-                  onPressed: () {
-                    print('Apply filters button pressed');
-                    allSessionsController.filterSessions();
-                    Get.back();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: dark ? TColors.yellow : TColors.deepPurple,
-                    foregroundColor: dark ? Colors.black : Colors.white,
-                  ),
-                  child: const Text('Apply'),
-                ),
-              ],
             ),
           ],
         ),
@@ -526,32 +456,206 @@ class AllSessionsScreen extends StatelessWidget {
     );
   }
 
+  void _showFilterOptions(BuildContext context) {
+    print('Showing filter options');
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(TSizes.cardRadiusLg),
+        ),
+      ),
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+            left: TSizes.defaultSpace,
+            right: TSizes.defaultSpace,
+            top: TSizes.defaultSpace,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Filter Sessions',
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              const SizedBox(height: TSizes.spaceBtwItems),
+              Text(
+                'Date Range',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              const SizedBox(height: TSizes.spaceBtwItems / 2),
+              Row(
+                children: [
+                  Expanded(
+                    child: Obx(() {
+                      final startDateStr = DateFormat('MMM d, yyyy')
+                          .format(allSessionsController.startDate.value);
+                      return OutlinedButton(
+                        onPressed: () async {
+                          final pickedDate = await showDatePicker(
+                            context: context,
+                            initialDate: allSessionsController.startDate.value,
+                            firstDate: DateTime(2020),
+                            lastDate: DateTime.now(),
+                          );
+                          if (pickedDate != null) {
+                            allSessionsController.startDate.value = pickedDate;
+                            allSessionsController.filterSessions();
+                          }
+                        },
+                        child: Text('From: $startDateStr'),
+                      );
+                    }),
+                  ),
+                  const SizedBox(width: TSizes.spaceBtwItems),
+                  Expanded(
+                    child: Obx(() {
+                      final endDateStr = DateFormat('MMM d, yyyy')
+                          .format(allSessionsController.endDate.value);
+                      return OutlinedButton(
+                        onPressed: () async {
+                          final pickedDate = await showDatePicker(
+                            context: context,
+                            initialDate: allSessionsController.endDate.value,
+                            firstDate: DateTime(2020),
+                            lastDate: DateTime.now(),
+                          );
+                          if (pickedDate != null) {
+                            allSessionsController.endDate.value = pickedDate;
+                            allSessionsController.filterSessions();
+                          }
+                        },
+                        child: Text('To: $endDateStr'),
+                      );
+                    }),
+                  ),
+                ],
+              ),
+              const SizedBox(height: TSizes.spaceBtwItems),
+              Text(
+                'Classes',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              const SizedBox(height: TSizes.spaceBtwItems / 2),
+              Obx(() {
+                return Wrap(
+                  spacing: 8.0,
+                  runSpacing: 8.0,
+                  children: allSessionsController.classes.map((cls) {
+                    final isSelected =
+                        allSessionsController.selectedClassIds.contains(cls.id);
+                    return FilterChip(
+                      label: Text('${cls.subjectName} (${cls.courseName})'),
+                      selected: isSelected,
+                      onSelected: (selected) {
+                        if (selected) {
+                          allSessionsController.selectedClassIds.add(cls.id);
+                        } else {
+                          allSessionsController.selectedClassIds.remove(cls.id);
+                        }
+                        allSessionsController.filterSessions();
+                      },
+                    );
+                  }).toList(),
+                );
+              }),
+              const SizedBox(height: TSizes.spaceBtwItems),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      allSessionsController.resetFilters();
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Reset'),
+                  ),
+                  const SizedBox(width: TSizes.spaceBtwItems),
+                  ElevatedButton(
+                    onPressed: () {
+                      allSessionsController.filterSessions();
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Apply'),
+                  ),
+                ],
+              ),
+              const SizedBox(height: TSizes.spaceBtwItems),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   void _showDeleteConfirmation(BuildContext context, String sessionId) {
     print('Showing delete confirmation for session: $sessionId');
-    Get.dialog(
-      AlertDialog(
-        title: const Text('Delete Session'),
-        content: const Text(
-          'Are you sure you want to delete this session? This action cannot be undone.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              print('Delete confirmation canceled');
-              Get.back();
-            },
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () {
-              print('Delete confirmed for session: $sessionId');
-              Get.back();
-              allSessionsController.deleteSession(sessionId);
-            },
-            child: const Text('Delete', style: TextStyle(color: Colors.red)),
-          ),
-        ],
-      ),
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Delete Session'),
+          content: const Text(
+              'Are you sure you want to delete this session? This will also delete all attendance records for this session.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                allSessionsController.deleteSession(sessionId);
+              },
+              child: const Text(
+                'Delete',
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // Add method for confirming deletion of multiple sessions
+  void _showDeleteSelectedConfirmation(BuildContext context) {
+    final count = allSessionsController.selectedSessionIds.length;
+    print('Showing delete confirmation for $count selected sessions');
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Delete Selected Sessions'),
+          content: Text(
+              'Are you sure you want to delete $count selected ${count == 1 ? 'session' : 'sessions'}? This will also delete all attendance records for ${count == 1 ? 'this session' : 'these sessions'}.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                allSessionsController.deleteSelectedSessions();
+              },
+              child: const Text(
+                'Delete',
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

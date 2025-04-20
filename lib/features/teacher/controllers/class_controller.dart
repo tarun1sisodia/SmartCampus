@@ -4,7 +4,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../models/class_model.dart';
 import '../../../models/course_model.dart';
 import '../../../models/subject_model.dart';
-// Ensure Course is imported
 import '../../../services/class_service.dart';
 import '../../../services/course_service.dart';
 import '../../../services/subject_service.dart';
@@ -25,10 +24,13 @@ class ClassController extends GetxController {
   final selectedCourseId = ''.obs;
   final yearController = TextEditingController();
   final sectionController = TextEditingController();
-  // Define selectedCourse as an observable variable
   var selectedCourse = Rxn<CourseModel>();
-  // Add the selectedSubject property
   var selectedSubject = Rxn<dynamic>();
+
+  // New properties for multi-select
+  final isSelectionMode = false.obs;
+  final selectedClassIds = <String>{}.obs;
+  final isAllSelected = false.obs;
 
   @override
   void onInit() {
@@ -247,5 +249,83 @@ class ClassController extends GetxController {
     selectedCourseId.value = classModel.courseId;
     yearController.text = classModel.year.toString();
     sectionController.text = classModel.section ?? '';
+  }
+
+  // New methods for multi-select functionality
+  
+  void toggleSelectionMode(String? initialClassId) {
+    isSelectionMode.value = !isSelectionMode.value;
+    
+    if (!isSelectionMode.value) {
+      // Clear selections when exiting selection mode
+      clearSelections();
+    } else if (initialClassId != null) {
+      // If entering selection mode with an initial selection
+      selectedClassIds.add(initialClassId);
+    }
+  }
+
+  void toggleClassSelection(String classId) {
+    if (selectedClassIds.contains(classId)) {
+      selectedClassIds.remove(classId);
+      // If no classes are selected, exit selection mode
+      if (selectedClassIds.isEmpty) {
+        isSelectionMode.value = false;
+      }
+    } else {
+      selectedClassIds.add(classId);
+    }
+    
+    // Update "all selected" state
+    isAllSelected.value = selectedClassIds.length == classes.length;
+  }
+
+  void toggleSelectAll() {
+    if (isAllSelected.value) {
+      // Deselect all
+      selectedClassIds.clear();
+      isSelectionMode.value = false;
+    } else {
+      // Select all
+      selectedClassIds.clear();
+      for (var classItem in classes) {
+        selectedClassIds.add(classItem.id);
+      }
+    }
+    isAllSelected.value = !isAllSelected.value;
+  }
+
+  void clearSelections() {
+    selectedClassIds.clear();
+    isAllSelected.value = false;
+  }
+
+  Future<void> deleteSelectedClasses() async {
+    try {
+      isLoading.value = true;
+      
+      // Create a copy to avoid modification during iteration
+      final classesToDelete = Set<String>.from(selectedClassIds);
+      
+      for (var classId in classesToDelete) {
+        await deleteClass(classId);
+      }
+      
+      // Exit selection mode
+      isSelectionMode.value = false;
+      clearSelections();
+      
+      // Show success message
+      final count = classesToDelete.length;
+      TSnackBar.showSuccess(
+        message: '$count ${count == 1 ? 'class' : 'classes'} deleted successfully',
+        title: 'Success',
+      );
+    } catch (e) {
+      print('Error deleting selected classes: $e');
+      TSnackBar.showError(message: 'Failed to delete classes: ${e.toString()}');
+    } finally {
+      isLoading.value = false;
+    }
   }
 }
