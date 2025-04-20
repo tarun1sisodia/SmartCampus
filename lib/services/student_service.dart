@@ -23,14 +23,12 @@ class StudentService {
           name: studentData['name'],
           rollNumber: studentData['roll_number'],
           classId: json['class_id'],
-          createdAt:
-              studentData['created_at'] != null
-                  ? DateTime.parse(studentData['created_at'])
-                  : null,
-          updatedAt:
-              studentData['updated_at'] != null
-                  ? DateTime.parse(studentData['updated_at'])
-                  : null,
+          createdAt: studentData['created_at'] != null
+              ? DateTime.parse(studentData['created_at'])
+              : null,
+          updatedAt: studentData['updated_at'] != null
+              ? DateTime.parse(studentData['updated_at'])
+              : null,
         );
       }).toList();
     } catch (e) {
@@ -46,7 +44,8 @@ class StudentService {
     required String classId,
   }) async {
     try {
-      print('Adding student to class: $classId, Name: $name, Roll Number: $rollNumber');
+      print(
+          'Adding student to class: $classId, Name: $name, Roll Number: $rollNumber');
       final existingStudents = await supabase
           .from('students')
           .select()
@@ -61,28 +60,27 @@ class StudentService {
         if (existingStudents[0]['name'] != name) {
           await supabase
               .from('students')
-              .update({'name': name})
-              .eq('id', studentId);
+              .update({'name': name}).eq('id', studentId);
           print('Updated student name to: $name');
         }
       } else {
+        //Create a new student
         final studentData = {
           'name': name,
           'roll_number': rollNumber,
           'created_at': DateTime.now().toIso8601String(),
         };
 
-        final response =
-            await supabase
-                .from('students')
-                .insert(studentData)
-                .select()
-                .single();
+        final response = await supabase
+            .from('students')
+            .insert(studentData)
+            .select()
+            .single();
 
         studentId = response['id'];
         print('Created new student with ID: $studentId');
       }
-
+      // Add student to class if not already added
       final existingClassStudents = await supabase
           .from('class_students')
           .select()
@@ -136,14 +134,12 @@ class StudentService {
         name: response['name'],
         rollNumber: response['roll_number'],
         classId: '', // This will be filled in by the caller if needed
-        createdAt:
-            response['created_at'] != null
-                ? DateTime.parse(response['created_at'])
-                : null,
-        updatedAt:
-            response['updated_at'] != null
-                ? DateTime.parse(response['updated_at'])
-                : null,
+        createdAt: response['created_at'] != null
+            ? DateTime.parse(response['created_at'])
+            : null,
+        updatedAt: response['updated_at'] != null
+            ? DateTime.parse(response['updated_at'])
+            : null,
       );
     } catch (e) {
       print('Failed to get student: $e');

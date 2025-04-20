@@ -140,18 +140,6 @@ class StudentController extends GetxController {
       isFetchingAvailableStudents.value = false;
     }
   }
-
-  void sortAvailableStudents(String option) {
-    print('Sorting available students by: $option');
-    sortOption.value = option;
-
-    if (option == 'name') {
-      availableStudents.sort((a, b) => a.name.compareTo(b.name));
-    } else if (option == 'rollNumber') {
-      availableStudents.sort((a, b) => a.rollNumber.compareTo(b.rollNumber));
-    }
-  }
-
   void selectStudent(StudentModel student) {
     print('Selecting student: ${student.id}');
     if (!selectedStudents.any((s) => s.id == student.id)) {
@@ -203,6 +191,77 @@ class StudentController extends GetxController {
           message: 'Failed to import students: ${e.toString()}');
     } finally {
       isLoading.value = false;
+    }
+  }
+  // Add these methods to your StudentController class
+
+// Sort available students with more options
+  void sortAvailableStudents(String option) {
+    sortOption.value = option;
+
+    switch (option) {
+      case 'name':
+        availableStudents.sort((a, b) => a.name.compareTo(b.name));
+        break;
+      case 'nameDesc':
+        availableStudents.sort((a, b) => b.name.compareTo(a.name));
+        break;
+      case 'rollNumber':
+        availableStudents.sort((a, b) => a.rollNumber.compareTo(b.rollNumber));
+        break;
+      case 'rollNumberDesc':
+        availableStudents.sort((a, b) => b.rollNumber.compareTo(a.rollNumber));
+        break;
+      case 'semester':
+        // Sort by semester (extracted from roll number)
+        availableStudents.sort((a, b) {
+          final semA = _getSemesterFromRollNumber(a.rollNumber);
+          final semB = _getSemesterFromRollNumber(b.rollNumber);
+          return semA.compareTo(semB);
+        });
+        break;
+    }
+
+    availableStudents.refresh();
+  }
+
+// Select all filtered students
+  void selectAllFilteredStudents(List<StudentModel> filteredStudents) {
+    for (var student in filteredStudents) {
+      if (!selectedStudents.any((s) => s.id == student.id)) {
+        selectedStudents.add(student);
+      }
+    }
+  }
+
+// Deselect all students
+  void deselectAllStudents() {
+    selectedStudents.clear();
+  }
+
+// Helper method to extract semester from roll number (same as in the dialog)
+  int _getSemesterFromRollNumber(String rollNumber) {
+    try {
+      if (rollNumber.length < 5) return 0;
+
+      final yearPart = rollNumber.substring(3, 5);
+      final admissionYear = 2000 + int.parse(yearPart);
+
+      final now = DateTime.now();
+      final currentYear = now.year;
+      final currentMonth = now.month;
+
+      int yearsSinceAdmission = currentYear - admissionYear;
+      int semester = yearsSinceAdmission * 2;
+
+      if (currentMonth >= 7) {
+        semester += 1;
+      }
+
+      return semester.clamp(1, 6);
+    } catch (e) {
+      print('Error parsing semester from roll number: $e');
+      return 0;
     }
   }
 }

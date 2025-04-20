@@ -97,7 +97,8 @@ class AddStudentScreen extends StatelessWidget {
           );
         }
 
-        print('Building student list with ${studentController.students.length} students');
+        print(
+            'Building student list with ${studentController.students.length} students');
         return ListView.builder(
           padding: const EdgeInsets.all(TSizes.defaultSpace),
           itemCount: studentController.students.length,
@@ -159,7 +160,8 @@ class AddStudentScreen extends StatelessWidget {
                           ),
                           ElevatedButton(
                             onPressed: () {
-                              print('Confirming student deletion: ${student.id}');
+                              print(
+                                  'Confirming student deletion: ${student.id}');
                               Get.back();
                               studentController.removeStudentFromClass(
                                 student.id,
@@ -227,12 +229,11 @@ class AddStudentScreen extends StatelessWidget {
         ),
         actions: [
           TextButton(
-            onPressed: () {
-              print('Add student dialog cancelled');
-              Get.back();
-            },
-            child: const Text('Cancel')
-          ),
+              onPressed: () {
+                print('Add student dialog cancelled');
+                Get.back();
+              },
+              child: const Text('Cancel')),
           ElevatedButton(
             onPressed: () {
               print('Attempting to add student');
@@ -268,6 +269,12 @@ class AddStudentScreen extends StatelessWidget {
     print('Opening import students dialog');
     final dark = THelperFunction.isDarkMode(context);
 
+    // Add a search controller for filtering students
+    final searchController = TextEditingController();
+
+    // Add a semester filter
+    final selectedSemester = RxInt(0); // 0 means all semesters
+
     print('Fetching available students');
     studentController.fetchAvailableStudents();
 
@@ -276,7 +283,7 @@ class AddStudentScreen extends StatelessWidget {
         title: const Text('Import Students'),
         content: SizedBox(
           width: double.maxFinite,
-          height: 400,
+          height: 500, // Increased height for additional filters
           child: Obx(() {
             print('Building import dialog content');
             if (studentController.isFetchingAvailableStudents.value) {
@@ -289,52 +296,207 @@ class AddStudentScreen extends StatelessWidget {
               return const Text('No students available for import.');
             }
 
-            print('Building available students list');
+            // Filter students based on search text and semester
+            final filteredStudents =
+                studentController.availableStudents.where((student) {
+              // Filter by search text (name or roll number)
+              final searchMatch = searchController.text.isEmpty ||
+                  student.name
+                      .toLowerCase()
+                      .contains(searchController.text.toLowerCase()) ||
+                  student.rollNumber
+                      .toLowerCase()
+                      .contains(searchController.text.toLowerCase());
+
+              // Filter by semester (if selected)
+              final semesterMatch = selectedSemester.value == 0 ||
+                  _getSemesterFromRollNumber(student.rollNumber) ==
+                      selectedSemester.value;
+
+              return searchMatch && semesterMatch;
+            }).toList();
+
+            print(
+                'Building available students list with ${filteredStudents.length} filtered students');
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                DropdownButton<String>(
-                  value: studentController.sortOption.value,
-                  onChanged: (value) {
-                    if (value != null) {
-                      print('Sorting students by: $value');
-                      studentController.sortAvailableStudents(value);
-                    }
-                  },
-                  items: const [
-                    DropdownMenuItem(
-                      value: 'name',
-                      child: Text('Sort by Name'),
+                // Search field
+                TextField(
+                  controller: searchController,
+                  decoration: InputDecoration(
+                    labelText: 'Search by name or roll number',
+                    prefixIcon: const Icon(Iconsax.search_normal),
+                    border: OutlineInputBorder(
+                      borderRadius:
+                          BorderRadius.circular(TSizes.inputFieldRadius),
                     ),
-                    DropdownMenuItem(
-                      value: 'rollNumber',
-                      child: Text('Sort by Roll Number'),
+                  ),
+                  onChanged: (_) =>
+                      Get.forceAppUpdate(), // Force UI update on search
+                ),
+                const SizedBox(height: TSizes.spaceBtwItems),
+
+                // Semester filter
+                Row(
+                  children: [
+                    const Text('Filter by Semester:'),
+                    const SizedBox(width: TSizes.sm),
+                    Expanded(
+                      child: DropdownButton<int>(
+                        isExpanded: true,
+                        value: selectedSemester.value,
+                        onChanged: (value) {
+                          if (value != null) {
+                            selectedSemester.value = value;
+                          }
+                        },
+                        items: [
+                          const DropdownMenuItem(
+                            value: 0,
+                            child: Text('All Semesters'),
+                          ),
+                          for (int i = 1; i <= 6; i++)
+                            DropdownMenuItem(
+                              value: i,
+                              child: Text('Semester $i'),
+                            ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
                 const SizedBox(height: TSizes.spaceBtwItems),
+
+                // Sorting options
+                Row(
+                  children: [
+                    const Text('Sort by:'),
+                    const SizedBox(width: TSizes.sm),
+                    Expanded(
+                      child: DropdownButton<String>(
+                        isExpanded: true,
+                        value: studentController.sortOption.value,
+                        onChanged: (value) {
+                          if (value != null) {
+                            print('Sorting students by: $value');
+                            studentController.sortAvailableStudents(value);
+                          }
+                        },
+                        items: const [
+                          DropdownMenuItem(
+                            value: 'name',
+                            child: Text('Name (A-Z)'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'nameDesc',
+                            child: Text('Name (Z-A)'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'rollNumber',
+                            child: Text('Roll Number (Asc)'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'rollNumberDesc',
+                            child: Text('Roll Number (Desc)'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'semester',
+                            child: Text('Semester'),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: TSizes.spaceBtwItems),
+
+                // Selection actions
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        studentController
+                            .selectAllFilteredStudents(filteredStudents);
+                      },
+                      child: const Text('Select All'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        studentController.deselectAllStudents();
+                      },
+                      child: const Text('Deselect All'),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: TSizes.spaceBtwItems),
+
+                // Student list
                 Expanded(
-                  child: ListView.builder(
-                    itemCount: studentController.availableStudents.length,
-                    itemBuilder: (context, index) {
-                      final student = studentController.availableStudents[index];
-                      print('Building checkbox for student: ${student.name}');
-                      return Obx(() => CheckboxListTile(
-                            value: studentController.selectedStudents
-                                .any((s) => s.id == student.id),
-                            onChanged: (isSelected) {
-                              print('Student selection changed: ${student.name}, selected: $isSelected');
-                              if (isSelected == true) {
-                                studentController.selectStudent(student);
-                              } else {
-                                studentController.deselectStudent(student);
-                              }
-                            },
-                            title: Text(student.name),
-                            subtitle: Text('Roll Number: ${student.rollNumber}'),
-                          ));
-                    },
-                  ),
+                  child: filteredStudents.isEmpty
+                      ? const Center(child: Text('No matching students found'))
+                      : ListView.builder(
+                          itemCount: filteredStudents.length,
+                          itemBuilder: (context, index) {
+                            final student = filteredStudents[index];
+                            print(
+                                'Building checkbox for student: ${student.name}');
+
+                            // Get semester from roll number for display
+                            final semester =
+                                _getSemesterFromRollNumber(student.rollNumber);
+                            final semesterText =
+                                semester > 0 ? 'Semester $semester' : '';
+
+                            return Obx(() => CheckboxListTile(
+                                  value: studentController.selectedStudents
+                                      .any((s) => s.id == student.id),
+                                  onChanged: (isSelected) {
+                                    print(
+                                        'Student selection changed: ${student.name}, selected: $isSelected');
+                                    if (isSelected == true) {
+                                      studentController.selectStudent(student);
+                                    } else {
+                                      studentController
+                                          .deselectStudent(student);
+                                    }
+                                  },
+                                  title: Text(student.name),
+                                  subtitle: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                          'Roll Number: ${student.rollNumber}'),
+                                      if (semesterText.isNotEmpty)
+                                        Text(
+                                          semesterText,
+                                          style: TextStyle(
+                                            color: dark
+                                                ? TColors.yellow
+                                                : TColors.deepPurple,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                  secondary: CircleAvatar(
+                                    backgroundColor: dark
+                                        ? TColors.yellow
+                                        : TColors.deepPurple,
+                                    child: Text(
+                                      student.name.substring(0, 1),
+                                      style: TextStyle(
+                                        color:
+                                            dark ? Colors.black : Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                  dense: true,
+                                ));
+                          },
+                        ),
                 ),
               ],
             );
@@ -342,24 +504,23 @@ class AddStudentScreen extends StatelessWidget {
         ),
         actions: [
           TextButton(
-            onPressed: () {
-              print('Import dialog cancelled');
-              Get.back();
-            },
-            child: const Text('Cancel')
-          ),
+              onPressed: () {
+                print('Import dialog cancelled');
+                Get.back();
+              },
+              child: const Text('Cancel')),
           Obx(() => ElevatedButton(
                 onPressed: studentController.selectedStudents.isEmpty
                     ? null
                     : () {
-                        print('Importing ${studentController.selectedStudents.length} students');
+                        print(
+                            'Importing ${studentController.selectedStudents.length} students');
                         studentController.importSelectedStudents();
                         Get.back();
                       },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: dark ? TColors.yellow : TColors.deepPurple,
                   foregroundColor: dark ? Colors.black : Colors.white,
-                  disabledBackgroundColor: Colors.grey,
                 ),
                 child: Text(
                     'Import (${studentController.selectedStudents.length})'),
@@ -367,5 +528,43 @@ class AddStudentScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+// Helper method to extract semester from roll number
+// Assuming roll numbers follow a pattern like BCA23001 where:
+// - BCA is the program
+// - 23 is the year
+// - 001 is the sequence number
+// We can determine semester based on year and current date
+  int _getSemesterFromRollNumber(String rollNumber) {
+    try {
+      if (rollNumber.length < 5) return 0;
+
+      // Extract the year part (e.g., "23" from "BCA23001")
+      final yearPart = rollNumber.substring(3, 5);
+      final admissionYear = 2000 + int.parse(yearPart);
+
+      // Calculate current year and month
+      final now = DateTime.now();
+      final currentYear = now.year;
+      final currentMonth = now.month;
+
+      // Calculate years since admission
+      int yearsSinceAdmission = currentYear - admissionYear;
+
+      // Calculate semester (2 semesters per year)
+      int semester = yearsSinceAdmission * 2;
+
+      // Adjust for current month (assuming semesters start in January and July)
+      if (currentMonth >= 7) {
+        semester += 1;
+      }
+
+      // Ensure semester is within valid range (1-6 for a 3-year program)
+      return semester.clamp(1, 6);
+    } catch (e) {
+      print('Error parsing semester from roll number: $e');
+      return 0;
+    }
   }
 }

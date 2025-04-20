@@ -28,7 +28,6 @@ import 'services/language_service.dart';
 Future<void> main() async {
   try {
     print('Starting app initialization...');
-
     // Intializing the binding for the app.
     WidgetsFlutterBinding.ensureInitialized();
     print('Flutter bindings initialized.');
