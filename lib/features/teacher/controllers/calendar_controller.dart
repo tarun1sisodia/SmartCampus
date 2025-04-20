@@ -25,6 +25,7 @@ class CalendarController extends GetxController {
   final selectedCourse = Rx<String?>(null);
   final selectedYear = Rx<int?>(null);
   final selectedSection = Rx<String?>(null);
+  final showAllSessions = false.obs;
 
   @override
   void onInit() {
@@ -32,6 +33,7 @@ class CalendarController extends GetxController {
     loadData();
 
     // Listen to filter changes
+    ever(showAllSessions, (_) => applyFilters());
     ever(showOnlyMyClasses, (_) => applyFilters());
     ever(selectedCourse, (_) => applyFilters());
     ever(selectedYear, (_) => applyFilters());
@@ -163,48 +165,36 @@ class CalendarController extends GetxController {
   void applyFilters() {
     List<AttendanceSessionModel> result = List.from(allSessions);
 
-    // Filter by teacher's classes if selected
-    if (showOnlyMyClasses.value) {
-      final userClassIds = userClasses.map((c) => c.id).toSet();
-      result = result
-          .where((session) => userClassIds.contains(session.classId))
-          .toList();
-    }
+    // If not showing all sessions, apply filters
+    if (!showAllSessions.value) {
+      // Filter by teacher's classes if selected
+      if (showOnlyMyClasses.value) {
+        final userClassIds = userClasses.map((c) => c.id).toSet();
+        result = result
+            .where((session) => userClassIds.contains(session.classId))
+            .toList();
+      }
 
-    // Apply course filter
-    if (selectedCourse.value != null) {
-      final filteredClassIds = userClasses
-          .where((c) => c.courseName == selectedCourse.value)
-          .map((c) => c.id)
-          .toSet();
+      // Apply course filter
+      if (selectedCourse.value != null) {
+        result = result
+            .where((session) => session.courseName == selectedCourse.value)
+            .toList();
+      }
 
-      result = result
-          .where((session) => filteredClassIds.contains(session.classId))
-          .toList();
-    }
+      // Apply year filter
+      if (selectedYear.value != null) {
+        result = result
+            .where((session) => session.year == selectedYear.value)
+            .toList();
+      }
 
-    // Apply year filter
-    if (selectedYear.value != null) {
-      final filteredClassIds = userClasses
-          .where((c) => c.year == selectedYear.value)
-          .map((c) => c.id)
-          .toSet();
-
-      result = result
-          .where((session) => filteredClassIds.contains(session.classId))
-          .toList();
-    }
-
-    // Apply section filter
-    if (selectedSection.value != null) {
-      final filteredClassIds = userClasses
-          .where((c) => c.section == selectedSection.value)
-          .map((c) => c.id)
-          .toSet();
-
-      result = result
-          .where((session) => filteredClassIds.contains(session.classId))
-          .toList();
+      // Apply section filter
+      if (selectedSection.value != null) {
+        result = result
+            .where((session) => session.section == selectedSection.value)
+            .toList();
+      }
     }
 
     filteredSessions.value = result;

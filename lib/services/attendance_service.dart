@@ -559,10 +559,10 @@ class AttendanceService {
   /// Add these methods to your existing AttendanceService class
 
   /// Fetches all attendance sessions from the database
-  /// Fetches all attendance sessions from the database
   Future<List<AttendanceSessionModel>> getAllAttendanceSessions() async {
     try {
       // Use the attendance_session_details view which already has all the joined data
+      // No filtering by teacher_id to get ALL sessions
       final response = await supabase
           .from('attendance_session_details')
           .select()

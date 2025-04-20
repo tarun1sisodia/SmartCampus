@@ -196,9 +196,9 @@ class CalendarScreen extends StatelessWidget {
     final isActive = controller.isSessionActive(session);
     print('Session active status: $isActive');
 
-    // Use the properties directly from the session model instead of looking up class details
-    final hasClassDetails = session.subjectName != null;
-    print('Has class details: $hasClassDetails');
+    // Check if this is the current user's session
+    final isMySession =
+        controller.userClasses.any((cls) => cls.id == session.classId);
 
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 4.0),
@@ -207,7 +207,9 @@ class CalendarScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(8.0),
         side: isActive
             ? BorderSide(color: Colors.green, width: 2.0)
-            : BorderSide.none,
+            : isMySession
+                ? BorderSide(color: AppColors.primary, width: 1.0)
+                : BorderSide.none,
       ),
       child: ListTile(
         contentPadding: const EdgeInsets.all(16.0),
@@ -228,7 +230,7 @@ class CalendarScreen extends StatelessWidget {
                 session.subjectName ?? 'Unknown Subject',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: AppColors.primary,
+                  color: isMySession ? AppColors.primary : Colors.grey[700],
                 ),
               ),
             ),
@@ -275,21 +277,53 @@ class CalendarScreen extends StatelessWidget {
                   ),
                 ),
               ),
+            if (isMySession)
+              Container(
+                margin: const EdgeInsets.only(top: 8.0),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8.0,
+                  vertical: 4.0,
+                ),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(4.0),
+                ),
+                child: Text(
+                  'MY CLASS',
+                  style: TextStyle(
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12.0,
+                  ),
+                ),
+              ),
           ],
         ),
         trailing: Icon(Icons.arrow_forward_ios, size: 16.0),
         onTap: () {
           print(
               'Session card tapped, navigating to details. Session ID: ${session.id}');
-          Get.toNamed('/session-details', arguments: {
-            'sessionId': session.id,
-            'classDetails': {
-              'subjectName': session.subjectName,
-              'courseName': session.courseName,
-              'year': session.year,
-              'section': session.section,
-            },
-          });
+          // Only allow navigation to session details if it's the user's session
+          if (isMySession) {
+            Get.toNamed('/session-details', arguments: {
+              'sessionId': session.id,
+              'classDetails': {
+                'subjectName': session.subjectName,
+                'courseName': session.courseName,
+                'year': session.year,
+                'section': session.section,
+              },
+            });
+          } else {
+            // Show a message that this is not the user's session
+            Get.snackbar(
+              'Not Your Session',
+              'You can only view details of your own sessions.',
+              snackPosition: SnackPosition.BOTTOM,
+              backgroundColor: Colors.orange,
+              colorText: Colors.white,
+            );
+          }
         },
       ),
     );
@@ -335,13 +369,30 @@ class CalendarScreen extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 16.0),
+
+              // Add this new toggle for showing all sessions
+              Obx(() => SwitchListTile(
+                    title: Text('Show all teachers\' sessions'),
+                    value: controller.showAllSessions.value,
+                    onChanged: (value) {
+                      print('Show all sessions changed: $value');
+                      controller.showAllSessions.value = value;
+                      // If showing all sessions, disable "show only my classes"
+                      if (value) {
+                        controller.showOnlyMyClasses.value = false;
+                      }
+                    },
+                  )),
+
               Obx(() => SwitchListTile(
                     title: Text('Show only my classes'),
                     value: controller.showOnlyMyClasses.value,
-                    onChanged: (value) {
-                      print('Show only my classes changed: $value');
-                      controller.showOnlyMyClasses.value = value;
-                    },
+                    onChanged: controller.showAllSessions.value
+                        ? null // Disable if showing all sessions
+                        : (value) {
+                            print('Show only my classes changed: $value');
+                            controller.showOnlyMyClasses.value = value;
+                          },
                   )),
               const SizedBox(height: 8.0),
               Text(
@@ -364,10 +415,12 @@ class CalendarScreen extends StatelessWidget {
                         );
                       }),
                     ],
-                    onChanged: (value) {
-                      print('Course filter changed: $value');
-                      controller.selectedCourse.value = value;
-                    },
+                    onChanged: controller.showAllSessions.value
+                        ? null // Disable if showing all sessions
+                        : (value) {
+                            print('Course filter changed: $value');
+                            controller.selectedCourse.value = value;
+                          },
                   )),
               const SizedBox(height: 8.0),
               Text(
@@ -390,10 +443,12 @@ class CalendarScreen extends StatelessWidget {
                         );
                       }),
                     ],
-                    onChanged: (value) {
-                      print('Year filter changed: $value');
-                      controller.selectedYear.value = value;
-                    },
+                    onChanged: controller.showAllSessions.value
+                        ? null // Disable if showing all sessions
+                        : (value) {
+                            print('Year filter changed: $value');
+                            controller.selectedYear.value = value;
+                          },
                   )),
               const SizedBox(height: 8.0),
               Text(
@@ -416,10 +471,12 @@ class CalendarScreen extends StatelessWidget {
                         );
                       }),
                     ],
-                    onChanged: (value) {
-                      print('Section filter changed: $value');
-                      controller.selectedSection.value = value;
-                    },
+                    onChanged: controller.showAllSessions.value
+                        ? null // Disable if showing all sessions
+                        : (value) {
+                            print('Section filter changed: $value');
+                            controller.selectedSection.value = value;
+                          },
                   )),
               const SizedBox(height: 16.0),
               SizedBox(
@@ -427,6 +484,7 @@ class CalendarScreen extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () {
                     print('Resetting all filters');
+                    controller.showAllSessions.value = false;
                     controller.showOnlyMyClasses.value = false;
                     controller.selectedCourse.value = null;
                     controller.selectedYear.value = null;

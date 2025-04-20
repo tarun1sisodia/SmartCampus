@@ -15,10 +15,10 @@ class LogoAndText extends StatelessWidget {
       children: [
         Image(
           image: AssetImage(
-          TImageStrings.appLogo,
+            TImageStrings.appLogo,
             // dark ? TImageStrings.darkApplogo : TImageStrings.lightApplogo,
           ),
-          height: 100,
+          height: 80,
         ),
         Text(
           TTexts.logintitle1,

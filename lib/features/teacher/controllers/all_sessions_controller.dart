@@ -239,6 +239,7 @@ class AllSessionsController extends GetxController {
 
 class AttendanceSessionWithClass extends AttendanceSessionModel {
   final String? className;
+  @override
   final String? subjectName;
   final ClassModel? classModel;
 

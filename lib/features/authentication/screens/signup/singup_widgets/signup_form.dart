@@ -12,9 +12,9 @@ import 'package:iconsax/iconsax.dart';
 
 class SignupForm extends StatelessWidget {
   SignupForm({super.key});
-  
+
   final controller = Get.put(SignupController());
-  
+
   @override
   Widget build(BuildContext context) {
     final dark = THelperFunction.isDarkMode(context);
@@ -130,35 +130,44 @@ class SignupForm extends StatelessWidget {
                 width: double.infinity,
                 height: TSizes.appBarHeight,
                 child: ElevatedButton(
-                  onPressed:
-                      controller.isLoading.value
-                          ? null
-                          : () async {
-                            if (formKey.currentState!.validate()) {
-                              try {
-                                await controller.signUpWithEmail();
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: dark ? TColors.yellow : TColors.deepPurple,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  onPressed: controller.isLoading.value
+                      ? null
+                      : () async {
+                          if (formKey.currentState!.validate()) {
+                            try {
+                              await controller.signUpWithEmail();
 
-                                // Navigate to email verification screen using named route
-                                Get.toNamed(
-                                  AppRoutes.verifyEmail,
-                                  arguments:
-                                      controller.emailController.text.trim(),
-                                );
-                              } catch (e) {
-                                // Error is already handled in the controller with custom snackbar
-                              }
-                            } else {
-                              // Show validation error if form is not valid
-                              TSnackBar.showValidationError(
-                                message:
-                                    'Please fill in all required fields correctly.',
+                              // Navigate to email verification screen using named route
+                              Get.toNamed(
+                                AppRoutes.verifyEmail,
+                                arguments:
+                                    controller.emailController.text.trim(),
                               );
+                            } catch (e) {
+                              // Error is already handled in the controller with custom snackbar
                             }
-                          },
-                  child:
-                      controller.isLoading.value
-                          ? const CircularProgressIndicator()
-                          : Text(TTexts.createAccount),
+                          } else {
+                            // Show validation error if form is not valid
+                            TSnackBar.showValidationError(
+                              message:
+                                  'Please fill in all required fields correctly.',
+                            );
+                          }
+                        },
+                  child: controller.isLoading.value
+                      ? const CircularProgressIndicator()
+                      : Text(TTexts.createAccount,
+                          style: TextStyle(
+                            color: dark ? TColors.deepPurple : Colors.white,
+                            fontSize: TSizes.fontSizeMd,
+                            fontWeight: FontWeight.bold,
+                          )),
                 ),
               ),
             ),

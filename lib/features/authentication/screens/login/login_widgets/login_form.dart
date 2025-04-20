@@ -61,8 +61,8 @@ class LoginForm extends StatelessWidget {
                   icon: Icon(
                     _passwordVisible.value ? Iconsax.eye : Iconsax.eye_slash,
                   ),
-                  onPressed:
-                      () => _passwordVisible.value = !_passwordVisible.value,
+                  onPressed: () =>
+                      _passwordVisible.value = !_passwordVisible.value,
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -91,39 +91,30 @@ class LoginForm extends StatelessWidget {
                 height: TSizes.appBarHeight,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: dark ? TColors.black : TColors.white,
+                    backgroundColor: dark ? TColors.yellow : TColors.deepPurple,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                      side: BorderSide(
-                        color: dark ? TColors.yellow : TColors.deepPurple,
-                        width: 2.0,
-                      ),
+                      borderRadius:
+                          BorderRadius.circular(TSizes.borderRadiusMd),
                     ),
                   ),
-                  onPressed:
-                      controller.isLoading.value
-                          ? null
-                          : () {
-                            if (_formKey.currentState!.validate()) {
-                              if (controller.emailController.text.isNotEmpty &&
-                                  controller
-                                      .passwordController
-                                      .text
-                                      .isNotEmpty) {
-                                controller.signInWithEmail();
-                              }
+                  onPressed: controller.isLoading.value
+                      ? null
+                      : () {
+                          if (_formKey.currentState!.validate()) {
+                            if (controller.emailController.text.isNotEmpty &&
+                                controller.passwordController.text.isNotEmpty) {
+                              controller.signInWithEmail();
                             }
-                          },
-                  child:
-                      controller.isLoading.value
-                          ? const CircularProgressIndicator()
-                          : Text(
-                            TTexts.signIn,
-                            // style: TextStyle(
-                            //   color: dark ? TColors.deepPurple : TColors.yellow,
-                            // ),
-                            style: Theme.of(context).textTheme.bodyLarge,
-                          ),
+                          }
+                        },
+                  child: controller.isLoading.value
+                      ? const CircularProgressIndicator()
+                      : Text(TTexts.signIn,
+                          style: TextStyle(
+                            color: dark ? TColors.deepPurple : Colors.white,
+                            fontSize: TSizes.fontSizeMd,
+                            fontWeight: FontWeight.bold,
+                          )),
                 ),
               ),
             ),
@@ -134,6 +125,11 @@ class LoginForm extends StatelessWidget {
               width: double.infinity,
               height: TSizes.appBarHeight,
               child: OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(TSizes.borderRadiusMd),
+                  ),
+                ),
                 onPressed: () {
                   // Clean up any existing SignupController
                   if (Get.isRegistered<SignupController>()) {
@@ -141,7 +137,12 @@ class LoginForm extends StatelessWidget {
                   }
                   Get.toNamed('/signup');
                 },
-                child: Text(TTexts.createAccount),
+                child: Text(TTexts.createAccount,
+                    style: TextStyle(
+                      color: dark ? TColors.yellow : TColors.deepPurple,
+                      fontSize: TSizes.fontSizeMd,
+                      fontWeight: FontWeight.bold,
+                    )),
               ),
             ),
           ],
