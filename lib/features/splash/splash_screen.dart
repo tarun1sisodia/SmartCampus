@@ -91,7 +91,7 @@ class _SplashScreenState extends State<SplashScreen>
                 return Opacity(opacity: _fadeAnimation.value, child: child);
               },
               child: Image.asset(
-                'assets/logos/smartcampus.png',
+                TImageStrings.applogoTransparentPNG,
                 width: 150,
                 height: 150,
               ),

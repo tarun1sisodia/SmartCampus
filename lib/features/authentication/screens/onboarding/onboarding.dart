@@ -1,3 +1,6 @@
+import 'package:attedance__/common/utils/constants/text_strings.dart';
+import 'package:attedance__/features/authentication/screens/onboarding/widgets/onboarding_page.dart';
+
 import '../../controllers/controllers_onboarding/onboarding_controller.dart';
 import 'widgets/onboarding_dot_navigation.dart';
 import 'widgets/onboarding_next_button.dart';
@@ -28,21 +31,15 @@ class Onboarding extends StatelessWidget {
                 TImageStrings.hellorobo,
                 width: THelperFunction.screenWidth() * 0.6,
               ),
-              Lottie.asset(
-                // TTexts.onboardingtitle3,
-                TImageStrings.searching,
-                width: THelperFunction.screenWidth() * 0.6,
+              OnboardingPage(
+                image: TImageStrings.onboardingImage2,
+                title: TTexts.attedancetitle2,
+                subtitle: TTexts.attendanceSubtitle2,
               ),
-
-              // OnboardingPage(
-              //   image: TImageStrings.searching,
-              //   title: TTexts.attedancetitle3,
-              //   subtitle: TTexts.attendanceSubtitle3,
-              // ),
-              Lottie.asset(
-                // TTexts.onboardingtitle3,
-                TImageStrings.lightEmailSuccess,
-                width: THelperFunction.screenWidth() * 0.6,
+              OnboardingPage(
+                image: TImageStrings.onboardingImage3,
+                title: TTexts.attedancetitle3,
+                subtitle: TTexts.attendanceSubtitle3,
               ),
             ],
           ),

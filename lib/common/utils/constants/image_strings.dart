@@ -2,9 +2,11 @@ class TImageStrings {
   TImageStrings._() {
     print('TImageStrings initialized');
   }
-  static const String appLogo = "assets/logos/smartcampus.png";
-  static const String darkApplogo = "assets/logos/1.png";
-  static const String lightApplogo = "assets/logos/2.png";
+  static const String appLogo = "assets/logos/applogo.png";
+  static const String applogoTransparentPNG =
+      "assets/logos/logo-transparent.png";
+  static const String applogoTransparentSVG =
+      "assets/logos/logo-transparent.svg";
 
   static const String google = "assets/icons/google.png";
   static const String facebook = "assets/icons/facebook.png";
@@ -12,11 +14,11 @@ class TImageStrings {
   static const String microsoft = "assets/icons/microsoft.png";
 
   static const String onboardingImage1 =
-      "assets/images/onboarding_images/searching.gif";
+      "assets/animations/hello_robo.json";
   static const String onboardingImage2 =
-      "assets/images/onboarding_images/payment.gif";
+      "assets/images/onboarding_images/tap.gif";
   static const String onboardingImage3 =
-      "assets/images/onboarding_images/delivery.gif";
+      "assets/images/onboarding_images/activity-feed.gif";
 
   static const String verifyemail = "assets/icons/verify.png";
   static const String successemail = "assets/icons/success.png";

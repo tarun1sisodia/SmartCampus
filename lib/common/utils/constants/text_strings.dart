@@ -1,8 +1,6 @@
 class TTexts {
   // Existing strings
   static const String onboardingtitle1 = "Choose Your product";
-  static const String onboardingtitle2 = "Select Payment method";
-  static const String onboardingtitle3 = "Deliever at your Door Step";
   static const String attedancetitle1 = "Welcome to SmartCampus";
   static const String attedancetitle2 = "Esay to use no more shouting";
   static const String attedancetitle3 = "Swipe to Present and Absent";
@@ -10,10 +8,8 @@ class TTexts {
       "Dolor officia nulla nulla aliqua excepteur culpa voluptate. Veniam deserunt sunt duis cillum Lorem. Culpa mollit do et deserunt dolor elit. Sint magna occaecat ea cillum do eu ad ad.";
 
   static const String attendanceSubtitle2 =
-      "Aute fugiat enim cillum labore tempor duis excepteur Lorem sint dolore. Ipsum non ipsum magna duis laborum et aliqua cillum eiusmod dolore quis ullamco. Cillum ullamco consectetur cupidatat aliqua consectetur eiusmod occaecat. Ullamco veniam enim proident nulla elit qui nulla dolore dolore aliqua nostrud. Excepteur elit exercitation dolor amet Lorem id in eiusmod deserunt enim. Pariatur mollit consectetur mollit laborum ipsum cupidatat.";
-  static const String attendanceSubtitle3 =
-      "Nostrud occaecat esse ipsum non sunt nulla non ea dolore. Reprehenderit consequat labore dolor proident veniam nulla eiusmod aliqua. Est elit excepteur labore cillum anim in et cupidatat consectetur sit eu est commodo. Enim est excepteur duis dolore nostrud eiusmod pariatur fugiat in elit ea. Irure veniam nulla reprehenderit proident deserunt est commodo.";
-
+      "Simplify attendance tracking with ease and clarity.";
+  static const String attendanceSubtitle3 = "Swipe to Present and Absent";
   static const String onboardingSubtitle1 =
       "Welcome to World limited Choice hub";
   static const String onboardingSubtitle2 =
@@ -25,7 +21,7 @@ class TTexts {
   static const String homeAppbarSubtitle = "Tarun Sisodia";
 
   static const String logintitle1 = "Welcome back";
-  static const String loginsubtitle1 = "hey, Login now we are waiting... ";
+  static const String loginsubtitle1 = "Hey, Enter your details to login";
 
   // Authentication Form Text
   static const String firstName = "First Name";

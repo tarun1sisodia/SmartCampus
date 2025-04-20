@@ -32,33 +32,36 @@ class OnboardingNextButton extends StatelessWidget {
                 borderRadius: BorderRadius.circular(30),
               ),
               elevation: 5,
-              shadowColor:
-                  dark
-                      ? TColors.buttonPrimary.withOpacity(0.5)
-                      : TColors.deepPurple.withOpacity(0.5),
+              shadowColor: dark
+                  ? TColors.buttonPrimary.withOpacity(0.5)
+                  : TColors.deepPurple.withOpacity(0.5),
               padding: const EdgeInsets.all(0),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                if (controller.currentPageIndex.value == 2)
-                  Padding(
-                    padding: const EdgeInsets.only(right: 8.0),
-                    child: Text(
-                      'Get Started',
-                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                        color: TColors.white,
-                        fontWeight: FontWeight.bold,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (controller.currentPageIndex.value == 2)
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: Text(
+                        'Get Started',
+                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                              color: TColors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
                     ),
+                  Icon(
+                    controller.currentPageIndex.value == 2
+                        ? Iconsax.login
+                        : Iconsax.arrow_right_3,
+                    color: TColors.white,
                   ),
-                Icon(
-                  controller.currentPageIndex.value == 2
-                      ? Iconsax.login
-                      : Iconsax.arrow_right_3,
-                  color: TColors.white,
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
