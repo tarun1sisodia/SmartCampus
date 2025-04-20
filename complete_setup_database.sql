@@ -951,6 +951,32 @@ USING (
         AND classes.teacher_id = auth.uid()
     )
 );
+-- Add image_url column to students table
+ALTER TABLE students 
+ADD COLUMN IF NOT EXISTS image_url TEXT;
+
+-- Create a storage bucket for student images if it doesn't exist
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('student_images', 'Student Images', true)
+ON CONFLICT (id) DO NOTHING;
+
+-- Add storage policy for student images
+CREATE POLICY "Student images are viewable by authenticated users" 
+ON storage.objects FOR SELECT
+USING (bucket_id = 'student_images' AND auth.role() = 'authenticated');
+
+CREATE POLICY "Teachers can upload student images" 
+ON storage.objects FOR INSERT 
+WITH CHECK (bucket_id = 'student_images' AND auth.role() = 'authenticated');
+
+CREATE POLICY "Teachers can update student images" 
+ON storage.objects FOR UPDATE
+USING (bucket_id = 'student_images' AND auth.role() = 'authenticated');
+
+CREATE POLICY "Teachers can delete student images" 
+ON storage.objects FOR DELETE
+USING (bucket_id = 'student_images' AND auth.role() = 'authenticated');
+
 
 -- =============================================
 -- STEP 7: Insert Sample Data

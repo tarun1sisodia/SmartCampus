@@ -1,7 +1,9 @@
 import 'package:attedance__/features/teacher/controllers/student_controller.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../../models/class_model.dart';
 import '../../../common/utils/constants/colors.dart';
 import '../../../common/utils/constants/sized.dart';
@@ -192,6 +194,8 @@ class AddStudentScreen extends StatelessWidget {
 
     studentController.nameController.clear();
     studentController.rollNumberController.clear();
+    studentController
+        .clearSelectedImage(); // Clear any previously selected image
     print('Form controllers reset');
 
     Get.dialog(
@@ -201,6 +205,38 @@ class AddStudentScreen extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              // Student image selection
+              Obx(() => GestureDetector(
+                    onTap: () => _showImagePickerOptions(context),
+                    child: Container(
+                      width: 100,
+                      height: 100,
+                      decoration: BoxDecoration(
+                        color: dark ? TColors.darkerGrey : Colors.grey[200],
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: dark ? TColors.yellow : TColors.deepPurple,
+                          width: 2,
+                        ),
+                      ),
+                      child: ClipOval(
+                        child: studentController.selectedImage.value != null
+                            ? Image.file(
+                                studentController.selectedImage.value!,
+                                fit: BoxFit.cover,
+                              )
+                            : Icon(
+                                Iconsax.camera,
+                                size: 40,
+                                color:
+                                    dark ? TColors.yellow : TColors.deepPurple,
+                              ),
+                      ),
+                    ),
+                  )),
+              const SizedBox(height: TSizes.spaceBtwItems),
+
+              // Name field
               TextField(
                 controller: studentController.nameController,
                 decoration: InputDecoration(
@@ -213,6 +249,8 @@ class AddStudentScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: TSizes.spaceBtwInputFields),
+
+              // Roll number field
               TextField(
                 controller: studentController.rollNumberController,
                 decoration: InputDecoration(
@@ -261,6 +299,151 @@ class AddStudentScreen extends StatelessWidget {
             child: const Text('Add'),
           ),
         ],
+      ),
+    );
+  }
+
+  // Method to show image picker options
+  void _showImagePickerOptions(BuildContext context) {
+    final dark = THelperFunction.isDarkMode(context);
+
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius:
+            BorderRadius.vertical(top: Radius.circular(TSizes.cardRadiusLg)),
+      ),
+      builder: (context) {
+        return Padding(
+          padding: const EdgeInsets.all(TSizes.defaultSpace),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Add Student Photo',
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              const SizedBox(height: TSizes.spaceBtwItems),
+              ListTile(
+                leading: Icon(
+                  Iconsax.camera,
+                  color: dark ? TColors.yellow : TColors.deepPurple,
+                ),
+                title: const Text('Take a Photo'),
+                onTap: () {
+                  Navigator.pop(context);
+                  studentController.pickImage(ImageSource.camera);
+                },
+              ),
+              ListTile(
+                leading: Icon(
+                  Iconsax.gallery,
+                  color: dark ? TColors.yellow : TColors.deepPurple,
+                ),
+                title: const Text('Choose from Gallery'),
+                onTap: () {
+                  Navigator.pop(context);
+                  studentController.pickImage(ImageSource.gallery);
+                },
+              ),
+              if (studentController.selectedImage.value != null)
+                ListTile(
+                  leading: const Icon(
+                    Iconsax.trash,
+                    color: Colors.red,
+                  ),
+                  title: const Text('Remove Photo'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    studentController.clearSelectedImage();
+                  },
+                ),
+              const SizedBox(height: TSizes.spaceBtwItems),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () => Navigator.pop(context),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: dark ? Colors.grey[800] : Colors.grey[200],
+                    foregroundColor: dark ? Colors.white : Colors.black,
+                  ),
+                  child: const Text('Cancel'),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  // Update the student list item to show student images
+  Widget _buildStudentListItem(
+      BuildContext context, bool dark, dynamic student) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: TSizes.spaceBtwItems),
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
+      ),
+      child: ListTile(
+        contentPadding: const EdgeInsets.all(TSizes.md),
+        leading: student.imageUrl != null && student.imageUrl.isNotEmpty
+            ? ClipOval(
+                child: CachedNetworkImage(
+                  imageUrl: student.imageUrl,
+                  width: 50,
+                  height: 50,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => CircleAvatar(
+                    backgroundColor: dark ? TColors.yellow : TColors.deepPurple,
+                    child: const CircularProgressIndicator(color: Colors.white),
+                  ),
+                  errorWidget: (context, url, error) => CircleAvatar(
+                    backgroundColor: dark ? TColors.yellow : TColors.deepPurple,
+                    child: Text(
+                      student.name.substring(0, 1),
+                      style: TextStyle(
+                        color: dark ? Colors.black : Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            : CircleAvatar(
+                backgroundColor: dark ? TColors.yellow : TColors.deepPurple,
+                child: Text(
+                  student.name.substring(0, 1),
+                  style: TextStyle(
+                    color: dark ? Colors.black : Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+        title: Text(
+          student.name,
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: TSizes.spaceBtwItems / 2),
+            Text(
+              'Roll Number: ${student.rollNumber}',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ],
+        ),
+        trailing: IconButton(
+          icon: const Icon(Iconsax.trash),
+          color: Colors.red,
+          onPressed: () {
+            // Existing delete functionality
+          },
+        ),
       ),
     );
   }

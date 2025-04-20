@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../../models/class_model.dart';
 import '../../../models/student_model.dart';
 import '../../../services/student_service.dart';
@@ -19,6 +22,10 @@ class StudentController extends GetxController {
 
   final nameController = TextEditingController();
   final rollNumberController = TextEditingController();
+
+  final selectedImage = Rxn<File>();
+  final isImageUploading = false.obs;
+  final imagePicker = ImagePicker();
 
   @override
   void onClose() {
@@ -49,6 +56,32 @@ class StudentController extends GetxController {
     }
   }
 
+  // Method to pick image from gallery or camera
+  Future<void> pickImage(ImageSource source) async {
+    try {
+      final pickedFile = await imagePicker.pickImage(
+        source: source,
+        imageQuality: 70, // Reduce image quality to save storage
+        maxWidth: 800, // Limit image dimensions
+        maxHeight: 800,
+      );
+
+      if (pickedFile != null) {
+        selectedImage.value = File(pickedFile.path);
+        print('Image selected: ${pickedFile.path}');
+      }
+    } catch (e) {
+      print('Error picking image: $e');
+      TSnackBar.showError(message: 'Failed to pick image: ${e.toString()}');
+    }
+  }
+
+  // Method to clear selected image
+  void clearSelectedImage() {
+    selectedImage.value = null;
+  }
+
+  // Update addStudentToClass method to include image
   Future<void> addStudentToClass() async {
     print('Adding student to class');
     try {
@@ -64,6 +97,7 @@ class StudentController extends GetxController {
         name: nameController.text.trim(),
         rollNumber: rollNumberController.text.trim(),
         classId: selectedClass.value!.id,
+        imageFile: selectedImage.value, // Pass the selected image
       );
 
       print('Student added successfully');
@@ -71,6 +105,7 @@ class StudentController extends GetxController {
 
       nameController.clear();
       rollNumberController.clear();
+      clearSelectedImage(); // Clear the selected image
 
       TSnackBar.showSuccess(message: 'Student added successfully');
     } catch (e) {
@@ -78,6 +113,52 @@ class StudentController extends GetxController {
       TSnackBar.showError(message: 'Failed to add student: ${e.toString()}');
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  // Method to update student image
+  Future<void> updateStudentImage(String studentId, String rollNumber) async {
+    try {
+      if (selectedImage.value == null) {
+        print('No image selected');
+        TSnackBar.showError(message: 'No image selected');
+        return;
+      }
+
+      isImageUploading.value = true;
+
+      final imageUrl = await studentService.updateStudentImage(
+        studentId: studentId,
+        imageFile: selectedImage.value!,
+        rollNumber: rollNumber,
+      );
+
+      if (imageUrl != null) {
+        // Update the student in the local list
+        final index = students.indexWhere((s) => s.id == studentId);
+        if (index != -1) {
+          final updatedStudent = StudentModel(
+            id: students[index].id,
+            name: students[index].name,
+            rollNumber: students[index].rollNumber,
+            classId: students[index].classId,
+            imageUrl: imageUrl,
+            createdAt: students[index].createdAt,
+            updatedAt: DateTime.now(),
+          );
+          students[index] = updatedStudent;
+          students.refresh();
+        }
+
+        clearSelectedImage();
+        TSnackBar.showSuccess(message: 'Student image updated successfully');
+      }
+    } catch (e) {
+      print('Error updating student image: $e');
+      TSnackBar.showError(
+          message: 'Failed to update student image: ${e.toString()}');
+    } finally {
+      isImageUploading.value = false;
     }
   }
 
@@ -140,6 +221,7 @@ class StudentController extends GetxController {
       isFetchingAvailableStudents.value = false;
     }
   }
+
   void selectStudent(StudentModel student) {
     print('Selecting student: ${student.id}');
     if (!selectedStudents.any((s) => s.id == student.id)) {

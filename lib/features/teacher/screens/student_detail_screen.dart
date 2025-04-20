@@ -2,9 +2,11 @@ import 'package:attedance__/models/student_model.dart';
 import 'package:attedance__/common/utils/constants/colors.dart';
 import 'package:attedance__/common/utils/constants/sized.dart';
 import 'package:attedance__/common/utils/helpers/helper_function.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import '../controllers/student_detail_controller.dart';
@@ -66,47 +68,139 @@ class StudentDetailScreen extends StatelessWidget {
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(TSizes.md),
-                  child: Row(
+                  child: Column(
                     children: [
-                      CircleAvatar(
-                        radius: 40,
-                        backgroundColor:
-                            dark ? TColors.yellow : TColors.deepPurple,
-                        child: Text(
-                          student.name.substring(0, 1),
-                          style: TextStyle(
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
-                            color: dark ? Colors.black : Colors.white,
+                      Row(
+                        children: [
+                          // Student image with edit option
+                          GestureDetector(
+                            onTap: () => _showImageOptions(context),
+                            child: Stack(
+                              children: [
+                                // Student image or placeholder
+                                Obx(() {
+                                  final currentStudent =
+                                      studentDetailController.student.value;
+                                  final hasImage =
+                                      currentStudent?.imageUrl != null &&
+                                          currentStudent!.imageUrl!.isNotEmpty;
+
+                                  return Container(
+                                    width: 80,
+                                    height: 80,
+                                    decoration: BoxDecoration(
+                                      color: dark
+                                          ? TColors.darkerGrey
+                                          : Colors.grey[200],
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                        color: dark
+                                            ? TColors.yellow
+                                            : TColors.deepPurple,
+                                        width: 2,
+                                      ),
+                                    ),
+                                    child: ClipOval(
+                                      child: hasImage
+                                          ? CachedNetworkImage(
+                                              imageUrl:
+                                                  currentStudent.imageUrl!,
+                                              fit: BoxFit.cover,
+                                              placeholder: (context, url) =>
+                                                  const Center(
+                                                      child:
+                                                          CircularProgressIndicator()),
+                                              errorWidget:
+                                                  (context, url, error) => Icon(
+                                                Iconsax.user,
+                                                size: 40,
+                                                color: dark
+                                                    ? TColors.yellow
+                                                    : TColors.deepPurple,
+                                              ),
+                                            )
+                                          : Icon(
+                                              Iconsax.user,
+                                              size: 40,
+                                              color: dark
+                                                  ? TColors.yellow
+                                                  : TColors.deepPurple,
+                                            ),
+                                    ),
+                                  );
+                                }),
+
+                                // Edit icon overlay
+                                Positioned(
+                                  right: 0,
+                                  bottom: 0,
+                                  child: Container(
+                                    padding: const EdgeInsets.all(4),
+                                    decoration: BoxDecoration(
+                                      color: dark
+                                          ? TColors.yellow
+                                          : TColors.deepPurple,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Icon(
+                                      Iconsax.camera,
+                                      size: 16,
+                                      color: dark ? Colors.black : Colors.white,
+                                    ),
+                                  ),
+                                ),
+
+                                // Loading indicator when uploading
+                                if (studentDetailController
+                                    .isImageUploading.value)
+                                  Positioned.fill(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.black.withOpacity(0.5),
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: const Center(
+                                        child: CircularProgressIndicator(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ),
-                      const SizedBox(width: TSizes.spaceBtwItems),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              student.name,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleLarge
-                                  ?.copyWith(fontWeight: FontWeight.bold),
+                          const SizedBox(width: TSizes.spaceBtwItems),
+
+                          // Student info
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  studentDetailController.student.value?.name ??
+                                      student.name,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleLarge
+                                      ?.copyWith(fontWeight: FontWeight.bold),
+                                ),
+                                const SizedBox(height: TSizes.xs),
+                                Text(
+                                  'Roll Number: ${studentDetailController.student.value?.rollNumber ?? student.rollNumber}',
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
+                                const SizedBox(height: TSizes.xs),
+                                if (studentDetailController.classModel.value !=
+                                    null)
+                                  Text(
+                                    'Class: ${studentDetailController.classModel.value!.subjectName} - ${studentDetailController.classModel.value!.courseName} Semester ${studentDetailController.classModel.value!.semester}',
+                                    style:
+                                        Theme.of(context).textTheme.bodySmall,
+                                  ),
+                              ],
                             ),
-                            const SizedBox(height: TSizes.xs),
-                            Text(
-                              'Roll Number: ${student.rollNumber}',
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            ),
-                            const SizedBox(height: TSizes.xs),
-                            if (studentDetailController.classModel.value !=
-                                null)
-                              Text(
-                                'Class: ${studentDetailController.classModel.value!.subjectName} - ${studentDetailController.classModel.value!.courseName} Semester ${studentDetailController.classModel.value!.semester}',
-                                style: Theme.of(context).textTheme.bodySmall,
-                              ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -328,6 +422,116 @@ class StudentDetailScreen extends StatelessWidget {
           ),
         );
       }),
+    );
+  }
+
+  void _showImageOptions(BuildContext context) {
+    final dark = THelperFunction.isDarkMode(context);
+
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius:
+            BorderRadius.vertical(top: Radius.circular(TSizes.cardRadiusLg)),
+      ),
+      builder: (context) {
+        return Padding(
+          padding: const EdgeInsets.all(TSizes.defaultSpace),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Update Student Photo',
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              const SizedBox(height: TSizes.spaceBtwItems),
+              ListTile(
+                leading: Icon(
+                  Iconsax.camera,
+                  color: dark ? TColors.yellow : TColors.deepPurple,
+                ),
+                title: const Text('Take a Photo'),
+                onTap: () {
+                  Navigator.pop(context);
+                  studentDetailController
+                      .pickImage(ImageSource.camera)
+                      .then((_) {
+                    if (studentDetailController.selectedImage.value != null) {
+                      studentDetailController.updateStudentImage();
+                    }
+                  });
+                },
+              ),
+              ListTile(
+                leading: Icon(
+                  Iconsax.gallery,
+                  color: dark ? TColors.yellow : TColors.deepPurple,
+                ),
+                title: const Text('Choose from Gallery'),
+                onTap: () {
+                  Navigator.pop(context);
+                  studentDetailController
+                      .pickImage(ImageSource.gallery)
+                      .then((_) {
+                    if (studentDetailController.selectedImage.value != null) {
+                      studentDetailController.updateStudentImage();
+                    }
+                  });
+                },
+              ),
+              if (studentDetailController.student.value?.imageUrl != null &&
+                  studentDetailController.student.value!.imageUrl!.isNotEmpty)
+                ListTile(
+                  leading: const Icon(
+                    Iconsax.trash,
+                    color: Colors.red,
+                  ),
+                  title: const Text('Remove Photo'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    // Show confirmation dialog
+                    Get.dialog(
+                      AlertDialog(
+                        title: const Text('Remove Photo'),
+                        content: const Text(
+                            'Are you sure you want to remove this student\'s photo?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Get.back(),
+                            child: const Text('Cancel'),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              Get.back();
+                              studentDetailController.deleteStudentImage();
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.red,
+                              foregroundColor: Colors.white,
+                            ),
+                            child: const Text('Remove'),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              const SizedBox(height: TSizes.spaceBtwItems),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () => Navigator.pop(context),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: dark ? Colors.grey[800] : Colors.grey[200],
+                    foregroundColor: dark ? Colors.white : Colors.black,
+                  ),
+                  child: const Text('Cancel'),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 

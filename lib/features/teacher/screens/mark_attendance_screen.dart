@@ -1,5 +1,6 @@
 import 'package:attedance__/app/routes/app_routes.dart';
 import 'package:attedance__/common/utils/device/device_utility.dart';
+import 'package:attedance__/common/widgets/student_avatar.dart'; // Add this import
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -14,23 +15,25 @@ class MarkAttendanceScreen extends StatelessWidget {
 
   MarkAttendanceScreen({super.key}) {
     print('MarkAttendanceScreen initialized');
-    
+
     // Check if the session is running when the screen is initialized
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _checkSessionStatus();
     });
   }
-  
+
   // Method to check if the session is running
   void _checkSessionStatus() {
     if (attendanceController.currentSessionId.value.isNotEmpty &&
-        !attendanceController.isSessionRunning(attendanceController.currentSessionId.value)) {
+        !attendanceController
+            .isSessionRunning(attendanceController.currentSessionId.value)) {
       // Show a message that the session is closed
       TSnackBar.showInfo(
-        message: 'This session is currently closed. You can view but not modify attendance.',
+        message:
+            'This session is currently closed. You can view but not modify attendance.',
         title: 'Session Closed',
       );
-      
+
       // Optionally, you could navigate back or disable editing
       // For now, we'll just show a warning and keep the screen in read-only mode
     }
@@ -47,19 +50,23 @@ class MarkAttendanceScreen extends StatelessWidget {
     final isTablet = screenSize.width < 1024 && screenSize.width > 500;
     final isMobile = screenSize.width <= 500;
     final isLandscape = DeviceUtility.isLandscapeOrientation(context);
-    print('Device type - isTablet: $isTablet, isMobile: $isMobile, isLandscape: $isLandscape');
+    print(
+        'Device type - isTablet: $isTablet, isMobile: $isMobile, isLandscape: $isLandscape');
 
     final cardPadding = isMobile
         ? (isLandscape ? TSizes.xs : TSizes.sm)
         : (isLandscape ? TSizes.sm : TSizes.md);
     print('Card padding: $cardPadding');
 
-    final avatarSize = isTablet ? (isLandscape ? 18.0 : 22.0) : (isLandscape ? 16.0 : 20.0);
+    final avatarSize =
+        isTablet ? (isLandscape ? 18.0 : 22.0) : (isLandscape ? 16.0 : 20.0);
     print('Avatar size: $avatarSize');
 
     // Check if session is running
-    final isSessionRunning = attendanceController.currentSessionId.value.isNotEmpty &&
-        attendanceController.isSessionRunning(attendanceController.currentSessionId.value);
+    final isSessionRunning =
+        attendanceController.currentSessionId.value.isNotEmpty &&
+            attendanceController
+                .isSessionRunning(attendanceController.currentSessionId.value);
 
     return Scaffold(
       appBar: AppBar(
@@ -78,7 +85,7 @@ class MarkAttendanceScreen extends StatelessWidget {
           IconButton(
             onPressed: () {
               print('Carousel View button pressed');
-              
+
               // Check if session is running before allowing access to carousel view
               if (!isSessionRunning) {
                 TSnackBar.showInfo(
@@ -87,7 +94,7 @@ class MarkAttendanceScreen extends StatelessWidget {
                 );
                 return;
               }
-              
+
               Get.toNamed(AppRoutes.carouselAttendance);
             },
             icon: const Icon(Iconsax.slider_horizontal_1),
@@ -102,16 +109,17 @@ class MarkAttendanceScreen extends StatelessWidget {
               ? FloatingActionButton.extended(
                   onPressed: () {
                     print('Submit Attendance button pressed');
-                    
+
                     // Check if session is running before allowing submission
                     if (!isSessionRunning) {
                       TSnackBar.showInfo(
-                        message: 'Cannot submit attendance for a closed session',
+                        message:
+                            'Cannot submit attendance for a closed session',
                         title: 'Session Closed',
                       );
                       return;
                     }
-                    
+
                     _showSubmitConfirmation(context);
                   },
                   backgroundColor: dark ? TColors.blue : TColors.yellow,
@@ -212,23 +220,12 @@ class MarkAttendanceScreen extends StatelessWidget {
                     horizontal: cardPadding,
                     vertical: isMobile ? TSizes.xs : TSizes.sm,
                   ),
-                  leading: CircleAvatar(
-                    backgroundColor: _getStatusColor(
-                      student.attendanceStatus,
-                      dark,
-                    ),
-                    radius: 20,
-                    child: Text(
-                      student.name.isNotEmpty
-                          ? student.name.substring(0, 1)
-                          : "?",
-                      style: TextStyle(
-                        color: dark ? Colors.black : Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: avatarSize * 0.8,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                  // Use StudentAvatar widget instead of CircleAvatar
+                  leading: StudentAvatar(
+                    imageUrl: student.imageUrl,
+                    name: student.name,
+                    size: 40,
+                    isDarkMode: dark,
                   ),
                   title: Text(
                     student.name,
@@ -245,9 +242,8 @@ class MarkAttendanceScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(
-                        height: isMobile
-                            ? TSizes.xs / 2
-                            : TSizes.spaceBtwItems / 2,
+                        height:
+                            isMobile ? TSizes.xs / 2 : TSizes.spaceBtwItems / 2,
                       ),
                       Text(
                         'Roll Number: ${student.rollNumber}',
@@ -264,13 +260,16 @@ class MarkAttendanceScreen extends StatelessWidget {
                       height: 1,
                       color: _getStatusColor(student.attendanceStatus, dark),
                     ),
-                    onChanged: isSessionRunning ? (value) {
-                      print('Updating attendance status for ${student.name} to $value');
-                      attendanceController.updateStudentStatus(
-                        student.id,
-                        value!,
-                      );
-                    } : null, // Disable dropdown if session is not running
+                    onChanged: isSessionRunning
+                        ? (value) {
+                            print(
+                                'Updating attendance status for ${student.name} to $value');
+                            attendanceController.updateStudentStatus(
+                              student.id,
+                              value!,
+                            );
+                          }
+                        : null, // Disable dropdown if session is not running
                     items: const [
                       DropdownMenuItem(
                         value: 'present',

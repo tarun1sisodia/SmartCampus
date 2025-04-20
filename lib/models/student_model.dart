@@ -3,6 +3,7 @@ class StudentModel {
   final String name;
   final String rollNumber;
   final String classId;
+  final String? imageUrl; // Add this field
   final DateTime? createdAt;
   final DateTime? updatedAt;
   String? attendanceStatus; // For tracking attendance in UI
@@ -12,6 +13,7 @@ class StudentModel {
     required this.name,
     required this.rollNumber,
     required this.classId,
+    this.imageUrl, // Add this parameter
     this.createdAt,
     this.updatedAt,
     this.attendanceStatus,
@@ -23,11 +25,12 @@ class StudentModel {
       name: json['name'],
       rollNumber: json['roll_number'],
       classId: json['class_id'],
-      createdAt: json['created_at'] != null 
-          ? DateTime.parse(json['created_at']) 
+      imageUrl: json['image_url'], // Add this field
+      createdAt: json['created_at'] != null
+          ? DateTime.parse(json['created_at'])
           : null,
-      updatedAt: json['updated_at'] != null 
-          ? DateTime.parse(json['updated_at']) 
+      updatedAt: json['updated_at'] != null
+          ? DateTime.parse(json['updated_at'])
           : null,
     );
   }
@@ -38,6 +41,7 @@ class StudentModel {
       'name': name,
       'roll_number': rollNumber,
       'class_id': classId,
+      'image_url': imageUrl, // Add this field
       'created_at': createdAt?.toIso8601String(),
       'updated_at': updatedAt?.toIso8601String(),
     };
