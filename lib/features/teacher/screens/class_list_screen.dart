@@ -1,6 +1,9 @@
 import 'package:attedance__/app/routes/app_routes.dart';
 import 'package:attedance__/models/class_model.dart';
+import 'package:attedance__/models/course_model.dart';
+import 'package:attedance__/models/subject_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import '../controllers/class_controller.dart';
@@ -365,9 +368,9 @@ class ClassListScreen extends StatelessWidget {
                 leading: const Icon(Iconsax.edit),
                 title: const Text('Edit Class'),
                 onTap: () {
-                  Navigator.pop(context);
+                  Navigator.pop(context); // Close the bottom sheet
                   print('Edit class ${classItem.id}');
-                  Get.to(() => CreateClassScreen());
+                  _showEditClassDialog(context, classItem);
                 },
               ),
               ListTile(
@@ -425,7 +428,7 @@ class ClassListScreen extends StatelessWidget {
     );
   }
 
-  // Add method for confirming deletion of multiple classes
+  // confirming deletion of multiple classes
   void _showDeleteSelectedConfirmation(BuildContext context) {
     final count = classController.selectedClassIds.length;
     print('Showing delete confirmation for $count selected classes');
@@ -453,6 +456,142 @@ class ClassListScreen extends StatelessWidget {
                 'Delete',
                 style: TextStyle(color: Colors.red),
               ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showEditClassDialog(BuildContext context, ClassModel classItem) {
+    final dark = THelperFunction.isDarkMode(context);
+
+    // Load the class data into the controller
+    classController.loadClassForEditing(classItem);
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Edit Class'),
+          content: SingleChildScrollView(
+            child: Obx(() {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Subject Dropdown
+                  DropdownButtonFormField(
+                    decoration: InputDecoration(
+                      labelText: 'Subject',
+                      border: OutlineInputBorder(
+                        borderRadius:
+                            BorderRadius.circular(TSizes.inputFieldRadius),
+                      ),
+                    ),
+                    isExpanded: true,
+                    value: classController.selectedSubject.value,
+                    items: classController.subjects.map((subject) {
+                      return DropdownMenuItem(
+                        value: subject,
+                        child: Text(
+                          subject.name,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      classController.selectedSubject.value = value;
+                      if (value != null) {
+                        classController.selectedSubjectId.value =
+                            (value as SubjectModel).id;
+                      }
+                    },
+                  ),
+                  const SizedBox(height: TSizes.spaceBtwInputFields),
+
+                  // Course Dropdown
+                  DropdownButtonFormField(
+                    decoration: InputDecoration(
+                      labelText: 'Course',
+                      border: OutlineInputBorder(
+                        borderRadius:
+                            BorderRadius.circular(TSizes.inputFieldRadius),
+                      ),
+                    ),
+                    isExpanded: true,
+                    value: classController.selectedCourse.value,
+                    items: classController.courses.map((course) {
+                      return DropdownMenuItem(
+                        value: course,
+                        child: Text(
+                          course.name,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      classController.selectedCourse.value =
+                          value as CourseModel?;
+                      if (value != null) {
+                        classController.selectedCourseId.value = value.id;
+                      }
+                    },
+                  ),
+                  const SizedBox(height: TSizes.spaceBtwInputFields),
+
+                  // Semester TextField
+                  TextFormField(
+                    controller: classController.semesterController,
+                    decoration: InputDecoration(
+                      labelText: 'Semester',
+                      hintText: 'Enter semester (1-6)',
+                      border: OutlineInputBorder(
+                        borderRadius:
+                            BorderRadius.circular(TSizes.inputFieldRadius),
+                      ),
+                    ),
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      FilteringTextInputFormatter.allow(RegExp(r'^[1-6]')),
+                    ],
+                  ),
+                  const SizedBox(height: TSizes.spaceBtwInputFields),
+
+                  // Section TextField
+                  TextFormField(
+                    controller: classController.sectionController,
+                    decoration: InputDecoration(
+                      labelText: 'Section (Optional)',
+                      hintText: 'Enter section (e.g., A, B, C)',
+                      border: OutlineInputBorder(
+                        borderRadius:
+                            BorderRadius.circular(TSizes.inputFieldRadius),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            }),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                // Update the class
+                classController.updateClass(classItem.id);
+                Navigator.pop(context);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: dark ? TColors.yellow : TColors.deepPurple,
+                foregroundColor: dark ? Colors.black : Colors.white,
+              ),
+              child: Text('Update Class'),
             ),
           ],
         );
