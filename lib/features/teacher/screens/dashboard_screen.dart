@@ -328,7 +328,7 @@ class DashboardScreen extends StatelessWidget {
                                     height: TSizes.spaceBtwItems / 2,
                                   ),
                                   Text(
-                                    '${classItem.courseName} - Year ${classItem.year}',
+                                    '${classItem.courseName} - Semester ${classItem.semester}',
                                     style:
                                         Theme.of(context).textTheme.bodyMedium,
                                   ),

@@ -3,7 +3,7 @@ class ClassModel {
   final String teacherId;
   final String subjectId;
   final String courseId;
-  final int year;
+  final int semester;
   final String? section;
   final String? subjectName;
   final String? courseName;
@@ -15,7 +15,7 @@ class ClassModel {
     required this.teacherId,
     required this.subjectId,
     required this.courseId,
-    required this.year,
+    required this.semester,
     this.section,
     this.subjectName,
     this.courseName,
@@ -29,7 +29,7 @@ class ClassModel {
       teacherId: json['teacher_id'],
       subjectId: json['subject_id'],
       courseId: json['course_id'],
-      year: json['year'],
+      semester: json['semester'],
       section: json['section'],
       subjectName: json['subject_name'],
       courseName: json['course_name'],
@@ -50,7 +50,7 @@ class ClassModel {
       'teacher_id': teacherId,
       'subject_id': subjectId,
       'course_id': courseId,
-      'year': year,
+      'semester': semester,
       'section': section,
       'subject_name': subjectName,
       'course_name': courseName,

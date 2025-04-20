@@ -46,11 +46,11 @@ CREATE TABLE IF NOT EXISTS classes (
     teacher_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     subject_id UUID NOT NULL REFERENCES subjects(id) ON DELETE RESTRICT,
     course_id UUID NOT NULL REFERENCES courses(id) ON DELETE RESTRICT,
-    year INT NOT NULL,
+    semester INT NOT NULL,
     section TEXT,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ,
-    UNIQUE(teacher_id, subject_id, course_id, year, section)
+    UNIQUE(teacher_id, subject_id, course_id, semester, section)
 );
 
 -- Students table
@@ -117,7 +117,7 @@ SELECT
     c.teacher_id,
     c.subject_id,
     c.course_id,
-    c.year,
+    c.semester,
     c.section,
     s.name AS subject_name,
     co.name AS course_name,
@@ -141,7 +141,7 @@ SELECT
     a.created_by,
     c.subject_name,
     c.course_name,
-    c.year,
+    c.semester,
     c.section,
     a.created_at,
     a.updated_at
@@ -1276,7 +1276,7 @@ BEGIN
             c.id AS class_id,
             s.name AS subject_name,
             co.name AS course_name,
-            c.year,
+            c.semester,
             c.section,
             (
                 SELECT COUNT(*)
@@ -1315,7 +1315,7 @@ BEGIN
                         'class_id', class_id,
                         'subject_name', subject_name,
                         'course_name', course_name,
-                        'year', year,
+                        'semester', semester,
                         'section', section,
                         'present_count', present_count,
                         'total_students', total_students,

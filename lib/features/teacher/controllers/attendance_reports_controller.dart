@@ -170,7 +170,7 @@ class AttendanceReportsController extends GetxController {
         (c) => c.id == selectedClassId.value,
       );
       final className =
-          '${classModel.subjectName} - ${classModel.courseName} Year ${classModel.year}';
+          '${classModel.subjectName} - ${classModel.courseName} Semester ${classModel.semester}';
 
       final headerRow = [
         'Roll Number',

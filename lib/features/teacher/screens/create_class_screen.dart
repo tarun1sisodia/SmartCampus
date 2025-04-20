@@ -1,5 +1,6 @@
 import 'package:attedance__/models/course_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import '../controllers/class_controller.dart';
 import '../../../common/utils/constants/colors.dart';
@@ -28,7 +29,8 @@ class CreateClassScreen extends StatelessWidget {
       ),
       body: Obx(
         () {
-          print('classController.isLoading: ${classController.isLoading.value}');
+          print(
+              'classController.isLoading: ${classController.isLoading.value}');
           return classController.isLoading.value
               ? const Center(child: CircularProgressIndicator())
               : Center(
@@ -102,12 +104,12 @@ class CreateClassScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: TSizes.spaceBtwInputFields),
 
-                        // Year TextField
+                        // Semester TextField
                         TextFormField(
-                          controller: classController.yearController,
+                          controller: classController.semesterController,
                           decoration: InputDecoration(
-                            labelText: 'Year',
-                            hintText: 'Enter year',
+                            labelText: 'Semester',
+                            hintText: 'Enter semester (1-6)',
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(
                                 TSizes.inputFieldRadius,
@@ -115,8 +117,13 @@ class CreateClassScreen extends StatelessWidget {
                             ),
                           ),
                           keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                            FilteringTextInputFormatter.allow(
+                                RegExp(r'^[1-6]$')),
+                          ],
                           onChanged: (value) {
-                            print('Year input: $value');
+                            print('Semester input: $value');
                           },
                         ),
                         const SizedBox(height: TSizes.spaceBtwInputFields),

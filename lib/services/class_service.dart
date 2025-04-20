@@ -24,7 +24,7 @@ class ClassService {
           teacherId: json['teacher_id'],
           subjectId: json['subject_id'],
           courseId: json['course_id'],
-          year: json['year'],
+          semester: json['semester'],
           section: json['section'],
           subjectName: subjectData['name'],
           courseName: courseData['name'],
@@ -49,7 +49,7 @@ class ClassService {
     required String teacherId,
     required String subjectId,
     required String courseId,
-    required int year,
+    required int semester,
     String? section,
   }) async {
     try {
@@ -58,7 +58,7 @@ class ClassService {
         'teacher_id': teacherId,
         'subject_id': subjectId,
         'course_id': courseId,
-        'year': year,
+        'semester': semester,
         'section': section,
         'created_at': DateTime.now().toIso8601String(),
       };
@@ -79,7 +79,7 @@ class ClassService {
         teacherId: response['teacher_id'],
         subjectId: response['subject_id'],
         courseId: response['course_id'],
-        year: response['year'],
+        semester: response['semester'],
         section: response['section'],
         subjectName: subjectData['name'],
         courseName: courseData['name'],
@@ -103,7 +103,7 @@ class ClassService {
     required String classId,
     required String subjectId,
     required String courseId,
-    required int year,
+    required int semester,
     String? section,
   }) async {
     try {
@@ -111,7 +111,7 @@ class ClassService {
       final data = {
         'subject_id': subjectId,
         'course_id': courseId,
-        'year': year,
+        'semester': semester,
         'section': section,
         'updated_at': DateTime.now().toIso8601String(),
       };
@@ -133,7 +133,7 @@ class ClassService {
         teacherId: response['teacher_id'],
         subjectId: response['subject_id'],
         courseId: response['course_id'],
-        year: response['year'],
+        semester: response['semester'],
         section: response['section'],
         subjectName: subjectData['name'],
         courseName: courseData['name'],
@@ -206,7 +206,7 @@ class ClassService {
         teacherId: response['teacher_id'],
         subjectId: response['subject_id'],
         courseId: response['course_id'],
-        year: response['year'],
+        semester: response['semester'],
         section: response['section'],
         subjectName: subjectData['name'],
         courseName: courseData['name'],

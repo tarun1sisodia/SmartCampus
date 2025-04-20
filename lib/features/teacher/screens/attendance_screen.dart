@@ -89,7 +89,7 @@ class AttendanceScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '${classModel.courseName} - Year ${classModel.year}',
+                      '${classModel.courseName} - Year ${classModel.semester}',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),

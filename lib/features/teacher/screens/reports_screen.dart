@@ -357,7 +357,7 @@ class ReportsScreen extends StatelessWidget {
           (c) => c.id == reportsController.selectedClassId.value,
         );
         final className =
-            '${classModel.subjectName} - ${classModel.courseName} Year ${classModel.year}';
+            '${classModel.subjectName} - ${classModel.courseName} Year ${classModel.semester}';
 
         return pw.Column(
           crossAxisAlignment: pw.CrossAxisAlignment.start,

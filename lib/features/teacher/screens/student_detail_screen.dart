@@ -102,7 +102,7 @@ class StudentDetailScreen extends StatelessWidget {
                             if (studentDetailController.classModel.value !=
                                 null)
                               Text(
-                                'Class: ${studentDetailController.classModel.value!.subjectName} - ${studentDetailController.classModel.value!.courseName} Year ${studentDetailController.classModel.value!.year}',
+                                'Class: ${studentDetailController.classModel.value!.subjectName} - ${studentDetailController.classModel.value!.courseName} Semester ${studentDetailController.classModel.value!.semester}',
                                 style: Theme.of(context).textTheme.bodySmall,
                               ),
                           ],

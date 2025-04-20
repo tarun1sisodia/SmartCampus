@@ -296,7 +296,7 @@ class CalendarController extends GetxController {
 
   // Get unique years from user classes
   List<int> get availableYears {
-    return userClasses.map((c) => c.year).toSet().toList();
+    return userClasses.map((c) => c.semester).toSet().toList();
   }
 
   // Get unique sections from user classes

@@ -22,7 +22,7 @@ class ClassController extends GetxController {
   // Form controllers
   final selectedSubjectId = ''.obs;
   final selectedCourseId = ''.obs;
-  final yearController = TextEditingController();
+  final semesterController = TextEditingController();
   final sectionController = TextEditingController();
   var selectedCourse = Rxn<CourseModel>();
   var selectedSubject = Rxn<dynamic>();
@@ -43,7 +43,7 @@ class ClassController extends GetxController {
   @override
   void onClose() {
     print('ClassController disposed');
-    yearController.dispose();
+    semesterController.dispose();
     sectionController.dispose();
     super.onClose();
   }
@@ -116,7 +116,7 @@ class ClassController extends GetxController {
       print('Creating class...');
       if (selectedSubject.value == null ||
           selectedCourse.value == null ||
-          yearController.text.trim().isEmpty) {
+          semesterController.text.trim().isEmpty) {
         print('Validation Failed');
         TSnackBar.showError(message: 'Please fill in all required fields');
         return;
@@ -136,7 +136,7 @@ class ClassController extends GetxController {
         teacherId: currentUser.id,
         subjectId: selectedSubject.value.id,
         courseId: selectedCourse.value!.id,
-        year: int.parse(yearController.text.trim()),
+        semester: int.parse(semesterController.text.trim()),
         section: sectionController.text.trim().isNotEmpty
             ? sectionController.text.trim()
             : null,
@@ -146,7 +146,7 @@ class ClassController extends GetxController {
       classes.insert(0, newClass);
 
       // Reset form
-      yearController.clear();
+      semesterController.clear();
       sectionController.clear();
 
       TSnackBar.showSuccess(message: 'Class created successfully');
@@ -164,7 +164,7 @@ class ClassController extends GetxController {
       print('Updating class with ID: $classId');
       if (selectedSubjectId.value.isEmpty ||
           selectedCourseId.value.isEmpty ||
-          yearController.text.trim().isEmpty) {
+          semesterController.text.trim().isEmpty) {
         print('Validation Failed');
         TSnackBar.showError(message: 'Please fill in all required fields');
         return;
@@ -176,7 +176,7 @@ class ClassController extends GetxController {
         classId: classId,
         subjectId: selectedSubjectId.value,
         courseId: selectedCourseId.value,
-        year: int.parse(yearController.text.trim()),
+        semester: int.parse(semesterController.text.trim()),
         section: sectionController.text.trim().isNotEmpty
             ? sectionController.text.trim()
             : null,
@@ -233,7 +233,7 @@ class ClassController extends GetxController {
     print('Validating class form...');
     if (selectedSubjectId.value.isEmpty ||
         selectedCourseId.value.isEmpty ||
-        yearController.text.isEmpty) {
+        semesterController.text.isEmpty) {
       print('Validation Failed');
       Get.snackbar('Error', 'Please fill in all required fields.');
       return false;
@@ -247,7 +247,7 @@ class ClassController extends GetxController {
     print('Loading class for editing: $classModel');
     selectedSubjectId.value = classModel.subjectId;
     selectedCourseId.value = classModel.courseId;
-    yearController.text = classModel.year.toString();
+    semesterController.text = classModel.semester.toString();
     sectionController.text = classModel.section ?? '';
   }
 

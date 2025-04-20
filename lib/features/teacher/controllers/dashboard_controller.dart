@@ -180,6 +180,7 @@ class DashboardController extends GetxController {
       final currentUser = Supabase.instance.client.auth.currentUser;
       if (currentUser == null) {
         print('No user is logged in');
+        TSnackBar.showError(message: 'You must be logged in to create data.');
         return;
       }
 
@@ -188,31 +189,46 @@ class DashboardController extends GetxController {
 
       if (classes.isEmpty) {
         print('No classes found, creating sample data...');
+
+        // Create a sample subject
         final subject = await subjectService.createSubject(
           'Operating Systems',
           'BCA301',
         );
         print('Sample subject created: $subject');
 
-        final course = await courseService.createCourse(
-          'Bachelors of Computer Application',
-          'BCA',
-        );
-        print('Sample course created: $course');
+        // Create a sample course
+        try {
+          final course = await courseService.createCourse(
+            'Bachelors of Computer Application',
+            'BCA',
+          );
+          print('Sample course created: $course');
 
-        await classService.createClass(
-          teacherId: currentUser.id,
-          subjectId: subject.id,
-          courseId: course.id,
-          year: 1,
-          section: 'A',
-        );
-        print('Sample class created');
+          // Create a sample class
+          await classService.createClass(
+            teacherId: currentUser.id,
+            subjectId: subject.id,
+            courseId: course.id,
+            semester: 1,
+            section: 'A',
+          );
+          print('Sample class created');
+        } catch (e) {
+          print('Error while creating course: $e');
+          TSnackBar.showError(
+            message: 'Failed to create course: ${e.toString()}',
+          );
+        }
 
+        // Reload dashboard data
         await loadDashboardData();
       }
     } catch (e) {
       print('Error creating initial data: $e');
+      TSnackBar.showError(
+        message: 'Failed to create initial data: ${e.toString()}',
+      );
     }
   }
 

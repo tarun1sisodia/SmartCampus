@@ -39,9 +39,9 @@ Future<void> main() async {
     // Initialize Supabase by directly providing the url and key.
     print('Initializing Supabase...');
     await Supabase.initialize(
-      url: 'https://iudnkcysaeyikkbkazoh.supabase.co',
+      url: 'https://aytvjwwnuyebddcwleut.supabase.co',
       anonKey:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1ZG5rY3lzYWV5aWtrYmthem9oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ5NTMwNzQsImV4cCI6MjA2MDUyOTA3NH0.aaDLHp1TOQA24ZIFleT3yu3QpCxvY1AqfubGMb1Ju4g',
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF5dHZqd3dudXllYmRkY3dsZXV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDUxNDI3MTIsImV4cCI6MjA2MDcxODcxMn0.rMubCVjGFTLo7JA_zm2FA62jK5Bzu__xw9QDqWVEYf8',
     );
     print('Supabase initialized.');
 

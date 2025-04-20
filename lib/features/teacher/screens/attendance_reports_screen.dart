@@ -94,7 +94,7 @@ class AttendanceReportsScreen extends StatelessWidget {
                             return DropdownMenuItem<String>(
                               value: classItem.id,
                               child: Text(
-                                '${classItem.subjectName} - ${classItem.courseName} Year ${classItem.year}',
+                                '${classItem.subjectName} - ${classItem.courseName} Year ${classItem.semester}',
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
                                 style: TextStyle(fontSize: 14),

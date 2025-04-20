@@ -216,7 +216,7 @@ class ClassListScreen extends StatelessWidget {
                                       ?.copyWith(fontWeight: FontWeight.bold),
                                 ),
                                 Text(
-                                  '${classItem.courseName} - Semester ${classItem.year}${classItem.section != null ? ' (${classItem.section})' : ''}',
+                                  '${classItem.courseName} - Semester ${classItem.semester}${classItem.section != null ? ' (${classItem.section})' : ''}',
                                   style: Theme.of(context).textTheme.bodyMedium,
                                 ),
                               ],
