@@ -27,6 +27,10 @@ class StudentController extends GetxController {
   final isImageUploading = false.obs;
   final imagePicker = ImagePicker();
 
+  final isSelectionMode = false.obs;
+  final selectedStudentIds = <String>{}.obs;
+  final isAllSelected = false.obs;
+
   @override
   void onClose() {
     print('Disposing controllers');
@@ -116,6 +120,74 @@ class StudentController extends GetxController {
     }
   }
 
+  // Toggle selection mode
+  void toggleSelectionMode() {
+    isSelectionMode.value = !isSelectionMode.value;
+    if (!isSelectionMode.value) {
+      // Clear selections when exiting selection mode
+      selectedStudentIds.clear();
+      isAllSelected.value = false;
+    }
+  }
+
+// Toggle selection of a student
+  void toggleStudentSelection(String studentId) {
+    if (selectedStudentIds.contains(studentId)) {
+      selectedStudentIds.remove(studentId);
+    } else {
+      selectedStudentIds.add(studentId);
+    }
+
+    // Update "all selected" state
+    isAllSelected.value = selectedStudentIds.length == students.length;
+  }
+
+// Toggle select all students
+  void toggleSelectAll() {
+    if (isAllSelected.value) {
+      // Deselect all
+      selectedStudentIds.clear();
+    } else {
+      // Select all
+      selectedStudentIds.clear();
+      for (var student in students) {
+        selectedStudentIds.add(student.id);
+      }
+    }
+    isAllSelected.value = !isAllSelected.value;
+  }
+
+// Remove selected students from class
+  Future<void> removeSelectedStudentsFromClass() async {
+    try {
+      isLoading.value = true;
+
+      // Create a copy to avoid modification during iteration
+      final studentsToRemove = Set<String>.from(selectedStudentIds);
+
+      for (var studentId in studentsToRemove) {
+        await removeStudentFromClass(studentId, showSnackbar: false);
+      }
+
+      // Exit selection mode
+      toggleSelectionMode();
+
+      // Show success message
+      final count = studentsToRemove.length;
+      TSnackBar.showSuccess(
+        message:
+            '$count ${count == 1 ? 'student' : 'students'} removed successfully',
+        title: 'Success',
+      );
+    } catch (e) {
+      print('Error removing selected students: $e');
+      TSnackBar.showError(
+          message: 'Failed to remove students: ${e.toString()}');
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
   // Method to update student image
   Future<void> updateStudentImage(String studentId, String rollNumber) async {
     try {
@@ -162,25 +234,30 @@ class StudentController extends GetxController {
     }
   }
 
-  Future<void> removeStudentFromClass(String studentId) async {
-    print('Removing student: $studentId');
+  Future<void> removeStudentFromClass(String studentId,
+      {bool showSnackbar = true}) async {
     try {
+      print('Removing student with ID: $studentId from class');
+      isLoading.value = true;
+
       if (selectedClass.value == null) {
         print('No class selected');
         TSnackBar.showError(message: 'No class selected');
         return;
       }
 
-      isLoading.value = true;
-
       await studentService.removeStudentFromClass(
         studentId: studentId,
         classId: selectedClass.value!.id,
       );
 
-      students.removeWhere((s) => s.id == studentId);
       print('Student removed successfully');
-      TSnackBar.showSuccess(message: 'Student removed successfully');
+      students.removeWhere((student) => student.id == studentId);
+
+      // Only show snackbar if requested (for individual deletions)
+      if (showSnackbar) {
+        TSnackBar.showSuccess(message: 'Student removed successfully');
+      }
     } catch (e) {
       print('Error removing student: $e');
       TSnackBar.showError(message: 'Failed to remove student: ${e.toString()}');
@@ -275,7 +352,6 @@ class StudentController extends GetxController {
       isLoading.value = false;
     }
   }
-  // Add these methods to your StudentController class
 
 // Sort available students with more options
   void sortAvailableStudents(String option) {
