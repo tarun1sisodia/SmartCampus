@@ -278,54 +278,33 @@ class CalendarScreen extends StatelessWidget {
                   ),
                 ),
               ),
-            if (isMySession)
-              Container(
-                margin: const EdgeInsets.only(top: 8.0),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8.0,
-                  vertical: 4.0,
-                ),
-                decoration: BoxDecoration(
-                  color: AppColors.primary.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(4.0),
-                ),
-                child: Text(
-                  'MY CLASS',
-                  style: TextStyle(
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12.0,
-                  ),
+            // Modified section to show teacher name for non-user sessions
+            Container(
+              margin: const EdgeInsets.only(top: 8.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 8.0,
+                vertical: 4.0,
+              ),
+              decoration: BoxDecoration(
+                color: isMySession
+                    ? AppColors.primary.withOpacity(0.1)
+                    : Colors.grey.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(4.0),
+              ),
+              child: Text(
+                isMySession
+                    ? 'MY CLASS'
+                    : 'Teacher: ${controller.getTeacherNameForSession(session)}',
+                style: TextStyle(
+                  color: isMySession ? AppColors.primary : Colors.grey[700],
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12.0,
                 ),
               ),
+            ),
           ],
         ),
         trailing: Icon(Icons.arrow_forward_ios, size: 16.0),
-        /* onTap: () {
-          print(
-              'Session card tapped, navigating to details. Session ID: ${session.id}');
-          if (isMySession) {
-            Get.toNamed('/session-details', arguments: {
-              'sessionId': session.id,
-              'classDetails': {
-                'subjectName': session.subjectName,
-                'courseName': session.courseName,
-                'semester': session.semester,
-                'section': session.section,
-              },
-            });
-          } else {
-            // Show a message that this is not the user's session
-            Get.snackbar(
-              'Not Your Session',
-              'You can only view details of your own sessions.',
-              snackPosition: SnackPosition.BOTTOM,
-              backgroundColor: Colors.orange,
-              colorText: Colors.white,
-            );
-          }
-        },*/
-        // In the _buildSessionCard method, update the onTap function:
         onTap: () {
           print(
               'Session card tapped, navigating to details. Session ID: ${session.id}');
@@ -354,8 +333,6 @@ class CalendarScreen extends StatelessWidget {
             );
           }
         },
-
-        // onTap: () => Get.to(SessionDetailsScreen()),
       ),
     );
   }

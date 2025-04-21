@@ -23,7 +23,7 @@ class CalendarController extends GetxController {
   // Filter options
   final showOnlyMyClasses = false.obs;
   final selectedCourse = Rx<String?>(null);
-  final selectedSemester= Rx<int?>(null);
+  final selectedSemester = Rx<int?>(null);
   final selectedSection = Rx<String?>(null);
   final showAllSessions = false.obs;
 
@@ -40,7 +40,7 @@ class CalendarController extends GetxController {
     ever(selectedSection, (_) => applyFilters());
   }
 
-  Future<void> loadData() async {
+/*Future<void> loadData() async {
     try {
       isLoading.value = true;
 
@@ -81,7 +81,7 @@ class CalendarController extends GetxController {
       isLoading.value = false;
     }
   }
-
+*/
   void _updateActiveSessionsCount() {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
@@ -311,5 +311,89 @@ class CalendarController extends GetxController {
 
   void refreshData() {
     loadData();
+  }
+
+// Add this to the CalendarController class
+  final teacherNames = <String, String>{}.obs; // Map of teacher IDs to names
+
+// Add this method to fetch teacher names
+  Future<void> fetchTeacherNames() async {
+    try {
+      // Get unique teacher IDs from all sessions
+      final teacherIds = allSessions
+          .map((session) => session.createdBy)
+          .where((id) => id != null)
+          .toSet()
+          .toList();
+
+      // For each teacher ID, fetch the teacher's name
+      for (final teacherId in teacherIds) {
+        if (teacherId != null && !teacherNames.containsKey(teacherId)) {
+          try {
+            // Fetch teacher name from service
+            final teacherName =
+                await attendanceService.getTeacherName(teacherId);
+            teacherNames[teacherId] = teacherName;
+          } catch (e) {
+            print('Error fetching teacher name for ID $teacherId: $e');
+            teacherNames[teacherId] = 'Unknown Teacher';
+          }
+        }
+      }
+    } catch (e) {
+      print('Error fetching teacher names: $e');
+    }
+  }
+
+// Update the loadData method to also fetch teacher names
+  Future<void> loadData() async {
+    try {
+      isLoading.value = true;
+
+      print('Loading calendar data...');
+
+      // Load all sessions and user's classes in parallel
+      final results = await Future.wait([
+        attendanceService.getAllAttendanceSessions(),
+        attendanceService.getTeacherClasses(),
+      ]);
+
+      allSessions.value = results[0] as List<AttendanceSessionModel>;
+      userClasses.value = results[1] as List<ClassModel>;
+
+      print(
+          'Loaded ${allSessions.length} sessions and ${userClasses.length} classes');
+
+      // Sample the first session to check data
+      if (allSessions.isNotEmpty) {
+        final sample = allSessions.first;
+        print(
+            'Sample session - ID: ${sample.id}, Subject: ${sample.subjectName}, Course: ${sample.courseName}');
+      }
+
+      // Fetch teacher names
+      await fetchTeacherNames();
+
+      // Count active sessions (sessions happening today)
+      _updateActiveSessionsCount();
+      print('Active sessions count: ${activeSessionsCount.value}');
+
+      // Apply initial filters
+      applyFilters();
+      print('Applied filters, filtered sessions: ${filteredSessions.length}');
+    } catch (e) {
+      print('Error loading calendar data: $e');
+      TSnackBar.showError(
+        message: 'Failed to load calendar data: ${e.toString()}',
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+// Add a helper method to get teacher name for a session
+  String getTeacherNameForSession(AttendanceSessionModel session) {
+    if (session.createdBy == null) return 'Unknown Teacher';
+    return teacherNames[session.createdBy] ?? 'Unknown Teacher';
   }
 }
