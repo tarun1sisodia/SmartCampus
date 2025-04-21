@@ -35,7 +35,7 @@ class Textfields extends StatelessWidget {
     final dark = THelperFunction.isDarkMode(context);
     
     // Get the current theme's InputDecorationTheme
-    final inputTheme = Theme.of(context).inputDecorationTheme;
+    // final inputTheme = Theme.of(context).inputDecorationTheme;
     
     return TextFormField(
       controller: controller,

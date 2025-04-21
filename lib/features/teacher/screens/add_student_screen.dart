@@ -1,3 +1,4 @@
+import 'package:attedance__/common/widgets/student_avatar.dart';
 import 'package:attedance__/features/teacher/controllers/student_controller.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -29,63 +30,63 @@ class AddStudentScreen extends StatelessWidget {
     });
 
     return Scaffold(
-     appBar: PreferredSize(
-       preferredSize: const Size.fromHeight(kToolbarHeight),
-       child: Obx(() => AppBar(
-        title: studentController.isSelectionMode.value 
-            ? Text(
-                '${studentController.selectedStudentIds.length} Selected',
-                style: Theme.of(context).textTheme.headlineSmall,
-              )
-            : Text(
-                'Add Students',
-                style: Theme.of(context).textTheme.headlineSmall,
-              ),
-        leading: studentController.isSelectionMode.value
-            ? IconButton(
-                icon: const Icon(Icons.close),
-                onPressed: () {
-                  studentController.toggleSelectionMode();
-                },
-              )
-            : null,
-        actions: [
-          if (studentController.isSelectionMode.value) 
-            IconButton(
-              icon: const Icon(Icons.select_all),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: Obx(() => AppBar(
+              title: studentController.isSelectionMode.value
+                  ? Text(
+                      '${studentController.selectedStudentIds.length} Selected',
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    )
+                  : Text(
+                      'Add Students',
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
+              leading: studentController.isSelectionMode.value
+                  ? IconButton(
+                      icon: const Icon(Icons.close),
+                      onPressed: () {
+                        studentController.toggleSelectionMode();
+                      },
+                    )
+                  : null,
+              actions: [
+                if (studentController.isSelectionMode.value)
+                  IconButton(
+                    icon: const Icon(Icons.select_all),
+                    onPressed: () {
+                      studentController.toggleSelectAll();
+                    },
+                  )
+                else
+                  IconButton(
+                    icon: const Icon(Iconsax.import),
+                    onPressed: () {
+                      print('Import students button pressed');
+                      _showImportStudentsDialog(context);
+                    },
+                  ),
+              ],
+            )),
+      ),
+      floatingActionButton: Obx(() => studentController.isSelectionMode.value
+          ? FloatingActionButton(
               onPressed: () {
-                studentController.toggleSelectAll();
+                if (studentController.selectedStudentIds.isNotEmpty) {
+                  _showDeleteSelectedConfirmation(context);
+                }
               },
+              backgroundColor: Colors.red,
+              child: const Icon(Iconsax.trash),
             )
-          else
-            IconButton(
-              icon: const Icon(Iconsax.import),
+          : FloatingActionButton(
               onPressed: () {
-                print('Import students button pressed');
-                _showImportStudentsDialog(context);
+                print('Add student FAB pressed');
+                _showAddStudentDialog(context);
               },
-            ),
-        ],
-      )),
-     ),
-    floatingActionButton: Obx(() => studentController.isSelectionMode.value
-    ? FloatingActionButton(
-        onPressed: () {
-          if (studentController.selectedStudentIds.isNotEmpty) {
-            _showDeleteSelectedConfirmation(context);
-          }
-        },
-        backgroundColor: Colors.red,
-        child: const Icon(Iconsax.trash),
-      )
-    : FloatingActionButton(
-        onPressed: () {
-          print('Add student FAB pressed');
-          _showAddStudentDialog(context);
-        },
-        backgroundColor: dark ? TColors.blue : TColors.yellow,
-        child: const Icon(Iconsax.add),
-      )),
+              backgroundColor: dark ? TColors.blue : TColors.yellow,
+              child: const Icon(Iconsax.add),
+            )),
       body: Obx(() {
         print('Building Obx body');
         if (studentController.isLoading.value) {
@@ -141,79 +142,107 @@ class AddStudentScreen extends StatelessWidget {
           itemBuilder: (context, index) {
             final student = studentController.students[index];
             print('Building list item for student: ${student.name}');
-          return Card(
-  margin: const EdgeInsets.only(bottom: TSizes.spaceBtwItems),
-  elevation: 2,
-  shape: RoundedRectangleBorder(
-    borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
-    side: studentController.selectedStudentIds.contains(student.id)
-        ? BorderSide(
-            color: dark ? TColors.yellow : TColors.deepPurple,
-            width: 2,
-          )
-        : BorderSide.none,
-  ),
-  child: InkWell(
-    onTap: () {
-      if (studentController.isSelectionMode.value) {
-        studentController.toggleStudentSelection(student.id);
-      }
-    },
-    onLongPress: () {
-      if (!studentController.isSelectionMode.value) {
-        studentController.toggleSelectionMode();
-        studentController.toggleStudentSelection(student.id);
-      }
-    },
-    child: ListTile(
-      contentPadding: const EdgeInsets.all(TSizes.md),
-      leading: studentController.isSelectionMode.value
-          ? Checkbox(
-              value: studentController.selectedStudentIds.contains(student.id),
-              onChanged: (value) {
-                studentController.toggleStudentSelection(student.id);
-              },
-              activeColor: dark ? TColors.yellow : TColors.deepPurple,
-            )
-          : CircleAvatar(
-              backgroundColor: dark ? TColors.yellow : TColors.deepPurple,
-              child: Text(
-                student.name.substring(0, 1),
-                style: TextStyle(
-                  color: dark ? Colors.black : Colors.white,
-                  fontWeight: FontWeight.bold,
+            return Obx(() {
+              final isSelected =
+                  studentController.selectedStudentIds.contains(student.id);
+              return Card(
+                margin: const EdgeInsets.only(bottom: TSizes.spaceBtwItems),
+                elevation: 2,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
+                  side:
+                      studentController.selectedStudentIds.contains(student.id)
+                          ? BorderSide(
+                              color: dark ? TColors.yellow : TColors.deepPurple,
+                              width: 2.5,
+                            )
+                          : BorderSide.none,
                 ),
-              ),
-            ),
-      title: Text(
-        student.name,
-        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-      ),
-      subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: TSizes.spaceBtwItems / 2),
-          Text(
-            'Roll Number: ${student.rollNumber}',
-            style: Theme.of(context).textTheme.bodySmall,
-          ),
-        ],
-      ),
-      trailing: studentController.isSelectionMode.value
-          ? null
-          : IconButton(
-              icon: const Icon(Iconsax.trash),
-              color: Colors.red,
-              onPressed: () {
-                print('Delete button pressed for student: ${student.name}');
-                _showDeleteConfirmation(context, student.id, student.name);
-              },
-            ),
-    ),
-  ),
-);
+                color: isSelected
+                    ? (dark
+                        ? TColors.darkerGrey.withOpacity(0.7)
+                        : Colors.grey.withOpacity(0.1))
+                    : null,
+                child: InkWell(
+                  onTap: () {
+                    if (studentController.isSelectionMode.value) {
+                      studentController.toggleStudentSelection(student.id);
+                    }
+                  },
+                  onLongPress: () {
+                    if (!studentController.isSelectionMode.value) {
+                      studentController.toggleSelectionMode();
+                      studentController.toggleStudentSelection(student.id);
+                    }
+                  },
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.all(TSizes.md),
+                    // Inside your ListTile, update the leading widget:
+
+                    leading: studentController.isSelectionMode.value
+                        ? Container(
+                            width: 24,
+                            height: 24,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: studentController.selectedStudentIds
+                                      .contains(student.id)
+                                  ? (dark ? TColors.yellow : TColors.deepPurple)
+                                  : Colors.transparent,
+                              border: Border.all(
+                                color:
+                                    dark ? TColors.yellow : TColors.deepPurple,
+                                width: 2,
+                              ),
+                            ),
+                            child: studentController.selectedStudentIds
+                                    .contains(student.id)
+                                ? Icon(
+                                    Icons.check,
+                                    size: 16,
+                                    color: dark ? Colors.black : Colors.white,
+                                  )
+                                : null,
+                          )
+                        : StudentAvatar(
+                            imageUrl: student.imageUrl,
+                            name: student.name,
+                            size: 40,
+                            isDarkMode: dark,
+                          ),
+
+                    title: Text(
+                      student.name,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: TSizes.spaceBtwItems / 2),
+                        Text(
+                          'Roll Number: ${student.rollNumber}',
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      ],
+                    ),
+                    trailing: studentController.isSelectionMode.value
+                        ? null
+                        : IconButton(
+                            icon: const Icon(Iconsax.trash),
+                            color: Colors.red,
+                            onPressed: () {
+                              print(
+                                  'Delete button pressed for student: ${student.name}');
+                              _showDeleteConfirmation(
+                                  context, student.id, student.name);
+                            },
+                          ),
+                  ),
+                ),
+              );
+            });
           },
         );
       }),
@@ -334,7 +363,6 @@ class AddStudentScreen extends StatelessWidget {
       ),
     );
   }
-
 
   // Method to show image picker options
   void _showImagePickerOptions(BuildContext context) {
@@ -785,7 +813,8 @@ class AddStudentScreen extends StatelessWidget {
   }
 
   // New method to show delete confirmation for a single student
-  void _showDeleteConfirmation(BuildContext context, String studentId, String studentName) {
+  void _showDeleteConfirmation(
+      BuildContext context, String studentId, String studentName) {
     Get.dialog(
       AlertDialog(
         title: const Text('Remove Student'),
@@ -822,7 +851,7 @@ class AddStudentScreen extends StatelessWidget {
   // New method to show delete confirmation for multiple students
   void _showDeleteSelectedConfirmation(BuildContext context) {
     final count = studentController.selectedStudentIds.length;
-    
+
     Get.dialog(
       AlertDialog(
         title: const Text('Remove Students'),

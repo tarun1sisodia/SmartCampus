@@ -977,6 +977,10 @@ CREATE POLICY "Teachers can delete student images"
 ON storage.objects FOR DELETE
 USING (bucket_id = 'student_images' AND auth.role() = 'authenticated');
 
+-- Run this SQL in your Supabase SQL editor if the column doesn't exist
+ALTER TABLE attendance_sessions ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'open' CHECK (status IN ('open', 'closed'));
+
+
 
 -- =============================================
 -- STEP 7: Insert Sample Data

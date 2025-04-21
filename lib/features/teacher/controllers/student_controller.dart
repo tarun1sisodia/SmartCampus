@@ -140,6 +140,8 @@ class StudentController extends GetxController {
 
     // Update "all selected" state
     isAllSelected.value = selectedStudentIds.length == students.length;
+    // Force UI refresh
+    students.refresh();
   }
 
 // Toggle select all students
@@ -155,6 +157,8 @@ class StudentController extends GetxController {
       }
     }
     isAllSelected.value = !isAllSelected.value;
+    // Force UI refresh
+    students.refresh();
   }
 
 // Remove selected students from class

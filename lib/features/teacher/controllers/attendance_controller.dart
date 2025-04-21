@@ -185,7 +185,8 @@ class AttendanceController extends GetxController {
     }
   }
 
-  // Submit attendance for all students
+  // Update the submitAttendance method
+
   Future<void> submitAttendance() async {
     try {
       isLoading.value = true;
@@ -217,10 +218,18 @@ class AttendanceController extends GetxController {
         records: records,
       );
 
-      print('Attendance submitted successfully');
+      // Close the session after submitting attendance
+      await attendanceService.closeAttendanceSession(currentSessionId.value);
+
+      // Reload the attendance sessions to reflect the updated status
+      if (selectedClass.value != null) {
+        await loadAttendanceSessions(selectedClass.value!.id);
+      }
+
+      print('Attendance submitted and session closed successfully');
 
       TSnackBar.showSuccess(
-        message: 'Attendance submitted successfully',
+        message: 'Attendance submitted and session closed successfully',
         title: 'Success',
       );
 
@@ -306,78 +315,79 @@ class AttendanceController extends GetxController {
       isLoading.value = false;
     }
   }
-  // Add this method to check if a session is currently running
-bool isSessionRunning(String sessionId) {
-  try {
-    // Find the session in the list
-    final session = attendanceSessions.firstWhereOrNull((s) => s.id == sessionId);
-    if (session == null) return false;
-    
-    final now = DateTime.now();
-    final sessionDate = session.date;
-    
-    // Check if the session is today
-    if (sessionDate.year == now.year &&
-        sessionDate.month == now.month &&
-        sessionDate.day == now.day) {
-      
-      // If there's no specific time, consider it running all day
-      if (session.startTime == null || session.endTime == null) {
-        return true;
-      }
-      
-      // Parse the time strings with AM/PM format
-      DateTime? sessionStart;
-      DateTime? sessionEnd;
-      
-      // Try to parse different time formats
-      try {
-        // First try format like "10:00 AM"
-        final startDateTime = DateFormat("h:mm a").parse(session.startTime!);
-        final endDateTime = DateFormat("h:mm a").parse(session.endTime!);
-        
-        sessionStart = DateTime(
-          now.year, now.month, now.day, 
-          startDateTime.hour, startDateTime.minute
-        );
-        
-        sessionEnd = DateTime(
-          now.year, now.month, now.day, 
-          endDateTime.hour, endDateTime.minute
-        );
-      } catch (e) {
-        // If that fails, try 24-hour format like "14:30"
-        try {
-          final startTimeParts = session.startTime!.split(':');
-          final endTimeParts = session.endTime!.split(':');
-          
-          final startHour = int.parse(startTimeParts[0]);
-          final startMinute = int.parse(startTimeParts[1]);
-          
-          final endHour = int.parse(endTimeParts[0]);
-          final endMinute = int.parse(endTimeParts[1]);
-          
-          sessionStart = DateTime(
-            now.year, now.month, now.day, startHour, startMinute);
-          sessionEnd = DateTime(
-            now.year, now.month, now.day, endHour, endMinute);
-        } catch (e) {
-          print('Error parsing session time: $e');
-          return false;
-        }
-      }
-      
-      // Check if current time is between start and end
-      return now.isAfter(sessionStart) && now.isBefore(sessionEnd);
-    }
-    
-    return false;
-  } catch (e) {
-    print('Error in isSessionRunning: $e');
-    return false;
-  }
-}
 
+  // Add this method to check if a session is currently running
+  // Update the isSessionRunning method to check the status column
+
+  bool isSessionRunning(String sessionId) {
+    try {
+      // Find the session in the list
+      final session =
+          attendanceSessions.firstWhereOrNull((s) => s.id == sessionId);
+      if (session == null) return false;
+
+      // If the session is explicitly marked as closed, return false
+      if (session.status == 'closed') return false;
+
+      final now = DateTime.now();
+      final sessionDate = session.date;
+
+      // Check if the session is today
+      if (sessionDate.year == now.year &&
+          sessionDate.month == now.month &&
+          sessionDate.day == now.day) {
+        // If there's no specific time, consider it running all day
+        if (session.startTime == null || session.endTime == null) {
+          return true;
+        }
+
+        // Parse the time strings with AM/PM format
+        DateTime? sessionStart;
+        DateTime? sessionEnd;
+
+        // Try to parse different time formats
+        try {
+          // First try format like "10:00 AM"
+          final startDateTime = DateFormat("h:mm a").parse(session.startTime!);
+          final endDateTime = DateFormat("h:mm a").parse(session.endTime!);
+
+          sessionStart = DateTime(now.year, now.month, now.day,
+              startDateTime.hour, startDateTime.minute);
+
+          sessionEnd = DateTime(now.year, now.month, now.day, endDateTime.hour,
+              endDateTime.minute);
+        } catch (e) {
+          // If that fails, try 24-hour format like "14:30"
+          try {
+            final startTimeParts = session.startTime!.split(':');
+            final endTimeParts = session.endTime!.split(':');
+
+            final startHour = int.parse(startTimeParts[0]);
+            final startMinute = int.parse(startTimeParts[1]);
+
+            final endHour = int.parse(endTimeParts[0]);
+            final endMinute = int.parse(endTimeParts[1]);
+
+            sessionStart =
+                DateTime(now.year, now.month, now.day, startHour, startMinute);
+            sessionEnd =
+                DateTime(now.year, now.month, now.day, endHour, endMinute);
+          } catch (e) {
+            print('Error parsing session time: $e');
+            return false;
+          }
+        }
+
+        // Check if current time is between start and end
+        return now.isAfter(sessionStart) && now.isBefore(sessionEnd);
+      }
+
+      return false;
+    } catch (e) {
+      print('Error in isSessionRunning: $e');
+      return false;
+    }
+  }
 
   @override
   void onClose() {

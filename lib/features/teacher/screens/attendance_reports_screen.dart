@@ -369,8 +369,8 @@ class AttendanceReportsScreen extends StatelessWidget {
                         ),
                         decoration: BoxDecoration(
                           color: dark
-                              ? const Color.fromARGB(255, 24, 117, 112)
-                              : const Color.fromARGB(255, 36, 11, 146),
+                              ? const Color.fromARGB(255, 67, 115, 226)
+                              : const Color.fromARGB(255, 28, 219, 229),
                           borderRadius: BorderRadius.circular(
                             TSizes.borderRadiusSm,
                           ),

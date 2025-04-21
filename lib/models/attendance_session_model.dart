@@ -4,15 +4,14 @@ class AttendanceSessionModel {
   final DateTime date;
   final String? startTime;
   final String? endTime;
-  final String createdBy;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
-  
-  // Add these fields to store class details
+  final String? createdBy;
   final String? subjectName;
   final String? courseName;
-  final int? year;
+  final int? semester;
   final String? section;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+  final String status; // Add this field
 
   AttendanceSessionModel({
     required this.id,
@@ -20,13 +19,14 @@ class AttendanceSessionModel {
     required this.date,
     this.startTime,
     this.endTime,
-    required this.createdBy,
-    this.createdAt,
-    this.updatedAt,
+    this.createdBy,
     this.subjectName,
     this.courseName,
-    this.year,
+    this.semester,
     this.section,
+    this.createdAt,
+    this.updatedAt,
+    this.status = 'open', // Default to 'open'
   });
 
   factory AttendanceSessionModel.fromJson(Map<String, dynamic> json) {
@@ -37,19 +37,17 @@ class AttendanceSessionModel {
       startTime: json['start_time'],
       endTime: json['end_time'],
       createdBy: json['created_by'],
-      createdAt:
-          json['created_at'] != null
-              ? DateTime.parse(json['created_at'])
-              : null,
-      updatedAt:
-          json['updated_at'] != null
-              ? DateTime.parse(json['updated_at'])
-              : null,
-      // Add these fields from the attendance_session_details view
       subjectName: json['subject_name'],
       courseName: json['course_name'],
-      year: json['year'],
+      semester: json['semester'],
       section: json['section'],
+      createdAt: json['created_at'] != null
+          ? DateTime.parse(json['created_at'])
+          : null,
+      updatedAt: json['updated_at'] != null
+          ? DateTime.parse(json['updated_at'])
+          : null,
+      status: json['status'] ?? 'open', // Handle null status
     );
   }
 
@@ -61,12 +59,13 @@ class AttendanceSessionModel {
       'start_time': startTime,
       'end_time': endTime,
       'created_by': createdBy,
-      'created_at': createdAt?.toIso8601String(),
-      'updated_at': updatedAt?.toIso8601String(),
       'subject_name': subjectName,
       'course_name': courseName,
-      'year': year,
+      'semester': semester,
       'section': section,
+      'created_at': createdAt?.toIso8601String(),
+      'updated_at': updatedAt?.toIso8601String(),
+      'status': status,
     };
   }
 }

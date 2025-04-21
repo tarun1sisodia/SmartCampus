@@ -185,7 +185,7 @@ class CalendarController extends GetxController {
       // Apply year filter
       if (selectedYear.value != null) {
         result = result
-            .where((session) => session.year == selectedYear.value)
+            .where((session) => session.semester == selectedYear.value)
             .toList();
       }
 

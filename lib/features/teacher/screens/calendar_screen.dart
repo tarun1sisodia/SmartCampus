@@ -242,7 +242,7 @@ class CalendarScreen extends StatelessWidget {
             const SizedBox(height: 8.0),
             if (session.courseName != null)
               Text('Course: ${session.courseName}'),
-            if (session.year != null) Text('Year: ${session.year}'),
+            if (session.semester != null) Text('Semester: ${session.semester}'),
             if (session.section != null) Text('Section: ${session.section}'),
             const SizedBox(height: 4.0),
             Row(
@@ -310,7 +310,7 @@ class CalendarScreen extends StatelessWidget {
               'classDetails': {
                 'subjectName': session.subjectName,
                 'courseName': session.courseName,
-                'year': session.year,
+                'year': session.semester,
                 'section': session.section,
               },
             });

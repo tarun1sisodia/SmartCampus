@@ -17,7 +17,6 @@ import '../../features/teacher/screens/carousel_attendance_screen.dart';
 import '../../features/teacher/screens/feedback_screen.dart';
 import '../../features/teacher/screens/help_screen.dart';
 import '../../features/teacher/screens/import_data_screen.dart';
-import '../../features/teacher/screens/notifications_screen.dart';
 import '../../features/teacher/screens/reports_screen.dart';
 import '../../features/teacher/screens/student_detail_screen.dart';
 import '../../features/teacher/screens/teacher_messages_screen.dart';
@@ -214,15 +213,7 @@ class AppRoutes {
       binding: HomeBinding(),
       transition: Transition.rightToLeft,
     ),
-    GetPage(
-      name: notifications,
-      page: () {
-        print('Navigating to Notifications Screen');
-        return const NotificationsScreen();
-      },
-      binding: HomeBinding(),
-      transition: Transition.rightToLeft,
-    ),
+
     GetPage(
       name: calendar,
       page: () {
