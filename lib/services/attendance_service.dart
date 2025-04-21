@@ -177,6 +177,26 @@ class AttendanceService {
     }
   }
 
+  // Add this method to the AttendanceService class
+
+  /// Closes an attendance session by updating its status
+  Future<void> closeAttendanceSession(String sessionId) async {
+    try {
+      print('Closing attendance session: $sessionId');
+
+      // Update the session with a closed status
+      await supabase.from('attendance_sessions').update({
+        'status': 'closed',
+        'updated_at': DateTime.now().toIso8601String(),
+      }).eq('id', sessionId);
+
+      print('Session closed successfully');
+    } catch (e) {
+      print('Error closing attendance session: $e');
+      throw 'Failed to close attendance session: $e';
+    }
+  }
+
   // Get attendance statistics for a class
   Future<Map<String, dynamic>> getAttendanceStatsForClass(
     String classId,
