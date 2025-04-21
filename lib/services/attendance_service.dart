@@ -576,8 +576,6 @@ class AttendanceService {
     }
   }
 
-  /// Add these methods to your existing AttendanceService class
-
   /// Fetches all attendance sessions from the database
   Future<List<AttendanceSessionModel>> getAllAttendanceSessions() async {
     try {
@@ -616,4 +614,240 @@ class AttendanceService {
       throw 'Failed to load classes';
     }
   }
+
+  // Add these methods to the AttendanceService class
+
+/// Fetches a specific attendance session by its ID
+Future<AttendanceSessionModel> getSessionById(String sessionId) async {
+  try {
+    print('Fetching attendance session with ID: $sessionId');
+    final response = await supabase
+        .from('attendance_sessions')
+        .select()
+        .eq('id', sessionId)
+        .single();
+
+    return AttendanceSessionModel.fromJson(response);
+  } catch (e) {
+    print('Error getting session by ID: $e');
+    throw 'Failed to get session details: $e';
+  }
+}
+
+/// Updates an attendance record with new status
+Future<void> updateAttendanceRecord(String recordId, bool isPresent) async {
+  try {
+    print('Updating attendance record: $recordId to isPresent=$isPresent');
+    
+    // Convert boolean to string status
+    final status = isPresent ? 'present' : 'absent';
+    
+    await supabase
+        .from('attendance_records')
+        .update({
+          'status': status,
+          'updated_at': DateTime.now().toIso8601String(),
+        })
+        .eq('id', recordId);
+        
+    print('Attendance record updated successfully');
+  } catch (e) {
+    print('Error updating attendance record: $e');
+    throw 'Failed to update attendance record: $e';
+  }
+}
+
+/// Gets detailed attendance records including student information
+Future<List<Map<String, dynamic>>> getDetailedAttendanceRecords(String sessionId) async {
+  try {
+    print('Fetching detailed attendance records for session: $sessionId');
+    
+    // Join attendance_records with students table to get student names
+    final response = await supabase
+        .from('attendance_records')
+        .select('''
+          id,
+          student_id,
+          status,
+          remarks,
+          students:student_id (
+            first_name,
+            last_name,
+            roll_number
+          )
+        ''')
+        .eq('session_id', sessionId);
+
+    // Transform the response into a more usable format
+    return (response as List).map<Map<String, dynamic>>((record) {
+      final student = record['students'] as Map<String, dynamic>;
+      final studentName = '${student['first_name'] ?? ''} ${student['last_name'] ?? ''}'.trim();
+      
+      return {
+        'id': record['id'],
+        'studentId': record['student_id'],
+        'studentName': studentName.isNotEmpty ? studentName : 'Unknown Student',
+        'rollNumber': student['roll_number'],
+        'isPresent': record['status'] == 'present',
+        'status': record['status'],
+        'remarks': record['remarks'],
+      };
+    }).toList();
+  } catch (e) {
+    print('Error getting detailed attendance records: $e');
+    throw 'Failed to get attendance records: $e';
+  }
+}
+
+/// Gets attendance statistics for a specific session
+Future<Map<String, dynamic>> getSessionAttendanceStats(String sessionId) async {
+  try {
+    print('Calculating attendance statistics for session: $sessionId');
+    
+    final records = await supabase
+        .from('attendance_records')
+        .select('status')
+        .eq('session_id', sessionId);
+    
+    int presentCount = 0;
+    int absentCount = 0;
+    int lateCount = 0;
+    
+    for (var record in records) {
+      final status = record['status'] as String;
+      if (status == 'present') {
+        presentCount++;
+      } else if (status == 'absent') {
+        absentCount++;
+      } else if (status == 'late') {
+        lateCount++;
+      }
+    }
+    
+    final totalCount = records.length;
+    
+    return {
+      'total': totalCount,
+      'present': presentCount,
+      'absent': absentCount,
+      'late': lateCount,
+      'attendanceRate': totalCount > 0 
+          ? ((presentCount + (lateCount * 0.5)) / totalCount) * 100 
+          : 0.0,
+    };
+  } catch (e) {
+    print('Error calculating session attendance statistics: $e');
+    throw 'Failed to get attendance statistics: $e';
+  }
+}
+
+/// Exports attendance data for a session (returns data that can be used for CSV/PDF)
+Future<List<Map<String, dynamic>>> exportSessionAttendanceData(String sessionId) async {
+  try {
+    print('Exporting attendance data for session: $sessionId');
+    
+    // Get session details
+    final session = await getSessionById(sessionId);
+    
+    // Get detailed attendance records
+    final records = await getDetailedAttendanceRecords(sessionId);
+    
+    // Format data for export
+    final exportData = records.map((record) {
+      return {
+        'Date': session.date.toString().split(' ')[0],
+        'Subject': session.subjectName ?? 'Unknown Subject',
+        'Student ID': record['studentId'],
+        'Student Name': record['studentName'],
+        'Roll Number': record['rollNumber'] ?? 'N/A',
+        'Status': record['status']?.toUpperCase() ?? 'NOT RECORDED',
+        'Remarks': record['remarks'] ?? '',
+      };
+    }).toList();
+    
+    return exportData;
+  } catch (e) {
+    print('Error exporting attendance data: $e');
+    throw 'Failed to export attendance data: $e';
+  }
+}
+
+/// Checks if a session is currently active
+bool isSessionActive(AttendanceSessionModel session) {
+  final now = DateTime.now();
+  final today = DateTime(now.year, now.month, now.day);
+  final sessionDate = DateTime(session.date.year, session.date.month, session.date.day);
+  
+  // If not today, it's not active
+  if (sessionDate != today) return false;
+  
+  // Check if session is currently active
+  if (session.startTime == null || session.endTime == null) return false;
+  
+  try {
+    // Parse time in format "06 AM" or "07 PM"
+    int startHour = 0;
+    int startMinute = 0;
+    int endHour = 0;
+    int endMinute = 0;
+    
+    // Parse start time
+    final startTimeParts = session.startTime!.split(' ');
+    if (startTimeParts.length == 2) {
+      final timePart = startTimeParts[0];
+      final amPm = startTimeParts[1].toUpperCase();
+      
+      if (timePart.contains(':')) {
+        final parts = timePart.split(':');
+        startHour = int.parse(parts[0]);
+        startMinute = int.parse(parts[1]);
+      } else {
+        startHour = int.parse(timePart);
+        startMinute = 0;
+      }
+      
+      // Convert to 24-hour format
+      if (amPm == 'PM' && startHour < 12) {
+        startHour += 12;
+      } else if (amPm == 'AM' && startHour == 12) {
+        startHour = 0;
+      }
+    }
+    
+    // Parse end time
+    final endTimeParts = session.endTime!.split(' ');
+    if (endTimeParts.length == 2) {
+      final timePart = endTimeParts[0];
+      final amPm = endTimeParts[1].toUpperCase();
+      
+      if (timePart.contains(':')) {
+        final parts = timePart.split(':');
+        endHour = int.parse(parts[0]);
+        endMinute = int.parse(parts[1]);
+      } else {
+        endHour = int.parse(timePart);
+        endMinute = 0;
+      }
+      
+      // Convert to 24-hour format
+      if (amPm == 'PM' && endHour < 12) {
+        endHour += 12;
+      } else if (amPm == 'AM' && endHour == 12) {
+        endHour = 0;
+      }
+    }
+    
+    final sessionStart = DateTime(today.year, today.month, today.day, startHour, startMinute);
+    final sessionEnd = DateTime(today.year, today.month, today.day, endHour, endMinute);
+    
+    return now.isAfter(sessionStart) && now.isBefore(sessionEnd);
+  } catch (e) {
+    print('Error parsing session times: $e');
+    return false;
+  }
+}
+
+
+
+
 }

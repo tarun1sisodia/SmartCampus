@@ -27,7 +27,7 @@ class CarouselAttendanceScreen extends StatelessWidget {
     // Inside the build method, add these responsive variables
     final screenSize = MediaQuery.of(context).size;
     print('Screen size: $screenSize');
-    final isTablet = screenSize.width < 1024 && screenSize.width > 500;
+    // final isTablet = screenSize.width < 1024 && screenSize.width > 500;
     final isMobile = screenSize.width <= 500;
     print('Is mobile: $isMobile');
     final isLandscape = DeviceUtility.isLandscapeOrientation(context);

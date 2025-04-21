@@ -23,7 +23,7 @@ class CalendarController extends GetxController {
   // Filter options
   final showOnlyMyClasses = false.obs;
   final selectedCourse = Rx<String?>(null);
-  final selectedYear = Rx<int?>(null);
+  final selectedSemester= Rx<int?>(null);
   final selectedSection = Rx<String?>(null);
   final showAllSessions = false.obs;
 
@@ -36,7 +36,7 @@ class CalendarController extends GetxController {
     ever(showAllSessions, (_) => applyFilters());
     ever(showOnlyMyClasses, (_) => applyFilters());
     ever(selectedCourse, (_) => applyFilters());
-    ever(selectedYear, (_) => applyFilters());
+    ever(selectedSemester, (_) => applyFilters());
     ever(selectedSection, (_) => applyFilters());
   }
 
@@ -183,9 +183,9 @@ class CalendarController extends GetxController {
       }
 
       // Apply year filter
-      if (selectedYear.value != null) {
+      if (selectedSemester.value != null) {
         result = result
-            .where((session) => session.semester == selectedYear.value)
+            .where((session) => session.semester == selectedSemester.value)
             .toList();
       }
 
@@ -294,8 +294,8 @@ class CalendarController extends GetxController {
         .toList();
   }
 
-  // Get unique years from user classes
-  List<int> get availableYears {
+  // Get unique semesters from user classes
+  List<int> get availableSemesters {
     return userClasses.map((c) => c.semester).toSet().toList();
   }
 

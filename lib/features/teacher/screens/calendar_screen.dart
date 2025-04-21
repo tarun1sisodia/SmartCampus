@@ -1,4 +1,5 @@
 import 'package:attedance__/common/utils/constants/constants.dart';
+import 'package:attedance__/features/teacher/screens/session_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -300,17 +301,16 @@ class CalendarScreen extends StatelessWidget {
           ],
         ),
         trailing: Icon(Icons.arrow_forward_ios, size: 16.0),
-        onTap: () {
+        /* onTap: () {
           print(
               'Session card tapped, navigating to details. Session ID: ${session.id}');
-          // Only allow navigation to session details if it's the user's session
           if (isMySession) {
             Get.toNamed('/session-details', arguments: {
               'sessionId': session.id,
               'classDetails': {
                 'subjectName': session.subjectName,
                 'courseName': session.courseName,
-                'year': session.semester,
+                'semester': session.semester,
                 'section': session.section,
               },
             });
@@ -324,7 +324,38 @@ class CalendarScreen extends StatelessWidget {
               colorText: Colors.white,
             );
           }
+        },*/
+        // In the _buildSessionCard method, update the onTap function:
+        onTap: () {
+          print(
+              'Session card tapped, navigating to details. Session ID: ${session.id}');
+          if (isMySession) {
+            // Use Get.toNamed with proper arguments
+            Get.toNamed(
+              '/sessiondetails', // Make sure this matches exactly with the route name in app_routes.dart
+              arguments: {
+                'sessionId': session.id,
+                'classDetails': {
+                  'subjectName': session.subjectName ?? 'Unknown Subject',
+                  'courseName': session.courseName ?? 'Unknown Course',
+                  'semester': session.semester ?? 0,
+                  'section': session.section ?? 'Unknown',
+                },
+              },
+            );
+          } else {
+            // Show a message that this is not the user's session
+            Get.snackbar(
+              'Not Your Session',
+              'You can only view details of your own sessions.',
+              snackPosition: SnackPosition.BOTTOM,
+              backgroundColor: Colors.orange,
+              colorText: Colors.white,
+            );
+          }
         },
+
+        // onTap: () => Get.to(SessionDetailsScreen()),
       ),
     );
   }
@@ -424,30 +455,36 @@ class CalendarScreen extends StatelessWidget {
                   )),
               const SizedBox(height: 8.0),
               Text(
-                'Year',
+                'Semester', // Changed from 'Year'
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               Obx(() => DropdownButton<int>(
                     isExpanded: true,
-                    hint: Text('Select Year'),
-                    value: controller.selectedYear.value,
+                    hint: Text('Select Semester'), // Changed from 'Select Year'
+                    value: controller
+                        .selectedSemester.value, // Changed from selectedYear
                     items: [
                       DropdownMenuItem<int>(
                         value: null,
-                        child: Text('All Years'),
+                        child:
+                            Text('All Semesters'), // Changed from 'All Years'
                       ),
-                      ...controller.availableYears.map((year) {
+                      ...controller.availableSemesters.map((semester) {
+                        // Changed from availableYears
                         return DropdownMenuItem<int>(
-                          value: year,
-                          child: Text('Year $year'),
+                          value: semester,
+                          child: Text(
+                              'Semester $semester'), // Changed from 'Year $year'
                         );
                       }),
                     ],
                     onChanged: controller.showAllSessions.value
                         ? null // Disable if showing all sessions
                         : (value) {
-                            print('Year filter changed: $value');
-                            controller.selectedYear.value = value;
+                            print(
+                                'Semester filter changed: $value'); // Changed from 'Year filter'
+                            controller.selectedSemester.value =
+                                value; // Changed from selectedYear
                           },
                   )),
               const SizedBox(height: 8.0),
@@ -487,7 +524,8 @@ class CalendarScreen extends StatelessWidget {
                     controller.showAllSessions.value = false;
                     controller.showOnlyMyClasses.value = false;
                     controller.selectedCourse.value = null;
-                    controller.selectedYear.value = null;
+                    controller.selectedSemester.value =
+                        null; // Changed from selectedYear
                     controller.selectedSection.value = null;
                   },
                   style: ElevatedButton.styleFrom(
