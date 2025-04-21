@@ -31,38 +31,39 @@ class CarouselAttendanceController extends GetxController {
   final remainingTime = ''.obs;
 
   @override
+
   /// Called when the controller is initialized.
   ///
   /// If a session ID is already set, it loads students for the current session.
   /// It then listens to changes in the students list to update statistics and
   /// listens to changes in the session ID to start/stop the timer.
   @override
-void onInit() {
-  super.onInit();
-  
-  // Listen to changes in the students list to update statistics
-  ever(attendanceController.students, (_) => updateStatistics());
+  void onInit() {
+    super.onInit();
 
-  // Listen to changes in session ID to start/stop timer
-  ever(attendanceController.currentSessionId, (_) {
-    if (attendanceController.currentSessionId.value.isNotEmpty) {
-      _initializeSessionTimer();
-    } else {
-      _stopTimer();
-    }
-  });
-  
-  // Delay loading students until after the build phase
-  WidgetsBinding.instance.addPostFrameCallback((_) {
-    // Load students for the current session if a session ID is already set
-    if (attendanceController.currentSessionId.value.isNotEmpty) {
-      attendanceController.loadStudentsForSession();
-    }
-  });
-}
+    // Listen to changes in the students list to update statistics
+    ever(attendanceController.students, (_) => updateStatistics());
 
+    // Listen to changes in session ID to start/stop timer
+    ever(attendanceController.currentSessionId, (_) {
+      if (attendanceController.currentSessionId.value.isNotEmpty) {
+        _initializeSessionTimer();
+      } else {
+        _stopTimer();
+      }
+    });
+
+    // Delay loading students until after the build phase
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Load students for the current session if a session ID is already set
+      if (attendanceController.currentSessionId.value.isNotEmpty) {
+        attendanceController.loadStudentsForSession();
+      }
+    });
+  }
 
   @override
+
   /// Stops the session timer when the controller is about to be removed from the
   /// widget tree. This is called by the GetX framework when the controller is
   /// about to be removed from the widget tree. It stops the session timer and
@@ -74,25 +75,26 @@ void onInit() {
 
   /// Initializes the session timer by parsing the start and end times of the
   /// current session from the attendance sessions list. It then starts the timer.
-  /// 
+  ///
   /// If the start time is not set, the timer is not started. If the end time is
   /// not set, the timer is not stopped.
   void _initializeSessionTimer() {
     // Get the current session details
-    final currentSession = attendanceController.attendanceSessions
-        .firstWhereOrNull(
-          (session) => session.id == attendanceController.currentSessionId.value,
-        );
+    final currentSession =
+        attendanceController.attendanceSessions.firstWhereOrNull(
+      (session) => session.id == attendanceController.currentSessionId.value,
+    );
 
     if (currentSession != null) {
       // Parse start and end times
-      if (currentSession.startTime != null && currentSession.startTime!.isNotEmpty) {
+      if (currentSession.startTime != null &&
+          currentSession.startTime!.isNotEmpty) {
         try {
           final startTimeParts = currentSession.startTime!.split(':');
           if (startTimeParts.length >= 2) {
             final hour = int.tryParse(startTimeParts[0]) ?? 0;
             final minute = int.tryParse(startTimeParts[1]) ?? 0;
-            
+
             // Create DateTime with today's date and the session time
             final today = DateTime.now();
             sessionStartTime.value = DateTime(
@@ -102,7 +104,7 @@ void onInit() {
               hour,
               minute,
             );
-            
+
             print('Session start time: ${sessionStartTime.value}');
           }
         } catch (e) {
@@ -110,13 +112,14 @@ void onInit() {
         }
       }
 
-      if (currentSession.endTime != null && currentSession.endTime!.isNotEmpty) {
+      if (currentSession.endTime != null &&
+          currentSession.endTime!.isNotEmpty) {
         try {
           final endTimeParts = currentSession.endTime!.split(':');
           if (endTimeParts.length >= 2) {
             final hour = int.tryParse(endTimeParts[0]) ?? 0;
             final minute = int.tryParse(endTimeParts[1]) ?? 0;
-            
+
             // Create DateTime with today's date and the session time
             final today = DateTime.now();
             sessionEndTime.value = DateTime(
@@ -126,7 +129,7 @@ void onInit() {
               hour,
               minute,
             );
-            
+
             print('Session end time: ${sessionEndTime.value}');
           }
         } catch (e) {
@@ -150,7 +153,8 @@ void onInit() {
       _timer!.cancel();
     }
 
-    print('Starting timer. Start time: $sessionStartTime, End time: $sessionEndTime');
+    print(
+        'Starting timer. Start time: $sessionStartTime, End time: $sessionEndTime');
     isTimerRunning.value = true;
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       elapsedTime.value++;
@@ -158,12 +162,12 @@ void onInit() {
     });
   }
 
-/// Stops the current timer and resets all related time-tracking values.
-  /// 
+  /// Stops the current timer and resets all related time-tracking values.
+  ///
   /// Cancels the active timer, sets [isTimerRunning] to false, and clears
   /// all time-related state variables, effectively resetting the timer
   /// and session tracking to its initial state.
-    void _stopTimer() {
+  void _stopTimer() {
     if (_timer != null) {
       _timer!.cancel();
       _timer = null;
@@ -189,7 +193,7 @@ void onInit() {
 
   void _updateRemainingTime() {
     final now = DateTime.now();
-    
+
     if (sessionEndTime.value != null) {
       // Calculate remaining time until session ends
       final remaining = sessionEndTime.value!.difference(now);
@@ -207,7 +211,7 @@ void onInit() {
     } else if (sessionStartTime.value != null) {
       // If no end time but we have start time, show elapsed time since start
       final elapsed = now.difference(sessionStartTime.value!);
-      
+
       final hours = elapsed.inHours;
       final minutes = elapsed.inMinutes.remainder(60);
       final seconds = elapsed.inSeconds.remainder(60);
@@ -236,34 +240,31 @@ void onInit() {
   /// been marked, false otherwise.
   void updateStatistics() {
     // Count number of students marked as present
-    presentCount.value =
-        attendanceController.students
-            .where((s) => s.attendanceStatus == 'present')
-            .length;
+    presentCount.value = attendanceController.students
+        .where((s) => s.attendanceStatus == 'present')
+        .length;
 
     // Count number of students marked as absent
-    absentCount.value =
-        attendanceController.students
-            .where((s) => s.attendanceStatus == 'absent')
-            .length;
+    absentCount.value = attendanceController.students
+        .where((s) => s.attendanceStatus == 'absent')
+        .length;
 
     // Count number of students marked as late
-    lateCount.value =
-        attendanceController.students
-            .where((s) => s.attendanceStatus == 'late')
-            .length;
+    lateCount.value = attendanceController.students
+        .where((s) => s.attendanceStatus == 'late')
+        .length;
 
     // Count number of students marked as excused
-    excusedCount.value =
-        attendanceController.students
-            .where((s) => s.attendanceStatus == 'excused')
-            .length;
+    excusedCount.value = attendanceController.students
+        .where((s) => s.attendanceStatus == 'excused')
+        .length;
 
     // Check if all students have been marked
     hasCompletedAttendance.value = attendanceController.students.every(
       (s) => s.attendanceStatus != null,
     );
   }
+
   // Mark attendance for current student
   /// Marks the current student with the given attendance status.
   ///
@@ -330,7 +331,8 @@ void onInit() {
     try {
       isSubmitting.value = true;
       await attendanceController.submitAttendance();
-      Get.toNamed('/attendance-reports'); // Return to previous screen after submission
+      Get.toNamed(
+          '/attendance-reports'); // Return to previous screen after submission
     } catch (e) {
       TSnackBar.showError(
         message: 'Failed to submit attendance: ${e.toString()}',
@@ -363,10 +365,9 @@ void onInit() {
   double get completionPercentage {
     if (attendanceController.students.isEmpty) return 0.0;
 
-    int markedCount =
-        attendanceController.students
-            .where((s) => s.attendanceStatus != null)
-            .length;
+    int markedCount = attendanceController.students
+        .where((s) => s.attendanceStatus != null)
+        .length;
 
     return markedCount / attendanceController.students.length;
   }

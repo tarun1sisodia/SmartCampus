@@ -226,10 +226,10 @@ class SessionDetailsController extends GetxController {
               SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () => Get.back(),
-                child: Text('Close'),
                 style: ElevatedButton.styleFrom(
                   minimumSize: Size(double.infinity, 48),
                 ),
+                child: Text('Close'),
               ),
             ],
           ),

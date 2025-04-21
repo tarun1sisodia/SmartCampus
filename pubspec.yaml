@@ -65,6 +65,7 @@ dependencies:
   lottie: 2.7.0
   crypto: ^3.0.6
   cached_network_image: ^3.4.1
+  url_launcher: ^6.3.1
   
 
 dependency_overrides:

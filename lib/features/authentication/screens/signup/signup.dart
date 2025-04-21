@@ -35,12 +35,12 @@ class Signup extends StatelessWidget {
               const SizedBox(height: TSizes.spaceBtwSections),
 
               // Divider
-              CustomDivider(dividerText: TTexts.orSignUpWith.capitalize!),
+              // CustomDivider(dividerText: TTexts.orSignUpWith.capitalize!),
 
               const SizedBox(height: TSizes.spaceBtwSections),
 
               // Social Login Buttons
-              FooterButton(),
+              // FooterButton(),
             ],
           ),
         ),

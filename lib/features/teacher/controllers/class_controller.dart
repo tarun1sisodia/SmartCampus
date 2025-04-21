@@ -130,16 +130,47 @@ class ClassController extends GetxController {
         TSnackBar.showError(message: 'You must be logged in to create a class');
         return;
       }
+
+      // Check for existing class with same parameters (case-insensitive for section)
+      final semester = int.parse(semesterController.text.trim());
+      final section = sectionController.text.trim().isNotEmpty
+          ? sectionController.text.trim()
+          : null;
+
+      // Check if a similar class already exists
+      bool duplicateExists = false;
+      for (var existingClass in classes) {
+        if (existingClass.courseId == selectedCourse.value!.id &&
+            existingClass.subjectId == selectedSubject.value.id &&
+            existingClass.semester == semester &&
+            (section == null && existingClass.section == null ||
+                section != null &&
+                    existingClass.section != null &&
+                    existingClass.section!.toLowerCase() ==
+                        section.toLowerCase())) {
+          duplicateExists = true;
+          break;
+        }
+      }
+
+      if (duplicateExists) {
+        TSnackBar.showError(
+          message:
+              'A class with these details already exists. Please check the section name.',
+          title: 'Duplicate Class',
+        );
+        isLoading.value = false;
+        return;
+      }
+
       print('Creating Class ...');
 
       final newClass = await classService.createClass(
         teacherId: currentUser.id,
         subjectId: selectedSubject.value.id,
         courseId: selectedCourse.value!.id,
-        semester: int.parse(semesterController.text.trim()),
-        section: sectionController.text.trim().isNotEmpty
-            ? sectionController.text.trim()
-            : null,
+        semester: semester,
+        section: section,
       );
       print('Class created: $newClass');
       // Add to the list
@@ -252,10 +283,10 @@ class ClassController extends GetxController {
   }
 
   // New methods for multi-select functionality
-  
+
   void toggleSelectionMode(String? initialClassId) {
     isSelectionMode.value = !isSelectionMode.value;
-    
+
     if (!isSelectionMode.value) {
       // Clear selections when exiting selection mode
       clearSelections();
@@ -275,7 +306,7 @@ class ClassController extends GetxController {
     } else {
       selectedClassIds.add(classId);
     }
-    
+
     // Update "all selected" state
     isAllSelected.value = selectedClassIds.length == classes.length;
   }
@@ -303,22 +334,23 @@ class ClassController extends GetxController {
   Future<void> deleteSelectedClasses() async {
     try {
       isLoading.value = true;
-      
+
       // Create a copy to avoid modification during iteration
       final classesToDelete = Set<String>.from(selectedClassIds);
-      
+
       for (var classId in classesToDelete) {
         await deleteClass(classId);
       }
-      
+
       // Exit selection mode
       isSelectionMode.value = false;
       clearSelections();
-      
+
       // Show success message
       final count = classesToDelete.length;
       TSnackBar.showSuccess(
-        message: '$count ${count == 1 ? 'class' : 'classes'} deleted successfully',
+        message:
+            '$count ${count == 1 ? 'class' : 'classes'} deleted successfully',
         title: 'Success',
       );
     } catch (e) {

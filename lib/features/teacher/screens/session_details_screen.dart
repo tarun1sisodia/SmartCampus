@@ -546,7 +546,6 @@ class SessionDetailsScreen extends StatelessWidget {
                     onPressed: () {
                       controller.viewAllStudents();
                     },
-                    child: Text('View All Students'),
                     style: OutlinedButton.styleFrom(
                       minimumSize: Size(double.infinity, 48),
                       side: BorderSide(color: AppColors.primary),
@@ -554,6 +553,7 @@ class SessionDetailsScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
+                    child: Text('View All Students'),
                   )
                 : SizedBox.shrink()),
           ],

@@ -7,6 +7,7 @@ import 'package:attedance__/common/utils/constants/text_strings.dart';
 import 'package:attedance__/common/utils/helpers/helper_function.dart';
 import 'package:attedance__/common/utils/helpers/snackbar_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
@@ -45,15 +46,27 @@ class SignupForm extends StatelessWidget {
             const SizedBox(height: TSizes.spaceBtwInputFields),
 
             //Phone Number
-            Textfields(
+            TextFormField(
               controller: controller.phoneController,
-              iconColor: dark ? TColors.yellow : TColors.deepPurple,
-              prefixIcon: const Icon(Iconsax.call),
-              labelText: TTexts.phoneNumber,
+              decoration: InputDecoration(
+                labelText: 'Phone',
+                prefixIcon: Icon(
+                  Iconsax.call,
+                  color: dark ? TColors.yellow : TColors.deepPurple,
+                ),
+              ),
               keyboardType: TextInputType.phone,
+              maxLength: 10,
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+              ],
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Please enter your phone number';
+                } else if (value.length != 10) {
+                  return 'Phone number must be exactly 10 digits';
+                } else if (!RegExp(r'^\d{10}$').hasMatch(value)) {
+                  return 'Phone number must contain only digits';
                 }
                 return null;
               },

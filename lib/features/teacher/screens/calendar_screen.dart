@@ -1,5 +1,4 @@
 import 'package:attedance__/common/utils/constants/constants.dart';
-import 'package:attedance__/features/teacher/screens/session_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -308,7 +307,7 @@ class CalendarScreen extends StatelessWidget {
         onTap: () {
           print(
               'Session card tapped, navigating to details. Session ID: ${session.id}');
-          if (isMySession) {
+          if (isMySession != null) {
             // Use Get.toNamed with proper arguments
             Get.toNamed(
               '/sessiondetails', // Make sure this matches exactly with the route name in app_routes.dart

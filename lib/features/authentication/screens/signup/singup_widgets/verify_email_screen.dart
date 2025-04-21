@@ -8,6 +8,8 @@ import 'package:attedance__/common/utils/helpers/helper_function.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 
 class VerifyEmailScreen extends StatelessWidget {
   final String email;
@@ -98,11 +100,35 @@ class VerifyEmailScreen extends StatelessWidget {
                       );
                     }
                   },
-                  child: Text(
-                    TTexts.continueText,
-                    style: Theme.of(context).textTheme.headlineSmall,
-                  ),
-                ),
+                  child: GestureDetector(
+                    onTap: () async {
+                      try {
+                        final Uri emailLaunchUri = Uri(
+                          scheme: 'mailto',
+                          path: email,
+                        );
+                        if (await canLaunchUrl(emailLaunchUri)) {
+                          await launchUrl(emailLaunchUri);
+                        } else {
+                          Get.snackbar(
+                            'Error',
+                            'Could not launch email app',
+                            snackPosition: SnackPosition.BOTTOM,
+                          );
+                        }
+                      } catch (e) {
+                        Get.snackbar(
+                          'Error',
+                          'Failed to open email app: ${e.toString()}',
+                          snackPosition: SnackPosition.BOTTOM,
+                        );
+                      }
+                    },
+                    child: Text(
+                      TTexts.continueText,
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
+                  ),                ),
               ),
               const SizedBox(height: TSizes.spaceBtwItems),
               
