@@ -307,31 +307,20 @@ class CalendarScreen extends StatelessWidget {
         onTap: () {
           print(
               'Session card tapped, navigating to details. Session ID: ${session.id}');
-          if (isMySession != null) {
-            // Use Get.toNamed with proper arguments
-            Get.toNamed(
-              '/sessiondetails', // Make sure this matches exactly with the route name in app_routes.dart
-              arguments: {
-                'sessionId': session.id,
-                'classDetails': {
-                  'subjectName': session.subjectName ?? 'Unknown Subject',
-                  'courseName': session.courseName ?? 'Unknown Course',
-                  'semester': session.semester ?? 0,
-                  'section': session.section ?? 'Unknown',
-                },
+          // Use Get.toNamed with proper arguments
+          Get.toNamed(
+            '/sessiondetails', // Make sure this matches exactly with the route name in app_routes.dart
+            arguments: {
+              'sessionId': session.id,
+              'classDetails': {
+                'subjectName': session.subjectName ?? 'Unknown Subject',
+                'courseName': session.courseName ?? 'Unknown Course',
+                'semester': session.semester ?? 0,
+                'section': session.section ?? 'Unknown',
               },
-            );
-          } else {
-            // Show a message that this is not the user's session
-            Get.snackbar(
-              'Not Your Session',
-              'You can only view details of your own sessions.',
-              snackPosition: SnackPosition.BOTTOM,
-              backgroundColor: Colors.orange,
-              colorText: Colors.white,
-            );
-          }
-        },
+            },
+          );
+                },
       ),
     );
   }

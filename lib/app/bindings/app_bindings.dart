@@ -249,10 +249,10 @@ class AllSessionsBinding extends Bindings {
   void dependencies() {
     // Make sure the attendance controller is available
     if (!Get.isRegistered<AttendanceController>()) {
-      Get.put(AttendanceController());
+      Get.lazyPut(() => AttendanceController());
     }
 
     // Initialize the all sessions controller
-    Get.put(AllSessionsController());
+    Get.lazyPut(() => AllSessionsController());
   }
 }

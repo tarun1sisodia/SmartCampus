@@ -14,6 +14,7 @@ class AttendanceController extends GetxController {
   final attendanceService = AttendanceService();
   final studentService = StudentService();
   final classService = ClassService();
+  // final allSessionsController = Get.put(AllSessionsController());
 
   final isLoading = false.obs;
   final isStudentsLoaded = false.obs;
@@ -217,6 +218,14 @@ class AttendanceController extends GetxController {
         sessionId: currentSessionId.value,
         records: records,
       );
+
+      // await allSessionsController.closeSession(currentSessionId.value);
+      // Show success message and navigate back
+      TSnackBar.showSuccess(
+        message: 'Attendance submitted and session closed',
+        title: 'Success',
+      );
+      Get.back();
 
       // Close the session after submitting attendance
       await attendanceService.closeAttendanceSession(currentSessionId.value);

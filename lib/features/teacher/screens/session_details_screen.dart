@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:attedance__/common/utils/constants/constants.dart';
 import '../controllers/session_details_controller.dart';
-import '../models/attendance_ui_models.dart';
 
 class SessionDetailsScreen extends StatelessWidget {
   final SessionDetailsController controller =

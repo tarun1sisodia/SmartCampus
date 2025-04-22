@@ -231,22 +231,22 @@ class CarouselAttendanceScreen extends StatelessWidget {
                     onSwipeLeft: () {
                       print('Swipe left detected');
                       carouselAttendanceController.moveToNextStudent();
-                      if (!carouselAttendanceController.isLastStudent) {
-                        carouselController.nextPage(
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeInOut,
-                        );
-                      }
+                      // if (!carouselAttendanceController.isLastStudent) {
+                      carouselController.nextPage(
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                      );
+                      // }
                     },
                     onSwipeRight: () {
                       print('Swipe right detected');
                       carouselAttendanceController.moveToNextStudent();
-                      if (!carouselAttendanceController.isLastStudent) {
-                        carouselController.nextPage(
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeInOut,
-                        );
-                      }
+                      // if (!carouselAttendanceController.isLastStudent) {
+                      carouselController.nextPage(
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                      );
+                      // }
                     },
                   );
                 },

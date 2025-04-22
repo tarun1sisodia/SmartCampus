@@ -11,7 +11,8 @@ class AttendanceSessionModel {
   final String? section;
   final DateTime? createdAt;
   final DateTime? updatedAt;
-  final String status; // Add this field
+  final String status;
+  final DateTime? closedAt;
 
   AttendanceSessionModel({
     required this.id,
@@ -26,29 +27,32 @@ class AttendanceSessionModel {
     this.section,
     this.createdAt,
     this.updatedAt,
-    this.status = 'open', // Default to 'open'
+    this.status = 'open',
+    this.closedAt,
   });
 
   factory AttendanceSessionModel.fromJson(Map<String, dynamic> json) {
     return AttendanceSessionModel(
-      id: json['id'],
-      classId: json['class_id'],
-      date: DateTime.parse(json['date']),
-      startTime: json['start_time'],
-      endTime: json['end_time'],
-      createdBy: json['created_by'],
-      subjectName: json['subject_name'],
-      courseName: json['course_name'],
-      semester: json['semester'],
-      section: json['section'],
-      createdAt: json['created_at'] != null
-          ? DateTime.parse(json['created_at'])
-          : null,
-      updatedAt: json['updated_at'] != null
-          ? DateTime.parse(json['updated_at'])
-          : null,
-      status: json['status'] ?? 'open', // Handle null status
-    );
+        id: json['id'],
+        classId: json['class_id'],
+        date: DateTime.parse(json['date']),
+        startTime: json['start_time'],
+        endTime: json['end_time'],
+        createdBy: json['created_by'],
+        subjectName: json['subject_name'],
+        courseName: json['course_name'],
+        semester: json['semester'],
+        section: json['section'],
+        createdAt: json['created_at'] != null
+            ? DateTime.parse(json['created_at'])
+            : null,
+        updatedAt: json['updated_at'] != null
+            ? DateTime.parse(json['updated_at'])
+            : null,
+        status: json['status'] ?? 'open',
+        closedAt: json['closed_at'] != null
+            ? DateTime.parse(json['closed_at'])
+            : null);
   }
 
   Map<String, dynamic> toJson() {
@@ -66,6 +70,7 @@ class AttendanceSessionModel {
       'created_at': createdAt?.toIso8601String(),
       'updated_at': updatedAt?.toIso8601String(),
       'status': status,
+      'closed_at': closedAt?.toIso8601String(),
     };
   }
 }

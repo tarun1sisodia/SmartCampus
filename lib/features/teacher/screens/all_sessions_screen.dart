@@ -1,5 +1,6 @@
 import 'package:attedance__/app/bindings/app_bindings.dart';
 import 'package:attedance__/common/utils/helpers/snackbar_helper.dart';
+import 'package:attedance__/features/teacher/controllers/attendance_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -12,10 +13,17 @@ import '../../../common/utils/constants/sized.dart';
 import '../../../common/utils/helpers/helper_function.dart';
 
 class AllSessionsScreen extends StatelessWidget {
-  final allSessionsController = Get.put(AllSessionsController());
+  final attendanceController = Get.put(AttendanceController());
+  late final AllSessionsController allSessionsController;
 
   AllSessionsScreen({super.key}) {
     print('AllSessionsScreen initialized');
+    // Initialize the controller in the constructor
+    if (Get.isRegistered<AllSessionsController>()) {
+      allSessionsController = Get.put(AllSessionsController());
+    } else {
+      allSessionsController = Get.put(AllSessionsController());
+    }
   }
 
   @override
@@ -231,6 +239,9 @@ class AllSessionsScreen extends StatelessWidget {
                               // Pre-compute the status to avoid calling during build
                               final isRunning = allSessionsController
                                   .isSessionRunning(session);
+                              final isClosed = allSessionsController
+                                  .isSessionClosed(session);
+
                               return Positioned(
                                 right: 0,
                                 bottom: 0,
@@ -238,8 +249,11 @@ class AllSessionsScreen extends StatelessWidget {
                                   width: 10,
                                   height: 10,
                                   decoration: BoxDecoration(
-                                    color:
-                                        isRunning ? Colors.green : Colors.red,
+                                    color: isClosed
+                                        ? Colors.red
+                                        : (isRunning
+                                            ? Colors.green
+                                            : Colors.orange),
                                     shape: BoxShape.circle,
                                     border: Border.all(
                                       color: dark
@@ -253,12 +267,37 @@ class AllSessionsScreen extends StatelessWidget {
                             }),
                           ],
                         ),
-                        title: Text(
-                          session.className ?? 'Unknown Class',
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium
-                              ?.copyWith(fontWeight: FontWeight.bold),
+                        title: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                session.className ?? 'Unknown Class',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium
+                                    ?.copyWith(fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            if (allSessionsController.isSessionClosed(session))
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 2,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Text(
+                                  'Closed',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                          ],
                         ),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -304,16 +343,25 @@ class AllSessionsScreen extends StatelessWidget {
                                         onPressed: () {
                                           print(
                                               'Standard button pressed for session: ${session.id}');
+                                          // Check if session is closed before allowing access
+                                          if (allSessionsController
+                                              .isSessionClosed(session)) {
+                                            TSnackBar.showInfo(
+                                              message:
+                                                  'This session has been closed',
+                                              title: 'Session Closed',
+                                            );
+                                            return;
+                                          }
                                           // Check if session is running before allowing access
                                           if (!allSessionsController
                                               .isSessionRunning(session)) {
-                                            // Show a message that the session is closed
                                             TSnackBar.showInfo(
                                               message:
-                                                  'This session is currently closed',
-                                              title: 'Session Closed',
+                                                  'This session is currently not active',
+                                              title: 'Session Inactive',
                                             );
-                                            return; // Don't proceed further
+                                            return;
                                           }
                                           allSessionsController
                                               .attendanceController
@@ -351,16 +399,25 @@ class AllSessionsScreen extends StatelessWidget {
                                       onPressed: () {
                                         print(
                                             'Carousel button pressed for session: ${session.id}');
+                                        // Check if session is closed before allowing access
+                                        if (allSessionsController
+                                            .isSessionClosed(session)) {
+                                          TSnackBar.showInfo(
+                                            message:
+                                                'This session has been closed',
+                                            title: 'Session Closed',
+                                          );
+                                          return;
+                                        }
                                         // Check if session is running before allowing access
                                         if (!allSessionsController
                                             .isSessionRunning(session)) {
-                                          // Show a message that the session is closed
                                           TSnackBar.showInfo(
                                             message:
-                                                'This session is currently closed',
-                                            title: 'Session Closed',
+                                                'This session is currently not active',
+                                            title: 'Session Inactive',
                                           );
-                                          return; // Don't proceed further
+                                          return;
                                         }
                                         allSessionsController
                                             .attendanceController

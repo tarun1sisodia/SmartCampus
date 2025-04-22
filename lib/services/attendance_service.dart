@@ -177,8 +177,6 @@ class AttendanceService {
     }
   }
 
-  // Add this method to the AttendanceService class
-
   /// Closes an attendance session by updating its status
   Future<void> closeAttendanceSession(String sessionId) async {
     try {
@@ -187,6 +185,7 @@ class AttendanceService {
       // Update the session with a closed status
       await supabase.from('attendance_sessions').update({
         'status': 'closed',
+        'closed_at': DateTime.now().toIso8601String(),
         'updated_at': DateTime.now().toIso8601String(),
       }).eq('id', sessionId);
 
@@ -851,26 +850,25 @@ class AttendanceService {
   }
 
   /// Fetches a teacher's name by their user ID
-Future<String> getTeacherName(String userId) async {
-try {
-  print('Fetching teacher name for user ID: $userId');
-    
-  // Query the profiles table to get the user's name
-  final response = await supabase
-      .from('profiles')
-      .select('first_name, last_name')
-      .eq('id', userId)
-      .single();
-    
-  final firstName = response['first_name'] as String? ?? '';
-  final lastName = response['last_name'] as String? ?? '';
-    
-  final fullName = '$firstName $lastName'.trim();
-  return fullName.isNotEmpty ? fullName : 'Unknown Teacher';
-    
-} catch (e) {
-  print('Error fetching teacher name: $e');
-  return 'Unknown Teacher';
-}
-}
+  Future<String> getTeacherName(String userId) async {
+    try {
+      print('Fetching teacher name for user ID: $userId');
+
+      // Query the profiles table to get the user's name
+      final response = await supabase
+          .from('profiles')
+          .select('first_name, last_name')
+          .eq('id', userId)
+          .single();
+
+      final firstName = response['first_name'] as String? ?? '';
+      final lastName = response['last_name'] as String? ?? '';
+
+      final fullName = '$firstName $lastName'.trim();
+      return fullName.isNotEmpty ? fullName : 'Unknown Teacher';
+    } catch (e) {
+      print('Error fetching teacher name: $e');
+      return 'Unknown Teacher';
+    }
+  }
 }

@@ -12,7 +12,8 @@ import 'attendance_controller.dart';
 class AllSessionsController extends GetxController {
   final attendanceService = AttendanceService();
   final classService = ClassService();
-  final attendanceController = Get.find<AttendanceController>();
+  // final attendanceController = Get.put(AttendanceController());
+  late final AttendanceController attendanceController;
 
   final isLoading = false.obs;
   final allSessions = <AttendanceSessionWithClass>[].obs;
@@ -34,6 +35,14 @@ class AllSessionsController extends GetxController {
   void onInit() {
     super.onInit();
     print('AllSessionsController initialized');
+
+    // Initialize the attendanceController here
+    if (Get.isRegistered<AttendanceController>()) {
+      attendanceController = Get.find<AttendanceController>();
+    } else {
+      attendanceController = Get.put(AttendanceController());
+    }
+
     loadAllSessions();
     loadClasses();
   }
@@ -179,8 +188,23 @@ class AllSessionsController extends GetxController {
     }
   }
 
+// Add this method to check if a session is closed
+  bool isSessionClosed(AttendanceSessionWithClass session) {
+    // Consider a session closed if its status is explicitly 'closed'
+    if (session.status == 'closed') return true;
+
+    // Also check if closedAt timestamp exists
+    if (session.closedAt != null) return true;
+
+    return false;
+  }
+
+// Modify the isSessionRunning method to also check if the session is closed
   bool isSessionRunning(AttendanceSessionWithClass session) {
     try {
+      // First check if the session is closed
+      if (isSessionClosed(session)) return false;
+
       final now = DateTime.now();
       final sessionDate = session.date;
 
@@ -209,7 +233,6 @@ class AllSessionsController extends GetxController {
           sessionEnd = DateTime(now.year, now.month, now.day, endDateTime.hour,
               endDateTime.minute);
         } catch (e) {
-          // If that fails, try 24-hour format like "14:30"
           // If that fails, try 24-hour format like "14:30"
           try {
             final startTimeParts = session.startTime!.split(':');
@@ -242,6 +265,66 @@ class AllSessionsController extends GetxController {
     }
   }
 
+// Add a method to close a session after attendance submission
+  Future<void> closeSession(String sessionId) async {
+    try {
+      isLoading.value = true;
+
+      // Call the service method to close the session
+      await attendanceService.closeAttendanceSession(sessionId);
+
+      // Update the local session data
+      final sessionIndex = allSessions.indexWhere((s) => s.id == sessionId);
+      if (sessionIndex >= 0) {
+        final updatedSession = allSessions[sessionIndex];
+        allSessions[sessionIndex] = AttendanceSessionWithClass(
+          id: updatedSession.id,
+          classId: updatedSession.classId,
+          date: updatedSession.date,
+          startTime: updatedSession.startTime,
+          endTime: updatedSession.endTime,
+          createdBy: updatedSession.createdBy,
+          createdAt: updatedSession.createdAt,
+          className: updatedSession.className,
+          subjectName: updatedSession.subjectName,
+          classModel: updatedSession.classModel,
+          status: 'closed',
+          closedAt: DateTime.now(),
+        );
+      }
+
+      // Also update in filtered sessions
+      final filteredIndex =
+          filteredSessions.indexWhere((s) => s.id == sessionId);
+      if (filteredIndex >= 0) {
+        final updatedSession = filteredSessions[filteredIndex];
+        filteredSessions[filteredIndex] = AttendanceSessionWithClass(
+          id: updatedSession.id,
+          classId: updatedSession.classId,
+          date: updatedSession.date,
+          startTime: updatedSession.startTime,
+          endTime: updatedSession.endTime,
+          createdBy: updatedSession.createdBy,
+          createdAt: updatedSession.createdAt,
+          className: updatedSession.className,
+          subjectName: updatedSession.subjectName,
+          classModel: updatedSession.classModel,
+          status: 'closed',
+          closedAt: DateTime.now(),
+        );
+      }
+
+      TSnackBar.showSuccess(
+        message: 'Session closed successfully',
+        title: 'Success',
+      );
+    } catch (e) {
+      print('Error closing session: $e');
+      TSnackBar.showError(message: 'Failed to close session: ${e.toString()}');
+    } finally {
+      isLoading.value = false;
+    }
+  }
   // New methods for multi-select functionality
 
   void toggleSelectionMode(String? initialSessionId) {
@@ -346,5 +429,7 @@ class AttendanceSessionWithClass extends AttendanceSessionModel {
     this.className,
     this.subjectName,
     this.classModel,
+    super.status,
+    super.closedAt,
   });
 }
