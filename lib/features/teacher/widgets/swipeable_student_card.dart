@@ -50,7 +50,7 @@ class SwipeableStudentCard extends StatelessWidget {
             width: 2,
           ),
         ),
-        child: Container(
+        child: SizedBox(
           height: cardHeight,
           width: double.infinity,
           child: Column(

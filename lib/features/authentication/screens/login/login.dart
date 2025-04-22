@@ -4,9 +4,6 @@ import 'package:get/get.dart';
 
 import '../../../../common/styles/spacing_styles.dart';
 import '../../../../common/utils/constants/sized.dart';
-import '../../../../common/utils/constants/text_strings.dart';
-import 'login_widgets/button_footer.dart';
-import 'login_widgets/divider_login.dart';
 import 'login_widgets/login_form.dart';
 import 'login_widgets/logo_text.dart';
 
