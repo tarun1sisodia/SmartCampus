@@ -295,7 +295,7 @@ class AttendanceController extends GetxController {
       //printnt('End time: ${endTimeController.text}');
 
       // Create the session
-      final session = await attendanceService.createAttendanceSession(
+       await attendanceService.createAttendanceSession(
         classId: selectedClass.value!.id,
         date: sessionDate.value,
         startTime:

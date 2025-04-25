@@ -96,7 +96,7 @@ class CarouselAttendanceController extends GetxController {
             final minute = int.tryParse(startTimeParts[1]) ?? 0;
 
             // Create DateTime with today's date and the session time
-            final today = DateTime.now();
+            DateTime.now();
             sessionStartTime.value = DateTime(
               currentSession.date.year,
               currentSession.date.month,
@@ -121,7 +121,7 @@ class CarouselAttendanceController extends GetxController {
             final minute = int.tryParse(endTimeParts[1]) ?? 0;
 
             // Create DateTime with today's date and the session time
-            final today = DateTime.now();
+            DateTime.now();
             sessionEndTime.value = DateTime(
               currentSession.date.year,
               currentSession.date.month,

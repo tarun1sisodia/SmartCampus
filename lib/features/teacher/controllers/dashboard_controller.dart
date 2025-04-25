@@ -35,7 +35,7 @@ class DashboardController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    print('DashboardController initialized');
+    //print('DashboardController initialized');
     loadDashboardData();
     initializeGreeting();
   }
@@ -95,23 +95,23 @@ class DashboardController extends GetxController {
 
   Future<void> loadDashboardData() async {
     try {
-      print('Loading dashboard data...');
+      //print('Loading dashboard data...');
       isLoading.value = true;
 
       final currentUser = Supabase.instance.client.auth.currentUser;
       if (currentUser == null) {
-        print('No user is logged in');
+        //print('No user is logged in');
         TSnackBar.showError(
           message: 'You must be logged in to view the dashboard',
         );
         return;
       }
 
-      print('Fetching classes for teacher: ${currentUser.id}');
+      //print('Fetching classes for teacher: ${currentUser.id}');
       final teacherClasses = await classService.getTeacherClasses(
         currentUser.id,
       );
-      print('Classes fetched: ${teacherClasses.length}');
+      //print('Classes fetched: ${teacherClasses.length}');
       classes.assignAll(teacherClasses);
       filteredClasses.assignAll(teacherClasses);
       totalClasses.value = teacherClasses.length;
@@ -121,15 +121,15 @@ class DashboardController extends GetxController {
       double totalAttendancePercentage = 0.0;
 
       for (var classModel in teacherClasses) {
-        print('Fetching stats for class: ${classModel.id}');
+        //print('Fetching stats for class: ${classModel.id}');
         final stats = await attendanceService.getAttendanceStatsForClass(
           classModel.id,
         );
-        print('Stats for class ${classModel.id}: $stats');
+        //print('Stats for class ${classModel.id}: $stats');
         classStats[classModel.id] = stats;
 
         final studentsCount = await _getStudentCountForClass(classModel.id);
-        print('Student count for class ${classModel.id}: $studentsCount');
+        //print('Student count for class ${classModel.id}: $studentsCount');
         totalStudentsCount += studentsCount;
 
         if (stats['totalSessions'] > 0) {
@@ -145,57 +145,57 @@ class DashboardController extends GetxController {
         averageAttendance.value = 0.0;
       }
 
-      print('Total students: $totalStudentsCount');
-      print('Average attendance: ${averageAttendance.value}');
+      //print('Total students: $totalStudentsCount');
+      //print('Average attendance: ${averageAttendance.value}');
     } catch (e) {
-      print('Error loading dashboard data: $e');
+      //print('Error loading dashboard data: $e');
       TSnackBar.showError(
         message: 'Failed to load dashboard data: ${e.toString()}',
       );
     } finally {
       isLoading.value = false;
-      print('Dashboard data loading complete');
+      //print('Dashboard data loading complete');
     }
   }
 
   Future<int> _getStudentCountForClass(String classId) async {
     try {
-      print('Getting student count for class: $classId');
+      //print('Getting student count for class: $classId');
       final response = await Supabase.instance.client
           .from('class_students')
           .select('id')
           .eq('class_id', classId);
 
-      print('Student count response for class $classId: $response');
+      //print('Student count response for class $classId: $response');
       return response.length;
     } catch (e) {
-      print('Error getting student count for class $classId: $e');
+      //print('Error getting student count for class $classId: $e');
       return 0;
     }
   }
 
   Future<void> createInitialData() async {
     try {
-      print('Creating initial data...');
+      //print('Creating initial data...');
       final currentUser = Supabase.instance.client.auth.currentUser;
       if (currentUser == null) {
-        print('No user is logged in');
+        //print('No user is logged in');
         TSnackBar.showError(message: 'You must be logged in to create data.');
         return;
       }
 
       final classes = await classService.getTeacherClasses(currentUser.id);
-      print('Existing classes: ${classes.length}');
+      //print('Existing classes: ${classes.length}');
 
       if (classes.isEmpty) {
-        print('No classes found, creating sample data...');
+        //print('No classes found, creating sample data...');
 
         // Create a sample subject
         final subject = await subjectService.createSubject(
           'Operating Systems',
           'BCA301',
         );
-        print('Sample subject created: $subject');
+        //print('Sample subject created: $subject');
 
         // Create a sample course
         try {
@@ -203,7 +203,7 @@ class DashboardController extends GetxController {
             'Bachelors of Computer Application',
             'BCA',
           );
-          print('Sample course created: $course');
+          //print('Sample course created: $course');
 
           // Create a sample class
           await classService.createClass(
@@ -213,9 +213,9 @@ class DashboardController extends GetxController {
             semester: 1,
             section: 'A',
           );
-          print('Sample class created');
+          //print('Sample class created');
         } catch (e) {
-          print('Error while creating course: $e');
+          //print('Error while creating course: $e');
           TSnackBar.showError(
             message: 'Failed to create course: ${e.toString()}',
           );
@@ -225,7 +225,7 @@ class DashboardController extends GetxController {
         await loadDashboardData();
       }
     } catch (e) {
-      print('Error creating initial data: $e');
+      //print('Error creating initial data: $e');
       TSnackBar.showError(
         message: 'Failed to create initial data: ${e.toString()}',
       );
@@ -233,7 +233,7 @@ class DashboardController extends GetxController {
   }
 
   void searchClasses(String query) {
-    print('Searching classes with query: $query');
+    //print('Searching classes with query: $query');
     searchQuery.value = query.toLowerCase();
     if (query.isEmpty) {
       filteredClasses.assignAll(classes);
@@ -247,12 +247,12 @@ class DashboardController extends GetxController {
           final matchesSection =
               classModel.section?.toLowerCase().contains(query) ?? false;
 
-          print(
-              'Class ${classModel.id}: matchesSubject=$matchesSubject, matchesCourse=$matchesCourse, matchesSection=$matchesSection');
+          //print(
+              // 'Class ${classModel.id}: matchesSubject=$matchesSubject, matchesCourse=$matchesCourse, matchesSection=$matchesSection');
           return matchesSubject || matchesCourse || matchesSection;
         }).toList(),
       );
     }
-    // print('Filtered classes: ${filteredClasses.length}');
+    // //print('Filtered classes: ${filteredClasses.length}');
   }
 }
