@@ -17,72 +17,72 @@ class StorageService extends GetxService {
 
   // Initialize storage service
   Future<StorageService> init() async {
-    print('Initializing StorageService...');
+    //print('Initializing StorageService...');
     await GetStorage.init();
-    print('StorageService initialized.');
+    //print('StorageService initialized.');
     return this;
   }
 
   // Onboarding
   bool getOnboardingStatus() {
-    print('Getting onboarding status...');
+    //print('Getting onboarding status...');
     final status = _storage.read(onboardingCompletedKey) ?? false;
-    print('Onboarding status: $status');
+    //print('Onboarding status: $status');
     return status;
   }
 
   Future<void> setOnboardingStatus(bool status) async {
-    print('Setting onboarding status to $status...');
+    //print('Setting onboarding status to $status...');
     await _storage.write(onboardingCompletedKey, status);
-    print('Onboarding status set.');
+    //print('Onboarding status set.');
   }
 
   // Remember User
   bool getRememberUserStatus() {
-    print('Getting remember user status...');
+    //print('Getting remember user status...');
     final status = _storage.read(rememberUserKey) ?? false;
-    print('Remember user status: $status');
+    //print('Remember user status: $status');
     return status;
   }
 
   Future<void> setRememberUserStatus(bool status) async {
-    print('Setting remember user status to $status...');
+    //print('Setting remember user status to $status...');
     await _storage.write(rememberUserKey, status);
-    print('Remember user status set.');
+    //print('Remember user status set.');
   }
 
   // User Credentials
   Future<void> saveUserCredentials(String email, String password) async {
-    print('Saving user credentials...');
+    //print('Saving user credentials...');
     await _storage.write(userEmailKey, email);
     await _storage.write(userPasswordKey, password);
-    print('User credentials saved.');
+    //print('User credentials saved.');
   }
 
   String? getUserEmail() {
-    print('Getting user email...');
+    //print('Getting user email...');
     final email = _storage.read(userEmailKey);
-    print('User email: $email');
+    //print('User email: $email');
     return email;
   }
 
   String? getUserPassword() {
-    print('Getting user password...');
+    //print('Getting user password...');
     final password = _storage.read(userPasswordKey);
-    print('User password: $password');
+    //print('User password: $password');
     return password;
   }
 
   Future<void> clearUserCredentials() async {
-    print('Clearing user credentials...');
+    //print('Clearing user credentials...');
     await _storage.remove(userEmailKey);
     await _storage.remove(userPasswordKey);
-    print('User credentials cleared.');
+    //print('User credentials cleared.');
   }
 
   // Get cache size in MB - optimized for mobile platforms
   Future<double> getCacheSize() async {
-    print('Calculating cache size...');
+    //print('Calculating cache size...');
     try {
       if (Platform.isAndroid || Platform.isIOS) {
         final cacheDir = await getTemporaryDirectory();
@@ -90,21 +90,21 @@ class StorageService extends GetxService {
         final cacheSize = await _calculateDirectorySize(cacheDir);
         final docSize = await _calculateDirectorySize(appDocDir);
         final totalSize = (cacheSize + docSize) / (1024 * 1024);
-        print('Cache size: $totalSize MB');
+        //print('Cache size: $totalSize MB');
         return totalSize;
       } else {
-        print('Returning default cache size for non-mobile platform.');
+        //print('Returning default cache size for non-mobile platform.');
         return 15.0;
       }
     } catch (e) {
-      print('Error calculating cache size: $e');
+      //print('Error calculating cache size: $e');
       return 0.0;
     }
   }
 
   // Calculate directory size - optimized for mobile
   Future<int> _calculateDirectorySize(Directory dir) async {
-    print('Calculating size for directory: ${dir.path}');
+    //print('Calculating size for directory: ${dir.path}');
     int totalSize = 0;
     try {
       if (await dir.exists()) {
@@ -118,21 +118,21 @@ class StorageService extends GetxService {
               totalSize += fileSize;
             }
           } catch (e) {
-            print('Skipping file: ${entity.path}');
+            //print('Skipping file: ${entity.path}');
           }
         }
       }
-      print('Total size for directory ${dir.path}: $totalSize bytes');
+      //print('Total size for directory ${dir.path}: $totalSize bytes');
       return totalSize;
     } catch (e) {
-      print('Error calculating directory size: $e');
+      //print('Error calculating directory size: $e');
       return totalSize;
     }
   }
 
   // Clear cache - optimized for mobile platforms
   Future<void> clearCache() async {
-    print('Clearing cache...');
+    //print('Clearing cache...');
     try {
       if (Platform.isAndroid || Platform.isIOS) {
         final tempDir = await getTemporaryDirectory();
@@ -146,7 +146,7 @@ class StorageService extends GetxService {
                 await entity.delete();
               }
             } catch (e) {
-              print('Could not delete ${entity.path}: $e');
+              //print('Could not delete ${entity.path}: $e');
             }
           }
         }
@@ -170,15 +170,15 @@ class StorageService extends GetxService {
           }
         }
       }
-      print('Cache cleared.');
+      //print('Cache cleared.');
     } catch (e) {
-      print('Error clearing cache: $e');
+      //print('Error clearing cache: $e');
     }
   }
 
   // Clear all stored data
   Future<void> clearAllData() async {
-    print('Clearing all data...');
+    //print('Clearing all data...');
     try {
       await _storage.erase();
       await clearCache();
@@ -194,20 +194,20 @@ class StorageService extends GetxService {
               await entity.delete();
             }
           } catch (e) {
-            print('Could not delete ${entity.path}: $e');
+            //print('Could not delete ${entity.path}: $e');
           }
         }
       }
-      print('All data cleared.');
+      //print('All data cleared.');
     } catch (e) {
-      print('Error clearing all data: $e');
+      //print('Error clearing all data: $e');
       rethrow;
     }
   }
 
   // Export user data - optimized for mobile
   Future<void> exportUserData() async {
-    print('Exporting user data...');
+    //print('Exporting user data...');
     try {
       final Map<String, dynamic> allData = {};
       final keys = _storage.getKeys();
@@ -230,9 +230,9 @@ class StorageService extends GetxService {
         XFile(file.path),
       ], text: 'Attendance App Data Export');
 
-      print('User data exported successfully.');
+      //print('User data exported successfully.');
     } catch (e) {
-      print('Error exporting data: $e');
+      //print('Error exporting data: $e');
       rethrow;
     }
   }

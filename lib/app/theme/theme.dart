@@ -11,8 +11,8 @@ import '../../app/theme/custom_themes/text_theme.dart';
 import 'package:flutter/material.dart';
 
 class TAppTheme {
-  TAppTheme._(){
-    print('TAppTheme initialized');
+  TAppTheme._() {
+    //print('TAppTheme initialized');
   }
 
   static ThemeData lightTheme = ThemeData(

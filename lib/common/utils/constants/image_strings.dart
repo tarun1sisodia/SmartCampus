@@ -1,6 +1,6 @@
 class TImageStrings {
   TImageStrings._() {
-    print('TImageStrings initialized');
+    //print('TImageStrings initialized');
   }
   static const String appLogo = "assets/logos/applogo.png";
   static const String applogoTransparentPNG =
@@ -13,8 +13,7 @@ class TImageStrings {
   static const String apple = "assets/icons/apple-logo.png";
   static const String microsoft = "assets/icons/microsoft.png";
 
-  static const String onboardingImage1 =
-      "assets/animations/hello_robo.json";
+  static const String onboardingImage1 = "assets/animations/hello_robo.json";
   static const String onboardingImage2 =
       "assets/images/onboarding_images/tap.gif";
   static const String onboardingImage3 =

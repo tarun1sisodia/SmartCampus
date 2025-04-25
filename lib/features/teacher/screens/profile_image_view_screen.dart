@@ -5,9 +5,9 @@ import 'package:get/get.dart';
 
 class ProfileImageViewScreen extends StatelessWidget {
   final String imageUrl;
-  
+
   const ProfileImageViewScreen({
-    super.key, 
+    super.key,
     required this.imageUrl,
   });
 
@@ -16,7 +16,7 @@ class ProfileImageViewScreen extends StatelessWidget {
     final dark = THelperFunction.isDarkMode(context);
     final size = MediaQuery.of(context).size;
     final imageSize = size.width * 0.8; // 80% of screen width
-    
+
     return Scaffold(
       backgroundColor: Colors.black.withOpacity(0.9),
       appBar: AppBar(
@@ -52,7 +52,7 @@ class ProfileImageViewScreen extends StatelessWidget {
                   image: NetworkImage(imageUrl),
                   fit: BoxFit.cover,
                   onError: (exception, stackTrace) {
-                    print('Error loading profile image: $exception');
+                    //print('Error loading profile image: $exception');
                   },
                 ),
               ),

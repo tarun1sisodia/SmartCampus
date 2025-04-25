@@ -21,7 +21,7 @@ class ClassListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('Building ClassListScreen');
+    ////print('Building ClassListScreen');
     final dark = THelperFunction.isDarkMode(context);
 
     return Obx(() {
@@ -58,7 +58,7 @@ class ClassListScreen extends StatelessWidget {
             if (!classController.isSelectionMode.value) ...[
               IconButton(
                 onPressed: () {
-                  print('Refreshing classes');
+                  ////print('Refreshing classes');
                   classController.loadClasses();
                 },
                 icon: const Icon(Iconsax.refresh),
@@ -67,7 +67,7 @@ class ClassListScreen extends StatelessWidget {
               const SizedBox(width: TSizes.sm),
               IconButton(
                 onPressed: () {
-                  print('Navigating to reports');
+                  ////print('Navigating to reports');
                   Get.toNamed(AppRoutes.reports);
                 },
                 icon: const Icon(Iconsax.chart),
@@ -80,7 +80,7 @@ class ClassListScreen extends StatelessWidget {
             ? null // Hide FAB in selection mode
             : FloatingActionButton(
                 onPressed: () {
-                  print('Opening create class screen');
+                  ////print('Opening create class screen');
                   Get.to(() => CreateClassScreen());
                 },
                 backgroundColor: dark ? TColors.blue : TColors.yellow,
@@ -97,12 +97,12 @@ class ClassListScreen extends StatelessWidget {
 
   Widget _buildBody(BuildContext context, bool dark) {
     if (classController.isLoading.value) {
-      print('Loading classes...');
+      ////print('Loading classes...');
       return const Center(child: CircularProgressIndicator());
     }
 
     if (classController.classes.isEmpty) {
-      print('No classes found');
+      ////print('No classes found');
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -126,7 +126,7 @@ class ClassListScreen extends StatelessWidget {
             const SizedBox(height: TSizes.spaceBtwItems),
             ElevatedButton.icon(
               onPressed: () {
-                print('Opening create class screen from empty state');
+                ////print('Opening create class screen from empty state');
                 Get.to(() => CreateClassScreen());
               },
               icon: const Icon(Iconsax.add),
@@ -143,7 +143,7 @@ class ClassListScreen extends StatelessWidget {
 
     return RefreshIndicator(
       onRefresh: () {
-        print('Refreshing classes via pull-to-refresh');
+        ////print('Refreshing classes via pull-to-refresh');
         return classController.loadClasses();
       },
       color: dark ? TColors.yellow : TColors.deepPurple,
@@ -153,7 +153,7 @@ class ClassListScreen extends StatelessWidget {
         padding: const EdgeInsets.all(TSizes.defaultSpace),
         itemCount: classController.classes.length,
         itemBuilder: (context, index) {
-          print('Building class item at index $index');
+          ////print('Building class item at index $index');
           final classItem = classController.classes[index];
 
           // Check if this class is selected
@@ -230,8 +230,8 @@ class ClassListScreen extends StatelessWidget {
                             IconButton(
                               icon: const Icon(Iconsax.more),
                               onPressed: () {
-                                print(
-                                    'Opening options for class ${classItem.id}');
+                                ////print(
+                                    // 'Opening options for class ${classItem.id}');
                                 _showClassOptions(context, classItem);
                               },
                             ),
@@ -249,8 +249,8 @@ class ClassListScreen extends StatelessWidget {
                               icon: Iconsax.people,
                               label: 'Students',
                               onTap: () {
-                                print(
-                                    'Opening students for class ${classItem.id}');
+                                ////print(
+                                    // 'Opening students for class ${classItem.id}');
                                 Get.to(() =>
                                     AddStudentScreen(classModel: classItem));
                               },
@@ -261,8 +261,8 @@ class ClassListScreen extends StatelessWidget {
                               icon: Iconsax.calendar_1,
                               label: 'Attendance',
                               onTap: () {
-                                print(
-                                    'Opening attendance for class ${classItem.id}');
+                                ////print(
+                                    // 'Opening attendance for class ${classItem.id}');
                                 Get.to(() =>
                                     AttendanceScreen(classModel: classItem));
                               },
@@ -369,7 +369,7 @@ class ClassListScreen extends StatelessWidget {
                 title: const Text('Edit Class'),
                 onTap: () {
                   Navigator.pop(context); // Close the bottom sheet
-                  print('Edit class ${classItem.id}');
+                  ////print('Edit class ${classItem.id}');
                   _showEditClassDialog(context, classItem);
                 },
               ),
@@ -379,7 +379,7 @@ class ClassListScreen extends StatelessWidget {
                     style: TextStyle(color: Colors.red)),
                 onTap: () {
                   Navigator.pop(context);
-                  print('Delete class ${classItem.id}');
+                  ////print('Delete class ${classItem.id}');
                   _showDeleteConfirmation(context, classItem);
                 },
               ),
@@ -431,7 +431,7 @@ class ClassListScreen extends StatelessWidget {
   //confirming deletion of multiple classes
   void _showDeleteSelectedConfirmation(BuildContext context) {
     final count = classController.selectedClassIds.length;
-    print('Showing delete confirmation for $count selected classes');
+    ////print('Showing delete confirmation for $count selected classes');
 
     showDialog(
       context: context,

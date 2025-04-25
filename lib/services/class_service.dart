@@ -7,14 +7,14 @@ class ClassService {
   // Get all classes for a teacher
   Future<List<ClassModel>> getTeacherClasses(String teacherId) async {
     try {
-      print('Fetching classes for teacher with ID: $teacherId');
+      //print('Fetching classes for teacher with ID: $teacherId');
       final response = await supabase
           .from('classes')
           .select('*, subjects(*), courses(*)')
           .eq('teacher_id', teacherId)
           .order('created_at', ascending: false);
 
-      print('Classes fetched successfully: $response');
+      //print('Classes fetched successfully: $response');
       return response.map<ClassModel>((json) {
         final subjectData = json['subjects'] as Map<String, dynamic>;
         final courseData = json['courses'] as Map<String, dynamic>;
@@ -28,18 +28,16 @@ class ClassService {
           section: json['section'],
           subjectName: subjectData['name'],
           courseName: courseData['name'],
-          createdAt:
-              json['created_at'] != null
-                  ? DateTime.parse(json['created_at'])
-                  : null,
-          updatedAt:
-              json['updated_at'] != null
-                  ? DateTime.parse(json['updated_at'])
-                  : null,
+          createdAt: json['created_at'] != null
+              ? DateTime.parse(json['created_at'])
+              : null,
+          updatedAt: json['updated_at'] != null
+              ? DateTime.parse(json['updated_at'])
+              : null,
         );
       }).toList();
     } catch (e) {
-      print('Error fetching classes: $e');
+      //print('Error fetching classes: $e');
       throw 'Failed to get teacher classes: $e';
     }
   }
@@ -53,7 +51,7 @@ class ClassService {
     String? section,
   }) async {
     try {
-      print('Creating a new class for teacher ID: $teacherId');
+      //print('Creating a new class for teacher ID: $teacherId');
       final data = {
         'teacher_id': teacherId,
         'subject_id': subjectId,
@@ -63,14 +61,13 @@ class ClassService {
         'created_at': DateTime.now().toIso8601String(),
       };
 
-      final response =
-          await supabase
-              .from('classes')
-              .insert(data)
-              .select('*, subjects(*), courses(*)')
-              .single();
+      final response = await supabase
+          .from('classes')
+          .insert(data)
+          .select('*, subjects(*), courses(*)')
+          .single();
 
-      print('Class created successfully: $response');
+      //print('Class created successfully: $response');
       final subjectData = response['subjects'] as Map<String, dynamic>;
       final courseData = response['courses'] as Map<String, dynamic>;
 
@@ -83,17 +80,15 @@ class ClassService {
         section: response['section'],
         subjectName: subjectData['name'],
         courseName: courseData['name'],
-        createdAt:
-            response['created_at'] != null
-                ? DateTime.parse(response['created_at'])
-                : null,
-        updatedAt:
-            response['updated_at'] != null
-                ? DateTime.parse(response['updated_at'])
-                : null,
+        createdAt: response['created_at'] != null
+            ? DateTime.parse(response['created_at'])
+            : null,
+        updatedAt: response['updated_at'] != null
+            ? DateTime.parse(response['updated_at'])
+            : null,
       );
     } catch (e) {
-      print('Error creating class: $e');
+      //print('Error creating class: $e');
       throw 'Failed to create class: $e';
     }
   }
@@ -107,7 +102,7 @@ class ClassService {
     String? section,
   }) async {
     try {
-      print('Updating class with ID: $classId');
+      //print('Updating class with ID: $classId');
       final data = {
         'subject_id': subjectId,
         'course_id': courseId,
@@ -116,15 +111,14 @@ class ClassService {
         'updated_at': DateTime.now().toIso8601String(),
       };
 
-      final response =
-          await supabase
-              .from('classes')
-              .update(data)
-              .eq('id', classId)
-              .select('*, subjects(*), courses(*)')
-              .single();
+      final response = await supabase
+          .from('classes')
+          .update(data)
+          .eq('id', classId)
+          .select('*, subjects(*), courses(*)')
+          .single();
 
-      print('Class updated successfully: $response');
+      //print('Class updated successfully: $response');
       final subjectData = response['subjects'] as Map<String, dynamic>;
       final courseData = response['courses'] as Map<String, dynamic>;
 
@@ -137,17 +131,15 @@ class ClassService {
         section: response['section'],
         subjectName: subjectData['name'],
         courseName: courseData['name'],
-        createdAt:
-            response['created_at'] != null
-                ? DateTime.parse(response['created_at'])
-                : null,
-        updatedAt:
-            response['updated_at'] != null
-                ? DateTime.parse(response['updated_at'])
-                : null,
+        createdAt: response['created_at'] != null
+            ? DateTime.parse(response['created_at'])
+            : null,
+        updatedAt: response['updated_at'] != null
+            ? DateTime.parse(response['updated_at'])
+            : null,
       );
     } catch (e) {
-      print('Error updating class: $e');
+      //print('Error updating class: $e');
       throw 'Failed to update class: $e';
     }
   }
@@ -155,12 +147,9 @@ class ClassService {
   // Delete a class
   Future<void> deleteClass(String classId) async {
     try {
-      print('Deleting class with ID: $classId');
+      //print('Deleting class with ID: $classId');
       // First delete all related records
-      await supabase
-          .from('attendance_records')
-          .delete()
-          .eq(
+      await supabase.from('attendance_records').delete().eq(
             'session_id',
             supabase
                 .from('attendance_sessions')
@@ -179,9 +168,9 @@ class ClassService {
 
       // Finally delete the class
       await supabase.from('classes').delete().eq('id', classId);
-      print('Class deleted successfully');
+      //print('Class deleted successfully');
     } catch (e) {
-      print('Error deleting class: $e');
+      //print('Error deleting class: $e');
       throw 'Failed to delete class: $e';
     }
   }
@@ -189,15 +178,14 @@ class ClassService {
   // Get a class by ID
   Future<ClassModel> getClassById(String classId) async {
     try {
-      print('Fetching class with ID: $classId');
-      final response =
-          await supabase
-              .from('classes')
-              .select('*, subjects(*), courses(*)')
-              .eq('id', classId)
-              .single();
+      //print('Fetching class with ID: $classId');
+      final response = await supabase
+          .from('classes')
+          .select('*, subjects(*), courses(*)')
+          .eq('id', classId)
+          .single();
 
-      print('Class fetched successfully: $response');
+      //print('Class fetched successfully: $response');
       final subjectData = response['subjects'] as Map<String, dynamic>;
       final courseData = response['courses'] as Map<String, dynamic>;
 
@@ -210,17 +198,15 @@ class ClassService {
         section: response['section'],
         subjectName: subjectData['name'],
         courseName: courseData['name'],
-        createdAt:
-            response['created_at'] != null
-                ? DateTime.parse(response['created_at'])
-                : null,
-        updatedAt:
-            response['updated_at'] != null
-                ? DateTime.parse(response['updated_at'])
-                : null,
+        createdAt: response['created_at'] != null
+            ? DateTime.parse(response['created_at'])
+            : null,
+        updatedAt: response['updated_at'] != null
+            ? DateTime.parse(response['updated_at'])
+            : null,
       );
     } catch (e) {
-      print('Error fetching class: $e');
+      //print('Error fetching class: $e');
       throw 'Failed to get class: $e';
     }
   }

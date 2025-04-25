@@ -12,7 +12,7 @@ class AttendanceStatsCard extends StatelessWidget {
   final int excusedCount;
   final bool isCompact;
 
-   AttendanceStatsCard({
+  AttendanceStatsCard({
     super.key,
     required this.totalStudents,
     required this.presentCount,
@@ -21,23 +21,23 @@ class AttendanceStatsCard extends StatelessWidget {
     required this.excusedCount,
     this.isCompact = false,
   }) {
-    print('AttendanceStatsCard initialized with:');
-    print('Total Students: $totalStudents');
-    print('Present Count: $presentCount');
-    print('Absent Count: $absentCount');
-    print('Late Count: $lateCount');
-    print('Excused Count: $excusedCount');
-    print('Is Compact: $isCompact');
+    //print('AttendanceStatsCard initialized with:');
+    //print('Total Students: $totalStudents');
+    //print('Present Count: $presentCount');
+    //print('Absent Count: $absentCount');
+    //print('Late Count: $lateCount');
+    //print('Excused Count: $excusedCount');
+    //print('Is Compact: $isCompact');
   }
 
   @override
   Widget build(BuildContext context) {
-    print('Building AttendanceStatsCard');
+    //print('Building AttendanceStatsCard');
     final dark = THelperFunction.isDarkMode(context);
     final unmarkedCount =
         totalStudents - (presentCount + absentCount + lateCount + excusedCount);
-    print('Dark mode: $dark');
-    print('Unmarked count: $unmarkedCount');
+    //print('Dark mode: $dark');
+    //print('Unmarked count: $unmarkedCount');
 
     return Card(
       elevation: 4,
@@ -60,10 +60,9 @@ class AttendanceStatsCard extends StatelessWidget {
 
             // Progress indicator
             LinearProgressIndicator(
-              value:
-                  totalStudents > 0
-                      ? (totalStudents - unmarkedCount) / totalStudents
-                      : 0,
+              value: totalStudents > 0
+                  ? (totalStudents - unmarkedCount) / totalStudents
+                  : 0,
               backgroundColor: Colors.grey.withAlpha(51),
               valueColor: AlwaysStoppedAnimation<Color>(
                 dark ? TColors.yellow : TColors.deepPurple,
@@ -127,7 +126,7 @@ class AttendanceStatsCard extends StatelessWidget {
     Color color,
     IconData icon,
   ) {
-    print('Building stat item: $label with count: $count');
+    //print('Building stat item: $label with count: $count');
     return Expanded(
       child: Column(
         children: [
@@ -136,9 +135,9 @@ class AttendanceStatsCard extends StatelessWidget {
           Text(
             count.toString(),
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: color,
-            ),
+                  fontWeight: FontWeight.bold,
+                  color: color,
+                ),
           ),
           Text(label, style: Theme.of(context).textTheme.bodySmall),
         ],

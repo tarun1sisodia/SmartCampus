@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class TBottomSheetTheme {
   TBottomSheetTheme._() {
-    print('TBottomSheetTheme initialized');
+    //print('TBottomSheetTheme initialized');
   }
 
   static BottomSheetThemeData lightBottomSheetTheme = BottomSheetThemeData(

@@ -37,7 +37,7 @@ class AttendanceController extends GetxController {
   /// [classModel] - The class model representing the selected class.
 
   void setSelectedClass(ClassModel classModel) {
-    print('Setting selected class: ${classModel.id}');
+    //printnt('Setting selected class: ${classModel.id}');
     selectedClass.value = classModel;
     loadAttendanceSessions(classModel.id);
   }
@@ -47,17 +47,17 @@ class AttendanceController extends GetxController {
 
   Future<void> loadAttendanceSessions(String classId) async {
     try {
-      print('Loading attendance sessions for class: $classId');
+      //printnt('Loading attendance sessions for class: $classId');
       isLoading.value = true;
 
       final sessions = await attendanceService.getAttendanceSessions(classId);
-      print('Loaded ${sessions.length} attendance sessions');
+      //printnt('Loaded ${sessions.length} attendance sessions');
       attendanceSessions.assignAll(sessions);
 
       // Load students for the class
       await loadStudentsForClass();
     } catch (e) {
-      print('Error loading attendance sessions: $e');
+      //printnt('Error loading attendance sessions: $e');
       TSnackBar.showError(
         message: 'Failed to load attendance sessions: ${e.toString()}',
       );
@@ -78,11 +78,11 @@ class AttendanceController extends GetxController {
   Future<void> loadStudentsForClass() async {
     try {
       if (selectedClass.value == null) {
-        print('No class selected, returning');
+        //printnt('No class selected, returning');
         return;
       }
 
-      print('Loading students for class: ${selectedClass.value!.id}');
+      //printnt('Loading students for class: ${selectedClass.value!.id}');
       isLoading.value = true;
 
       // Load students for the class
@@ -90,7 +90,7 @@ class AttendanceController extends GetxController {
         selectedClass.value!.id,
       );
 
-      print('Loaded ${classStudents.length} students');
+      //printnt('Loaded ${classStudents.length} students');
 
       // Initialize attendance status for all students
       for (var student in classStudents) {
@@ -100,7 +100,7 @@ class AttendanceController extends GetxController {
       students.assignAll(classStudents);
       isStudentsLoaded.value = true;
     } catch (e) {
-      print('Error loading students: $e');
+      //printnt('Error loading students: $e');
       TSnackBar.showError(message: 'Failed to load students: ${e.toString()}');
     } finally {
       isLoading.value = false;
@@ -123,11 +123,11 @@ class AttendanceController extends GetxController {
   Future<void> loadStudentsForSession() async {
     try {
       if (currentSessionId.value.isEmpty || selectedClass.value == null) {
-        print('No session or class selected, returning');
+        //printnt('No session or class selected, returning');
         return;
       }
 
-      print('Loading students for session: ${currentSessionId.value}');
+      //printnt('Loading students for session: ${currentSessionId.value}');
       isLoading.value = true;
 
       // Load students for the class
@@ -135,13 +135,13 @@ class AttendanceController extends GetxController {
         selectedClass.value!.id,
       );
 
-      print('Loaded ${classStudents.length} students');
+      //printnt('Loaded ${classStudents.length} students');
 
       // Load existing attendance records for this session
       final attendanceRecords = await attendanceService
           .getAttendanceRecordsForSession(currentSessionId.value);
 
-      print('Loaded ${attendanceRecords.length} attendance records');
+      //printnt('Loaded ${attendanceRecords.length} attendance records');
 
       // Map attendance records to students
       for (var student in classStudents) {
@@ -155,7 +155,7 @@ class AttendanceController extends GetxController {
       students.assignAll(classStudents);
       isStudentsLoaded.value = true;
     } catch (e) {
-      print('Error loading students for session: $e');
+      //printnt('Error loading students for session: $e');
       TSnackBar.showError(message: 'Failed to load students: ${e.toString()}');
     } finally {
       isLoading.value = false;
@@ -173,16 +173,16 @@ class AttendanceController extends GetxController {
   /// [status] The new attendance status to assign to the student.
 
   void updateStudentStatus(String studentId, String status) {
-    print('Updating status for student $studentId to: $status');
+    //printnt('Updating status for student $studentId to: $status');
     final index = students.indexWhere((student) => student.id == studentId);
     if (index != -1) {
       final student = students[index];
       student.attendanceStatus = status;
       students[index] = student;
       students.refresh();
-      print('Student status updated successfully');
+      //printnt('Student status updated successfully');
     } else {
-      print('Student not found in the list');
+      //printnt('Student not found in the list');
     }
   }
 
@@ -193,12 +193,12 @@ class AttendanceController extends GetxController {
       isLoading.value = true;
 
       if (currentSessionId.value.isEmpty) {
-        print('No session selected, cannot submit attendance');
+        //printnt('No session selected, cannot submit attendance');
         TSnackBar.showError(message: 'No session selected');
         return;
       }
 
-      print('Submitting attendance for session: ${currentSessionId.value}');
+      //printnt('Submitting attendance for session: ${currentSessionId.value}');
 
       // Prepare attendance records
       final records = students
@@ -211,7 +211,7 @@ class AttendanceController extends GetxController {
           )
           .toList();
 
-      print('Submitting ${records.length} attendance records');
+      //printnt('Submitting ${records.length} attendance records');
 
       // Submit attendance records
       await attendanceService.submitBulkAttendance(
@@ -235,7 +235,7 @@ class AttendanceController extends GetxController {
         await loadAttendanceSessions(selectedClass.value!.id);
       }
 
-      print('Attendance submitted and session closed successfully');
+      //printnt('Attendance submitted and session closed successfully');
 
       TSnackBar.showSuccess(
         message: 'Attendance submitted and session closed successfully',
@@ -245,7 +245,7 @@ class AttendanceController extends GetxController {
       // Navigate back to attendance screen
       Get.back();
     } catch (e) {
-      print('Error submitting attendance: $e');
+      //printnt('Error submitting attendance: $e');
       TSnackBar.showError(
         message: 'Failed to submit attendance: ${e.toString()}',
       );
@@ -275,25 +275,24 @@ class AttendanceController extends GetxController {
       isLoading.value = true;
 
       if (selectedClass.value == null) {
-        print('No class selected, cannot create session');
+        //printnt('No class selected, cannot create session');
         TSnackBar.showError(message: 'No class selected');
         return;
       }
 
       final currentUser = Supabase.instance.client.auth.currentUser;
       if (currentUser == null) {
-        print('No user logged in');
+        //printnt('No user logged in');
         TSnackBar.showError(
           message: 'You must be logged in to create a session',
         );
         return;
       }
 
-      print(
-          'Creating attendance session for class: ${selectedClass.value!.id}');
-      print('Session date: ${sessionDate.value}');
-      print('Start time: ${startTimeController.text}');
-      print('End time: ${endTimeController.text}');
+      //printnt('Creating attendance session for class: ${selectedClass.value!.id}');
+      //printnt('Session date: ${sessionDate.value}');
+      //printnt('Start time: ${startTimeController.text}');
+      //printnt('End time: ${endTimeController.text}');
 
       // Create the session
       final session = await attendanceService.createAttendanceSession(
@@ -305,7 +304,7 @@ class AttendanceController extends GetxController {
         createdBy: currentUser.id,
       );
 
-      print('Session created successfully');
+      //printnt('Session created successfully');
 
       // Reload sessions
       await loadAttendanceSessions(selectedClass.value!.id);
@@ -318,7 +317,7 @@ class AttendanceController extends GetxController {
         title: 'Success',
       );
     } catch (e) {
-      print('Error creating attendance session: $e');
+      //printnt('Error creating attendance session: $e');
       TSnackBar.showError(message: 'Failed to create session: ${e.toString()}');
     } finally {
       isLoading.value = false;
@@ -382,7 +381,7 @@ class AttendanceController extends GetxController {
             sessionEnd =
                 DateTime(now.year, now.month, now.day, endHour, endMinute);
           } catch (e) {
-            print('Error parsing session time: $e');
+            //printnt('Error parsing session time: $e');
             return false;
           }
         }
@@ -393,14 +392,14 @@ class AttendanceController extends GetxController {
 
       return false;
     } catch (e) {
-      print('Error in isSessionRunning: $e');
+      //printnt('Error in isSessionRunning: $e');
       return false;
     }
   }
 
   @override
   void onClose() {
-    print('Disposing controllers');
+    //printnt('Disposing controllers');
     startTimeController.dispose();
     endTimeController.dispose();
     super.onClose();

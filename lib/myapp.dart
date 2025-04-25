@@ -41,15 +41,15 @@ class MyApp extends StatelessWidget {
   }
 }
 /*Future<void> _autoLogin() async {
-  print('Attempting auto-login...');
+  //print('Attempting auto-login...');
 
   // Initialize the storage service
   await Get.putAsync(() => StorageService().init());
-  print('StorageService initialized.');
+  //print('StorageService initialized.');
 
   // Retrieve the storage service instance
 final storageService = Get.find<StorageService>();
-  print('StorageService instance retrieved.');
+  //print('StorageService instance retrieved.');
 
   // Check if user credentials are saved
   final bool isLoggedIn =
@@ -57,22 +57,22 @@ final storageService = Get.find<StorageService>();
       storageService.getUserEmail() != null &&
       storageService.getUserPassword() != null;
 
-  print('Is user logged in? $isLoggedIn');
+  //print('Is user logged in? $isLoggedIn');
 
   if (isLoggedIn) {
     try {
       final email = storageService.getUserEmail()!;
       final password = storageService.getUserPassword()!;
-      print('Attempting auto-login with email: $email');
+      //print('Attempting auto-login with email: $email');
 
       await Supabase.instance.client.auth.signInWithPassword(
         email: email,
         password: password,
       );
 
-      print('Auto-login successful.');
+      //print('Auto-login successful.');
     } catch (e) {
-      print('Auto-login failed: $e');
+      //print('Auto-login failed: $e');
       Get.snackbar(
         'Auto-login Failed',
         'Unable to log in automatically. Please log in manually.',

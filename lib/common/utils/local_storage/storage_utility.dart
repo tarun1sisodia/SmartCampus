@@ -68,7 +68,7 @@ class TStorageUtility {
       final jsonString = jsonEncode(object);
       await _storage.write(key, jsonString);
     } catch (e) {
-      print('Error saving object to storage: $e');
+      //printnt('Error saving object to storage: $e');
       rethrow;
     }
   }
@@ -83,7 +83,7 @@ class TStorageUtility {
       final jsonMap = jsonDecode(jsonString) as Map<String, dynamic>;
       return fromJson(jsonMap);
     } catch (e) {
-      print('Error reading object from storage: $e');
+      //printnt('Error reading object from storage: $e');
       return null;
     }
   }
@@ -95,7 +95,7 @@ class TStorageUtility {
       final jsonString = jsonEncode(objects);
       await _storage.write(key, jsonString);
     } catch (e) {
-      print('Error saving object list to storage: $e');
+      //printnt('Error saving object list to storage: $e');
       rethrow;
     }
   }
@@ -113,7 +113,7 @@ class TStorageUtility {
           .map((item) => fromJson(item as Map<String, dynamic>))
           .toList();
     } catch (e) {
-      print('Error reading object list from storage: $e');
+      //printnt('Error reading object list from storage: $e');
       return null;
     }
   }
@@ -137,7 +137,7 @@ class TStorageUtility {
 
       return filePath;
     } catch (e) {
-      print('Error saving image: $e');
+      //printnt('Error saving image: $e');
       return null;
     }
   }
@@ -158,7 +158,7 @@ class TStorageUtility {
       }
       return null;
     } catch (e) {
-      print('Error retrieving image: $e');
+      //printnt('Error retrieving image: $e');
       return null;
     }
   }
@@ -184,7 +184,7 @@ class TStorageUtility {
       }
       return false;
     } catch (e) {
-      print('Error deleting image: $e');
+      //printnt('Error deleting image: $e');
       return false;
     }
   }
@@ -292,7 +292,7 @@ class TStorageUtility {
       // Convert bytes to MB
       return totalSize / (1024 * 1024);
     } catch (e) {
-      print('Error calculating cache size: $e');
+      //printnt('Error calculating cache size: $e');
       return 0.0;
     }
   }
@@ -348,7 +348,7 @@ class TStorageUtility {
         await directory.create(recursive: true);
       }
     } catch (e) {
-      print('Error clearing cache directory: $e');
+      //printnt('Error clearing cache directory: $e');
     }
   }
 
@@ -379,7 +379,7 @@ class TStorageUtility {
 
       return filePath;
     } catch (e) {
-      print('Error saving document: $e');
+      //printnt('Error saving document: $e');
       return null;
     }
   }
@@ -400,7 +400,7 @@ class TStorageUtility {
       }
       return null;
     } catch (e) {
-      print('Error retrieving document: $e');
+      //printnt('Error retrieving document: $e');
       return null;
     }
   }
@@ -426,7 +426,7 @@ class TStorageUtility {
       }
       return false;
     } catch (e) {
-      print('Error deleting document: $e');
+      //printnt('Error deleting document: $e');
       return false;
     }
   }
@@ -439,7 +439,7 @@ class TStorageUtility {
       final encrypted = _encryptString(value);
       await saveData('secure_$key', encrypted);
     } catch (e) {
-      print('Error saving secure data: $e');
+      //printnt('Error saving secure data: $e');
       rethrow;
     }
   }
@@ -453,7 +453,7 @@ class TStorageUtility {
 
       return _decryptString(encrypted);
     } catch (e) {
-      print('Error retrieving secure data: $e');
+      //printnt('Error retrieving secure data: $e');
       return null;
     }
   }
@@ -499,7 +499,7 @@ class TStorageUtility {
 
       await saveData('offline_$key', jsonEncode(existingData));
     } catch (e) {
-      print('Error saving offline data: $e');
+      //printnt('Error saving offline data: $e');
       rethrow;
     }
   }
@@ -514,7 +514,7 @@ class TStorageUtility {
       final jsonList = jsonDecode(jsonString) as List;
       return jsonList.cast<Map<String, dynamic>>();
     } catch (e) {
-      print('Error retrieving offline data: $e');
+      //printnt('Error retrieving offline data: $e');
       return null;
     }
   }
@@ -544,7 +544,7 @@ class TStorageUtility {
       // Save teacher data
       await saveData('teacher_profile', jsonEncode(teacherData));
     } catch (e) {
-      print('Error saving teacher profile: $e');
+      //printnt('Error saving teacher profile: $e');
       rethrow;
     }
   }
@@ -573,7 +573,7 @@ class TStorageUtility {
 
       return profileData;
     } catch (e) {
-      print('Error retrieving teacher profile: $e');
+      //printnt('Error retrieving teacher profile: $e');
       return null;
     }
   }
@@ -594,7 +594,7 @@ class TStorageUtility {
       }
       return null;
     } catch (e) {
-      print('Error retrieving teacher profile image: $e');
+      //printnt('Error retrieving teacher profile image: $e');
       return null;
     }
   }
@@ -623,7 +623,7 @@ class TStorageUtility {
       // Save updated profile
       await saveData('teacher_profile', jsonEncode(currentProfile));
     } catch (e) {
-      print('Error updating teacher profile: $e');
+      //printnt('Error updating teacher profile: $e');
       rethrow;
     }
   }
@@ -646,7 +646,7 @@ class TStorageUtility {
         }
       ]);
     } catch (e) {
-      print('Error saving attendance data: $e');
+      //printnt('Error saving attendance data: $e');
       rethrow;
     }
   }
@@ -663,7 +663,7 @@ class TStorageUtility {
       final jsonList = jsonDecode(jsonString) as List;
       return jsonList.cast<Map<String, dynamic>>();
     } catch (e) {
-      print('Error retrieving attendance data: $e');
+      //printnt('Error retrieving attendance data: $e');
       return null;
     }
   }
@@ -689,7 +689,7 @@ class TStorageUtility {
             'offline_pending_attendance', jsonEncode(updatedPendingData));
       }
     } catch (e) {
-      print('Error marking attendance as synced: $e');
+      //printnt('Error marking attendance as synced: $e');
       rethrow;
     }
   }

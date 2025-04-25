@@ -8,7 +8,7 @@ class AttendanceActionButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('Building AttendanceActionButtons');
+    //print('Building AttendanceActionButtons');
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
@@ -18,7 +18,7 @@ class AttendanceActionButtons extends StatelessWidget {
           Iconsax.close_circle,
           Colors.red,
           () {
-            print('Marking attendance as absent');
+            //print('Marking attendance as absent');
             onMarkAttendance('absent');
           },
         ),
@@ -28,7 +28,7 @@ class AttendanceActionButtons extends StatelessWidget {
           Iconsax.timer_1,
           Colors.orange,
           () {
-            print('Marking attendance as late');
+            //print('Marking attendance as late');
             onMarkAttendance('late');
           },
         ),
@@ -38,7 +38,7 @@ class AttendanceActionButtons extends StatelessWidget {
           Iconsax.note_1,
           Colors.blue,
           () {
-            print('Marking attendance as excused');
+            //print('Marking attendance as excused');
             onMarkAttendance('excused');
           },
         ),
@@ -48,7 +48,7 @@ class AttendanceActionButtons extends StatelessWidget {
           Iconsax.tick_circle,
           Colors.green,
           () {
-            print('Marking attendance as present');
+            //print('Marking attendance as present');
             onMarkAttendance('present');
           },
         ),
@@ -63,7 +63,7 @@ class AttendanceActionButtons extends StatelessWidget {
     Color color,
     VoidCallback onPressed,
   ) {
-    print('Building action button for $label');
+    //print('Building action button for $label');
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [

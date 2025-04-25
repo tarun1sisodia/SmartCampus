@@ -749,7 +749,7 @@ class AddStudentScreen extends StatelessWidget {
         actions: [
           TextButton(
               onPressed: () {
-                print('Import dialog cancelled');
+                // print('Import dialog cancelled');
                 Get.back();
               },
               child: const Text('Cancel')),
@@ -868,7 +868,7 @@ class AddStudentScreen extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () {
-              print('Confirming deletion of $count students');
+              // print('Confirming deletion of $count students');
               Get.back();
               studentController.removeSelectedStudentsFromClass();
             },

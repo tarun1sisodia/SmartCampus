@@ -1,6 +1,6 @@
 class TSizes {
   TSizes._() {
-    print('TSizes initialized');
+    //print('TSizes initialized');
   }
 
   // Padding and margin sizes (reduced)

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class TDeviceUtils {
   TDeviceUtils._() {
-    print('TDeviceUtils initialized');
+    //print('TDeviceUtils initialized');
   }
   static double screenHeight(BuildContext context) =>
       MediaQuery.of(context).size.height;

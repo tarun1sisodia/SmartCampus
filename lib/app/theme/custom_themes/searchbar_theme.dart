@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class TSearchbarTheme {
-  TSearchbarTheme._(){
-    print('TSearchbarTheme initialized');
+  TSearchbarTheme._() {
+    //print('TSearchbarTheme initialized');
   }
   static final lightSearchBar = SearchBarThemeData(
     elevation: WidgetStatePropertyAll(0),

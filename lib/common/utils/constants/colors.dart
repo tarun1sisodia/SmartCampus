@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class TColors {
   TColors._() {
-    print('TColors initialized');
+    //print('TColors initialized');
   }
 
   // App Basic Colors

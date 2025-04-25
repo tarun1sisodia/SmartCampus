@@ -11,15 +11,15 @@ class TeacherGreeting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('Building TeacherGreeting widget');
+    //print('Building TeacherGreeting widget');
     final dark = THelperFunction.isDarkMode(context);
-    print('Dark mode: $dark');
+    //print('Dark mode: $dark');
     final controller = Get.find<TeacherProfileController>();
-    print('Controller initialized');
+    //print('Controller initialized');
 
     // Get the current time to display appropriate greeting
     final hour = DateTime.now().hour;
-    print('Current hour: $hour');
+    //print('Current hour: $hour');
     String greeting;
 
     if (hour < 12) {
@@ -29,11 +29,11 @@ class TeacherGreeting extends StatelessWidget {
     } else {
       greeting = 'Good Evening';
     }
-    print('Selected greeting: $greeting');
+    //print('Selected greeting: $greeting');
 
     // Handle null user gracefully
     final userName = controller.user.value?.name ?? 'Teacher';
-    print('User name: $userName');
+    //print('User name: $userName');
 
     return Container(
       padding: const EdgeInsets.all(0),
@@ -69,13 +69,13 @@ class TeacherGreeting extends StatelessWidget {
                 Text(
                   greeting,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: dark ? TColors.yellow : TColors.deepPurple,
-                  ),
+                        color: dark ? TColors.yellow : TColors.deepPurple,
+                      ),
                 ),
                 const SizedBox(height: TSizes.xs),
                 Obx(
                   () {
-                    print('Rebuilding user name text');
+                    //print('Rebuilding user name text');
                     return Text(
                       userName,
                       style: Theme.of(context).textTheme.headlineSmall,
@@ -90,7 +90,7 @@ class TeacherGreeting extends StatelessWidget {
           // Notification icon
           IconButton(
             onPressed: () {
-              print('Notification button pressed');
+              //print('Notification button pressed');
               // Navigate to notifications
             },
             icon: const Icon(Icons.notifications_outlined),

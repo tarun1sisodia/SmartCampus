@@ -253,6 +253,6 @@ class DashboardController extends GetxController {
         }).toList(),
       );
     }
-    print('Filtered classes: ${filteredClasses.length}');
+    // print('Filtered classes: ${filteredClasses.length}');
   }
 }

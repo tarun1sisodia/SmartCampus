@@ -15,7 +15,7 @@ import 'class_list_screen.dart';
 
 class DashboardScreen extends StatelessWidget {
   DashboardScreen({super.key}) {
-    print('DashboardScreen initialized');
+    //print('DashboardScreen initialized');
   }
 
   final dashboardController = Get.find<DashboardController>();
@@ -30,7 +30,7 @@ class DashboardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('Building DashboardScreen');
+    //print('Building DashboardScreen');
     final dark = THelperFunction.isDarkMode(context);
     // Make sure profile data is loaded
     if (profileController.user.value == null) {
@@ -53,14 +53,14 @@ class DashboardScreen extends StatelessWidget {
         }),
       ),
       body: Obx(() {
-        print('Dashboard state updated');
+        //print('Dashboard state updated');
         if (dashboardController.isLoading.value) {
-          print('Dashboard is loading');
+          //print('Dashboard is loading');
           return const Center(child: CircularProgressIndicator());
         }
 
         if (dashboardController.classes.isEmpty) {
-          print('No data available');
+          //print('No data available');
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -72,7 +72,7 @@ class DashboardScreen extends StatelessWidget {
                 const SizedBox(height: TSizes.spaceBtwItems),
                 ElevatedButton(
                   onPressed: () {
-                    print('Creating initial data');
+                    //print('Creating initial data');
                     dashboardController.createInitialData();
                   },
                   child: const Text('Create Sample Data'),
@@ -84,7 +84,7 @@ class DashboardScreen extends StatelessWidget {
 
         return RefreshIndicator(
           onRefresh: () async {
-            print('Refreshing dashboard data');
+            //print('Refreshing dashboard data');
             await dashboardController.loadDashboardData();
           },
           color: dark ? TColors.yellow : TColors.deepPurple,
@@ -122,7 +122,7 @@ class DashboardScreen extends StatelessWidget {
                             color: dark ? Colors.white : Colors.black,
                           ),
                           onChanged: (value) {
-                            print('Search query: $value');
+                            //print('Search query: $value');
                             isSearching.value = value.isNotEmpty;
                             dashboardController.searchClasses(value);
                           },
@@ -133,7 +133,7 @@ class DashboardScreen extends StatelessWidget {
                             ? IconButton(
                                 icon: const Icon(Icons.clear),
                                 onPressed: () {
-                                  print('Clearing search');
+                                  //print('Clearing search');
                                   searchController.clear();
                                   isSearching.value = false;
                                   dashboardController.searchClasses('');
@@ -233,7 +233,7 @@ class DashboardScreen extends StatelessWidget {
                     ),
                     TextButton(
                       onPressed: () {
-                        print('Navigating to ClassListScreen');
+                        //print('Navigating to ClassListScreen');
                         Get.to(() => ClassListScreen());
                       },
                       child: Text(
@@ -263,7 +263,7 @@ class DashboardScreen extends StatelessWidget {
                             const SizedBox(height: TSizes.spaceBtwItems / 2),
                             ElevatedButton(
                               onPressed: () {
-                                print('Navigating to create class');
+                                //print('Navigating to create class');
                                 Get.to(() => ClassListScreen());
                               },
                               style: ElevatedButton.styleFrom(
@@ -290,7 +290,7 @@ class DashboardScreen extends StatelessWidget {
                           final stats =
                               dashboardController.classStats[classItem.id];
 
-                          print('Rendering class: ${classItem.subjectName}');
+                          //print('Rendering class: ${classItem.subjectName}');
                           return Card(
                             margin: const EdgeInsets.only(
                               bottom: TSizes.spaceBtwItems,
@@ -342,8 +342,8 @@ class DashboardScreen extends StatelessWidget {
                               ),
                               trailing: const Icon(Iconsax.arrow_right_3),
                               onTap: () {
-                                print(
-                                    'Navigating to class details: ${classItem.subjectName}');
+                                //print(
+                                    // 'Navigating to class details: ${classItem.subjectName}');
                                 Get.to(() => ClassListScreen());
                               },
                             ),
@@ -377,7 +377,7 @@ class DashboardScreen extends StatelessWidget {
                       0.5 + (value * 0.5), // Start at 50% size and grow to 100%
                   child: GestureDetector(
                     onTap: () {
-                      print('Navigating to TeacherProfileScreen');
+                      //print('Navigating to TeacherProfileScreen');
                       Get.to(() => TeacherProfileScreen());
                     },
                     child: Container(
@@ -400,8 +400,8 @@ class DashboardScreen extends StatelessWidget {
                                 ),
                                 fit: BoxFit.cover,
                                 onError: (exception, stackTrace) {
-                                  print(
-                                      'Error loading profile image: $exception');
+                                  //print(
+                                      // 'Error loading profile image: $exception');
                                 },
                               )
                             : const DecorationImage(
@@ -453,7 +453,7 @@ class DashboardScreen extends StatelessWidget {
               child: IconButton(
                 icon: const Icon(Iconsax.setting),
                 onPressed: () {
-                  print('Navigating to TeacherSettingsScreen');
+                  //print('Navigating to TeacherSettingsScreen');
                   Get.to(() => const TeacherSettingsScreen());
                 },
               ),
@@ -472,11 +472,11 @@ class DashboardScreen extends StatelessWidget {
           tag: 'profileImage',
           child: GestureDetector(
             onTap: () {
-              print('Navigating to TeacherProfileScreen');
+              //print('Navigating to TeacherProfileScreen');
               Get.to(() => TeacherProfileScreen());
             },
             child: Obx(() {
-              print('Profile image updated');
+              //print('Profile image updated');
               return Container(
                 width: 40,
                 height: 40,
@@ -496,7 +496,7 @@ class DashboardScreen extends StatelessWidget {
                           ),
                           fit: BoxFit.cover,
                           onError: (exception, stackTrace) {
-                            print('Error loading profile image: $exception');
+                            //print('Error loading profile image: $exception');
                           },
                         )
                       : const DecorationImage(
@@ -511,7 +511,7 @@ class DashboardScreen extends StatelessWidget {
       ),
       title: Obx(
         () {
-          print('User name updated: ${profileController.user.value?.name}');
+          //print('User name updated: ${profileController.user.value?.name}');
           return Text(
             'Hi, ${profileController.user.value?.name ?? 'Teacher'}',
             style: Theme.of(context)
@@ -525,14 +525,14 @@ class DashboardScreen extends StatelessWidget {
         IconButton(
           icon: const Icon(Iconsax.setting),
           onPressed: () {
-            print('Navigating to TeacherSettingsScreen');
+            //print('Navigating to TeacherSettingsScreen');
             Get.to(() => const TeacherSettingsScreen());
           },
         ),
         const SizedBox(width: TSizes.sm),
         IconButton(
           onPressed: () {
-            print('Refreshing dashboard data');
+            //print('Refreshing dashboard data');
             dashboardController.loadDashboardData();
           },
           icon: const Icon(Iconsax.refresh),
@@ -550,7 +550,7 @@ class DashboardScreen extends StatelessWidget {
     required IconData icon,
     required Color color,
   }) {
-    print('Building stat card: $title');
+    //print('Building stat card: $title');
     return Expanded(
       child: Container(
         padding: const EdgeInsets.all(TSizes.md),

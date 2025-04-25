@@ -33,27 +33,27 @@ class StudentController extends GetxController {
 
   @override
   void onClose() {
-    print('Disposing controllers');
+    //printnt('Disposing controllers');
     nameController.dispose();
     rollNumberController.dispose();
     super.onClose();
   }
 
   void setSelectedClass(ClassModel classModel) {
-    print('Setting selected class: ${classModel.id}');
+    //printnt('Setting selected class: ${classModel.id}');
     selectedClass.value = classModel;
     loadStudentsForClass(classModel.id);
   }
 
   Future<void> loadStudentsForClass(String classId) async {
-    print('Loading students for class: $classId');
+    //printnt('Loading students for class: $classId');
     try {
       isLoading.value = true;
       final classStudents = await studentService.getStudentsForClass(classId);
-      print('Loaded students: $classStudents');
+      //printnt('Loaded students: $classStudents');
       students.assignAll(classStudents);
     } catch (e) {
-      print('Error loading students: $e');
+      //printnt('Error loading students: $e');
       TSnackBar.showError(message: 'Failed to load students: ${e.toString()}');
     } finally {
       isLoading.value = false;
@@ -72,10 +72,10 @@ class StudentController extends GetxController {
 
       if (pickedFile != null) {
         selectedImage.value = File(pickedFile.path);
-        print('Image selected: ${pickedFile.path}');
+        //printnt('Image selected: ${pickedFile.path}');
       }
     } catch (e) {
-      print('Error picking image: $e');
+      //printnt('Error picking image: $e');
       TSnackBar.showError(message: 'Failed to pick image: ${e.toString()}');
     }
   }
@@ -87,10 +87,10 @@ class StudentController extends GetxController {
 
   // Update addStudentToClass method to include image
   Future<void> addStudentToClass() async {
-    print('Adding student to class');
+    //printnt('Adding student to class');
     try {
       if (selectedClass.value == null) {
-        print('No class selected');
+        //printnt('No class selected');
         TSnackBar.showError(message: 'No class selected');
         return;
       }
@@ -104,7 +104,7 @@ class StudentController extends GetxController {
         imageFile: selectedImage.value, // Pass the selected image
       );
 
-      print('Student added successfully');
+      //printnt('Student added successfully');
       await loadStudentsForClass(selectedClass.value!.id);
 
       nameController.clear();
@@ -113,7 +113,7 @@ class StudentController extends GetxController {
 
       TSnackBar.showSuccess(message: 'Student added successfully');
     } catch (e) {
-      print('Error adding student: $e');
+      //printnt('Error adding student: $e');
       TSnackBar.showError(message: 'Failed to add student: ${e.toString()}');
     } finally {
       isLoading.value = false;
@@ -184,7 +184,7 @@ class StudentController extends GetxController {
         title: 'Success',
       );
     } catch (e) {
-      print('Error removing selected students: $e');
+      //printnt('Error removing selected students: $e');
       TSnackBar.showError(
           message: 'Failed to remove students: ${e.toString()}');
     } finally {
@@ -196,7 +196,7 @@ class StudentController extends GetxController {
   Future<void> updateStudentImage(String studentId, String rollNumber) async {
     try {
       if (selectedImage.value == null) {
-        print('No image selected');
+        //printnt('No image selected');
         TSnackBar.showError(message: 'No image selected');
         return;
       }
@@ -230,7 +230,7 @@ class StudentController extends GetxController {
         TSnackBar.showSuccess(message: 'Student image updated successfully');
       }
     } catch (e) {
-      print('Error updating student image: $e');
+      //printnt('Error updating student image: $e');
       TSnackBar.showError(
           message: 'Failed to update student image: ${e.toString()}');
     } finally {
@@ -241,11 +241,11 @@ class StudentController extends GetxController {
   Future<void> removeStudentFromClass(String studentId,
       {bool showSnackbar = true}) async {
     try {
-      print('Removing student with ID: $studentId from class');
+      //printnt('Removing student with ID: $studentId from class');
       isLoading.value = true;
 
       if (selectedClass.value == null) {
-        print('No class selected');
+        //printnt('No class selected');
         TSnackBar.showError(message: 'No class selected');
         return;
       }
@@ -255,7 +255,7 @@ class StudentController extends GetxController {
         classId: selectedClass.value!.id,
       );
 
-      print('Student removed successfully');
+      //printnt('Student removed successfully');
       students.removeWhere((student) => student.id == studentId);
 
       // Only show snackbar if requested (for individual deletions)
@@ -263,7 +263,7 @@ class StudentController extends GetxController {
         TSnackBar.showSuccess(message: 'Student removed successfully');
       }
     } catch (e) {
-      print('Error removing student: $e');
+      //printnt('Error removing student: $e');
       TSnackBar.showError(message: 'Failed to remove student: ${e.toString()}');
     } finally {
       isLoading.value = false;
@@ -271,10 +271,10 @@ class StudentController extends GetxController {
   }
 
   Future<void> fetchAvailableStudents() async {
-    print('Fetching available students');
+    //printnt('Fetching available students');
     try {
       if (selectedClass.value == null) {
-        print('No class selected');
+        //printnt('No class selected');
         TSnackBar.showError(message: 'No class selected');
         return;
       }
@@ -283,19 +283,19 @@ class StudentController extends GetxController {
       selectedStudents.clear();
 
       final allStudents = await studentService.getAllStudents();
-      print('All students: $allStudents');
+      //printnt('All students: $allStudents');
 
       final currentStudentIds = students.map((s) => s.id).toSet();
       final filteredStudents = allStudents
           .where((student) => !currentStudentIds.contains(student.id))
           .toList();
 
-      print('Filtered students: $filteredStudents');
+      //printnt('Filtered students: $filteredStudents');
       filteredStudents.sort((a, b) => a.name.compareTo(b.name));
 
       availableStudents.assignAll(filteredStudents);
     } catch (e) {
-      print('Error fetching available students: $e');
+      //printnt('Error fetching available students: $e');
       TSnackBar.showError(
           message: 'Failed to fetch available students: ${e.toString()}');
     } finally {
@@ -304,28 +304,28 @@ class StudentController extends GetxController {
   }
 
   void selectStudent(StudentModel student) {
-    print('Selecting student: ${student.id}');
+    //printnt('Selecting student: ${student.id}');
     if (!selectedStudents.any((s) => s.id == student.id)) {
       selectedStudents.add(student);
     }
   }
 
   void deselectStudent(StudentModel student) {
-    print('Deselecting student: ${student.id}');
+    //printnt('Deselecting student: ${student.id}');
     selectedStudents.removeWhere((s) => s.id == student.id);
   }
 
   Future<void> importSelectedStudents() async {
-    print('Importing selected students');
+    //printnt('Importing selected students');
     try {
       if (selectedClass.value == null) {
-        print('No class selected');
+        //printnt('No class selected');
         TSnackBar.showError(message: 'No class selected');
         return;
       }
 
       if (selectedStudents.isEmpty) {
-        print('No students selected for import');
+        //printnt('No students selected for import');
         TSnackBar.showInfo(message: 'No students selected for import');
         return;
       }
@@ -333,7 +333,7 @@ class StudentController extends GetxController {
       isLoading.value = true;
 
       for (final student in selectedStudents) {
-        print('Importing student: ${student.id}');
+        //printnt('Importing student: ${student.id}');
         await studentService.addStudentToClass(
           name: student.name,
           rollNumber: student.rollNumber,
@@ -343,13 +343,13 @@ class StudentController extends GetxController {
 
       await loadStudentsForClass(selectedClass.value!.id);
 
-      print('Imported ${selectedStudents.length} students');
+      //printnt('Imported ${selectedStudents.length} students');
       selectedStudents.clear();
 
       TSnackBar.showSuccess(
           message: 'Successfully imported ${selectedStudents.length} students');
     } catch (e) {
-      print('Error importing students: $e');
+      //printnt('Error importing students: $e');
       TSnackBar.showError(
           message: 'Failed to import students: ${e.toString()}');
     } finally {
@@ -422,7 +422,7 @@ class StudentController extends GetxController {
 
       return semester.clamp(1, 6);
     } catch (e) {
-      print('Error parsing semester from roll number: $e');
+      //printnt('Error parsing semester from roll number: $e');
       return 0;
     }
   }

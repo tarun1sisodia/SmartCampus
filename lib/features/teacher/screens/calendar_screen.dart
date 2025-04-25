@@ -9,12 +9,12 @@ class CalendarScreen extends StatelessWidget {
   final CalendarController controller = Get.put(CalendarController());
 
   CalendarScreen({super.key}) {
-    print('CalendarScreen constructor called');
+    //printnt('CalendarScreen constructor called');
   }
 
   @override
   Widget build(BuildContext context) {
-    print('Building CalendarScreen');
+    //printnt('Building CalendarScreen');
     return Scaffold(
       appBar: AppBar(
         title: Text('Class Calendar'),
@@ -22,23 +22,23 @@ class CalendarScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.filter_list),
             onPressed: () {
-              print('Filter button pressed');
+              //printnt('Filter button pressed');
               _showFilterBottomSheet(context);
             },
           ),
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () {
-              print('Refresh button pressed');
+              //printnt('Refresh button pressed');
               controller.refreshData();
             },
           ),
         ],
       ),
       body: Obx(() {
-        print('Building body with Obx');
+        //printnt('Building body with Obx');
         if (controller.isLoading.value) {
-          print('Showing loading indicator');
+          //printnt('Showing loading indicator');
           return CircularProgressIndicator();
         }
 
@@ -54,10 +54,10 @@ class CalendarScreen extends StatelessWidget {
   }
 
   Widget _buildActiveSessionsIndicator() {
-    print('Building active sessions indicator');
+    //printnt('Building active sessions indicator');
     return Obx(() {
       final activeCount = controller.activeSessionsCount.value;
-      print('Active sessions count: $activeCount');
+      //printnt('Active sessions count: $activeCount');
 
       if (activeCount == 0) {
         return const SizedBox.shrink();
@@ -95,9 +95,9 @@ class CalendarScreen extends StatelessWidget {
   }
 
   Widget _buildCalendar() {
-    print('Building calendar');
+    //printnt('Building calendar');
     return Obx(() {
-      print('Calendar focused day: ${controller.focusedDay.value}');
+      //printnt('Calendar focused day: ${controller.focusedDay.value}');
       return TableCalendar(
         firstDay: DateTime.utc(2020, 1, 1),
         lastDay: DateTime.utc(2030, 12, 31),
@@ -107,21 +107,21 @@ class CalendarScreen extends StatelessWidget {
           return isSameDay(controller.selectedDay.value, day);
         },
         onDaySelected: (selectedDay, focusedDay) {
-          print('Day selected: $selectedDay');
+          //printnt('Day selected: $selectedDay');
           controller.selectedDay.value = selectedDay;
           controller.focusedDay.value = focusedDay;
         },
         onFormatChanged: (format) {
-          print('Calendar format changed: $format');
+          //printnt('Calendar format changed: $format');
           controller.calendarFormat.value = format;
         },
         onPageChanged: (focusedDay) {
-          print('Calendar page changed: $focusedDay');
+          //printnt('Calendar page changed: $focusedDay');
           controller.focusedDay.value = focusedDay;
         },
         eventLoader: (day) {
           final sessions = controller.getSessionsForDay(day);
-          print('Loading events for day: $day, count: ${sessions.length}');
+          //printnt('Loading events for day: $day, count: ${sessions.length}');
           return sessions;
         },
         calendarStyle: CalendarStyle(
@@ -160,12 +160,12 @@ class CalendarScreen extends StatelessWidget {
   }
 
   Widget _buildSessionsList() {
-    print('Building sessions list');
+    //printnt('Building sessions list');
     return Obx(() {
       final sessionsForSelectedDay = controller.getSessionsForDay(
         controller.selectedDay.value,
       );
-      print('Sessions for selected day: ${sessionsForSelectedDay.length}');
+      //printnt('Sessions for selected day: ${sessionsForSelectedDay.length}');
 
       if (sessionsForSelectedDay.isEmpty) {
         return Expanded(
@@ -183,7 +183,7 @@ class CalendarScreen extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           itemCount: sessionsForSelectedDay.length,
           itemBuilder: (context, index) {
-            print('Building session card at index: $index');
+            //printnt('Building session card at index: $index');
             return _buildSessionCard(sessionsForSelectedDay[index]);
           },
         ),
@@ -192,9 +192,9 @@ class CalendarScreen extends StatelessWidget {
   }
 
   Widget _buildSessionCard(AttendanceSessionModel session) {
-    print('Building session card for session ID: ${session.id}');
+    //printnt('Building session card for session ID: ${session.id}');
     final isActive = controller.isSessionActive(session);
-    print('Session active status: $isActive');
+    //printnt('Session active status: $isActive');
 
     // Check if this is the current user's session
     final isMySession =
@@ -305,8 +305,7 @@ class CalendarScreen extends StatelessWidget {
         ),
         trailing: Icon(Icons.arrow_forward_ios, size: 16.0),
         onTap: () {
-          print(
-              'Session card tapped, navigating to details. Session ID: ${session.id}');
+          //printnt('Session card tapped, navigating to details. Session ID: ${session.id}');
           // Use Get.toNamed with proper arguments
           Get.toNamed(
             '/sessiondetails', // Make sure this matches exactly with the route name in app_routes.dart
@@ -326,7 +325,7 @@ class CalendarScreen extends StatelessWidget {
   }
 
   void _showFilterBottomSheet(BuildContext context) {
-    print('Showing filter bottom sheet');
+    //printnt('Showing filter bottom sheet');
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -358,7 +357,7 @@ class CalendarScreen extends StatelessWidget {
                   IconButton(
                     icon: Icon(Icons.close),
                     onPressed: () {
-                      print('Closing filter bottom sheet');
+                      //printnt('Closing filter bottom sheet');
                       Navigator.pop(context);
                     },
                   ),
@@ -371,7 +370,7 @@ class CalendarScreen extends StatelessWidget {
                     title: Text('Show all teachers\' sessions'),
                     value: controller.showAllSessions.value,
                     onChanged: (value) {
-                      print('Show all sessions changed: $value');
+                      //printnt('Show all sessions changed: $value');
                       controller.showAllSessions.value = value;
                       // If showing all sessions, disable "show only my classes"
                       if (value) {
@@ -386,7 +385,7 @@ class CalendarScreen extends StatelessWidget {
                     onChanged: controller.showAllSessions.value
                         ? null // Disable if showing all sessions
                         : (value) {
-                            print('Show only my classes changed: $value');
+                            //printnt('Show only my classes changed: $value');
                             controller.showOnlyMyClasses.value = value;
                           },
                   )),
@@ -414,7 +413,7 @@ class CalendarScreen extends StatelessWidget {
                     onChanged: controller.showAllSessions.value
                         ? null // Disable if showing all sessions
                         : (value) {
-                            print('Course filter changed: $value');
+                            //printnt('Course filter changed: $value');
                             controller.selectedCourse.value = value;
                           },
                   )),
@@ -446,8 +445,7 @@ class CalendarScreen extends StatelessWidget {
                     onChanged: controller.showAllSessions.value
                         ? null // Disable if showing all sessions
                         : (value) {
-                            print(
-                                'Semester filter changed: $value'); // Changed from 'Year filter'
+                            //print('Semester filter changed: $value'); // Changed from 'Year filter'
                             controller.selectedSemester.value =
                                 value; // Changed from selectedYear
                           },
@@ -476,7 +474,7 @@ class CalendarScreen extends StatelessWidget {
                     onChanged: controller.showAllSessions.value
                         ? null // Disable if showing all sessions
                         : (value) {
-                            print('Section filter changed: $value');
+                            //printnt('Section filter changed: $value');
                             controller.selectedSection.value = value;
                           },
                   )),
@@ -485,7 +483,7 @@ class CalendarScreen extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    print('Resetting all filters');
+                    //printnt('Resetting all filters');
                     controller.showAllSessions.value = false;
                     controller.showOnlyMyClasses.value = false;
                     controller.selectedCourse.value = null;

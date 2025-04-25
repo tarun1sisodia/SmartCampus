@@ -53,7 +53,7 @@ class TeacherProfileController extends GetxController {
 
           totalStudents += response.length;
         } catch (e) {
-          print('Error getting students for class ${classModel.id}: $e');
+          //printnt('Error getting students for class ${classModel.id}: $e');
         }
 
         // Get attendance stats for this class
@@ -66,9 +66,7 @@ class TeacherProfileController extends GetxController {
             classesWithAttendance++;
           }
         } catch (e) {
-          print(
-            'Error getting attendance stats for class ${classModel.id}: $e',
-          );
+          //print('Error getting attendance stats for class ${classModel.id}: $e',          );
           // Continue with next class if there's an error
         }
       }
@@ -84,7 +82,7 @@ class TeacherProfileController extends GetxController {
         averageAttendance.value = 0.0;
       }
     } catch (e) {
-      print('Error loading teacher stats: $e');
+      //printnt('Error loading teacher stats: $e');
     } finally {
       isStatsLoading.value = false;
     }
@@ -190,7 +188,7 @@ class TeacherProfileController extends GetxController {
           phone: currentUser.userMetadata?['phone'] ?? '',
         );
 
-        print('Error fetching user data: $e');
+        //printnt('Error fetching user data: $e');
       }
 
       // Set up form controllers with current values
@@ -198,7 +196,7 @@ class TeacherProfileController extends GetxController {
       phoneController.text = user.value?.phone ?? '';
     } catch (e) {
       errorMessage.value = e.toString();
-      print('Profile error: $e');
+      //printnt('Profile error: $e');
     } finally {
       isLoading.value = false;
     }
@@ -355,7 +353,7 @@ class TeacherProfileController extends GetxController {
       TSnackBar.showSuccess(message: 'Profile image updated successfully');
     } catch (e) {
       TSnackBar.showError(message: 'Failed to upload image: ${e.toString()}');
-      print('Image upload error: $e');
+      //printnt('Image upload error: $e');
     } finally {
       isUploadingImage.value = false;
     }
@@ -390,7 +388,7 @@ class TeacherProfileController extends GetxController {
           await supabase.storage.from('profile_images').remove([filePath]);
         } catch (e) {
           // Continue even if image deletion fails
-          print('Failed to delete profile image: $e');
+          //printnt('Failed to delete profile image: $e');
         }
       }
 
@@ -414,7 +412,7 @@ class TeacherProfileController extends GetxController {
           await supabase.from('classes').delete().eq('id', classModel.id);
         }
       } catch (e) {
-        print('Error deleting classes: $e');
+        //printnt('Error deleting classes: $e');
         // Continue with account deletion even if class deletion fails
       }
 
@@ -441,7 +439,7 @@ class TeacherProfileController extends GetxController {
       }
 
       TSnackBar.showError(message: 'Failed to delete account: ${e.toString()}');
-      print('Account deletion error: $e');
+      //printnt('Account deletion error: $e');
     } finally {
       isLoading.value = false;
     }

@@ -59,7 +59,7 @@ class AppRoutes {
     GetPage(
       name: splash,
       page: () {
-        print('Navigating to Splash Screen');
+        //print('Navigating to Splash Screen');
         return SplashScreen();
       },
       binding: SplashBinding(),
@@ -68,7 +68,7 @@ class AppRoutes {
     GetPage(
       name: onboarding,
       page: () {
-        print('Navigating to Onboarding Screen');
+        //print('Navigating to Onboarding Screen');
         return Onboarding();
       },
       binding: OnboardingBinding(),
@@ -77,7 +77,7 @@ class AppRoutes {
     GetPage(
       name: changePassword,
       page: () {
-        print('Navigating to Change Password Screen');
+        //print('Navigating to Change Password Screen');
         return ChangePasswordScreen();
       },
       binding: ChangePasswordBinding(),
@@ -87,7 +87,7 @@ class AppRoutes {
     GetPage(
       name: login,
       page: () {
-        print('Navigating to Login Screen');
+        //print('Navigating to Login Screen');
         return Login();
       },
       binding: LoginBinding(),
@@ -96,7 +96,7 @@ class AppRoutes {
     GetPage(
       name: signup,
       page: () {
-        print('Navigating to Signup Screen');
+        //print('Navigating to Signup Screen');
         return Signup();
       },
       binding: SignupBinding(),
@@ -105,7 +105,7 @@ class AppRoutes {
     GetPage(
       name: forgotPassword,
       page: () {
-        print('Navigating to Forgot Password Screen');
+        //print('Navigating to Forgot Password Screen');
         return ForgotPasswordScreen();
       },
       binding: ForgotPasswordBinding(),
@@ -114,7 +114,7 @@ class AppRoutes {
     GetPage(
       name: resetConfirmation,
       page: () {
-        print('Navigating to Reset Password Confirmation Screen');
+        //print('Navigating to Reset Password Confirmation Screen');
         final email = Get.arguments as String;
         return ResetPasswordConfirmationScreen(email: email);
       },
@@ -124,7 +124,7 @@ class AppRoutes {
     GetPage(
       name: verifyEmail,
       page: () {
-        print('Navigating to Verify Email Screen');
+        //print('Navigating to Verify Email Screen');
         final email = Get.arguments as String;
         return VerifyEmailScreen(email: email);
       },
@@ -134,7 +134,7 @@ class AppRoutes {
     GetPage(
       name: home,
       page: () {
-        print('Navigating to Home Screen');
+        //print('Navigating to Home Screen');
         return NavigationMenu();
       },
       binding: HomeBinding(),
@@ -143,7 +143,7 @@ class AppRoutes {
     GetPage(
       name: carouselAttendance,
       page: () {
-        print('Navigating to Carousel Attendance Screen');
+        //print('Navigating to Carousel Attendance Screen');
         return CarouselAttendanceScreen();
       },
       binding: CarouselAttendanceBinding(),
@@ -153,7 +153,7 @@ class AppRoutes {
     GetPage(
       name: reports,
       page: () {
-        print('Navigating to Reports Screen');
+        //print('Navigating to Reports Screen');
         return ReportsScreen();
       },
       binding: ReportsBinding(),
@@ -162,7 +162,7 @@ class AppRoutes {
     GetPage(
       name: message,
       page: () {
-        print('Navigating to Messages Screen');
+        //print('Navigating to Messages Screen');
         return const TeacherMessagesScreen();
       },
       binding: MessagesBinding(),
@@ -171,7 +171,7 @@ class AppRoutes {
     GetPage(
       name: settings,
       page: () {
-        print('Navigating to Settings Screen');
+        //print('Navigating to Settings Screen');
         return const TeacherSettingsScreen();
       },
       binding: SettingsBinding(),
@@ -180,7 +180,7 @@ class AppRoutes {
     GetPage(
       name: help,
       page: () {
-        print('Navigating to Help Screen');
+        //print('Navigating to Help Screen');
         return const HelpScreen();
       },
       binding: HomeBinding(),
@@ -189,7 +189,7 @@ class AppRoutes {
     GetPage(
       name: feedback,
       page: () {
-        print('Navigating to Feedback Screen');
+        //print('Navigating to Feedback Screen');
         return FeedbackScreen();
       },
       binding: HomeBinding(),
@@ -198,7 +198,7 @@ class AppRoutes {
     GetPage(
       name: about,
       page: () {
-        print('Navigating to About Screen');
+        //print('Navigating to About Screen');
         return const AboutScreen();
       },
       binding: HomeBinding(),
@@ -207,7 +207,7 @@ class AppRoutes {
     GetPage(
       name: import,
       page: () {
-        print('Navigating to Import Data Screen');
+        //print('Navigating to Import Data Screen');
         return const ImportDataScreen();
       },
       binding: HomeBinding(),
@@ -217,7 +217,7 @@ class AppRoutes {
     GetPage(
       name: calendar,
       page: () {
-        print('Navigating to Calendar Screen');
+        //print('Navigating to Calendar Screen');
         return CalendarScreen();
       },
       binding: BindingsBuilder(() {
@@ -227,7 +227,7 @@ class AppRoutes {
     GetPage(
       name: attendanceReports,
       page: () {
-        print('Navigating to Attendance Reports Screen');
+        //print('Navigating to Attendance Reports Screen');
         return AttendanceReportsScreen();
       },
       binding: ReportsBinding(),
@@ -236,7 +236,7 @@ class AppRoutes {
     GetPage(
       name: studentDetail,
       page: () {
-        print('Navigating to Student Detail Screen');
+        //print('Navigating to Student Detail Screen');
         final args = Get.arguments as Map<String, dynamic>;
         return StudentDetailScreen(
           student: args['student'],
@@ -249,7 +249,7 @@ class AppRoutes {
     GetPage(
       name: allSessions,
       page: () {
-        print('Navigating to All Sessions Screen');
+        //print('Navigating to All Sessions Screen');
         return AllSessionsScreen();
       },
       binding: AllSessionsBinding(),
@@ -258,7 +258,7 @@ class AppRoutes {
 
   /// Navigate to the initial route based on app state
   static String getInitialRoute() {
-    print('Getting initial route');
+    //print('Getting initial route');
     return splash; // Change this to the desired initial route
   }
 }

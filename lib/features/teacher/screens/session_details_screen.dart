@@ -8,7 +8,7 @@ class SessionDetailsScreen extends StatelessWidget {
       Get.put(SessionDetailsController());
 
   SessionDetailsScreen({super.key}) {
-    print('SessionDetailsScreen constructor called');
+    //print('SessionDetailsScreen constructor called');
   }
 
   @override
@@ -46,7 +46,7 @@ class SessionDetailsScreen extends StatelessWidget {
     final String sessionId = args['sessionId'];
     final Map<String, dynamic> classDetails = args['classDetails'];
 
-    print('Building SessionDetailsScreen for session ID: $sessionId');
+    //print('Building SessionDetailsScreen for session ID: $sessionId');
     return Scaffold(
       appBar: AppBar(
         title: Text('Session Details'),
@@ -54,7 +54,7 @@ class SessionDetailsScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () {
-              print('Refresh button pressed');
+              //print('Refresh button pressed');
               controller.refreshData(sessionId);
             },
           ),

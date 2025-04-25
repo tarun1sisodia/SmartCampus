@@ -58,11 +58,11 @@ class SignupController extends GetxController {
       }
 
       // Log input data for debugging
-      ////print('Signing up with:');
-      ////print('Email: ${emailController.text.trim()}');
-      ////print('Password: ${passwordController.text}');
-      ////print('Name: ${nameController.text.trim()}');
-      ////print('Phone: ${phoneController.text.trim()}');
+      //////printnt('Signing up with:');
+      //////printnt('Email: ${emailController.text.trim()}');
+      //////printnt('Password: ${passwordController.text}');
+      //////printnt('Name: ${nameController.text.trim()}');
+      //////printnt('Phone: ${phoneController.text.trim()}');
 
       // Sign up the user with Supabase Auth
       final response = await supabase.auth.signUp(
@@ -75,7 +75,7 @@ class SignupController extends GetxController {
       );
 
       // Log response for debugging
-      ////print('Supabase response: ${response.toString()}');
+      //////printnt('Supabase response: ${response.toString()}');
 
       if (response.user == null) {
         errorMessage.value = 'Registration failed';
@@ -94,7 +94,7 @@ class SignupController extends GetxController {
       errorMessage.value = e.toString();
 
       // Log error for debugging
-      ////print('Error during sign-up: $e');
+      //////printnt('Error during sign-up: $e');
 
       // Determine error type
       if (e.toString().contains('network') ||

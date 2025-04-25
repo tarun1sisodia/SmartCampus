@@ -41,18 +41,18 @@ class AttendanceReportsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    print('AttendanceReportsController initialized');
+    //printntnt('AttendanceReportsController initialized');
     loadClasses();
   }
 
   Future<void> loadClasses() async {
     try {
-      print('Loading classes...');
+      //printntnt('Loading classes...');
       isLoading.value = true;
 
       final currentUser = Supabase.instance.client.auth.currentUser;
       if (currentUser == null) {
-        print('User not authenticated');
+        //printntnt('User not authenticated');
         TSnackBar.showError(message: 'You must be logged in to view reports');
         return;
       }
@@ -60,16 +60,16 @@ class AttendanceReportsController extends GetxController {
       final teacherClasses = await classService.getTeacherClasses(
         currentUser.id,
       );
-      print('Classes fetched: ${teacherClasses.length}');
+      //printntnt('Classes fetched: ${teacherClasses.length}');
       classes.assignAll(teacherClasses);
 
       if (classes.isNotEmpty && selectedClassId.isEmpty) {
         selectedClassId.value = classes[0].id;
-        print('Selected class ID: ${selectedClassId.value}');
+        //printntnt('Selected class ID: ${selectedClassId.value}');
         await loadAttendanceData();
       }
     } catch (e) {
-      print('Error loading classes: $e');
+      //printntnt('Error loading classes: $e');
       TSnackBar.showError(message: 'Failed to load classes: ${e.toString()}');
     } finally {
       isLoading.value = false;
@@ -79,26 +79,26 @@ class AttendanceReportsController extends GetxController {
   Future<void> loadAttendanceData() async {
     try {
       if (selectedClassId.isEmpty) {
-        print('No class selected');
+        //printntnt('No class selected');
         return;
       }
 
-      print('Loading attendance data for class: ${selectedClassId.value}');
+      //printntnt('Loading attendance data for class: ${selectedClassId.value}');
       isLoading.value = true;
 
-      final classSessions = await attendanceService
-          .getAttendanceSessionsForDateRange(
-            classId: selectedClassId.value,
-            startDate: startDate.value,
-            endDate: endDate.value,
-          );
-      print('Sessions fetched: ${classSessions.length}');
+      final classSessions =
+          await attendanceService.getAttendanceSessionsForDateRange(
+        classId: selectedClassId.value,
+        startDate: startDate.value,
+        endDate: endDate.value,
+      );
+      //printntnt('Sessions fetched: ${classSessions.length}');
       sessions.assignAll(classSessions);
 
       final classStudents = await studentService.getStudentsForClass(
         selectedClassId.value,
       );
-      print('Students fetched: ${classStudents.length}');
+      //printntnt('Students fetched: ${classStudents.length}');
       students.assignAll(classStudents);
 
       presentCount.value = 0;
@@ -107,7 +107,7 @@ class AttendanceReportsController extends GetxController {
       studentStats.clear();
 
       if (sessions.isEmpty) {
-        print('No sessions found');
+        //printntnt('No sessions found');
         averageAttendance.value = 0.0;
         return;
       }
@@ -123,22 +123,22 @@ class AttendanceReportsController extends GetxController {
       lateCount.value = stats['lateCount'] ?? 0;
       averageAttendance.value = stats['averageAttendance'] ?? 0.0;
 
-      print('Overall stats - Present: ${presentCount.value}, Absent: ${absentCount.value}, Late: ${lateCount.value}, Average: ${averageAttendance.value}');
+      //print('Overall stats - Present: ${presentCount.value}, Absent: ${absentCount.value}, Late: ${lateCount.value}, Average: ${averageAttendance.value}');
 
       for (var student in students) {
-        final studentStat = await attendanceService
-            .getAttendanceStatsForStudentInDateRange(
-              classId: selectedClassId.value,
-              studentId: student.id,
-              startDate: startDate.value,
-              endDate: endDate.value,
-            );
+        final studentStat =
+            await attendanceService.getAttendanceStatsForStudentInDateRange(
+          classId: selectedClassId.value,
+          studentId: student.id,
+          startDate: startDate.value,
+          endDate: endDate.value,
+        );
 
         studentStats[student.id] = studentStat;
-        print('Stats for student ${student.name}: $studentStat');
+        //printntnt('Stats for student ${student.name}: $studentStat');
       }
     } catch (e) {
-      print('Error loading attendance data: $e');
+      //printntnt('Error loading attendance data: $e');
       TSnackBar.showError(
         message: 'Failed to load attendance data: ${e.toString()}',
       );
@@ -148,7 +148,7 @@ class AttendanceReportsController extends GetxController {
   }
 
   void navigateToStudentDetail(StudentModel student) {
-    print('Navigating to student detail for: ${student.name}');
+    //printntnt('Navigating to student detail for: ${student.name}');
     Get.to(
       () =>
           StudentDetailScreen(student: student, classId: selectedClassId.value),
@@ -158,12 +158,12 @@ class AttendanceReportsController extends GetxController {
   Future<void> exportAttendanceReport() async {
     try {
       if (selectedClassId.isEmpty || students.isEmpty || sessions.isEmpty) {
-        print('No data available to export');
+        //printntnt('No data available to export');
         TSnackBar.showInfo(message: 'No data available to export');
         return;
       }
 
-      print('Exporting attendance report...');
+      //printntnt('Exporting attendance report...');
       isLoading.value = true;
 
       final classModel = classes.firstWhere(
@@ -187,7 +187,11 @@ class AttendanceReportsController extends GetxController {
 
       final dataRows = <List<dynamic>>[];
 
-      for (var student in students) {
+      // Sort students by roll number in ascending order
+      final sortedStudents = List<StudentModel>.from(students);
+      sortedStudents.sort((a, b) => a.rollNumber.compareTo(b.rollNumber));
+
+      for (var student in sortedStudents) {
         final stats = studentStats[student.id];
         if (stats == null) continue;
 
@@ -238,7 +242,7 @@ class AttendanceReportsController extends GetxController {
       final file = File(filePath);
       await file.writeAsString(csv);
 
-      print('CSV file saved at: $filePath');
+      //printntnt('CSV file saved at: $filePath');
 
       await Share.shareXFiles(
         [XFile(filePath)],
@@ -247,7 +251,7 @@ class AttendanceReportsController extends GetxController {
 
       TSnackBar.showSuccess(message: 'Report exported successfully');
     } catch (e) {
-      print('Error exporting report: $e');
+      //printntnt('Error exporting report: $e');
       TSnackBar.showError(message: 'Failed to export report: ${e.toString()}');
     } finally {
       isLoading.value = false;

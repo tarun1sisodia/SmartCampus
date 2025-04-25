@@ -9,14 +9,14 @@ class StudentService {
   // Get all students for a class
   Future<List<StudentModel>> getStudentsForClass(String classId) async {
     try {
-      print('Fetching students for class: $classId');
+      //print('Fetching students for class: $classId');
       final response = await supabase
           .from('class_students')
           .select('*, students(*)')
           .eq('class_id', classId)
           .order('created_at');
 
-      print('Fetched students successfully: $response');
+      //print('Fetched students successfully: $response');
       return response.map<StudentModel>((json) {
         final studentData = json['students'] as Map<String, dynamic>;
 
@@ -35,7 +35,7 @@ class StudentService {
         );
       }).toList();
     } catch (e) {
-      print('Failed to get students for class: $e');
+      //print('Failed to get students for class: $e');
       throw 'Failed to get students: $e';
     }
   }
@@ -48,8 +48,8 @@ class StudentService {
     File? imageFile, // Add this parameter
   }) async {
     try {
-      print(
-          'Adding student to class: $classId, Name: $name, Roll Number: $rollNumber');
+      //print(
+          // 'Adding student to class: $classId, Name: $name, Roll Number: $rollNumber');
       final existingStudents = await supabase
           .from('students')
           .select()
@@ -73,13 +73,13 @@ class StudentService {
           imageUrl =
               supabase.storage.from('student_images').getPublicUrl(filePath);
 
-          print('Uploaded student image: $imageUrl');
+          //print('Uploaded student image: $imageUrl');
         }
       }
 
       if (existingStudents.isNotEmpty) {
         studentId = existingStudents[0]['id'];
-        print('Student exists with ID: $studentId');
+        //print('Student exists with ID: $studentId');
 
         // Update student data if needed
         final updateData = <String, dynamic>{};
@@ -95,7 +95,7 @@ class StudentService {
               .from('students')
               .update(updateData)
               .eq('id', studentId);
-          print('Updated student data: $updateData');
+          //print('Updated student data: $updateData');
         }
       } else {
         //Create a new student
@@ -113,7 +113,7 @@ class StudentService {
             .single();
 
         studentId = response['id'];
-        print('Created new student with ID: $studentId');
+        //print('Created new student with ID: $studentId');
       }
       // Add student to class if not already added
       final existingClassStudents = await supabase
@@ -128,10 +128,10 @@ class StudentService {
           'student_id': studentId,
           'created_at': DateTime.now().toIso8601String(),
         });
-        print('Added student to class: $classId');
+        //print('Added student to class: $classId');
       }
     } catch (e) {
-      print('Failed to add student to class: $e');
+      //print('Failed to add student to class: $e');
       throw 'Failed to add student to class: $e';
     }
   }
@@ -143,7 +143,7 @@ class StudentService {
     required String rollNumber,
   }) async {
     try {
-      print('Updating image for student with ID: $studentId');
+      //print('Updating image for student with ID: $studentId');
 
       final fileExt = path.extension(imageFile.path);
       final fileName = '${DateTime.now().millisecondsSinceEpoch}$fileExt';
@@ -163,12 +163,12 @@ class StudentService {
             .from('students')
             .update({'image_url': imageUrl}).eq('id', studentId);
 
-        print('Updated student image: $imageUrl');
+        //print('Updated student image: $imageUrl');
         return imageUrl;
       }
       return null;
     } catch (e) {
-      print('Failed to update student image: $e');
+      //print('Failed to update student image: $e');
       throw 'Failed to update student image: $e';
     }
   }
@@ -179,7 +179,7 @@ class StudentService {
     required String imageUrl,
   }) async {
     try {
-      print('Deleting image for student with ID: $studentId');
+      //print('Deleting image for student with ID: $studentId');
 
       // Extract the file path from the URL
       final uri = Uri.parse(imageUrl);
@@ -197,12 +197,12 @@ class StudentService {
             .from('students')
             .update({'image_url': null}).eq('id', studentId);
 
-        print('Deleted student image successfully');
+        //print('Deleted student image successfully');
       } else {
         throw 'Invalid image URL format';
       }
     } catch (e) {
-      print('Failed to delete student image: $e');
+      //print('Failed to delete student image: $e');
       throw 'Failed to delete student image: $e';
     }
   }
@@ -213,16 +213,16 @@ class StudentService {
     required String classId,
   }) async {
     try {
-      print('Removing student with ID: $studentId from class: $classId');
+      //print('Removing student with ID: $studentId from class: $classId');
       await supabase
           .from('class_students')
           .delete()
           .eq('class_id', classId)
           .eq('student_id', studentId);
 
-      print('Removed student from class successfully');
+      //print('Removed student from class successfully');
     } catch (e) {
-      print('Failed to remove student from class: $e');
+      //print('Failed to remove student from class: $e');
       throw 'Failed to remove student from class: $e';
     }
   }
@@ -230,11 +230,11 @@ class StudentService {
   // Get a student by ID
   Future<StudentModel> getStudentById(String studentId) async {
     try {
-      print('Fetching student with ID: $studentId');
+      //print('Fetching student with ID: $studentId');
       final response =
           await supabase.from('students').select().eq('id', studentId).single();
 
-      print('Fetched student successfully: $response');
+      //print('Fetched student successfully: $response');
       return StudentModel(
         id: response['id'],
         name: response['name'],
@@ -248,7 +248,7 @@ class StudentService {
             : null,
       );
     } catch (e) {
-      print('Failed to get student: $e');
+      //print('Failed to get student: $e');
       throw 'Failed to get student: $e';
     }
   }
@@ -256,10 +256,10 @@ class StudentService {
   // Get all students
   Future<List<StudentModel>> getAllStudents() async {
     try {
-      print('Fetching all students');
+      //print('Fetching all students');
       final response = await supabase.from('students').select().order('name');
 
-      print('Fetched all students successfully: $response');
+      //print('Fetched all students successfully: $response');
       return response.map<StudentModel>((json) {
         return StudentModel(
           id: json['id'],
@@ -275,7 +275,7 @@ class StudentService {
         );
       }).toList();
     } catch (e) {
-      print('Failed to get all students: $e');
+      //print('Failed to get all students: $e');
       throw 'Failed to get all students: $e';
     }
   }

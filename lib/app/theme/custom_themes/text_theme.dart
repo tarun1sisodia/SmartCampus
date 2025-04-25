@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 // ignore: camel_case_types
 class TtextTheme {
   TtextTheme._(){
-    print('TtextTheme initialized');
+    ////print('TtextTheme initialized');
   }
 
   static TextTheme lighttextTheme = TextTheme(

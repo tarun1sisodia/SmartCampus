@@ -35,14 +35,14 @@ class ClassController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    print('ClassController initialized');
+    //printnt('ClassController initialized');
     loadClasses();
     loadCoursesAndSubjects();
   }
 
   @override
   void onClose() {
-    print('ClassController disposed');
+    //printnt('ClassController disposed');
     semesterController.dispose();
     sectionController.dispose();
     super.onClose();
@@ -51,12 +51,12 @@ class ClassController extends GetxController {
   // Load all classes for the current teacher
   Future<void> loadClasses() async {
     try {
-      print('Loading classes...');
+      //printnt('Loading classes...');
       isLoading.value = true;
 
       final currentUser = Supabase.instance.client.auth.currentUser;
       if (currentUser == null) {
-        print('No user logged in');
+        //printnt('No user logged in');
         TSnackBar.showError(message: 'You must be logged in to view classes');
         return;
       }
@@ -65,10 +65,10 @@ class ClassController extends GetxController {
         currentUser.id,
       );
 
-      print('Classes loaded: $teacherClasses');
+      //printnt('Classes loaded: $teacherClasses');
       classes.assignAll(teacherClasses);
     } catch (e) {
-      print('Error loading classes: $e');
+      //printnt('Error loading classes: $e');
       TSnackBar.showError(message: 'Failed to load classes: ${e.toString()}');
     } finally {
       isLoading.value = false;
@@ -78,14 +78,14 @@ class ClassController extends GetxController {
   // Load courses and subjects for dropdowns
   Future<void> loadCoursesAndSubjects() async {
     try {
-      print('Loading courses and subjects...');
+      //printnt('Loading courses and subjects...');
       isLoading.value = true;
 
       final allCourses = await courseService.getAllCourses();
       final allSubjects = await subjectService.getAllSubjects();
 
-      print('Courses loaded: $allCourses');
-      print('Subjects loaded: $allSubjects');
+      //printnt('Courses loaded: $allCourses');
+      //printnt('Subjects loaded: $allSubjects');
 
       courses.assignAll(allCourses);
       subjects.assignAll(allSubjects);
@@ -93,15 +93,15 @@ class ClassController extends GetxController {
       // Set default selections if available
       if (courses.isNotEmpty) {
         selectedCourseId.value = courses[0].id;
-        print('Default course selected: ${courses[0]}');
+        //printnt('Default course selected: ${courses[0]}');
       }
 
       if (subjects.isNotEmpty) {
         selectedSubjectId.value = subjects[0].id;
-        print('Default subject selected: ${subjects[0]}');
+        //printnt('Default subject selected: ${subjects[0]}');
       }
     } catch (e) {
-      print('Error loading courses and subjects: $e');
+      //printnt('Error loading courses and subjects: $e');
       TSnackBar.showError(
         message: 'Failed to load courses and subjects: ${e.toString()}',
       );
@@ -113,20 +113,20 @@ class ClassController extends GetxController {
   // Create a new class
   Future<void> createClass() async {
     try {
-      print('Creating class...');
+      //printnt('Creating class...');
       if (selectedSubject.value == null ||
           selectedCourse.value == null ||
           semesterController.text.trim().isEmpty) {
-        print('Validation Failed');
+        //printnt('Validation Failed');
         TSnackBar.showError(message: 'Please fill in all required fields');
         return;
       }
-      print('Validation Passed');
+      //printnt('Validation Passed');
       isLoading.value = true;
 
       final currentUser = Supabase.instance.client.auth.currentUser;
       if (currentUser == null) {
-        print('User not logged in');
+        //printnt('User not logged in');
         TSnackBar.showError(message: 'You must be logged in to create a class');
         return;
       }
@@ -163,7 +163,7 @@ class ClassController extends GetxController {
         return;
       }
 
-      print('Creating Class ...');
+      //printnt('Creating Class ...');
 
       final newClass = await classService.createClass(
         teacherId: currentUser.id,
@@ -172,7 +172,7 @@ class ClassController extends GetxController {
         semester: semester,
         section: section,
       );
-      print('Class created: $newClass');
+      //printnt('Class created: $newClass');
       // Add to the list
       classes.insert(0, newClass);
 
@@ -182,7 +182,7 @@ class ClassController extends GetxController {
 
       TSnackBar.showSuccess(message: 'Class created successfully');
     } catch (e) {
-      print('Failed to create class: $e');
+      //printnt('Failed to create class: $e');
       TSnackBar.showError(message: 'Failed to create class: ${e.toString()}');
     } finally {
       isLoading.value = false;
@@ -192,11 +192,11 @@ class ClassController extends GetxController {
   // Update an existing class
   Future<void> updateClass(String classId) async {
     try {
-      print('Updating class with ID: $classId');
+      //printnt('Updating class with ID: $classId');
       if (selectedSubjectId.value.isEmpty ||
           selectedCourseId.value.isEmpty ||
           semesterController.text.trim().isEmpty) {
-        print('Validation Failed');
+        //printnt('Validation Failed');
         TSnackBar.showError(message: 'Please fill in all required fields');
         return;
       }
@@ -213,7 +213,7 @@ class ClassController extends GetxController {
             : null,
       );
 
-      print('Class updated: $updatedClass');
+      //printnt('Class updated: $updatedClass');
 
       // Update in the list
       final index = classes.indexWhere((c) => c.id == classId);
@@ -224,7 +224,7 @@ class ClassController extends GetxController {
 
       TSnackBar.showSuccess(message: 'Class updated successfully');
     } catch (e) {
-      print('Failed to update class: $e');
+      //printnt('Failed to update class: $e');
       TSnackBar.showError(message: 'Failed to update class: ${e.toString()}');
     } finally {
       isLoading.value = false;
@@ -234,7 +234,7 @@ class ClassController extends GetxController {
   // Delete a class
   Future<void> deleteClass(String classId) async {
     try {
-      print('Deleting class with ID: $classId');
+      //printnt('Deleting class with ID: $classId');
       isLoading.value = true;
 
       // First delete related records (like students, attendance, etc.)
@@ -249,10 +249,10 @@ class ClassController extends GetxController {
       // Remove the class from the local list
       classes.removeWhere((c) => c.id == classId);
 
-      print('Class deleted successfully');
+      //printnt('Class deleted successfully');
       TSnackBar.showSuccess(message: 'Class deleted successfully');
     } catch (e) {
-      print('Failed to delete class: $e');
+      //printnt('Failed to delete class: $e');
       TSnackBar.showError(message: 'Failed to delete class: ${e.toString()}');
     } finally {
       isLoading.value = false;
@@ -261,21 +261,21 @@ class ClassController extends GetxController {
 
   // Method to validate the class form
   bool validateClassForm() {
-    print('Validating class form...');
+    //printnt('Validating class form...');
     if (selectedSubjectId.value.isEmpty ||
         selectedCourseId.value.isEmpty ||
         semesterController.text.isEmpty) {
-      print('Validation Failed');
+      //printnt('Validation Failed');
       Get.snackbar('Error', 'Please fill in all required fields.');
       return false;
     }
-    print('Validation Passed');
+    //printnt('Validation Passed');
     return true;
   }
 
   // Load a class for editing
   void loadClassForEditing(ClassModel classModel) {
-    print('Loading class for editing: $classModel');
+    //printnt('Loading class for editing: $classModel');
     selectedSubjectId.value = classModel.subjectId;
     selectedCourseId.value = classModel.courseId;
     semesterController.text = classModel.semester.toString();
@@ -354,7 +354,7 @@ class ClassController extends GetxController {
         title: 'Success',
       );
     } catch (e) {
-      print('Error deleting selected classes: $e');
+      //printnt('Error deleting selected classes: $e');
       TSnackBar.showError(message: 'Failed to delete classes: ${e.toString()}');
     } finally {
       isLoading.value = false;

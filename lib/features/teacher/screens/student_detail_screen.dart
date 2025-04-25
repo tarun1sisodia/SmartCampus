@@ -21,15 +21,15 @@ class StudentDetailScreen extends StatelessWidget {
     required this.student,
     required this.classId,
   }) {
-    print(
-        'Initializing StudentDetailScreen with student: $student and classId: $classId');
+    //print(
+        // 'Initializing StudentDetailScreen with student: $student and classId: $classId');
     // Initialize controller with student and class data
     studentDetailController.setStudentAndClass(student, classId);
   }
 
   @override
   Widget build(BuildContext context) {
-    print('Building StudentDetailScreen');
+    //print('Building StudentDetailScreen');
     final dark = THelperFunction.isDarkMode(context);
 
     return Scaffold(
@@ -41,7 +41,7 @@ class StudentDetailScreen extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              print('Refreshing student data');
+              //print('Refreshing student data');
               studentDetailController.loadStudentData();
             },
             icon: const Icon(Iconsax.refresh),
@@ -49,9 +49,9 @@ class StudentDetailScreen extends StatelessWidget {
         ],
       ),
       body: Obx(() {
-        print('StudentDetailController state updated');
+        //print('StudentDetailController state updated');
         if (studentDetailController.isLoading.value) {
-          print('Loading student data...');
+          //print('Loading student data...');
           return const Center(child: CircularProgressIndicator());
         }
 
@@ -353,7 +353,7 @@ class StudentDetailScreen extends StatelessWidget {
                             final status = record['status'];
                             final remarks = record['remarks'];
 
-                            print('Rendering attendance record: $record');
+                            //print('Rendering attendance record: $record');
 
                             return ListTile(
                               leading: CircleAvatar(
@@ -542,7 +542,7 @@ class StudentDetailScreen extends StatelessWidget {
     IconData icon,
     Color color,
   ) {
-    print('Building stat item: $label with value: $value');
+    //print('Building stat item: $label with value: $value');
     return Column(
       children: [
         Icon(icon, color: color, size: 24),
@@ -559,7 +559,7 @@ class StudentDetailScreen extends StatelessWidget {
   }
 
   Color _getStatusColor(String status, bool dark) {
-    print('Getting status color for status: $status');
+    //print('Getting status color for status: $status');
     switch (status.toLowerCase()) {
       case 'present':
         return Colors.green;
@@ -575,7 +575,7 @@ class StudentDetailScreen extends StatelessWidget {
   }
 
   IconData _getStatusIcon(String status) {
-    print('Getting status icon for status: $status');
+    //print('Getting status icon for status: $status');
     switch (status.toLowerCase()) {
       case 'present':
         return Iconsax.tick_circle;
@@ -596,7 +596,7 @@ class StudentDetailScreen extends StatelessWidget {
     String currentStatus,
     String? currentRemarks,
   ) {
-    print('Showing update status dialog for sessionId: $sessionId');
+    //print('Showing update status dialog for sessionId: $sessionId');
     final dark = THelperFunction.isDarkMode(context);
     final remarksController = TextEditingController(text: currentRemarks);
     final selectedStatus = currentStatus.obs;
@@ -624,7 +624,7 @@ class StudentDetailScreen extends StatelessWidget {
                     Colors.green,
                     selectedStatus.value.toLowerCase() == 'present',
                     () {
-                      print('Selected status: Present');
+                      //print('Selected status: Present');
                       selectedStatus.value = 'present';
                     },
                   ),
@@ -635,7 +635,7 @@ class StudentDetailScreen extends StatelessWidget {
                     Colors.red,
                     selectedStatus.value.toLowerCase() == 'absent',
                     () {
-                      print('Selected status: Absent');
+                      //print('Selected status: Absent');
                       selectedStatus.value = 'absent';
                     },
                   ),
@@ -646,7 +646,7 @@ class StudentDetailScreen extends StatelessWidget {
                     Colors.orange,
                     selectedStatus.value.toLowerCase() == 'late',
                     () {
-                      print('Selected status: Late');
+                      //print('Selected status: Late');
                       selectedStatus.value = 'late';
                     },
                   ),
@@ -657,7 +657,7 @@ class StudentDetailScreen extends StatelessWidget {
                     Colors.blue,
                     selectedStatus.value.toLowerCase() == 'excused',
                     () {
-                      print('Selected status: Excused');
+                      //print('Selected status: Excused');
                       selectedStatus.value = 'excused';
                     },
                   ),
@@ -680,15 +680,15 @@ class StudentDetailScreen extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () {
-              print('Cancelled update attendance');
+              //print('Cancelled update attendance');
               Get.back();
             },
             child: const Text('Cancel'),
           ),
           ElevatedButton(
             onPressed: () {
-              print(
-                  'Updating attendance record for sessionId: $sessionId with status: ${selectedStatus.value} and remarks: ${remarksController.text}');
+              //print(
+                  // 'Updating attendance record for sessionId: $sessionId with status: ${selectedStatus.value} and remarks: ${remarksController.text}');
               studentDetailController.updateAttendanceRecord(
                 sessionId: sessionId,
                 status: selectedStatus.value,
@@ -717,7 +717,7 @@ class StudentDetailScreen extends StatelessWidget {
     bool isSelected,
     VoidCallback onTap,
   ) {
-    print('Building status button: $label');
+    //print('Building status button: $label');
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(TSizes.borderRadiusMd),

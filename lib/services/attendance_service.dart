@@ -11,7 +11,7 @@ class AttendanceService {
     String classId,
   ) async {
     try {
-      print('Fetching attendance sessions for class: $classId');
+      //print('Fetching attendance sessions for class: $classId');
       final response = await supabase
           .from('attendance_sessions')
           .select()
@@ -22,7 +22,7 @@ class AttendanceService {
         return AttendanceSessionModel.fromJson(json);
       }).toList();
     } catch (e) {
-      print('Error getting attendance sessions: $e');
+      //print('Error getting attendance sessions: $e');
       throw 'Failed to get attendance sessions: $e';
     }
   }
@@ -34,8 +34,8 @@ class AttendanceService {
     required DateTime endDate,
   }) async {
     try {
-      print(
-          'Fetching attendance sessions for date range: $startDate to $endDate');
+      //print(
+          // 'Fetching attendance sessions for date range: $startDate to $endDate');
       final response = await supabase
           .from('attendance_sessions')
           .select()
@@ -48,7 +48,7 @@ class AttendanceService {
         return AttendanceSessionModel.fromJson(json);
       }).toList();
     } catch (e) {
-      print('Error getting attendance sessions for date range: $e');
+      //print('Error getting attendance sessions for date range: $e');
       throw 'Failed to get attendance sessions: $e';
     }
   }
@@ -62,7 +62,7 @@ class AttendanceService {
     required String createdBy,
   }) async {
     try {
-      print('Creating new attendance session for class: $classId');
+      //print('Creating new attendance session for class: $classId');
       final currentUser = supabase.auth.currentUser;
       if (currentUser == null) {
         throw 'User not authenticated';
@@ -85,7 +85,7 @@ class AttendanceService {
 
       return AttendanceSessionModel.fromJson(response);
     } catch (e) {
-      print('Error creating attendance session: $e');
+      //print('Error creating attendance session: $e');
       throw 'Failed to create attendance session: $e';
     }
   }
@@ -99,7 +99,7 @@ class AttendanceService {
   /// deletion fails.
   Future<void> deleteSession(String sessionId) async {
     try {
-      print('Deleting attendance session: $sessionId');
+      //print('Deleting attendance session: $sessionId');
       // First delete all attendance records for this session
       await supabase
           .from('attendance_records')
@@ -109,7 +109,7 @@ class AttendanceService {
       // Then delete the session
       await supabase.from('attendance_sessions').delete().eq('id', sessionId);
     } catch (e) {
-      print('Error deleting session: $e');
+      //print('Error deleting session: $e');
       throw 'Failed to delete session: $e';
     }
   }
@@ -119,7 +119,7 @@ class AttendanceService {
     String sessionId,
   ) async {
     try {
-      print('Fetching attendance records for session: $sessionId');
+      //print('Fetching attendance records for session: $sessionId');
       final response = await supabase
           .from('attendance_records')
           .select()
@@ -129,7 +129,7 @@ class AttendanceService {
         return AttendanceRecordModel.fromJson(json);
       }).toList();
     } catch (e) {
-      print('Error getting attendance records: $e');
+      //print('Error getting attendance records: $e');
       throw 'Failed to get attendance records: $e';
     }
   }
@@ -142,8 +142,8 @@ class AttendanceService {
     String? remarks,
   }) async {
     try {
-      print(
-          'Submitting attendance for student: $studentId in session: $sessionId');
+      //print(
+          // 'Submitting attendance for student: $studentId in session: $sessionId');
       // Check if record already exists
       final existingRecords = await supabase
           .from('attendance_records')
@@ -172,7 +172,7 @@ class AttendanceService {
         await supabase.from('attendance_records').insert(data);
       }
     } catch (e) {
-      print('Error submitting attendance: $e');
+      //print('Error submitting attendance: $e');
       throw 'Failed to submit attendance: $e';
     }
   }
@@ -180,7 +180,7 @@ class AttendanceService {
   /// Closes an attendance session by updating its status
   Future<void> closeAttendanceSession(String sessionId) async {
     try {
-      print('Closing attendance session: $sessionId');
+      //print('Closing attendance session: $sessionId');
 
       // Update the session with a closed status
       await supabase.from('attendance_sessions').update({
@@ -189,9 +189,9 @@ class AttendanceService {
         'updated_at': DateTime.now().toIso8601String(),
       }).eq('id', sessionId);
 
-      print('Session closed successfully');
+      //print('Session closed successfully');
     } catch (e) {
-      print('Error closing attendance session: $e');
+      //print('Error closing attendance session: $e');
       throw 'Failed to close attendance session: $e';
     }
   }
@@ -201,7 +201,7 @@ class AttendanceService {
     String classId,
   ) async {
     try {
-      print('Fetching attendance statistics for class: $classId');
+      //print('Fetching attendance statistics for class: $classId');
       // Get total sessions
       final sessions = await getAttendanceSessions(classId);
       final totalSessions = sessions.length;
@@ -247,7 +247,7 @@ class AttendanceService {
         'averageAttendance': averageAttendance,
       };
     } catch (e) {
-      print('Error getting attendance statistics: $e');
+      //print('Error getting attendance statistics: $e');
       throw 'Failed to get attendance statistics: $e';
     }
   }
@@ -259,8 +259,8 @@ class AttendanceService {
     required DateTime endDate,
   }) async {
     try {
-      print(
-          'Fetching attendance statistics for date range: $startDate to $endDate');
+      //print(
+          // 'Fetching attendance statistics for date range: $startDate to $endDate');
       // Get sessions in date range
       final sessions = await getAttendanceSessionsForDateRange(
         classId: classId,
@@ -317,7 +317,7 @@ class AttendanceService {
         'averageAttendance': averageAttendance,
       };
     } catch (e) {
-      print('Error getting attendance statistics for date range: $e');
+      //print('Error getting attendance statistics for date range: $e');
       throw 'Failed to get attendance statistics: $e';
     }
   }
@@ -328,8 +328,8 @@ class AttendanceService {
     required String studentId,
   }) async {
     try {
-      print(
-          'Fetching attendance statistics for student: $studentId in class: $classId');
+      //print(
+          // 'Fetching attendance statistics for student: $studentId in class: $classId');
       // Get all sessions for the class
       final sessions = await getAttendanceSessions(classId);
       final totalSessions = sessions.length;
@@ -381,7 +381,7 @@ class AttendanceService {
         'attendancePercentage': attendancePercentage,
       };
     } catch (e) {
-      print('Error getting student attendance statistics: $e');
+      //print('Error getting student attendance statistics: $e');
       throw 'Failed to get student attendance statistics: $e';
     }
   }
@@ -394,8 +394,8 @@ class AttendanceService {
     required DateTime endDate,
   }) async {
     try {
-      print(
-          'Fetching attendance statistics for student: $studentId for date range: $startDate to $endDate');
+      //print(
+          // 'Fetching attendance statistics for student: $studentId for date range: $startDate to $endDate');
       // Get sessions in date range
       final sessions = await getAttendanceSessionsForDateRange(
         classId: classId,
@@ -452,7 +452,7 @@ class AttendanceService {
         'attendancePercentage': attendancePercentage,
       };
     } catch (e) {
-      print('Error getting student attendance statistics for date range: $e');
+      //print('Error getting student attendance statistics for date range: $e');
       throw 'Failed to get student attendance statistics: $e';
     }
   }
@@ -585,13 +585,13 @@ class AttendanceService {
           .select()
           .order('date', ascending: false);
 
-      print('Attendance sessions response: ${response.length} sessions loaded');
+      //print('Attendance sessions response: ${response.length} sessions loaded');
 
       return (response as List)
           .map((data) => AttendanceSessionModel.fromJson(data))
           .toList();
     } catch (e) {
-      print('Error fetching all attendance sessions: $e');
+      //print('Error fetching all attendance sessions: $e');
       throw 'Failed to load attendance sessions';
     }
   }
@@ -609,7 +609,7 @@ class AttendanceService {
           .map((data) => ClassModel.fromJson(data))
           .toList();
     } catch (e) {
-      print('Error fetching teacher classes: $e');
+      //print('Error fetching teacher classes: $e');
       throw 'Failed to load classes';
     }
   }
@@ -619,7 +619,7 @@ class AttendanceService {
   /// Fetches a specific attendance session by its ID
   Future<AttendanceSessionModel> getSessionById(String sessionId) async {
     try {
-      print('Fetching attendance session with ID: $sessionId');
+      //print('Fetching attendance session with ID: $sessionId');
       final response = await supabase
           .from('attendance_sessions')
           .select()
@@ -628,7 +628,7 @@ class AttendanceService {
 
       return AttendanceSessionModel.fromJson(response);
     } catch (e) {
-      print('Error getting session by ID: $e');
+      //print('Error getting session by ID: $e');
       throw 'Failed to get session details: $e';
     }
   }
@@ -636,7 +636,7 @@ class AttendanceService {
   /// Updates an attendance record with new status
   Future<void> updateAttendanceRecord(String recordId, bool isPresent) async {
     try {
-      print('Updating attendance record: $recordId to isPresent=$isPresent');
+      //print('Updating attendance record: $recordId to isPresent=$isPresent');
 
       // Convert boolean to string status
       final status = isPresent ? 'present' : 'absent';
@@ -646,9 +646,9 @@ class AttendanceService {
         'updated_at': DateTime.now().toIso8601String(),
       }).eq('id', recordId);
 
-      print('Attendance record updated successfully');
+      //print('Attendance record updated successfully');
     } catch (e) {
-      print('Error updating attendance record: $e');
+      //print('Error updating attendance record: $e');
       throw 'Failed to update attendance record: $e';
     }
   }
@@ -657,7 +657,7 @@ class AttendanceService {
   Future<List<Map<String, dynamic>>> getDetailedAttendanceRecords(
       String sessionId) async {
     try {
-      print('Fetching detailed attendance records for session: $sessionId');
+      //print('Fetching detailed attendance records for session: $sessionId');
 
       // Join attendance_records with students table to get student names
       final response = await supabase.from('attendance_records').select('''
@@ -691,7 +691,7 @@ class AttendanceService {
         };
       }).toList();
     } catch (e) {
-      print('Error getting detailed attendance records: $e');
+      //print('Error getting detailed attendance records: $e');
       throw 'Failed to get attendance records: $e';
     }
   }
@@ -700,7 +700,7 @@ class AttendanceService {
   Future<Map<String, dynamic>> getSessionAttendanceStats(
       String sessionId) async {
     try {
-      print('Calculating attendance statistics for session: $sessionId');
+      //print('Calculating attendance statistics for session: $sessionId');
 
       final records = await supabase
           .from('attendance_records')
@@ -734,7 +734,7 @@ class AttendanceService {
             : 0.0,
       };
     } catch (e) {
-      print('Error calculating session attendance statistics: $e');
+      //print('Error calculating session attendance statistics: $e');
       throw 'Failed to get attendance statistics: $e';
     }
   }
@@ -743,7 +743,7 @@ class AttendanceService {
   Future<List<Map<String, dynamic>>> exportSessionAttendanceData(
       String sessionId) async {
     try {
-      print('Exporting attendance data for session: $sessionId');
+      //print('Exporting attendance data for session: $sessionId');
 
       // Get session details
       final session = await getSessionById(sessionId);
@@ -766,7 +766,7 @@ class AttendanceService {
 
       return exportData;
     } catch (e) {
-      print('Error exporting attendance data: $e');
+      //print('Error exporting attendance data: $e');
       throw 'Failed to export attendance data: $e';
     }
   }
@@ -844,7 +844,7 @@ class AttendanceService {
 
       return now.isAfter(sessionStart) && now.isBefore(sessionEnd);
     } catch (e) {
-      print('Error parsing session times: $e');
+      //print('Error parsing session times: $e');
       return false;
     }
   }
@@ -852,7 +852,7 @@ class AttendanceService {
   /// Fetches a teacher's name by their user ID
   Future<String> getTeacherName(String userId) async {
     try {
-      print('Fetching teacher name for user ID: $userId');
+      //print('Fetching teacher name for user ID: $userId');
 
       // Query the profiles table to get the user's name
       final response = await supabase
@@ -867,7 +867,7 @@ class AttendanceService {
       final fullName = '$firstName $lastName'.trim();
       return fullName.isNotEmpty ? fullName : 'Unknown Teacher';
     } catch (e) {
-      print('Error fetching teacher name: $e');
+      //print('Error fetching teacher name: $e');
       return 'Unknown Teacher';
     }
   }

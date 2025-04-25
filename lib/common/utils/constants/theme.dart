@@ -4,9 +4,8 @@ import 'constants.dart';
 
 // Define AppDimensions class for UI dimensions
 class AppDimensions {
-  AppDimensions._()
-  {
-    print('AppDimensions initialized');
+  AppDimensions._() {
+    //print('AppDimensions initialized');
   }
   static const double cardElevation = 2.0;
   static const double cardRadius = 12.0;
@@ -27,7 +26,7 @@ final ThemeData appTheme = ThemeData(
     background: AppColors.backgroundLight,
   ),
   scaffoldBackgroundColor: AppColors.backgroundLight,
-  
+
   // Card theme
   cardTheme: CardTheme(
     color: Colors.white,
@@ -36,7 +35,7 @@ final ThemeData appTheme = ThemeData(
       borderRadius: BorderRadius.circular(AppDimensions.cardRadius),
     ),
   ),
-  
+
   // AppBar theme
   appBarTheme: AppBarTheme(
     backgroundColor: AppColors.primary,
@@ -44,7 +43,7 @@ final ThemeData appTheme = ThemeData(
     elevation: 0,
     centerTitle: true,
   ),
-  
+
   // Text themes
   textTheme: TextTheme(
     headlineLarge: TextStyle(
@@ -75,14 +74,14 @@ final ThemeData appTheme = ThemeData(
       color: AppColors.textSecondary,
     ),
   ),
-  
+
   // Button themes
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
       backgroundColor: AppColors.primary,
       foregroundColor: Colors.white,
       padding: const EdgeInsets.symmetric(
-        horizontal: 24, 
+        horizontal: 24,
         vertical: 12,
       ),
       shape: RoundedRectangleBorder(
@@ -90,7 +89,7 @@ final ThemeData appTheme = ThemeData(
       ),
     ),
   ),
-  
+
   // Text field theme
   inputDecorationTheme: InputDecorationTheme(
     filled: true,
@@ -112,11 +111,11 @@ final ThemeData appTheme = ThemeData(
       borderSide: BorderSide(color: AppColors.error),
     ),
     contentPadding: const EdgeInsets.symmetric(
-      horizontal: 16, 
+      horizontal: 16,
       vertical: 16,
     ),
   ),
-  
+
   // Checkbox theme
   checkboxTheme: CheckboxThemeData(
     fillColor: WidgetStateProperty.resolveWith<Color>((states) {
@@ -129,7 +128,7 @@ final ThemeData appTheme = ThemeData(
       borderRadius: BorderRadius.circular(4),
     ),
   ),
-  
+
   // Bottom navigation bar theme
   bottomNavigationBarTheme: BottomNavigationBarThemeData(
     backgroundColor: Colors.white,

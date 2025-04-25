@@ -6,7 +6,7 @@ class TLogger {
   // Private constructor to prevent instantiation   
   TLogger._()
   {
-    print('TLogger initialized');
+    //printnt('TLogger initialized');
   } // Added private constructor
   // Single logger instance with pretty printing and debug level configuration
   static final Logger _logger = Logger(

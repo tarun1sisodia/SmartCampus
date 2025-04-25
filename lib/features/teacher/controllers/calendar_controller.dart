@@ -44,7 +44,7 @@ class CalendarController extends GetxController {
     try {
       isLoading.value = true;
 
-      print('Loading calendar data...');
+      //printnt('Loading calendar data...');
 
       // Load all sessions and user's classes in parallel
       final results = await Future.wait([
@@ -55,25 +55,25 @@ class CalendarController extends GetxController {
       allSessions.value = results[0] as List<AttendanceSessionModel>;
       userClasses.value = results[1] as List<ClassModel>;
 
-      print(
+      //printnt(
           'Loaded ${allSessions.length} sessions and ${userClasses.length} classes');
 
       // Sample the first session to check data
       if (allSessions.isNotEmpty) {
         final sample = allSessions.first;
-        print(
+        //printnt(
             'Sample session - ID: ${sample.id}, Subject: ${sample.subjectName}, Course: ${sample.courseName}');
       }
 
       // Count active sessions (sessions happening today)
       _updateActiveSessionsCount();
-      print('Active sessions count: ${activeSessionsCount.value}');
+      //printnt('Active sessions count: ${activeSessionsCount.value}');
 
       // Apply initial filters
       applyFilters();
-      print('Applied filters, filtered sessions: ${filteredSessions.length}');
+      //printnt('Applied filters, filtered sessions: ${filteredSessions.length}');
     } catch (e) {
-      print('Error loading calendar data: $e');
+      //printnt('Error loading calendar data: $e');
       TSnackBar.showError(
         message: 'Failed to load calendar data: ${e.toString()}',
       );
@@ -156,7 +156,7 @@ class CalendarController extends GetxController {
 
         return now.isAfter(sessionStart) && now.isBefore(sessionEnd);
       } catch (e) {
-        print('Error parsing session times: $e');
+        //printnt('Error parsing session times: $e');
         return false;
       }
     }).length;
@@ -279,7 +279,7 @@ class CalendarController extends GetxController {
 
       return now.isAfter(sessionStart) && now.isBefore(sessionEnd);
     } catch (e) {
-      print('Error parsing session times: $e');
+      //printnt('Error parsing session times: $e');
       return false;
     }
   }
@@ -335,13 +335,13 @@ class CalendarController extends GetxController {
                 await attendanceService.getTeacherName(teacherId);
             teacherNames[teacherId] = teacherName;
           } catch (e) {
-            print('Error fetching teacher name for ID $teacherId: $e');
+            //printnt('Error fetching teacher name for ID $teacherId: $e');
             teacherNames[teacherId] = 'Unknown Teacher';
           }
         }
       }
     } catch (e) {
-      print('Error fetching teacher names: $e');
+      //printnt('Error fetching teacher names: $e');
     }
   }
 
@@ -350,7 +350,7 @@ class CalendarController extends GetxController {
     try {
       isLoading.value = true;
 
-      print('Loading calendar data...');
+      //printnt('Loading calendar data...');
 
       // Load all sessions and user's classes in parallel
       final results = await Future.wait([
@@ -361,14 +361,12 @@ class CalendarController extends GetxController {
       allSessions.value = results[0] as List<AttendanceSessionModel>;
       userClasses.value = results[1] as List<ClassModel>;
 
-      print(
-          'Loaded ${allSessions.length} sessions and ${userClasses.length} classes');
+      //print('Loaded ${allSessions.length} sessions and ${userClasses.length} classes');
 
       // Sample the first session to check data
       if (allSessions.isNotEmpty) {
         final sample = allSessions.first;
-        print(
-            'Sample session - ID: ${sample.id}, Subject: ${sample.subjectName}, Course: ${sample.courseName}');
+        //print('Sample session - ID: ${sample.id}, Subject: ${sample.subjectName}, Course: ${sample.courseName}');
       }
 
       // Fetch teacher names
@@ -376,13 +374,13 @@ class CalendarController extends GetxController {
 
       // Count active sessions (sessions happening today)
       _updateActiveSessionsCount();
-      print('Active sessions count: ${activeSessionsCount.value}');
+      //printnt('Active sessions count: ${activeSessionsCount.value}');
 
       // Apply initial filters
       applyFilters();
-      print('Applied filters, filtered sessions: ${filteredSessions.length}');
+      //printnt('Applied filters, filtered sessions: ${filteredSessions.length}');
     } catch (e) {
-      print('Error loading calendar data: $e');
+      //printnt('Error loading calendar data: $e');
       TSnackBar.showError(
         message: 'Failed to load calendar data: ${e.toString()}',
       );

@@ -18,21 +18,21 @@ class StatsContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('Building StatsContainer widget');
+    //print('Building StatsContainer widget');
     // Check if we're in dark mode
     final dark = THelperFunction.isDarkMode(context);
-    print('Dark mode: $dark');
+    //print('Dark mode: $dark');
 
     // Determine container and border colors based on theme
     final containerColor = dark ? Theme.of(context).cardColor : Colors.white;
-    print('Container color: $containerColor');
+    //print('Container color: $containerColor');
 
     final borderColor = dark ? Colors.grey.shade800 : Colors.grey.shade300;
-    print('Border color: $borderColor');
+    //print('Border color: $borderColor');
 
     // Determine text color based on theme
     final textColor = dark ? Colors.white : Colors.black87;
-    print('Text color: $textColor');
+    //print('Text color: $textColor');
 
     return Container(
       padding: const EdgeInsets.all(TSizes.md),
@@ -69,9 +69,9 @@ class StatsContainer extends StatelessWidget {
           Text(
             value,
             style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: textColor,
-            ),
+                  fontWeight: FontWeight.bold,
+                  color: textColor,
+                ),
           ),
 
           const SizedBox(height: TSizes.xs),
@@ -80,8 +80,8 @@ class StatsContainer extends StatelessWidget {
           Text(
             title,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: dark ? Colors.grey.shade400 : Colors.grey.shade700,
-            ),
+                  color: dark ? Colors.grey.shade400 : Colors.grey.shade700,
+                ),
           ),
         ],
       ),

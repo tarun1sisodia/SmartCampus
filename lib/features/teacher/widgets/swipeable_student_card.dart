@@ -85,16 +85,16 @@ class SwipeableStudentCard extends StatelessWidget {
                 child: Container(
                   decoration: BoxDecoration(
                     color: Colors.grey[200],
-                    image: student.imageUrl != null &&
-                            student.imageUrl!.isNotEmpty
-                        ? DecorationImage(
-                            image: NetworkImage(student.imageUrl!),
-                            fit: BoxFit.contain,
-                            onError: (exception, stackTrace) {
-                              print('Error loading student image: $exception');
-                            },
-                          )
-                        : null,
+                    image:
+                        student.imageUrl != null && student.imageUrl!.isNotEmpty
+                            ? DecorationImage(
+                                image: NetworkImage(student.imageUrl!),
+                                fit: BoxFit.contain,
+                                onError: (exception, stackTrace) {
+                                  //print('Error loading student image: $exception');
+                                },
+                              )
+                            : null,
                   ),
                   child: student.imageUrl == null || student.imageUrl!.isEmpty
                       ? Center(

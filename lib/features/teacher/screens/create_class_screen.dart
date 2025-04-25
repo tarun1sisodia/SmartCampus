@@ -11,14 +11,14 @@ class CreateClassScreen extends StatelessWidget {
   final classController = Get.find<ClassController>();
 
   CreateClassScreen({super.key}) {
-    print('CreateClassScreen initialized');
+    //print('CreateClassScreen initialized');
   }
 
   @override
   Widget build(BuildContext context) {
-    print('CreateClassScreen build method called');
+    //print('CreateClassScreen build method called');
     final dark = THelperFunction.isDarkMode(context);
-    print('Dark mode: $dark');
+    //print('Dark mode: $dark');
 
     return Scaffold(
       appBar: AppBar(
@@ -29,8 +29,8 @@ class CreateClassScreen extends StatelessWidget {
       ),
       body: Obx(
         () {
-          print(
-              'classController.isLoading: ${classController.isLoading.value}');
+          //print(
+              // 'classController.isLoading: ${classController.isLoading.value}');
           return classController.isLoading.value
               ? const Center(child: CircularProgressIndicator())
               : Center(
@@ -57,7 +57,7 @@ class CreateClassScreen extends StatelessWidget {
                           ),
                           isExpanded: true,
                           items: classController.subjects.map((subject) {
-                            print('Subject: ${subject.name}');
+                            //print('Subject: ${subject.name}');
                             return DropdownMenuItem(
                               value: subject,
                               child: Text(
@@ -68,7 +68,7 @@ class CreateClassScreen extends StatelessWidget {
                             );
                           }).toList(),
                           onChanged: (value) {
-                            print('Selected subject: $value');
+                            //print('Selected subject: $value');
                             classController.selectedSubject.value = value;
                           },
                         ),
@@ -86,7 +86,7 @@ class CreateClassScreen extends StatelessWidget {
                           ),
                           isExpanded: true,
                           items: classController.courses.map((course) {
-                            print('Course: ${course.name}');
+                            //print('Course: ${course.name}');
                             return DropdownMenuItem(
                               value: course,
                               child: Text(
@@ -97,7 +97,7 @@ class CreateClassScreen extends StatelessWidget {
                             );
                           }).toList(),
                           onChanged: (value) {
-                            print('Selected course: $value');
+                            //print('Selected course: $value');
                             classController.selectedCourse.value =
                                 value as CourseModel?;
                           },
@@ -123,7 +123,7 @@ class CreateClassScreen extends StatelessWidget {
                                 RegExp(r'^[1-6]$')),
                           ],
                           onChanged: (value) {
-                            print('Semester input: $value');
+                            //print('Semester input: $value');
                           },
                         ),
                         const SizedBox(height: TSizes.spaceBtwInputFields),
@@ -141,7 +141,7 @@ class CreateClassScreen extends StatelessWidget {
                             ),
                           ),
                           onChanged: (value) {
-                            print('Section input: $value');
+                            //print('Section input: $value');
                           },
                         ),
                         const SizedBox(height: TSizes.spaceBtwSections),
@@ -152,7 +152,7 @@ class CreateClassScreen extends StatelessWidget {
                           height: 55,
                           child: ElevatedButton(
                             onPressed: () {
-                              print('Create Class button pressed');
+                              //print('Create Class button pressed');
                               classController.createClass();
                             },
                             style: ElevatedButton.styleFrom(

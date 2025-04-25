@@ -39,7 +39,7 @@ class SettingsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    print('onInit called');
+    //printnt('onInit called');
     loadSettings();
     loadUserInfo();
   }
@@ -47,10 +47,10 @@ class SettingsController extends GetxController {
   // Load all saved settings
   void loadSettings() {
     try {
-      print('Loading settings...');
+      //printnt('Loading settings...');
       final savedTheme = storage.read('selected_theme') ?? 'System Default';
       selectedTheme.value = savedTheme;
-      print('Saved theme: $savedTheme');
+      //printnt('Saved theme: $savedTheme');
 
       if (savedTheme == 'Dark') {
         isDarkMode.value = true;
@@ -67,10 +67,10 @@ class SettingsController extends GetxController {
       selectedLanguage.value = storage.read('selected_language') ?? 'English';
       isDeveloperMode.value = storage.read('developer_mode') ?? false;
 
-      print('Settings loaded: $selectedTheme, $isDarkMode, $notificationsEnabled, $biometricsEnabled, $selectedLanguage, $isDeveloperMode');
+      //printnt('Settings loaded: $selectedTheme, $isDarkMode, $notificationsEnabled, $biometricsEnabled, $selectedLanguage, $isDeveloperMode');
       logger.i('Settings loaded successfully');
     } catch (e) {
-      print('Error loading settings: $e');
+      //printnt('Error loading settings: $e');
       logger.e('Error loading settings: $e');
     }
   }
@@ -78,38 +78,38 @@ class SettingsController extends GetxController {
   // Load user information
   void loadUserInfo() {
     try {
-      print('Loading user info...');
+      //printnt('Loading user info...');
       final user = supabase.auth.currentUser;
       if (user != null) {
         userEmail.value = user.email ?? '';
-        print('User email: ${userEmail.value}');
+        //printnt('User email: ${userEmail.value}');
         _fetchUserData(user.id);
       }
     } catch (e) {
-      print('Error loading user info: $e');
+      //printnt('Error loading user info: $e');
       logger.e('Error loading user info: $e');
     }
   }
 
   Future<void> _fetchUserData(String userId) async {
     try {
-      print('Fetching user data for userId: $userId');
+      //printnt('Fetching user data for userId: $userId');
       final userData =
           await supabase.from('users').select().eq('id', userId).maybeSingle();
 
       if (userData != null) {
         userName.value = userData['name'] ?? '';
         userRole.value = userData['role'] ?? 'User';
-        print('User data fetched: $userName, $userRole');
+        //printnt('User data fetched: $userName, $userRole');
       }
     } catch (e) {
-      print('Error fetching user data: $e');
+      //printnt('Error fetching user data: $e');
       logger.e('Error fetching user data: $e');
     }
   }
 
   void toggleDarkMode(bool value) {
-    print('Toggling dark mode to: $value');
+    //printnt('Toggling dark mode to: $value');
     isDarkMode.value = value;
 
     if (value) {
@@ -130,7 +130,7 @@ class SettingsController extends GetxController {
   }
 
   void changeTheme(String theme) {
-    print('Changing theme to: $theme');
+    //printnt('Changing theme to: $theme');
     selectedTheme.value = theme;
     storage.write('selected_theme', theme);
 
@@ -148,7 +148,7 @@ class SettingsController extends GetxController {
   }
 
   void changeLanguage(String language) {
-    print('Changing language to: $language');
+    //printnt('Changing language to: $language');
     selectedLanguage.value = language;
     storage.write('selected_language', language);
 
@@ -161,7 +161,7 @@ class SettingsController extends GetxController {
   }
 
   void toggleNotifications(bool value) {
-    print('Toggling notifications to: $value');
+    //printnt('Toggling notifications to: $value');
     notificationsEnabled.value = value;
     storage.write('notifications_enabled', value);
 
@@ -174,7 +174,7 @@ class SettingsController extends GetxController {
   }
 
   void toggleBiometrics(bool value) {
-    print('Toggling biometrics to: $value');
+    //printnt('Toggling biometrics to: $value');
     biometricsEnabled.value = value;
     storage.write('biometrics_enabled', value);
 
@@ -189,7 +189,7 @@ class SettingsController extends GetxController {
   }
 
   void toggleDeveloperMode(bool value) {
-    print('Toggling developer mode to: $value');
+    //printnt('Toggling developer mode to: $value');
     isDeveloperMode.value = value;
     storage.write('developer_mode', value);
 
@@ -213,13 +213,13 @@ class SettingsController extends GetxController {
 
   Future<void> signOut() async {
     try {
-      print('Signing out...');
+      //printnt('Signing out...');
       isLoading.value = true;
 
       final authController = Get.find<SupabaseAuthController>();
       await authController.signOut();
     } catch (e) {
-      print('Error signing out: $e');
+      //printnt('Error signing out: $e');
       logger.e('Error signing out: $e');
       Get.snackbar(
         'Error',
@@ -236,7 +236,7 @@ class SettingsController extends GetxController {
 
   Future<void> deleteAccount() async {
     try {
-      print('Deleting account...');
+      //printnt('Deleting account...');
       isLoading.value = true;
 
       final confirmed = await Get.dialog<bool>(
@@ -275,7 +275,7 @@ class SettingsController extends GetxController {
         }
       }
     } catch (e) {
-      print('Error deleting account: $e');
+      //printnt('Error deleting account: $e');
       logger.e('Error deleting account: $e');
       Get.snackbar(
         'Error',
@@ -291,7 +291,7 @@ class SettingsController extends GetxController {
   }
 
   void resetSettings() {
-    print('Resetting settings...');
+    //printnt('Resetting settings...');
     Get.dialog(
       AlertDialog(
         title: const Text('Reset Settings'),

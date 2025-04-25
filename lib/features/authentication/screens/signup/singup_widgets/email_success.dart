@@ -12,7 +12,7 @@ class EmailSuccess extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("EmailSuccess screen built"); // Debugging print
+    ////print("EmailSuccess screen built"); // Debugging ////print
 
     return Scaffold(
       appBar: AppBar(
@@ -20,7 +20,7 @@ class EmailSuccess extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              print("Clear button pressed"); // Debugging print
+              ////print("Clear button pressed"); // Debugging ////print
               Get.offAll(() => Login());
             },
             icon: Icon(CupertinoIcons.clear),
@@ -55,7 +55,7 @@ class EmailSuccess extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    print("Continue button pressed"); // Debugging print
+                    ////print("Continue button pressed"); // Debugging ////print
                     Get.to(() => Login());
                   },
                   child: Text(

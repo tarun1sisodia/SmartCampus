@@ -13,12 +13,12 @@ class LoginController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    print('LoginController initialized');
+    //printnt('LoginController initialized');
     loadSavedCredentials();
   }
 
   void loadSavedCredentials() {
-    print('Loading saved credentials...');
+    //printnt('Loading saved credentials...');
     final remember = StorageService.instance.getRememberUserStatus();
     if (remember) {
       final email = StorageService.instance.getUserEmail();
@@ -28,13 +28,13 @@ class LoginController extends GetxController {
         emailController.text = email;
         passwordController.text = password;
         rememberMe.value = true;
-        print('Credentials loaded: email=$email');
+        //printnt('Credentials loaded: email=$email');
       }
     }
   }
 
   void setRememberMe(bool value) {
-    print('Setting rememberMe to $value');
+    //printnt('Setting rememberMe to $value');
     rememberMe.value = value;
     StorageService.instance.setRememberUserStatus(value);
 
@@ -44,7 +44,7 @@ class LoginController extends GetxController {
         emailController.text,
         passwordController.text,
       );
-      print('Credentials saved: email=${emailController.text}');
+      //printnt('Credentials saved: email=${emailController.text}');
       // Show a confirmation message
       TSnackBar.showInfo(
         message: 'Your credentials will be remembered for next login',
@@ -53,7 +53,7 @@ class LoginController extends GetxController {
     } else {
       // Clear saved credentials
       StorageService.instance.clearUserCredentials();
-      print('Credentials cleared');
+      //printnt('Credentials cleared');
       // Show a confirmation message
       TSnackBar.showInfo(
         message: 'Your credentials will not be saved',
@@ -66,12 +66,12 @@ class LoginController extends GetxController {
     final email = StorageService.instance.getUserEmail();
     final password = StorageService.instance.getUserPassword();
     final loggedIn = email != null && password != null;
-    print('Is user logged in? $loggedIn');
+    //printnt('Is user logged in? $loggedIn');
     return loggedIn;
   }
 
   void login() async {
-    print('Attempting to log in...');
+    //printnt('Attempting to log in...');
     try {
       // Your login logic here
       if (rememberMe.value) {
@@ -79,7 +79,7 @@ class LoginController extends GetxController {
           emailController.text,
           passwordController.text,
         );
-        print('Credentials saved during login: email=${emailController.text}');
+        //printnt('Credentials saved during login: email=${emailController.text}');
       }
 
       // Show success message
@@ -87,9 +87,9 @@ class LoginController extends GetxController {
         message: 'You have successfully logged in',
         title: 'Welcome Back',
       );
-      print('Login successful');
+      //printnt('Login successful');
     } catch (e) {
-      print('Login failed: $e');
+      //printnt('Login failed: $e');
       // Determine if it's a server error or client error
       if (e.toString().contains('network') ||
           e.toString().contains('connection')) {
@@ -107,7 +107,7 @@ class LoginController extends GetxController {
 
   @override
   void onClose() {
-    print('Disposing LoginController');
+    //printnt('Disposing LoginController');
     emailController.dispose();
     passwordController.dispose();
     super.onClose();

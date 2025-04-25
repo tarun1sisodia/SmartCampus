@@ -30,7 +30,7 @@ class TAppbar extends StatelessWidget {
         leading: showBackArrow
             ? IconButton(
                 onPressed: () {
-                  print('Back arrow pressed');
+                  //printnt('Back arrow pressed');
                   Get.back();
                 },
                 icon: Icon(
@@ -41,7 +41,7 @@ class TAppbar extends StatelessWidget {
             : leadingIcon != null
                 ? IconButton(
                     onPressed: () {
-                      print('Leading icon pressed');
+                      //printnt('Leading icon pressed');
                       Get.back();
                     },
                     icon: Icon(

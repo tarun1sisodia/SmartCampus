@@ -14,7 +14,7 @@ class MarkAttendanceScreen extends StatelessWidget {
   final attendanceController = Get.find<AttendanceController>();
 
   MarkAttendanceScreen({super.key}) {
-    print('MarkAttendanceScreen initialized');
+    //print('MarkAttendanceScreen initialized');
 
     // Check if the session is running when the screen is initialized
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -41,26 +41,26 @@ class MarkAttendanceScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('Building MarkAttendanceScreen');
+    //print('Building MarkAttendanceScreen');
     final dark = THelperFunction.isDarkMode(context);
-    print('Dark mode: $dark');
+    //print('Dark mode: $dark');
 
     final screenSize = MediaQuery.of(context).size;
-    print('Screen size: $screenSize');
+    //print('Screen size: $screenSize');
     final isTablet = screenSize.width < 1024 && screenSize.width > 500;
     final isMobile = screenSize.width <= 500;
     final isLandscape = DeviceUtility.isLandscapeOrientation(context);
-    print(
-        'Device type - isTablet: $isTablet, isMobile: $isMobile, isLandscape: $isLandscape');
+    //print(
+        // 'Device type - isTablet: $isTablet, isMobile: $isMobile, isLandscape: $isLandscape');
 
     final cardPadding = isMobile
         ? (isLandscape ? TSizes.xs : TSizes.sm)
         : (isLandscape ? TSizes.sm : TSizes.md);
-    print('Card padding: $cardPadding');
+    //print('Card padding: $cardPadding');
 
     final avatarSize =
         isTablet ? (isLandscape ? 18.0 : 22.0) : (isLandscape ? 16.0 : 20.0);
-    print('Avatar size: $avatarSize');
+    //print('Avatar size: $avatarSize');
 
     // Check if session is running
     final isSessionRunning =
@@ -77,14 +77,14 @@ class MarkAttendanceScreen extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              print('Refresh button pressed');
+              //print('Refresh button pressed');
               attendanceController.loadStudentsForSession();
             },
             icon: const Icon(Iconsax.refresh),
           ),
           IconButton(
             onPressed: () {
-              print('Carousel View button pressed');
+              //print('Carousel View button pressed');
 
               // Check if session is running before allowing access to carousel view
               if (!isSessionRunning) {
@@ -104,11 +104,11 @@ class MarkAttendanceScreen extends StatelessWidget {
       ),
       floatingActionButton: Obx(
         () {
-          print('FloatingActionButton state updated');
+          //print('FloatingActionButton state updated');
           return attendanceController.isStudentsLoaded.value
               ? FloatingActionButton.extended(
                   onPressed: () {
-                    print('Submit Attendance button pressed');
+                    //print('Submit Attendance button pressed');
 
                     // Check if session is running before allowing submission
                     if (!isSessionRunning) {
@@ -130,14 +130,14 @@ class MarkAttendanceScreen extends StatelessWidget {
         },
       ),
       body: Obx(() {
-        print('Body state updated');
+        //print('Body state updated');
         if (attendanceController.isLoading.value) {
-          print('Loading students...');
+          //print('Loading students...');
           return const Center(child: CircularProgressIndicator());
         }
 
         if (attendanceController.currentSessionId.value.isEmpty) {
-          print('No session selected');
+          //print('No session selected');
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -164,7 +164,7 @@ class MarkAttendanceScreen extends StatelessWidget {
         }
 
         if (attendanceController.students.isEmpty) {
-          print('No students found');
+          //print('No students found');
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -190,10 +190,10 @@ class MarkAttendanceScreen extends StatelessWidget {
           );
         }
 
-        print('Displaying student list');
+        //print('Displaying student list');
         return RefreshIndicator(
           onRefresh: () async {
-            print('Refreshing student list');
+            //print('Refreshing student list');
             await attendanceController.loadStudentsForSession();
           },
           color: dark ? TColors.yellow : TColors.deepPurple,
@@ -206,7 +206,7 @@ class MarkAttendanceScreen extends StatelessWidget {
             itemCount: attendanceController.students.length,
             itemBuilder: (context, index) {
               final student = attendanceController.students[index];
-              print('Rendering student: ${student.name}');
+              //print('Rendering student: ${student.name}');
               return Card(
                 margin: EdgeInsets.only(
                   bottom: isMobile ? TSizes.xs : TSizes.spaceBtwItems,
@@ -262,8 +262,8 @@ class MarkAttendanceScreen extends StatelessWidget {
                     ),
                     onChanged: isSessionRunning
                         ? (value) {
-                            print(
-                                'Updating attendance status for ${student.name} to $value');
+                            //print(
+                                // 'Updating attendance status for ${student.name} to $value');
                             attendanceController.updateStudentStatus(
                               student.id,
                               value!,
@@ -293,7 +293,7 @@ class MarkAttendanceScreen extends StatelessWidget {
   }
 
   Color _getStatusColor(String? status, bool dark) {
-    print('Getting status color for status: $status');
+    //print('Getting status color for status: $status');
     switch (status) {
       case 'present':
         return Colors.green;
@@ -309,7 +309,7 @@ class MarkAttendanceScreen extends StatelessWidget {
   }
 
   void _showSubmitConfirmation(BuildContext context) {
-    print('Showing submit confirmation dialog');
+    //print('Showing submit confirmation dialog');
     final dark = THelperFunction.isDarkMode(context);
 
     Get.dialog(
@@ -321,14 +321,14 @@ class MarkAttendanceScreen extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () {
-              print('Cancel button pressed in dialog');
+              //print('Cancel button pressed in dialog');
               Get.back();
             },
             child: const Text('Cancel'),
           ),
           ElevatedButton(
             onPressed: () {
-              print('Submit button pressed in dialog');
+              //print('Submit button pressed in dialog');
               Get.back();
               attendanceController.submitAttendance();
             },

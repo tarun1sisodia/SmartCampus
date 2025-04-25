@@ -17,18 +17,18 @@ class AttendanceScreen extends StatelessWidget {
   final attendanceController = Get.put(AttendanceController());
 
   AttendanceScreen({super.key, required this.classModel}) {
-    print('AttendanceScreen initialized with classModel: $classModel');
+    //print('AttendanceScreen initialized with classModel: $classModel');
   }
 
   @override
   Widget build(BuildContext context) {
-    print('Building AttendanceScreen');
+    //print('Building AttendanceScreen');
     final dark = THelperFunction.isDarkMode(context);
-    print('Dark mode: $dark');
+    //print('Dark mode: $dark');
 
     // Set the selected class when the screen is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      print('Setting selected class in post frame callback');
+      //print('Setting selected class in post frame callback');
       attendanceController.setSelectedClass(classModel);
     });
 
@@ -41,7 +41,7 @@ class AttendanceScreen extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              print('Refreshing attendance sessions');
+              //print('Refreshing attendance sessions');
               attendanceController.loadAttendanceSessions(classModel.id);
             },
             icon: const Icon(Iconsax.refresh),
@@ -50,7 +50,7 @@ class AttendanceScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          print('Opening create session dialog');
+          //print('Opening create session dialog');
           _showCreateSessionDialog(context);
         },
         backgroundColor: dark ? TColors.blue : TColors.yellow,
@@ -58,15 +58,15 @@ class AttendanceScreen extends StatelessWidget {
         label: const Text('New Session'),
       ),
       body: Obx(() {
-        print('Building Obx body');
+        //print('Building Obx body');
         if (attendanceController.isLoading.value) {
-          print('Showing loading indicator');
+          //print('Showing loading indicator');
           return const Center(child: CircularProgressIndicator());
         }
 
         return RefreshIndicator(
           onRefresh: () async {
-            print('Refreshing attendance sessions');
+            //print('Refreshing attendance sessions');
             // Show loading indicator while refreshing
             attendanceController.attendanceSessions();
           },
@@ -175,7 +175,7 @@ class AttendanceScreen extends StatelessWidget {
                         itemCount:
                             attendanceController.attendanceSessions.length,
                         itemBuilder: (context, index) {
-                          print('Building session item at index: $index');
+                          //print('Building session item at index: $index');
                           final session =
                               attendanceController.attendanceSessions[index];
                           final formattedDate = DateFormat('EEEE, MMMM d, yyyy')
@@ -194,7 +194,7 @@ class AttendanceScreen extends StatelessWidget {
                             child: ListTile(
                               contentPadding: const EdgeInsets.all(TSizes.md),
                               onTap: () {
-                                print('Navigating to mark attendance screen');
+                                //print('Navigating to mark attendance screen');
                                 // Set current session and navigate to mark attendance
                                 attendanceController.currentSessionId.value =
                                     session.id;
@@ -245,8 +245,8 @@ class AttendanceScreen extends StatelessWidget {
                                     icon: const Icon(Iconsax.play_circle),
                                     tooltip: 'Carousel View',
                                     onPressed: () {
-                                      print(
-                                          'Navigating to carousel attendance screen');
+                                      //print(
+                                          // 'Navigating to carousel attendance screen');
                                       // Check if session is running before allowing access
                                       if (!attendanceController
                                           .isSessionRunning(session.id)) {
@@ -284,7 +284,7 @@ class AttendanceScreen extends StatelessWidget {
 
   // Show dialog to create a new attendance session
   void _showCreateSessionDialog(BuildContext context) {
-    print('Showing create session dialog');
+    //print('Showing create session dialog');
     final dark = THelperFunction.isDarkMode(context);
 
     // Reset date to today
@@ -310,7 +310,7 @@ class AttendanceScreen extends StatelessWidget {
                 ),
                 trailing: const Icon(Iconsax.calendar),
                 onTap: () async {
-                  print('Opening date picker');
+                  //print('Opening date picker');
                   final pickedDate = await showDatePicker(
                     context: context,
                     initialDate: attendanceController.sessionDate.value,
@@ -320,7 +320,7 @@ class AttendanceScreen extends StatelessWidget {
                   );
 
                   if (pickedDate != null) {
-                    print('Selected date: $pickedDate');
+                    //print('Selected date: $pickedDate');
                     attendanceController.sessionDate.value = pickedDate;
                   }
                 },
@@ -341,14 +341,14 @@ class AttendanceScreen extends StatelessWidget {
                   suffixIcon: IconButton(
                     icon: const Icon(Iconsax.clock),
                     onPressed: () async {
-                      print('Opening start time picker');
+                      //print('Opening start time picker');
                       final pickedTime = await showTimePicker(
                         context: context,
                         initialTime: TimeOfDay.now(),
                       );
 
                       if (pickedTime != null) {
-                        print('Selected start time: $pickedTime');
+                        //print('Selected start time: $pickedTime');
                         attendanceController.startTimeController.text =
                             pickedTime.format(context);
                       }
@@ -372,14 +372,14 @@ class AttendanceScreen extends StatelessWidget {
                   suffixIcon: IconButton(
                     icon: const Icon(Iconsax.clock),
                     onPressed: () async {
-                      print('Opening end time picker');
+                      //print('Opening end time picker');
                       final pickedTime = await showTimePicker(
                         context: context,
                         initialTime: TimeOfDay.now(),
                       );
 
                       if (pickedTime != null) {
-                        print('Selected end time: $pickedTime');
+                        //print('Selected end time: $pickedTime');
                         attendanceController.endTimeController.text =
                             pickedTime.format(context);
                       }
@@ -393,13 +393,13 @@ class AttendanceScreen extends StatelessWidget {
         actions: [
           TextButton(
               onPressed: () {
-                print('Canceling session creation');
+                //print('Canceling session creation');
                 Get.back();
               },
               child: const Text('Cancel')),
           ElevatedButton(
             onPressed: () {
-              print('Creating new attendance session');
+              //print('Creating new attendance session');
               attendanceController.createAttendanceSession();
             },
             style: ElevatedButton.styleFrom(

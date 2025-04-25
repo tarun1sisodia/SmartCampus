@@ -63,13 +63,13 @@ class _SplashScreenState extends State<SplashScreen>
     final bool onboardingCompleted = storageService.getOnboardingStatus();
 
     if (currentUser != null) {
-      print('User authenticated: true');
+      //printnt('User authenticated: true');
       Get.offAllNamed(AppRoutes.home);
     } else if (onboardingCompleted) {
-      print('Onboarding completed: true');
+      //printnt('Onboarding completed: true');
       Get.offAllNamed(AppRoutes.login);
     } else {
-      print('First time user: showing onboarding');
+      //printnt('First time user: showing onboarding');
       Get.offAllNamed(AppRoutes.onboarding);
     }
   }
@@ -120,9 +120,9 @@ class _SplashScreenState extends State<SplashScreen>
               child: Text(
                 'Smart Campus',
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: dark ? TColors.yellow : TColors.deepPurple,
-                ),
+                      fontWeight: FontWeight.bold,
+                      color: dark ? TColors.yellow : TColors.deepPurple,
+                    ),
               ),
             ),
 
@@ -137,8 +137,8 @@ class _SplashScreenState extends State<SplashScreen>
               child: Text(
                 'Track attendance with ease',
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: dark ? Colors.white70 : Colors.black54,
-                ),
+                      color: dark ? Colors.white70 : Colors.black54,
+                    ),
               ),
             ),
           ],

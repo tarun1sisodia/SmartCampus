@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class TCheckboxTheme {
   TCheckboxTheme._() {
-    print('TCheckboxTheme initialized');
+    //print('TCheckboxTheme initialized');
   }
 
   static CheckboxThemeData lightCheckBoxTheme = CheckboxThemeData(

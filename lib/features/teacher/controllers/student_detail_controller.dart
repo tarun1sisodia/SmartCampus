@@ -32,15 +32,14 @@ class StudentDetailController extends GetxController {
 
   // Set student and class data
   void setStudentAndClass(StudentModel studentModel, String classId) {
-    print(
-        'Setting student and class: studentModel=${studentModel.toJson()}, classId=$classId');
+    ////print('Setting student and class: studentModel=${studentModel.toJson()}, classId=$classId');
     student.value = studentModel;
     loadStudentData(studentModel.id, classId);
   }
 
   // Load student data
   Future<void> loadStudentData([String? studentId, String? classId]) async {
-    print('Loading student data: studentId=$studentId, classId=$classId');
+    ////print('Loading student data: studentId=$studentId, classId=$classId');
     try {
       isLoading.value = true;
 
@@ -48,20 +47,19 @@ class StudentDetailController extends GetxController {
       final classIdToUse = classId ?? classModel.value?.id;
 
       if (studentIdToUse == null || classIdToUse == null) {
-        print('Error: Student or class information is missing');
+        ////print('Error: Student or class information is missing');
         TSnackBar.showError(message: 'Student or class information is missing');
         return;
       }
 
       // Load class details
-      print('Fetching class details for classId=$classIdToUse');
+      ////print('Fetching class details for classId=$classIdToUse');
       final classDetails = await classService.getClassById(classIdToUse);
       classModel.value = classDetails;
-      print('Class details loaded: ${classDetails.toJson()}');
+      ////print('Class details loaded: ${classDetails.toJson()}');
 
       // Load attendance statistics
-      print(
-          'Fetching attendance stats for studentId=$studentIdToUse, classId=$classIdToUse');
+      ////print('Fetching attendance stats for studentId=$studentIdToUse, classId=$classIdToUse');
       final stats = await attendanceService.getAttendanceStatsForStudent(
         classId: classIdToUse,
         studentId: studentIdToUse,
@@ -72,25 +70,24 @@ class StudentDetailController extends GetxController {
       absentCount.value = stats['absentCount'] ?? 0;
       lateCount.value = stats['lateCount'] ?? 0;
       attendancePercentage.value = stats['attendancePercentage'] ?? 0.0;
-      print('Attendance stats loaded: $stats');
+      ////print('Attendance stats loaded: $stats');
 
       // Load attendance history
-      print(
-          'Fetching attendance history for studentId=$studentIdToUse, classId=$classIdToUse');
+      ////print('Fetching attendance history for studentId=$studentIdToUse, classId=$classIdToUse');
       final history = await attendanceService.getStudentAttendanceHistory(
         classId: classIdToUse,
         studentId: studentIdToUse,
       );
 
       attendanceHistory.assignAll(history);
-      print('Attendance history loaded: $history');
+      ////print('Attendance history loaded: $history');
     } catch (e) {
-      print('Error loading student data: ${e.toString()}');
+      ////print('Error loading student data: ${e.toString()}');
       TSnackBar.showError(
           message: 'Failed to load student data: ${e.toString()}');
     } finally {
       isLoading.value = false;
-      print('Finished loading student data');
+      ////print('Finished loading student data');
     }
   }
 
@@ -106,10 +103,10 @@ class StudentDetailController extends GetxController {
 
       if (pickedFile != null) {
         selectedImage.value = File(pickedFile.path);
-        print('Image selected: ${pickedFile.path}');
+        ////print('Image selected: ${pickedFile.path}');
       }
     } catch (e) {
-      print('Error picking image: $e');
+      ////print('Error picking image: $e');
       TSnackBar.showError(message: 'Failed to pick image: ${e.toString()}');
     }
   }
@@ -118,7 +115,7 @@ class StudentDetailController extends GetxController {
 Future<void> deleteStudentImage() async {
   try {
     if (student.value == null || student.value!.imageUrl == null) {
-      print('No image to delete or student information is missing');
+      ////print('No image to delete or student information is missing');
       TSnackBar.showError(message: 'No image to delete or student information is missing');
       return;
     }
@@ -144,7 +141,7 @@ Future<void> deleteStudentImage() async {
     
     TSnackBar.showSuccess(message: 'Student image removed successfully');
   } catch (e) {
-    print('Error deleting student image: ${e.toString()}');
+    ////print('Error deleting student image: ${e.toString()}');
     TSnackBar.showError(message: 'Failed to delete student image: ${e.toString()}');
   } finally {
     isImageUploading.value = false;
@@ -155,7 +152,7 @@ Future<void> deleteStudentImage() async {
   Future<void> updateStudentImage() async {
     try {
       if (selectedImage.value == null || student.value == null) {
-        print('No image selected or student information is missing');
+        ////print('No image selected or student information is missing');
         TSnackBar.showError(
             message: 'No image selected or student information is missing');
         return;
@@ -186,7 +183,7 @@ Future<void> deleteStudentImage() async {
         TSnackBar.showSuccess(message: 'Student image updated successfully');
       }
     } catch (e) {
-      print('Error updating student image: ${e.toString()}');
+      ////print('Error updating student image: ${e.toString()}');
       TSnackBar.showError(
           message: 'Failed to update student image: ${e.toString()}');
     } finally {
@@ -200,13 +197,12 @@ Future<void> deleteStudentImage() async {
     required String status,
     String? remarks,
   }) async {
-    print(
-        'Updating attendance record: sessionId=$sessionId, status=$status, remarks=$remarks');
+    ////print('Updating attendance record: sessionId=$sessionId, status=$status, remarks=$remarks');
     try {
       isLoading.value = true;
 
       if (student.value == null) {
-        print('Error: Student information is missing');
+        ////print('Error: Student information is missing');
         TSnackBar.showError(message: 'Student information is missing');
         return;
       }
@@ -217,19 +213,19 @@ Future<void> deleteStudentImage() async {
         status: status,
         remarks: remarks,
       );
-      print('Attendance record updated successfully');
+      ////print('Attendance record updated successfully');
 
       // Reload data to reflect changes
       await loadStudentData();
 
       TSnackBar.showSuccess(message: 'Attendance updated successfully');
     } catch (e) {
-      print('Error updating attendance: ${e.toString()}');
+      ////print('Error updating attendance: ${e.toString()}');
       TSnackBar.showError(
           message: 'Failed to update attendance: ${e.toString()}');
     } finally {
       isLoading.value = false;
-      print('Finished updating attendance record');
+      ////print('Finished updating attendance record');
     }
   }
 }

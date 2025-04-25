@@ -253,7 +253,7 @@ class TeacherProfileScreen extends StatelessWidget {
                             ),
                             fit: BoxFit.cover,
                             onError: (exception, stackTrace) {
-                              print('Error loading profile image: $exception');
+                              //print('Error loading profile image: $exception');
                             },
                           )
                         : const DecorationImage(

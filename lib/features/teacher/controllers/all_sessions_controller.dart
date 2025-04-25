@@ -34,7 +34,7 @@ class AllSessionsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    print('AllSessionsController initialized');
+    ////print('AllSessionsController initialized');
 
     // Initialize the attendanceController here
     if (Get.isRegistered<AttendanceController>()) {
@@ -49,24 +49,24 @@ class AllSessionsController extends GetxController {
 
   @override
   void onClose() {
-    print('AllSessionsController disposed');
+    ////print('AllSessionsController disposed');
     searchController.dispose();
     super.onClose();
   }
 
   Future<void> loadAllSessions() async {
     try {
-      print('Loading all sessions...');
+      ////print('Loading all sessions...');
       isLoading.value = true;
 
       final currentUser = Supabase.instance.client.auth.currentUser;
       if (currentUser == null) {
-        print('No user logged in');
+        ////print('No user logged in');
         TSnackBar.showError(message: 'You must be logged in to view sessions');
         return;
       }
 
-      print('Fetching classes for teacher: ${currentUser.id}');
+      ////print('Fetching classes for teacher: ${currentUser.id}');
       final teacherClasses = await classService.getTeacherClasses(
         currentUser.id,
       );
@@ -74,13 +74,13 @@ class AllSessionsController extends GetxController {
       List<AttendanceSessionWithClass> allTeacherSessions = [];
 
       for (var classModel in teacherClasses) {
-        print('Fetching sessions for class: ${classModel.id}');
+        ////print('Fetching sessions for class: ${classModel.id}');
         final sessions = await attendanceService.getAttendanceSessions(
           classModel.id,
         );
 
         final sessionsWithClass = sessions.map((session) {
-          print('Processing session: ${session.id}');
+          ////print('Processing session: ${session.id}');
           return AttendanceSessionWithClass(
             id: session.id,
             classId: session.classId,
@@ -100,39 +100,39 @@ class AllSessionsController extends GetxController {
 
       allTeacherSessions.sort((a, b) => b.date.compareTo(a.date));
 
-      print('All sessions loaded: ${allTeacherSessions.length}');
+      ////print('All sessions loaded: ${allTeacherSessions.length}');
       allSessions.assignAll(allTeacherSessions);
       filteredSessions.assignAll(allTeacherSessions);
     } catch (e) {
-      print('Error loading sessions: $e');
+      ////print('Error loading sessions: $e');
       TSnackBar.showError(message: 'Failed to load sessions: ${e.toString()}');
     } finally {
       isLoading.value = false;
-      print('Finished loading sessions');
+      ////print('Finished loading sessions');
     }
   }
 
   Future<void> loadClasses() async {
     try {
-      print('Loading classes...');
+      ////print('Loading classes...');
       final currentUser = Supabase.instance.client.auth.currentUser;
       if (currentUser == null) {
-        print('No user logged in');
+        ////print('No user logged in');
         return;
       }
 
       final teacherClasses = await classService.getTeacherClasses(
         currentUser.id,
       );
-      print('Classes loaded: ${teacherClasses.length}');
+      ////print('Classes loaded: ${teacherClasses.length}');
       classes.assignAll(teacherClasses);
     } catch (e) {
-      print('Error loading classes: $e');
+      ////print('Error loading classes: $e');
     }
   }
 
   void filterSessions() {
-    print('Filtering sessions...');
+    ////print('Filtering sessions...');
     final searchTerm = searchController.text.toLowerCase();
 
     filteredSessions.value = allSessions.where((session) {
@@ -151,22 +151,22 @@ class AllSessionsController extends GetxController {
       return isInDateRange && isClassSelected && matchesSearch;
     }).toList();
 
-    print('Filtered sessions count: ${filteredSessions.length}');
+    ////print('Filtered sessions count: ${filteredSessions.length}');
   }
 
   void resetFilters() {
-    print('Resetting filters...');
+    ////print('Resetting filters...');
     searchController.clear();
     startDate.value = DateTime.now().subtract(const Duration(days: 30));
     endDate.value = DateTime.now();
     selectedClassIds.clear();
     filteredSessions.assignAll(allSessions);
-    print('Filters reset');
+    ////print('Filters reset');
   }
 
   Future<void> deleteSession(String sessionId) async {
     try {
-      print('Deleting session: $sessionId');
+      ////print('Deleting session: $sessionId');
       isLoading.value = true;
 
       await attendanceService.deleteSession(sessionId);
@@ -174,17 +174,17 @@ class AllSessionsController extends GetxController {
       allSessions.removeWhere((session) => session.id == sessionId);
       filteredSessions.removeWhere((session) => session.id == sessionId);
 
-      print('Session deleted: $sessionId');
+      ////print('Session deleted: $sessionId');
       TSnackBar.showSuccess(
         message: 'Session deleted successfully',
         title: 'Success',
       );
     } catch (e) {
-      print('Error deleting session: $e');
+      ////print('Error deleting session: $e');
       TSnackBar.showError(message: 'Failed to delete session: ${e.toString()}');
     } finally {
       isLoading.value = false;
-      print('Finished deleting session');
+      ////print('Finished deleting session');
     }
   }
 
@@ -249,7 +249,7 @@ class AllSessionsController extends GetxController {
             sessionEnd =
                 DateTime(now.year, now.month, now.day, endHour, endMinute);
           } catch (e) {
-            print('Error parsing session time: $e');
+            ////print('Error parsing session time: $e');
             return false;
           }
         }
@@ -260,7 +260,7 @@ class AllSessionsController extends GetxController {
 
       return false;
     } catch (e) {
-      print('Error in isSessionRunning: $e');
+      ////print('Error in isSessionRunning: $e');
       return false;
     }
   }
@@ -319,7 +319,7 @@ class AllSessionsController extends GetxController {
         title: 'Success',
       );
     } catch (e) {
-      print('Error closing session: $e');
+      ////print('Error closing session: $e');
       TSnackBar.showError(message: 'Failed to close session: ${e.toString()}');
     } finally {
       isLoading.value = false;
@@ -403,7 +403,7 @@ class AllSessionsController extends GetxController {
         title: 'Success',
       );
     } catch (e) {
-      print('Error deleting selected sessions: $e');
+      ////print('Error deleting selected sessions: $e');
       TSnackBar.showError(
           message: 'Failed to delete sessions: ${e.toString()}');
     } finally {

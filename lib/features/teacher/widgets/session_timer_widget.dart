@@ -15,19 +15,19 @@ class SessionTimerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('Building SessionTimerWidget');
-    print('Remaining Time: $remainingTime');
-    print('Is Session Active: $isSessionActive');
+    //print('Building SessionTimerWidget');
+    //print('Remaining Time: $remainingTime');
+    //print('Is Session Active: $isSessionActive');
 
     final dark = THelperFunction.isDarkMode(context);
-    print('Is Dark Mode: $dark');
-    
+    //print('Is Dark Mode: $dark');
+
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         Icon(
           isSessionActive ? Iconsax.timer_1 : Iconsax.timer_pause,
-          color: isSessionActive 
+          color: isSessionActive
               ? (dark ? TColors.yellow : TColors.deepPurple)
               : Colors.red,
           size: 20,
@@ -36,11 +36,11 @@ class SessionTimerWidget extends StatelessWidget {
         Text(
           remainingTime,
           style: Theme.of(context).textTheme.titleSmall?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: isSessionActive 
-                ? (dark ? TColors.yellow : TColors.deepPurple)
-                : Colors.red,
-          ),
+                fontWeight: FontWeight.bold,
+                color: isSessionActive
+                    ? (dark ? TColors.yellow : TColors.deepPurple)
+                    : Colors.red,
+              ),
         ),
       ],
     );

@@ -16,7 +16,7 @@ enum MessageSource {
 class TSnackBar {
   TSnackBar._()
   {
-    print('TSnackBar initialized');
+    //printnt('TSnackBar initialized');
   } // Private constructor to prevent instantiation
 
   /// Enum defining different message types

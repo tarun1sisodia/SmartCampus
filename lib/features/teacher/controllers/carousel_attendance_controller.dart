@@ -105,10 +105,10 @@ class CarouselAttendanceController extends GetxController {
               minute,
             );
 
-            print('Session start time: ${sessionStartTime.value}');
+            //printnt('Session start time: ${sessionStartTime.value}');
           }
         } catch (e) {
-          print('Error parsing start time: $e');
+          //printnt('Error parsing start time: $e');
         }
       }
 
@@ -130,10 +130,10 @@ class CarouselAttendanceController extends GetxController {
               minute,
             );
 
-            print('Session end time: ${sessionEndTime.value}');
+            //printnt('Session end time: ${sessionEndTime.value}');
           }
         } catch (e) {
-          print('Error parsing end time: $e');
+          //printnt('Error parsing end time: $e');
         }
       }
 
@@ -153,8 +153,7 @@ class CarouselAttendanceController extends GetxController {
       _timer!.cancel();
     }
 
-    print(
-        'Starting timer. Start time: $sessionStartTime, End time: $sessionEndTime');
+    //print('Starting timer. Start time: $sessionStartTime, End time: $sessionEndTime');
     isTimerRunning.value = true;
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       elapsedTime.value++;

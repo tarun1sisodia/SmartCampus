@@ -22,7 +22,7 @@ class ReportsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('Building ReportsScreen');
+    //print('Building ReportsScreen');
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -41,7 +41,7 @@ class ReportsScreen extends StatelessWidget {
             icon: Iconsax.chart_2,
             color: Colors.blue,
             onTap: () {
-              print('Navigating to attendance summary report');
+              //print('Navigating to attendance summary report');
               Get.toNamed('/attendance-reports');
             },
           ),
@@ -52,7 +52,7 @@ class ReportsScreen extends StatelessWidget {
             icon: Iconsax.user_octagon,
             color: Colors.green,
             onTap: () {
-              print('Student Performance report coming soon');
+              //print('Student Performance report coming soon');
               TSnackBar.showInfo(message: 'Coming soon!');
             },
           ),
@@ -63,7 +63,7 @@ class ReportsScreen extends StatelessWidget {
             icon: Iconsax.component,
             color: Colors.purple,
             onTap: () {
-              print('Class Comparison report coming soon');
+              //print('Class Comparison report coming soon');
               TSnackBar.showInfo(message: 'Coming soon!');
             },
           ),
@@ -76,7 +76,7 @@ class ReportsScreen extends StatelessWidget {
             icon: Iconsax.document_1,
             color: Colors.red,
             onTap: () {
-              print('Showing export PDF options');
+              //print('Showing export PDF options');
               _showExportPdfOptions(context);
             },
           ),
@@ -87,7 +87,7 @@ class ReportsScreen extends StatelessWidget {
             icon: Iconsax.document_text,
             color: Colors.teal,
             onTap: () {
-              print('Showing export Excel options');
+              //print('Showing export Excel options');
               _showExportExcelOptions(context);
             },
           ),
@@ -97,7 +97,7 @@ class ReportsScreen extends StatelessWidget {
   }
 
   Widget _buildSectionHeader(BuildContext context, String title) {
-    print('Building section header: $title');
+    //print('Building section header: $title');
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: TSizes.md),
       child: Text(
@@ -117,7 +117,7 @@ class ReportsScreen extends StatelessWidget {
     required Color color,
     required VoidCallback onTap,
   }) {
-    print('Building report card: $title');
+    //print('Building report card: $title');
     final dark = THelperFunction.isDarkMode(context);
 
     return Card(
@@ -149,8 +149,8 @@ class ReportsScreen extends StatelessWidget {
                     Text(
                       title,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                            fontWeight: FontWeight.bold,
+                          ),
                     ),
                     const SizedBox(height: TSizes.xs),
                     Text(
@@ -172,7 +172,7 @@ class ReportsScreen extends StatelessWidget {
   }
 
   void _showExportPdfOptions(BuildContext context) {
-    print('Showing export PDF options');
+    //print('Showing export PDF options');
     final dark = THelperFunction.isDarkMode(context);
 
     Get.bottomSheet(
@@ -206,7 +206,7 @@ class ReportsScreen extends StatelessWidget {
               title: const Text('Attendance Summary'),
               subtitle: const Text('Export overall attendance statistics'),
               onTap: () {
-                print('Exporting Attendance Summary as PDF');
+                //print('Exporting Attendance Summary as PDF');
                 Get.back();
                 _exportAttendanceAsPdf();
               },
@@ -223,7 +223,7 @@ class ReportsScreen extends StatelessWidget {
               title: const Text('Student Performance'),
               subtitle: const Text('Export individual student statistics'),
               onTap: () {
-                print('Exporting Student Performance as PDF');
+                //print('Exporting Student Performance as PDF');
                 Get.back();
                 _exportStudentPerformanceAsPdf();
               },
@@ -233,7 +233,7 @@ class ReportsScreen extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  print('Canceling export PDF options');
+                  //print('Canceling export PDF options');
                   Get.back();
                 },
                 style: ElevatedButton.styleFrom(
@@ -250,7 +250,7 @@ class ReportsScreen extends StatelessWidget {
   }
 
   void _showExportExcelOptions(BuildContext context) {
-    print('Showing export Excel options');
+    //print('Showing export Excel options');
     final dark = THelperFunction.isDarkMode(context);
 
     Get.bottomSheet(
@@ -284,7 +284,7 @@ class ReportsScreen extends StatelessWidget {
               title: const Text('Attendance Summary'),
               subtitle: const Text('Export overall attendance statistics'),
               onTap: () {
-                print('Exporting Attendance Summary as Excel');
+                //print('Exporting Attendance Summary as Excel');
                 Get.back();
                 reportsController.exportAttendanceReport();
               },
@@ -301,7 +301,7 @@ class ReportsScreen extends StatelessWidget {
               title: const Text('Student Performance'),
               subtitle: const Text('Export individual student statistics'),
               onTap: () {
-                print('Exporting Student Performance as Excel');
+                //print('Exporting Student Performance as Excel');
                 Get.back();
                 _exportStudentPerformanceAsExcel();
               },
@@ -311,7 +311,7 @@ class ReportsScreen extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  print('Canceling export Excel options');
+                  //print('Canceling export Excel options');
                   Get.back();
                 },
                 style: ElevatedButton.styleFrom(
@@ -328,27 +328,27 @@ class ReportsScreen extends StatelessWidget {
   }
 
   Future<void> _exportAttendanceAsPdf() async {
-    print('Exporting Attendance Report as PDF');
+    //print('Exporting Attendance Report as PDF');
     await _exportPdf(
       title: 'Attendance Report',
       fileName: 'Attendance_Report.pdf',
       buildContent: () {
-        print('Building content for Attendance Report PDF');
+        //print('Building content for Attendance Report PDF');
         return pw.Text('Attendance Report Content');
       },
     );
   }
 
   Future<void> _exportStudentPerformanceAsPdf() async {
-    print('Exporting Student Performance Report as PDF');
+    //print('Exporting Student Performance Report as PDF');
     await _exportPdf(
       title: 'Student Performance Report',
       fileName: 'Student_Performance_Report.pdf',
       buildContent: () {
-        print('Building content for Student Performance Report PDF');
+        //print('Building content for Student Performance Report PDF');
         if (reportsController.selectedClassId.isEmpty ||
             reportsController.students.isEmpty) {
-          print('No data available to export');
+          //print('No data available to export');
           TSnackBar.showInfo(message: 'No data available to export');
           return pw.Container();
         }
@@ -427,17 +427,17 @@ class ReportsScreen extends StatelessWidget {
   }
 
   Future<void> _exportStudentPerformanceAsExcel() async {
-    print('Exporting Student Performance Report as Excel');
+    //print('Exporting Student Performance Report as Excel');
     try {
       await reportsController.exportAttendanceReport();
     } catch (e) {
-      print('Failed to export Excel: ${e.toString()}');
+      //print('Failed to export Excel: ${e.toString()}');
       TSnackBar.showError(message: 'Failed to export Excel: ${e.toString()}');
     }
   }
 
   pw.Widget _buildPdfStat(String label, String value) {
-    print('Building PDF stat: $label - $value');
+    //print('Building PDF stat: $label - $value');
     return pw.Column(
       children: [
         pw.Text(
@@ -451,7 +451,7 @@ class ReportsScreen extends StatelessWidget {
   }
 
   pw.Widget _buildPdfTableCell(String text, {bool isHeader = false}) {
-    print('Building PDF table cell: $text');
+    //print('Building PDF table cell: $text');
     return pw.Padding(
       padding: const pw.EdgeInsets.all(8),
       child: pw.Text(
@@ -470,7 +470,7 @@ class ReportsScreen extends StatelessWidget {
     String fileName,
     String shareText,
   ) async {
-    print('Saving PDF based on platform: $fileName');
+    //print('Saving PDF based on platform: $fileName');
     if (kIsWeb) {
       _downloadFileForWeb(fileName, bytes);
       TSnackBar.showSuccess(message: 'PDF downloaded successfully');
@@ -500,7 +500,7 @@ class ReportsScreen extends StatelessWidget {
     required String fileName,
     required pw.Widget Function() buildContent,
   }) async {
-    print('Exporting PDF: $title');
+    //print('Exporting PDF: $title');
     try {
       final pdf = pw.Document();
 
@@ -508,19 +508,17 @@ class ReportsScreen extends StatelessWidget {
         pw.MultiPage(
           pageFormat: PdfPageFormat.a4,
           margin: const pw.EdgeInsets.all(32),
-          header:
-              (context) => pw.Text(
-                title,
-                style: pw.TextStyle(
-                  fontSize: 18,
-                  fontWeight: pw.FontWeight.bold,
-                ),
-              ),
-          footer:
-              (context) => pw.Text(
-                'Page ${context.pageNumber} of ${context.pagesCount}',
-                style: const pw.TextStyle(fontSize: 10),
-              ),
+          header: (context) => pw.Text(
+            title,
+            style: pw.TextStyle(
+              fontSize: 18,
+              fontWeight: pw.FontWeight.bold,
+            ),
+          ),
+          footer: (context) => pw.Text(
+            'Page ${context.pageNumber} of ${context.pagesCount}',
+            style: const pw.TextStyle(fontSize: 10),
+          ),
           build: (context) => [buildContent()],
         ),
       );
@@ -531,25 +529,24 @@ class ReportsScreen extends StatelessWidget {
 
       TSnackBar.showSuccess(message: 'PDF exported successfully');
     } catch (e) {
-      print('Failed to export PDF: ${e.toString()}');
+      //print('Failed to export PDF: ${e.toString()}');
       TSnackBar.showError(message: 'Failed to export PDF: ${e.toString()}');
     }
   }
 }
 
 String sanitizeFileName(String fileName) {
-  print('Sanitizing file name: $fileName');
+  //print('Sanitizing file name: $fileName');
   return fileName.replaceAll(RegExp(r'[^\w\s-]'), '').replaceAll(' ', '_');
 }
 
 void _downloadFileForWeb(String fileName, List<int> bytes) {
-  print('Downloading file for web: $fileName');
+  //print('Downloading file for web: $fileName');
   final blob = html.Blob([bytes]);
   final url = html.Url.createObjectUrlFromBlob(blob);
-  final anchor =
-      html.AnchorElement(href: url)
-        ..target = 'blank'
-        ..download = fileName
-        ..click();
+  final anchor = html.AnchorElement(href: url)
+    ..target = 'blank'
+    ..download = fileName
+    ..click();
   html.Url.revokeObjectUrl(url);
 }
