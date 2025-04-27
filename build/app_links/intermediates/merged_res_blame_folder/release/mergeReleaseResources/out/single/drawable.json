@@ -1,0 +1,18 @@
+[
+    {
+        "merged": "com.llfbandit.app_links-release-25:/drawable/notification_bg_low.xml",
+        "source": "com.llfbandit.app_links-core-1.13.1-8:/drawable/notification_bg_low.xml"
+    },
+    {
+        "merged": "com.llfbandit.app_links-release-25:/drawable/notification_tile_bg.xml",
+        "source": "com.llfbandit.app_links-core-1.13.1-8:/drawable/notification_tile_bg.xml"
+    },
+    {
+        "merged": "com.llfbandit.app_links-release-25:/drawable/notification_icon_background.xml",
+        "source": "com.llfbandit.app_links-core-1.13.1-8:/drawable/notification_icon_background.xml"
+    },
+    {
+        "merged": "com.llfbandit.app_links-release-25:/drawable/notification_bg.xml",
+        "source": "com.llfbandit.app_links-core-1.13.1-8:/drawable/notification_bg.xml"
+    }
+]

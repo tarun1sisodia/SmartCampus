@@ -1,0 +1,4 @@
+#Fri Apr 25 08:35:06 IST 2025
+base.0=/home/charon/Studio/smartcampus/build/app/intermediates/dex/release/minifyReleaseWithR8/classes.dex
+path.0=classes.dex
+renamed.0=classes.dex

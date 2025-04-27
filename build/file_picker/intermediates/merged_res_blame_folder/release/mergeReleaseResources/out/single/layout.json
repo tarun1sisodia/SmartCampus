@@ -1,0 +1,22 @@
+[
+    {
+        "merged": "com.mr.flutter.plugin.filepicker.file_picker-release-25:/layout/ime_secondary_split_test_activity.xml",
+        "source": "com.mr.flutter.plugin.filepicker.file_picker-core-1.13.1-8:/layout/ime_secondary_split_test_activity.xml"
+    },
+    {
+        "merged": "com.mr.flutter.plugin.filepicker.file_picker-release-25:/layout/custom_dialog.xml",
+        "source": "com.mr.flutter.plugin.filepicker.file_picker-core-1.13.1-8:/layout/custom_dialog.xml"
+    },
+    {
+        "merged": "com.mr.flutter.plugin.filepicker.file_picker-release-25:/layout/notification_template_part_time.xml",
+        "source": "com.mr.flutter.plugin.filepicker.file_picker-core-1.13.1-8:/layout/notification_template_part_time.xml"
+    },
+    {
+        "merged": "com.mr.flutter.plugin.filepicker.file_picker-release-25:/layout/ime_base_split_test_activity.xml",
+        "source": "com.mr.flutter.plugin.filepicker.file_picker-core-1.13.1-8:/layout/ime_base_split_test_activity.xml"
+    },
+    {
+        "merged": "com.mr.flutter.plugin.filepicker.file_picker-release-25:/layout/notification_template_part_chronometer.xml",
+        "source": "com.mr.flutter.plugin.filepicker.file_picker-core-1.13.1-8:/layout/notification_template_part_chronometer.xml"
+    }
+]

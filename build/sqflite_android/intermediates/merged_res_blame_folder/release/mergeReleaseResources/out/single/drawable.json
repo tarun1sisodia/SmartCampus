@@ -1,0 +1,18 @@
+[
+    {
+        "merged": "com.tekartik.sqflite.sqflite_android-release-25:/drawable/notification_icon_background.xml",
+        "source": "com.tekartik.sqflite.sqflite_android-core-1.13.1-8:/drawable/notification_icon_background.xml"
+    },
+    {
+        "merged": "com.tekartik.sqflite.sqflite_android-release-25:/drawable/notification_bg_low.xml",
+        "source": "com.tekartik.sqflite.sqflite_android-core-1.13.1-8:/drawable/notification_bg_low.xml"
+    },
+    {
+        "merged": "com.tekartik.sqflite.sqflite_android-release-25:/drawable/notification_tile_bg.xml",
+        "source": "com.tekartik.sqflite.sqflite_android-core-1.13.1-8:/drawable/notification_tile_bg.xml"
+    },
+    {
+        "merged": "com.tekartik.sqflite.sqflite_android-release-25:/drawable/notification_bg.xml",
+        "source": "com.tekartik.sqflite.sqflite_android-core-1.13.1-8:/drawable/notification_bg.xml"
+    }
+]

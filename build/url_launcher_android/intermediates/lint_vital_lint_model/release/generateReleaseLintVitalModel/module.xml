@@ -1,0 +1,37 @@
+<lint-module
+    format="1"
+    dir="/home/charon/.pub-cache/hosted/pub.dev/url_launcher_android-6.3.15/android"
+    name=":url_launcher_android"
+    type="LIBRARY"
+    maven="io.flutter.plugins.urllauncher:url_launcher_android:1.0-SNAPSHOT"
+    agpVersion="8.7.0"
+    buildFolder="/home/charon/Studio/smartcampus/build/url_launcher_android"
+    bootClassPath="/home/charon/Android/Sdk/platforms/android-35/android.jar:/home/charon/Android/Sdk/build-tools/34.0.0/core-lambda-stubs.jar"
+    javaSourceLevel="11"
+    compileTarget="android-35"
+    neverShrinking="true">
+  <lintOptions
+      disable="AndroidGradlePluginVersion,InvalidPackage,GradleDependency,NewerVersionAvailable"
+      abortOnError="true"
+      absolutePaths="true"
+      checkAllWarnings="true"
+      warningsAsErrors="true"
+      checkReleaseBuilds="true"
+      explainIssues="true">
+    <severities>
+      <severity
+        id="AndroidGradlePluginVersion"
+        severity="IGNORE" />
+      <severity
+        id="GradleDependency"
+        severity="IGNORE" />
+      <severity
+        id="InvalidPackage"
+        severity="IGNORE" />
+      <severity
+        id="NewerVersionAvailable"
+        severity="IGNORE" />
+    </severities>
+  </lintOptions>
+  <variant name="release"/>
+</lint-module>

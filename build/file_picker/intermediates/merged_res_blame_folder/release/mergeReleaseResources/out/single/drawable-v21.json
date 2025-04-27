@@ -1,0 +1,6 @@
+[
+    {
+        "merged": "com.mr.flutter.plugin.filepicker.file_picker-release-25:/drawable-v21/notification_action_background.xml",
+        "source": "com.mr.flutter.plugin.filepicker.file_picker-core-1.13.1-8:/drawable-v21/notification_action_background.xml"
+    }
+]

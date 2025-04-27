@@ -1,0 +1,6 @@
+[
+    {
+        "merged": "com.tekartik.sqflite.sqflite_android-release-25:/drawable-v21/notification_action_background.xml",
+        "source": "com.tekartik.sqflite.sqflite_android-core-1.13.1-8:/drawable-v21/notification_action_background.xml"
+    }
+]

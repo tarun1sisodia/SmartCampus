@@ -70,7 +70,7 @@ Future<void> main() async {
 
     //print('Launching MyApp...');
     runApp(MyApp());
-  } catch (e, stackTrace) {
+  } catch (e) {
     //print('ERROR DURING APP INITIALIZATION: $e');
     //print('Stack trace: $stackTrace');
     // Still try to run the app with minimal functionality
