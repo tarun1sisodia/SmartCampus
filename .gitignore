@@ -30,9 +30,12 @@ migrate_working_dir/
 .flutter-plugins-dependencies
 .pub-cache/
 .pub/
-
 # Symbolication related
 app.*.symbols
+
+# Keep only flutter-apk folder and ignore rest of build
+build/
+!build/app/outputs/flutter-apk/
 
 # Obfuscation related
 app.*.map.json

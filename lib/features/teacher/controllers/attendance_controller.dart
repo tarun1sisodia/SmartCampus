@@ -295,7 +295,7 @@ class AttendanceController extends GetxController {
       //printnt('End time: ${endTimeController.text}');
 
       // Create the session
-       await attendanceService.createAttendanceSession(
+      await attendanceService.createAttendanceSession(
         classId: selectedClass.value!.id,
         date: sessionDate.value,
         startTime:
@@ -340,12 +340,21 @@ class AttendanceController extends GetxController {
       final now = DateTime.now();
       final sessionDate = session.date;
 
+      // Debug information
+      print('Checking if session is running:');
+      print('Session ID: $sessionId');
+      print('Session date: $sessionDate');
+      print('Current date: $now');
+      print('Session start time: ${session.startTime}');
+      print('Session end time: ${session.endTime}');
+
       // Check if the session is today
       if (sessionDate.year == now.year &&
           sessionDate.month == now.month &&
           sessionDate.day == now.day) {
         // If there's no specific time, consider it running all day
         if (session.startTime == null || session.endTime == null) {
+          print('No specific time set, considering session running all day');
           return true;
         }
 
@@ -356,43 +365,78 @@ class AttendanceController extends GetxController {
         // Try to parse different time formats
         try {
           // First try format like "10:00 AM"
-          final startDateTime = DateFormat("h:mm a").parse(session.startTime!);
-          final endDateTime = DateFormat("h:mm a").parse(session.endTime!);
-
-          sessionStart = DateTime(now.year, now.month, now.day,
-              startDateTime.hour, startDateTime.minute);
-
-          sessionEnd = DateTime(now.year, now.month, now.day, endDateTime.hour,
-              endDateTime.minute);
-        } catch (e) {
-          // If that fails, try 24-hour format like "14:30"
-          try {
+          if (session.startTime!.toLowerCase().contains('am') ||
+              session.startTime!.toLowerCase().contains('pm')) {
             final startTimeParts = session.startTime!.split(':');
-            final endTimeParts = session.endTime!.split(':');
+            final hour = int.parse(startTimeParts[0]);
+            final minutePart = startTimeParts[1].split(' ');
+            final minute = int.parse(minutePart[0]);
+            final ampm = minutePart[1].toLowerCase();
 
-            final startHour = int.parse(startTimeParts[0]);
-            final startMinute = int.parse(startTimeParts[1]);
-
-            final endHour = int.parse(endTimeParts[0]);
-            final endMinute = int.parse(endTimeParts[1]);
+            int adjustedHour = hour;
+            if (ampm == 'pm' && hour < 12) {
+              adjustedHour += 12;
+            } else if (ampm == 'am' && hour == 12) {
+              adjustedHour = 0;
+            }
 
             sessionStart =
-                DateTime(now.year, now.month, now.day, startHour, startMinute);
-            sessionEnd =
-                DateTime(now.year, now.month, now.day, endHour, endMinute);
-          } catch (e) {
-            //printnt('Error parsing session time: $e');
-            return false;
+                DateTime(now.year, now.month, now.day, adjustedHour, minute);
+          } else {
+            // Try 24-hour format
+            final startTimeParts = session.startTime!.split(':');
+            final hour = int.parse(startTimeParts[0]);
+            final minute = int.parse(startTimeParts[1]);
+            sessionStart = DateTime(now.year, now.month, now.day, hour, minute);
           }
-        }
 
-        // Check if current time is between start and end
-        return now.isAfter(sessionStart) && now.isBefore(sessionEnd);
+          // Parse end time similarly
+          if (session.endTime!.toLowerCase().contains('am') ||
+              session.endTime!.toLowerCase().contains('pm')) {
+            final endTimeParts = session.endTime!.split(':');
+            final hour = int.parse(endTimeParts[0]);
+            final minutePart = endTimeParts[1].split(' ');
+            final minute = int.parse(minutePart[0]);
+            final ampm = minutePart[1].toLowerCase();
+
+            int adjustedHour = hour;
+            if (ampm == 'pm' && hour < 12) {
+              adjustedHour += 12;
+            } else if (ampm == 'am' && hour == 12) {
+              adjustedHour = 0;
+            }
+
+            sessionEnd =
+                DateTime(now.year, now.month, now.day, adjustedHour, minute);
+          } else {
+            // Try 24-hour format
+            final endTimeParts = session.endTime!.split(':');
+            final hour = int.parse(endTimeParts[0]);
+            final minute = int.parse(endTimeParts[1]);
+            sessionEnd = DateTime(now.year, now.month, now.day, hour, minute);
+          }
+
+          print('Parsed start time: $sessionStart');
+          print('Parsed end time: $sessionEnd');
+          print('Current time: $now');
+
+          // Check if current time is between start and end
+          bool isAfterStart = now.isAfter(sessionStart);
+          bool isBeforeEnd = now.isBefore(sessionEnd);
+          print('Is after start: $isAfterStart');
+          print('Is before end: $isBeforeEnd');
+
+          return isAfterStart && isBeforeEnd;
+        } catch (e) {
+          print('Error parsing session time: $e');
+          // If parsing fails, default to running
+          return true;
+        }
       }
 
       return false;
     } catch (e) {
-      //printnt('Error in isSessionRunning: $e');
+      print('Error in isSessionRunning: $e');
       return false;
     }
   }

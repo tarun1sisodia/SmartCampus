@@ -250,10 +250,10 @@ class AllSessionsScreen extends StatelessWidget {
                                   height: 10,
                                   decoration: BoxDecoration(
                                     color: isClosed
-                                        ? Colors.red
+                                        ? TColors.red
                                         : (isRunning
-                                            ? Colors.green
-                                            : Colors.orange),
+                                            ? TColors.green
+                                            : TColors.red),
                                     shape: BoxShape.circle,
                                     border: Border.all(
                                       color: dark

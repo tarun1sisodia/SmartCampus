@@ -81,7 +81,7 @@ class CarouselAttendanceController extends GetxController {
   void _initializeSessionTimer() {
     // Get the current session details
     final currentSession =
-      attendanceController.attendanceSessions.firstWhereOrNull(
+        attendanceController.attendanceSessions.firstWhereOrNull(
       (session) => session.id == attendanceController.currentSessionId.value,
     );
 
@@ -90,52 +90,106 @@ class CarouselAttendanceController extends GetxController {
       if (currentSession.startTime != null &&
           currentSession.startTime!.isNotEmpty) {
         try {
-          final startTimeParts = currentSession.startTime!.split(':');
-          if (startTimeParts.length >= 2) {
-            final hour = int.tryParse(startTimeParts[0]) ?? 0;
-            final minute = int.tryParse(startTimeParts[1]) ?? 0;
+          // Try different time formats
+          DateTime? parsedStartTime;
 
-            // Create DateTime with today's date and the session time
-            DateTime.now();
-            sessionStartTime.value = DateTime(
-              currentSession.date.year,
-              currentSession.date.month,
-              currentSession.date.day,
-              hour,
-              minute,
-            );
+          // First try to parse as "HH:mm" (24-hour format)
+          if (currentSession.startTime!.contains(':')) {
+            final startTimeParts = currentSession.startTime!.split(':');
+            if (startTimeParts.length >= 2) {
+              final hour = int.tryParse(startTimeParts[0]) ?? 0;
+              final minute = int.tryParse(startTimeParts[1].split(' ')[0]) ?? 0;
 
-            //printnt('Session start time: ${sessionStartTime.value}');
+              // Check if AM/PM is specified
+              bool isPM =
+                  currentSession.startTime!.toLowerCase().contains('pm');
+              bool isAM =
+                  currentSession.startTime!.toLowerCase().contains('am');
+
+              int adjustedHour = hour;
+              // Convert 12-hour format to 24-hour if needed
+              if (isPM && hour < 12) {
+                adjustedHour += 12;
+              } else if (isAM && hour == 12) {
+                adjustedHour = 0;
+              }
+
+              parsedStartTime = DateTime(
+                currentSession.date.year,
+                currentSession.date.month,
+                currentSession.date.day,
+                adjustedHour,
+                minute,
+              );
+            }
+          }
+
+          if (parsedStartTime != null) {
+            sessionStartTime.value = parsedStartTime;
+            print(
+                'Session start time parsed successfully: ${sessionStartTime.value}');
+          } else {
+            print('Failed to parse start time: ${currentSession.startTime}');
           }
         } catch (e) {
-          //printnt('Error parsing start time: $e');
+          print('Error parsing start time: $e');
         }
       }
 
       if (currentSession.endTime != null &&
           currentSession.endTime!.isNotEmpty) {
         try {
-          final endTimeParts = currentSession.endTime!.split(':');
-          if (endTimeParts.length >= 2) {
-            final hour = int.tryParse(endTimeParts[0]) ?? 0;
-            final minute = int.tryParse(endTimeParts[1]) ?? 0;
+          // Try different time formats
+          DateTime? parsedEndTime;
 
-            // Create DateTime with today's date and the session time
-            DateTime.now();
-            sessionEndTime.value = DateTime(
-              currentSession.date.year,
-              currentSession.date.month,
-              currentSession.date.day,
-              hour,
-              minute,
-            );
+          // First try to parse as "HH:mm" (24-hour format)
+          if (currentSession.endTime!.contains(':')) {
+            final endTimeParts = currentSession.endTime!.split(':');
+            if (endTimeParts.length >= 2) {
+              final hour = int.tryParse(endTimeParts[0]) ?? 0;
+              final minute = int.tryParse(endTimeParts[1].split(' ')[0]) ?? 0;
 
-            //printnt('Session end time: ${sessionEndTime.value}');
+              // Check if AM/PM is specified
+              bool isPM = currentSession.endTime!.toLowerCase().contains('pm');
+              bool isAM = currentSession.endTime!.toLowerCase().contains('am');
+
+              int adjustedHour = hour;
+              // Convert 12-hour format to 24-hour if needed
+              if (isPM && hour < 12) {
+                adjustedHour += 12;
+              } else if (isAM && hour == 12) {
+                adjustedHour = 0;
+              }
+
+              parsedEndTime = DateTime(
+                currentSession.date.year,
+                currentSession.date.month,
+                currentSession.date.day,
+                adjustedHour,
+                minute,
+              );
+            }
+          }
+
+          if (parsedEndTime != null) {
+            sessionEndTime.value = parsedEndTime;
+            print(
+                'Session end time parsed successfully: ${sessionEndTime.value}');
+          } else {
+            print('Failed to parse end time: ${currentSession.endTime}');
           }
         } catch (e) {
-          //printnt('Error parsing end time: $e');
+          print('Error parsing end time: $e');
         }
       }
+
+      // For debugging
+      print('Current time: ${DateTime.now()}');
+      print('Session date: ${currentSession.date}');
+      print('Session start time (raw): ${currentSession.startTime}');
+      print('Session end time (raw): ${currentSession.endTime}');
+      print('Parsed start time: ${sessionStartTime.value}');
+      print('Parsed end time: ${sessionEndTime.value}');
 
       // Start the timer
       _startTimer();
@@ -197,8 +251,13 @@ class CarouselAttendanceController extends GetxController {
       // Calculate remaining time until session ends
       final remaining = sessionEndTime.value!.difference(now);
 
+      print('Current time: $now');
+      print('Session end time: ${sessionEndTime.value}');
+      print('Remaining time in seconds: ${remaining.inSeconds}');
+
       if (remaining.isNegative) {
         remainingTime.value = 'Session Ended';
+        print('Session has ended (negative remaining time)');
       } else {
         final hours = remaining.inHours;
         final minutes = remaining.inMinutes.remainder(60);
@@ -206,6 +265,7 @@ class CarouselAttendanceController extends GetxController {
 
         remainingTime.value =
             '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+        print('Session is active, remaining: ${remainingTime.value}');
       }
     } else if (sessionStartTime.value != null) {
       // If no end time but we have start time, show elapsed time since start
@@ -217,6 +277,7 @@ class CarouselAttendanceController extends GetxController {
 
       remainingTime.value =
           'Elapsed: ${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+      print('No end time set, showing elapsed time: ${remainingTime.value}');
     } else {
       // If no start or end time, just show elapsed time since timer started
       final hours = elapsedTime.value ~/ 3600;
@@ -225,6 +286,7 @@ class CarouselAttendanceController extends GetxController {
 
       remainingTime.value =
           'Timer: ${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+      print('No start or end time, showing timer: ${remainingTime.value}');
     }
   }
 
@@ -330,7 +392,8 @@ class CarouselAttendanceController extends GetxController {
     try {
       isSubmitting.value = true;
       await attendanceController.submitAttendance();
-      Get.off('/attendance-reports'); // Return to previous screen after submission
+      Get.offNamed(
+          '/attendance-reports'); // Return to previous screen after submission
     } catch (e) {
       TSnackBar.showError(
         message: 'Failed to submit attendance: ${e.toString()}',
