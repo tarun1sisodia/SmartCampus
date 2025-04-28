@@ -340,47 +340,39 @@ class AllSessionsScreen extends StatelessWidget {
                                     Flexible(
                                       flex: 4,
                                       child: ElevatedButton.icon(
-                                        onPressed: () {
-                                          print(
-                                              'Standard button pressed for session: ${session.id}');
-                                          // Check if session is closed before allowing access
-                                          if (allSessionsController
-                                              .isSessionClosed(session)) {
-                                            TSnackBar.showInfo(
-                                              message:
-                                                  'This session has been closed',
-                                              title: 'Session Closed',
-                                            );
-                                            return;
-                                          }
-                                          // Check if session is running before allowing access
-                                          if (!allSessionsController
-                                              .isSessionRunning(session)) {
-                                            TSnackBar.showInfo(
-                                              message:
-                                                  'This session is currently not active',
-                                              title: 'Session Inactive',
-                                            );
-                                            return;
-                                          }
-                                          allSessionsController
-                                              .attendanceController
-                                              .currentSessionId
-                                              .value = session.id;
-                                          allSessionsController
-                                              .attendanceController
-                                              .selectedClass
-                                              .value = session.classModel;
-                                          Get.to(() => MarkAttendanceScreen());
-                                        },
-                                        icon: const Icon(
-                                          Iconsax.clipboard_text,
-                                        ),
-                                        label: const Text(
-                                          'Standard',
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 1,
-                                        ),
+                                        onPressed: allSessionsController
+                                                .isSessionClosed(session)
+                                            ? null // Disable the button if session is closed
+                                            : () {
+                                                print(
+                                                    'Standard button pressed for session: ${session.id}');
+                                                // Check if session is running before allowing access
+                                                if (!allSessionsController
+                                                    .isSessionRunning(
+                                                        session)) {
+                                                  TSnackBar.showInfo(
+                                                    message:
+                                                        'This session is currently not active',
+                                                    title: 'Session Inactive',
+                                                  );
+                                                  return;
+                                                }
+                                                allSessionsController
+                                                    .attendanceController
+                                                    .currentSessionId
+                                                    .value = session.id;
+                                                allSessionsController
+                                                    .attendanceController
+                                                    .selectedClass
+                                                    .value = session.classModel;
+                                                Get.to(() =>
+                                                    MarkAttendanceScreen());
+                                              },
+                                        icon:
+                                            const Icon(Iconsax.clipboard_text),
+                                        label: const Text('Standard',
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1),
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor: dark
                                               ? TColors.yellow
@@ -388,6 +380,13 @@ class AllSessionsScreen extends StatelessWidget {
                                           foregroundColor: dark
                                               ? Colors.black
                                               : Colors.white,
+                                          disabledBackgroundColor: dark
+                                              ? TColors.yellow.withOpacity(0.5)
+                                              : TColors.deepPurple
+                                                  .withOpacity(0.5),
+                                          disabledForegroundColor: dark
+                                              ? Colors.black.withOpacity(0.5)
+                                              : Colors.white.withOpacity(0.5),
                                           padding: const EdgeInsets.symmetric(
                                             horizontal: TSizes.sm,
                                             vertical: TSizes.sm,
@@ -395,61 +394,62 @@ class AllSessionsScreen extends StatelessWidget {
                                         ),
                                       ),
                                     ),
+
                                     ElevatedButton.icon(
-                                      onPressed: () {
-                                        print(
-                                            'Carousel button pressed for session: ${session.id}');
-                                        // Check if session is closed before allowing access
-                                        if (allSessionsController
-                                            .isSessionClosed(session)) {
-                                          TSnackBar.showInfo(
-                                            message:
-                                                'This session has been closed',
-                                            title: 'Session Closed',
-                                          );
-                                          return;
-                                        }
-                                        // Check if session is running before allowing access
-                                        if (!allSessionsController
-                                            .isSessionRunning(session)) {
-                                          TSnackBar.showInfo(
-                                            message:
-                                                'This session is currently not active',
-                                            title: 'Session Inactive',
-                                          );
-                                          return;
-                                        }
-                                        allSessionsController
-                                            .attendanceController
-                                            .currentSessionId
-                                            .value = session.id;
-                                        allSessionsController
-                                            .attendanceController
-                                            .selectedClass
-                                            .value = session.classModel;
-                                        Get.to(
-                                          () => CarouselAttendanceScreen(),
-                                          binding: CarouselAttendanceBinding(),
-                                        );
-                                      },
+                                      onPressed: allSessionsController
+                                              .isSessionClosed(session)
+                                          ? null // Disable the button if session is closed
+                                          : () {
+                                              print(
+                                                  'Carousel button pressed for session: ${session.id}');
+                                              // Check if session is running before allowing access
+                                              if (!allSessionsController
+                                                  .isSessionRunning(session)) {
+                                                TSnackBar.showInfo(
+                                                  message:
+                                                      'This session is currently not active',
+                                                  title: 'Session Inactive',
+                                                );
+                                                return;
+                                              }
+                                              allSessionsController
+                                                  .attendanceController
+                                                  .currentSessionId
+                                                  .value = session.id;
+                                              allSessionsController
+                                                  .attendanceController
+                                                  .selectedClass
+                                                  .value = session.classModel;
+                                              Get.to(
+                                                () =>
+                                                    CarouselAttendanceScreen(),
+                                                binding:
+                                                    CarouselAttendanceBinding(),
+                                              );
+                                            },
                                       icon: const Icon(Iconsax.play_circle),
-                                      label: const Text(
-                                        'Carousel',
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
-                                      ),
+                                      label: const Text('Carousel',
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1),
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: dark
                                             ? TColors.blue
                                             : TColors.yellow,
                                         foregroundColor:
                                             dark ? Colors.white : Colors.black,
+                                        disabledBackgroundColor: dark
+                                            ? TColors.blue.withOpacity(0.5)
+                                            : TColors.yellow.withOpacity(0.5),
+                                        disabledForegroundColor: dark
+                                            ? Colors.white.withOpacity(0.5)
+                                            : Colors.black.withOpacity(0.5),
                                         padding: const EdgeInsets.symmetric(
                                           horizontal: TSizes.sm,
                                           vertical: TSizes.sm,
                                         ),
                                       ),
                                     ),
+
                                     // Add delete button
                                     IconButton(
                                       onPressed: () {

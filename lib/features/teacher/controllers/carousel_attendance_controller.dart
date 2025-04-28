@@ -81,7 +81,7 @@ class CarouselAttendanceController extends GetxController {
   void _initializeSessionTimer() {
     // Get the current session details
     final currentSession =
-        attendanceController.attendanceSessions.firstWhereOrNull(
+      attendanceController.attendanceSessions.firstWhereOrNull(
       (session) => session.id == attendanceController.currentSessionId.value,
     );
 
@@ -330,8 +330,7 @@ class CarouselAttendanceController extends GetxController {
     try {
       isSubmitting.value = true;
       await attendanceController.submitAttendance();
-      Get.toNamed(
-          '/attendance-reports'); // Return to previous screen after submission
+      Get.off('/attendance-reports'); // Return to previous screen after submission
     } catch (e) {
       TSnackBar.showError(
         message: 'Failed to submit attendance: ${e.toString()}',

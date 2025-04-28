@@ -168,8 +168,7 @@ class SessionDetailsController extends GetxController {
 
     try {
       // Use the service method to get formatted export data
-      final exportData = await attendanceService
-          .exportSessionAttendanceData(session.value!.id);
+      await attendanceService.exportSessionAttendanceData(session.value!.id);
 
       // Here you would typically save this data to a file
       // For now, just show a success message
