@@ -1,12 +1,13 @@
 import 'dart:io';
-import 'package:attedance__/models/class_model.dart';
-import 'package:attedance__/models/student_model.dart';
-import 'package:attedance__/services/attendance_service.dart';
-import 'package:attedance__/services/class_service.dart';
-import 'package:attedance__/services/student_service.dart';
-import 'package:attedance__/common/utils/helpers/snackbar_helper.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+
+import '../../../common/utils/helpers/snackbar_helper.dart';
+import '../../../models/class_model.dart';
+import '../../../models/student_model.dart';
+import '../../../services/attendance_service.dart';
+import '../../../services/class_service.dart';
+import '../../../services/student_service.dart';
 
 class StudentDetailController extends GetxController {
   final attendanceService = AttendanceService();
@@ -112,41 +113,43 @@ class StudentDetailController extends GetxController {
   }
 
 // Method to delete student image
-Future<void> deleteStudentImage() async {
-  try {
-    if (student.value == null || student.value!.imageUrl == null) {
-      ////print('No image to delete or student information is missing');
-      TSnackBar.showError(message: 'No image to delete or student information is missing');
-      return;
+  Future<void> deleteStudentImage() async {
+    try {
+      if (student.value == null || student.value!.imageUrl == null) {
+        ////print('No image to delete or student information is missing');
+        TSnackBar.showError(
+            message: 'No image to delete or student information is missing');
+        return;
+      }
+
+      isImageUploading.value = true;
+
+      await studentService.deleteStudentImage(
+        studentId: student.value!.id,
+        imageUrl: student.value!.imageUrl!,
+      );
+
+      // Update the student model with null image URL
+      student.value = StudentModel(
+        id: student.value!.id,
+        name: student.value!.name,
+        rollNumber: student.value!.rollNumber,
+        classId: student.value!.classId,
+        imageUrl: null,
+        createdAt: student.value!.createdAt,
+        updatedAt: DateTime.now(),
+        attendanceStatus: student.value!.attendanceStatus,
+      );
+
+      TSnackBar.showSuccess(message: 'Student image removed successfully');
+    } catch (e) {
+      ////print('Error deleting student image: ${e.toString()}');
+      TSnackBar.showError(
+          message: 'Failed to delete student image: ${e.toString()}');
+    } finally {
+      isImageUploading.value = false;
     }
-    
-    isImageUploading.value = true;
-    
-    await studentService.deleteStudentImage(
-      studentId: student.value!.id,
-      imageUrl: student.value!.imageUrl!,
-    );
-    
-    // Update the student model with null image URL
-    student.value = StudentModel(
-      id: student.value!.id,
-      name: student.value!.name,
-      rollNumber: student.value!.rollNumber,
-      classId: student.value!.classId,
-      imageUrl: null,
-      createdAt: student.value!.createdAt,
-      updatedAt: DateTime.now(),
-      attendanceStatus: student.value!.attendanceStatus,
-    );
-    
-    TSnackBar.showSuccess(message: 'Student image removed successfully');
-  } catch (e) {
-    ////print('Error deleting student image: ${e.toString()}');
-    TSnackBar.showError(message: 'Failed to delete student image: ${e.toString()}');
-  } finally {
-    isImageUploading.value = false;
   }
-}
 
   // Method to update student image
   Future<void> updateStudentImage() async {

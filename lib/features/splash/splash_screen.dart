@@ -1,12 +1,12 @@
-import 'package:attedance__/common/utils/constants/image_strings.dart';
-import 'package:attedance__/services/storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../common/utils/constants/colors.dart';
+import '../../common/utils/constants/image_strings.dart';
 import '../../common/utils/helpers/helper_function.dart';
 import '../../app/routes/app_routes.dart';
+import '../../services/storage_service.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -121,7 +121,7 @@ class _SplashScreenState extends State<SplashScreen>
                 'Smart Campus',
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: dark ? TColors.yellow : TColors.deepPurple,
+                      color: dark ? TColors.yellow : TColors.primary,
                     ),
               ),
             ),

@@ -1,9 +1,10 @@
-import 'package:attedance__/features/authentication/controllers/controllers_onboarding/onboarding_controller.dart';
-import 'package:attedance__/common/utils/constants/colors.dart';
-import 'package:attedance__/common/utils/constants/sized.dart';
-import 'package:attedance__/common/utils/device/device_utility.dart';
-import 'package:attedance__/common/utils/helpers/helper_function.dart';
 import 'package:flutter/material.dart';
+
+import '../../../../../common/utils/constants/colors.dart';
+import '../../../../../common/utils/constants/sized.dart';
+import '../../../../../common/utils/device/device_utility.dart';
+import '../../../../../common/utils/helpers/helper_function.dart';
+import '../../../controllers/controllers_onboarding/onboarding_controller.dart';
 
 class OnboardingSkip extends StatelessWidget {
   const OnboardingSkip({super.key});
@@ -19,7 +20,7 @@ class OnboardingSkip extends StatelessWidget {
         onPressed: () => OnboardingController.instance.skipPage(),
         style: ElevatedButton.styleFrom(
           backgroundColor: dark ? Colors.black54 : Colors.white,
-          foregroundColor: dark ? TColors.white : TColors.deepPurple,
+          foregroundColor: dark ? TColors.white : TColors.primary,
           elevation: 1,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(TSizes.buttonRadius),
@@ -36,9 +37,9 @@ class OnboardingSkip extends StatelessWidget {
         child: Text(
           'Skip',
           style: Theme.of(context).textTheme.labelLarge?.copyWith(
-            fontWeight: FontWeight.w600,
-            color: dark ? TColors.white : TColors.deepPurple,
-          ),
+                fontWeight: FontWeight.w600,
+                color: dark ? TColors.white : TColors.primary,
+              ),
         ),
       ),
     );

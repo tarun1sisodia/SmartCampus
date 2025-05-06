@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:attedance__/common/utils/constants/constants.dart';
+import '../../../common/utils/constants/constants.dart';
 import '../controllers/session_details_controller.dart';
 
 class SessionDetailsScreen extends StatelessWidget {
@@ -123,7 +123,7 @@ class SessionDetailsScreen extends StatelessWidget {
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
-                color: AppColors.primary,
+                color: TColors.primary,
               ),
             ),
             SizedBox(height: 8),
@@ -301,7 +301,7 @@ class SessionDetailsScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   _buildStatItem('Total', attendanceStats.total.toString(),
-                      AppColors.primary),
+                      TColors.primary),
                   _buildStatItem('Present', attendanceStats.present.toString(),
                       Colors.green),
                   _buildStatItem(
@@ -388,7 +388,7 @@ class SessionDetailsScreen extends StatelessWidget {
                           }
                         : null,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primary,
+                      backgroundColor: TColors.primary,
                       foregroundColor: Colors.white,
                       padding: EdgeInsets.symmetric(vertical: 12),
                       shape: RoundedRectangleBorder(
@@ -547,7 +547,7 @@ class SessionDetailsScreen extends StatelessWidget {
                     },
                     style: OutlinedButton.styleFrom(
                       minimumSize: Size(double.infinity, 48),
-                      side: BorderSide(color: AppColors.primary),
+                      side: BorderSide(color: TColors.primary),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),

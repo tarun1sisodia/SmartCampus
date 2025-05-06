@@ -135,13 +135,13 @@ class HelpScreen extends StatelessWidget {
                 child: Text(
                   title,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
               ),
               Icon(
                 Iconsax.arrow_right_3,
-                color: dark ? TColors.yellow : TColors.deepPurple,
+                color: dark ? TColors.yellow : TColors.primary,
               ),
             ],
           ),
@@ -180,63 +180,62 @@ class HelpScreen extends StatelessWidget {
           top: Radius.circular(TSizes.cardRadiusLg),
         ),
       ),
-      builder:
-          (context) => DraggableScrollableSheet(
-            initialChildSize: 0.7,
-            maxChildSize: 0.9,
-            minChildSize: 0.5,
-            expand: false,
-            builder: (context, scrollController) {
-              return ListView(
-                controller: scrollController,
-                padding: const EdgeInsets.all(TSizes.defaultSpace),
-                children: [
-                  Text(
-                    'Frequently Asked Questions',
-                    style: Theme.of(context).textTheme.headlineSmall,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: TSizes.spaceBtwSections),
-                  _buildFAQItem(
-                    context,
-                    question: 'How do I mark attendance?',
-                    answer:
-                        'To mark attendance, go to the Classes tab, select a class, then tap on "Attendance". From there, you can create a new session and mark students as present, absent, or late.',
-                  ),
-                  _buildFAQItem(
-                    context,
-                    question: 'How do I add a new student?',
-                    answer:
-                        'To add a new student, go to the Classes tab, select a class, then tap on "Students". From there, you can tap the "+" button to add a new student to the class.',
-                  ),
-                  _buildFAQItem(
-                    context,
-                    question: 'How do I generate reports?',
-                    answer:
-                        'To generate reports, go to the More tab, select "Reports". From there, you can choose the type of report you want to generate and export it in your preferred format.',
-                  ),
-                  _buildFAQItem(
-                    context,
-                    question: 'How do I create a new class?',
-                    answer:
-                        'To create a new class, go to the Classes tab and tap the "+" button in the bottom right corner. Fill in the class details and tap "Create".',
-                  ),
-                  _buildFAQItem(
-                    context,
-                    question: 'How do I edit a student\'s information?',
-                    answer:
-                        'To edit a student\'s information, go to the Classes tab, select a class, then tap on "Students". Find the student you want to edit, tap on their name, and then tap the edit button.',
-                  ),
-                  _buildFAQItem(
-                    context,
-                    question: 'How do I view attendance history?',
-                    answer:
-                        'To view attendance history, go to the Classes tab, select a class, then tap on "Attendance". You will see a list of all attendance sessions for that class.',
-                  ),
-                ],
-              );
-            },
-          ),
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.7,
+        maxChildSize: 0.9,
+        minChildSize: 0.5,
+        expand: false,
+        builder: (context, scrollController) {
+          return ListView(
+            controller: scrollController,
+            padding: const EdgeInsets.all(TSizes.defaultSpace),
+            children: [
+              Text(
+                'Frequently Asked Questions',
+                style: Theme.of(context).textTheme.headlineSmall,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: TSizes.spaceBtwSections),
+              _buildFAQItem(
+                context,
+                question: 'How do I mark attendance?',
+                answer:
+                    'To mark attendance, go to the Classes tab, select a class, then tap on "Attendance". From there, you can create a new session and mark students as present, absent, or late.',
+              ),
+              _buildFAQItem(
+                context,
+                question: 'How do I add a new student?',
+                answer:
+                    'To add a new student, go to the Classes tab, select a class, then tap on "Students". From there, you can tap the "+" button to add a new student to the class.',
+              ),
+              _buildFAQItem(
+                context,
+                question: 'How do I generate reports?',
+                answer:
+                    'To generate reports, go to the More tab, select "Reports". From there, you can choose the type of report you want to generate and export it in your preferred format.',
+              ),
+              _buildFAQItem(
+                context,
+                question: 'How do I create a new class?',
+                answer:
+                    'To create a new class, go to the Classes tab and tap the "+" button in the bottom right corner. Fill in the class details and tap "Create".',
+              ),
+              _buildFAQItem(
+                context,
+                question: 'How do I edit a student\'s information?',
+                answer:
+                    'To edit a student\'s information, go to the Classes tab, select a class, then tap on "Students". Find the student you want to edit, tap on their name, and then tap the edit button.',
+              ),
+              _buildFAQItem(
+                context,
+                question: 'How do I view attendance history?',
+                answer:
+                    'To view attendance history, go to the Classes tab, select a class, then tap on "Attendance". You will see a list of all attendance sessions for that class.',
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 
@@ -250,79 +249,77 @@ class HelpScreen extends StatelessWidget {
           top: Radius.circular(TSizes.cardRadiusLg),
         ),
       ),
-      builder:
-          (context) => Padding(
-            padding: const EdgeInsets.all(TSizes.defaultSpace),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'Contact Support',
-                  style: Theme.of(context).textTheme.headlineSmall,
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: TSizes.spaceBtwSections),
-                ListTile(
-                  leading: Container(
-                    padding: const EdgeInsets.all(TSizes.sm),
-                    decoration: BoxDecoration(
-                      color: Colors.blue.withOpacity(0.1),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(Iconsax.message, color: Colors.blue),
-                  ),
-                  title: const Text('Email Support'),
-                  subtitle: const Text('support@attendanceapp.com'),
-                  onTap: () {
-                    // Launch email app
-                  },
-                ),
-                ListTile(
-                  leading: Container(
-                    padding: const EdgeInsets.all(TSizes.sm),
-                    decoration: BoxDecoration(
-                      color: Colors.green.withOpacity(0.1),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(Iconsax.call, color: Colors.green),
-                  ),
-                  title: const Text('Phone Support'),
-                  subtitle: const Text('+1 (123) 456-7890'),
-                  onTap: () {
-                    // Launch phone app
-                  },
-                ),
-                ListTile(
-                  leading: Container(
-                    padding: const EdgeInsets.all(TSizes.sm),
-                    decoration: BoxDecoration(
-                      color: Colors.purple.withOpacity(0.1),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(Iconsax.global, color: Colors.purple),
-                  ),
-                  title: const Text('Visit Website'),
-                  subtitle: const Text('www.attendanceapp.com/support'),
-                  onTap: () {
-                    // Launch website
-                  },
-                ),
-                const SizedBox(height: TSizes.spaceBtwItems),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () => Navigator.pop(context),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          dark ? TColors.yellow : TColors.deepPurple,
-                      foregroundColor: dark ? Colors.black : Colors.white,
-                    ),
-                    child: const Text('Close'),
-                  ),
-                ),
-              ],
+      builder: (context) => Padding(
+        padding: const EdgeInsets.all(TSizes.defaultSpace),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Contact Support',
+              style: Theme.of(context).textTheme.headlineSmall,
+              textAlign: TextAlign.center,
             ),
-          ),
+            const SizedBox(height: TSizes.spaceBtwSections),
+            ListTile(
+              leading: Container(
+                padding: const EdgeInsets.all(TSizes.sm),
+                decoration: BoxDecoration(
+                  color: Colors.blue.withOpacity(0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Iconsax.message, color: Colors.blue),
+              ),
+              title: const Text('Email Support'),
+              subtitle: const Text('support@attendanceapp.com'),
+              onTap: () {
+                // Launch email app
+              },
+            ),
+            ListTile(
+              leading: Container(
+                padding: const EdgeInsets.all(TSizes.sm),
+                decoration: BoxDecoration(
+                  color: Colors.green.withOpacity(0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Iconsax.call, color: Colors.green),
+              ),
+              title: const Text('Phone Support'),
+              subtitle: const Text('+1 (123) 456-7890'),
+              onTap: () {
+                // Launch phone app
+              },
+            ),
+            ListTile(
+              leading: Container(
+                padding: const EdgeInsets.all(TSizes.sm),
+                decoration: BoxDecoration(
+                  color: Colors.purple.withOpacity(0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Iconsax.global, color: Colors.purple),
+              ),
+              title: const Text('Visit Website'),
+              subtitle: const Text('www.attendanceapp.com/support'),
+              onTap: () {
+                // Launch website
+              },
+            ),
+            const SizedBox(height: TSizes.spaceBtwItems),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () => Navigator.pop(context),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: dark ? TColors.yellow : TColors.primary,
+                  foregroundColor: dark ? TColors.dark : Colors.white,
+                ),
+                child: const Text('Close'),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

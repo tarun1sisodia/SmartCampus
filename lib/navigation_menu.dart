@@ -1,15 +1,15 @@
-import 'package:attedance__/features/teacher/controllers/attendance_controller.dart';
-import 'package:attedance__/features/teacher/controllers/carousel_attendance_controller.dart';
-import 'package:attedance__/features/teacher/controllers/teacher_profile_controller.dart';
-import 'package:attedance__/features/teacher/screens/all_sessions_screen.dart';
-import 'package:attedance__/features/teacher/screens/calendar_screen.dart';
-import 'package:attedance__/features/teacher/screens/dashboard_screen.dart';
-import 'package:attedance__/features/teacher/screens/class_list_screen.dart';
-import 'package:attedance__/app/routes/app_routes.dart';
+import '../../features/teacher/controllers/attendance_controller.dart';
+import '../../features/teacher/controllers/carousel_attendance_controller.dart';
+import '../../features/teacher/controllers/teacher_profile_controller.dart';
+import '../../features/teacher/screens/all_sessions_screen.dart';
+import '../../features/teacher/screens/calendar_screen.dart';
+import '../../features/teacher/screens/dashboard_screen.dart';
+import '../../features/teacher/screens/class_list_screen.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'app/routes/app_routes.dart';
 import 'common/utils/constants/colors.dart';
 import 'common/utils/helpers/helper_function.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +38,7 @@ class NavigationMenu extends StatelessWidget {
               Icon(
                 Iconsax.user_minus,
                 size: 64,
-                color: dark ? TColors.yellow : TColors.deepPurple,
+                color: dark ? TColors.yellow : TColors.primary,
               ),
               const SizedBox(height: 16),
               Text(
@@ -70,54 +70,57 @@ class NavigationMenu extends StatelessWidget {
     }
 
     return Scaffold(
-      bottomNavigationBar: Obx(
-        () {
-          //print('Building bottom navigation bar...');
-          return Container(
-            height: 80,
-            decoration: BoxDecoration(
-              color: dark
-                  ? Theme.of(context).scaffoldBackgroundColor
-                  : Theme.of(context).scaffoldBackgroundColor,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withAlpha(13),
-                  blurRadius: 10,
-                  offset: const Offset(0, -5),
-                ),
-              ],
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _buildNavItem(
-                    context, 0, Iconsax.home, 'Home', dark, controller),
-                _buildNavItem(
-                  context,
-                  1,
-                  Iconsax.book_1,
-                  'Classes',
-                  dark,
-                  controller,
-                ),
-                _buildNavItem(
-                  context,
-                  2,
-                  Iconsax.timer_1,
-                  'Sessions',
-                  dark,
-                  controller,
-                ),
-                _buildNavItem(
-                    context, 3, Iconsax.calendar, 'Calendar', dark, controller),
-              ],
-            ),
-          );
-        },
-      ),
+      bottomNavigationBar: Obx(() {
+        //print('Building bottom navigation bar...');
+        return Container(
+          height: 80,
+          decoration: BoxDecoration(
+            color: dark
+                ? Theme.of(context).scaffoldBackgroundColor
+                : Theme.of(context).scaffoldBackgroundColor,
+            boxShadow: [
+              BoxShadow(
+                color: TColors.dark.withAlpha(13),
+                blurRadius: 10,
+                offset: const Offset(0, -5),
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _buildNavItem(context, 0, Iconsax.home, 'Home', dark, controller),
+              _buildNavItem(
+                context,
+                1,
+                Iconsax.book_1,
+                'Classes',
+                dark,
+                controller,
+              ),
+              _buildNavItem(
+                context,
+                2,
+                Iconsax.timer_1,
+                'Sessions',
+                dark,
+                controller,
+              ),
+              _buildNavItem(
+                context,
+                3,
+                Iconsax.calendar,
+                'Calendar',
+                dark,
+                controller,
+              ),
+            ],
+          ),
+        );
+      }),
       body: Obx(() {
         //print(
-            // 'Displaying screen with index: ${controller.selectedIndex.value}');
+        // 'Displaying screen with index: ${controller.selectedIndex.value}');
         return controller.screens[controller.selectedIndex.value];
       }),
     );
@@ -149,8 +152,8 @@ class NavigationMenu extends StatelessWidget {
             Icon(
               icon,
               color: isSelected
-                  ? (dark ? Colors.orange : Colors.deepPurpleAccent)
-                  : (dark ? Colors.grey : Colors.grey),
+                  ? (dark ? TColors.orange : Colors.deepPurpleAccent)
+                  : (dark ? TColors.blue : TColors.black),
               size: 28,
             ),
             const SizedBox(height: 4),

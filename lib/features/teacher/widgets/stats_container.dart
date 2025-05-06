@@ -1,6 +1,7 @@
-import 'package:attedance__/common/utils/constants/sized.dart';
-import 'package:attedance__/common/utils/helpers/helper_function.dart';
 import 'package:flutter/material.dart';
+
+import '../../../common/utils/constants/sized.dart';
+import '../../../common/utils/helpers/helper_function.dart';
 
 class StatsContainer extends StatelessWidget {
   final String title;

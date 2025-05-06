@@ -1,7 +1,8 @@
-import 'package:attedance__/models/attendance_record_model.dart';
-import 'package:attedance__/models/attendance_session_model.dart';
-import 'package:attedance__/models/class_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+import '../models/attendance_record_model.dart';
+import '../models/attendance_session_model.dart';
+import '../models/class_model.dart';
 
 class AttendanceService {
   final supabase = Supabase.instance.client;

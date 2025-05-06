@@ -1,4 +1,3 @@
-import 'package:attedance__/features/authentication/controllers/controllers_onboarding/onboarding_controller.dart';
 import 'package:attedance__/common/utils/constants/colors.dart';
 import 'package:attedance__/common/utils/constants/sized.dart';
 import 'package:attedance__/common/utils/device/device_utility.dart';
@@ -6,6 +5,8 @@ import 'package:attedance__/common/utils/helpers/helper_function.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:get/get.dart';
+
+import '../../../controllers/controllers_onboarding/onboarding_controller.dart';
 
 class OnboardingNextButton extends StatelessWidget {
   const OnboardingNextButton({super.key});
@@ -26,15 +27,14 @@ class OnboardingNextButton extends StatelessWidget {
           child: ElevatedButton(
             onPressed: () => controller.nextPage(),
             style: ElevatedButton.styleFrom(
-              backgroundColor:
-                  dark ? TColors.buttonPrimary : TColors.deepPurple,
+              backgroundColor: dark ? TColors.buttonPrimary : TColors.primary,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30),
               ),
               elevation: 5,
               shadowColor: dark
                   ? TColors.buttonPrimary.withOpacity(0.5)
-                  : TColors.deepPurple.withOpacity(0.5),
+                  : TColors.primary.withOpacity(0.5),
               padding: const EdgeInsets.all(0),
             ),
             child: FittedBox(

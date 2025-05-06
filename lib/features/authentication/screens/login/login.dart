@@ -1,9 +1,9 @@
-import 'package:attedance__/features/authentication/controllers/login_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../common/styles/spacing_styles.dart';
 import '../../../../common/utils/constants/sized.dart';
+import '../../controllers/login_controller.dart';
 import 'login_widgets/login_form.dart';
 import 'login_widgets/logo_text.dart';
 

@@ -1,11 +1,12 @@
-import 'package:attedance__/app/bindings/app_bindings.dart';
-import 'package:attedance__/common/utils/helpers/snackbar_helper.dart';
-import 'package:attedance__/features/teacher/controllers/attendance_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
+import 'package:shimmer/shimmer.dart';
+import '../../../app/bindings/app_bindings.dart';
+import '../../../common/utils/helpers/snackbar_helper.dart';
 import '../controllers/all_sessions_controller.dart';
+import '../controllers/attendance_controller.dart';
 import '../screens/mark_attendance_screen.dart';
 import '../screens/carousel_attendance_screen.dart';
 import '../../../common/utils/constants/colors.dart';
@@ -91,7 +92,99 @@ class AllSessionsScreen extends StatelessWidget {
       print(
           'Obx triggered: isLoading=${allSessionsController.isLoading.value}');
       if (allSessionsController.isLoading.value) {
-        return const Center(child: CircularProgressIndicator());
+        return Column(
+          children: [
+            // Add shimmer effect for search bar
+            Padding(
+              padding: const EdgeInsets.all(TSizes.defaultSpace),
+              child: Shimmer.fromColors(
+                baseColor: dark ? TColors.darkerGrey : Colors.grey.shade300,
+                  highlightColor: dark ? TColors.yellow : TColors.primary,
+                child: Container(
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: Colors.grey,
+                    borderRadius:
+                        BorderRadius.circular(TSizes.inputFieldRadius),
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: 5, // Simulate loading 5 items
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: TSizes.defaultSpace,
+                      vertical: TSizes.spaceBtwItems / 2,
+                    ),
+                    child: Shimmer.fromColors(
+                       baseColor: dark ? TColors.darkerGrey : Colors.grey.shade300,
+                  highlightColor: dark ? TColors.yellow : TColors.primary,
+                      child: Card(
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(TSizes.cardRadiusMd),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(TSizes.md),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  CircleAvatar(
+                                    radius: 24,
+                                    backgroundColor: Colors.grey,
+                                  ),
+                                  const SizedBox(width: TSizes.spaceBtwItems),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          height: 16,
+                                          width: double.infinity,
+                                          color: Colors.grey,
+                                        ),
+                                        const SizedBox(
+                                            height: TSizes.spaceBtwItems / 2),
+                                        Container(
+                                          height: 14,
+                                          width: 150,
+                                          color: Colors.grey,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: TSizes.spaceBtwItems),
+                              Container(
+                                height: 14,
+                                width: double.infinity,
+                                color: Colors.grey,
+                              ),
+                              const SizedBox(height: TSizes.spaceBtwItems / 2),
+                              Container(
+                                height: 14,
+                                width: 200,
+                                color: Colors.grey,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        );
       }
 
       if (allSessionsController.allSessions.isEmpty) {
@@ -103,7 +196,7 @@ class AllSessionsScreen extends StatelessWidget {
               Icon(
                 Iconsax.calendar_1,
                 size: 64,
-                color: dark ? TColors.yellow : TColors.deepPurple,
+                color: dark ? TColors.yellow : TColors.primary,
               ),
               const SizedBox(height: TSizes.spaceBtwItems),
               Text(
@@ -126,7 +219,7 @@ class AllSessionsScreen extends StatelessWidget {
           print('RefreshIndicator triggered');
           await allSessionsController.loadAllSessions();
         },
-        color: dark ? TColors.yellow : TColors.deepPurple,
+        color: dark ? TColors.yellow : TColors.primary,
         backgroundColor: dark ? TColors.darkerGrey : Colors.white,
         child: Column(
           children: [
@@ -209,8 +302,7 @@ class AllSessionsScreen extends StatelessWidget {
                         // Add border when selected
                         side: isSelected
                             ? BorderSide(
-                                color:
-                                    dark ? TColors.yellow : TColors.deepPurple,
+                                color: dark ? TColors.yellow : TColors.primary,
                                 width: 2,
                               )
                             : BorderSide.none,
@@ -225,11 +317,11 @@ class AllSessionsScreen extends StatelessWidget {
                           children: [
                             CircleAvatar(
                               backgroundColor:
-                                  dark ? TColors.yellow : TColors.deepPurple,
+                                  dark ? TColors.yellow : TColors.primary,
                               child: Text(
                                 DateFormat('d').format(session.date),
                                 style: TextStyle(
-                                  color: dark ? Colors.black : Colors.white,
+                                  color: dark ? TColors.dark : Colors.white,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -376,16 +468,16 @@ class AllSessionsScreen extends StatelessWidget {
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor: dark
                                               ? TColors.yellow
-                                              : TColors.deepPurple,
+                                              : TColors.primary,
                                           foregroundColor: dark
-                                              ? Colors.black
+                                              ? TColors.dark
                                               : Colors.white,
                                           disabledBackgroundColor: dark
                                               ? TColors.yellow.withOpacity(0.5)
-                                              : TColors.deepPurple
+                                              : TColors.primary
                                                   .withOpacity(0.5),
                                           disabledForegroundColor: dark
-                                              ? Colors.black.withOpacity(0.5)
+                                              ? TColors.dark.withOpacity(0.5)
                                               : Colors.white.withOpacity(0.5),
                                           padding: const EdgeInsets.symmetric(
                                             horizontal: TSizes.sm,
@@ -436,13 +528,13 @@ class AllSessionsScreen extends StatelessWidget {
                                             ? TColors.blue
                                             : TColors.yellow,
                                         foregroundColor:
-                                            dark ? Colors.white : Colors.black,
+                                            dark ? Colors.white : TColors.dark,
                                         disabledBackgroundColor: dark
                                             ? TColors.blue.withOpacity(0.5)
                                             : TColors.yellow.withOpacity(0.5),
                                         disabledForegroundColor: dark
                                             ? Colors.white.withOpacity(0.5)
-                                            : Colors.black.withOpacity(0.5),
+                                            : TColors.dark.withOpacity(0.5),
                                         padding: const EdgeInsets.symmetric(
                                           horizontal: TSizes.sm,
                                           vertical: TSizes.sm,

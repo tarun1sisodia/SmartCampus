@@ -59,6 +59,18 @@ class TStorageUtility {
     await _clearCacheDirectory();
   }
 
+  /// Gets a string value from storage
+  /// Usage: final language = storage.getString('language_code')
+  String? getString(String key) {
+    return readData<String>(key);
+  }
+
+  /// Saves a string value to storage
+  /// Usage: await storage.setString('language_code', 'en')
+  Future<void> setString(String key, String value) async {
+    await saveData(key, value);
+  }
+
   /// Saves a complex object by serializing it to JSON
   /// Usage: await storage.saveObject('user_profile', userProfileObject)
   Future<void> saveObject(String key, dynamic object) async {

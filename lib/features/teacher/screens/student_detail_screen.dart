@@ -1,7 +1,3 @@
-import 'package:attedance__/models/student_model.dart';
-import 'package:attedance__/common/utils/constants/colors.dart';
-import 'package:attedance__/common/utils/constants/sized.dart';
-import 'package:attedance__/common/utils/helpers/helper_function.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,6 +5,10 @@ import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import '../../../common/utils/constants/colors.dart';
+import '../../../common/utils/constants/sized.dart';
+import '../../../common/utils/helpers/helper_function.dart';
+import '../../../models/student_model.dart';
 import '../controllers/student_detail_controller.dart';
 
 class StudentDetailScreen extends StatelessWidget {
@@ -22,7 +22,7 @@ class StudentDetailScreen extends StatelessWidget {
     required this.classId,
   }) {
     //print(
-        // 'Initializing StudentDetailScreen with student: $student and classId: $classId');
+    // 'Initializing StudentDetailScreen with student: $student and classId: $classId');
     // Initialize controller with student and class data
     studentDetailController.setStudentAndClass(student, classId);
   }
@@ -96,7 +96,7 @@ class StudentDetailScreen extends StatelessWidget {
                                       border: Border.all(
                                         color: dark
                                             ? TColors.yellow
-                                            : TColors.deepPurple,
+                                            : TColors.primary,
                                         width: 2,
                                       ),
                                     ),
@@ -116,7 +116,7 @@ class StudentDetailScreen extends StatelessWidget {
                                                 size: 40,
                                                 color: dark
                                                     ? TColors.yellow
-                                                    : TColors.deepPurple,
+                                                    : TColors.primary,
                                               ),
                                             )
                                           : Icon(
@@ -124,7 +124,7 @@ class StudentDetailScreen extends StatelessWidget {
                                               size: 40,
                                               color: dark
                                                   ? TColors.yellow
-                                                  : TColors.deepPurple,
+                                                  : TColors.primary,
                                             ),
                                     ),
                                   );
@@ -139,7 +139,7 @@ class StudentDetailScreen extends StatelessWidget {
                                     decoration: BoxDecoration(
                                       color: dark
                                           ? TColors.yellow
-                                          : TColors.deepPurple,
+                                          : TColors.primary,
                                       shape: BoxShape.circle,
                                     ),
                                     child: Icon(
@@ -247,7 +247,7 @@ class StudentDetailScreen extends StatelessWidget {
                             ),
                             circularStrokeCap: CircularStrokeCap.round,
                             progressColor:
-                                dark ? TColors.yellow : TColors.deepPurple,
+                                dark ? TColors.yellow : TColors.primary,
                             backgroundColor: dark
                                 ? Colors.grey.shade800
                                 : Colors.grey.shade200,
@@ -263,7 +263,7 @@ class StudentDetailScreen extends StatelessWidget {
                             'Sessions',
                             studentDetailController.totalSessions.toString(),
                             Icons.calendar_today,
-                            dark ? TColors.yellow : TColors.deepPurple,
+                            dark ? TColors.yellow : TColors.primary,
                           ),
                           _buildStatItem(
                             context,
@@ -323,9 +323,8 @@ class StudentDetailScreen extends StatelessWidget {
                                 Icon(
                                   Iconsax.calendar_1,
                                   size: 48,
-                                  color: dark
-                                      ? TColors.yellow
-                                      : TColors.deepPurple,
+                                  color:
+                                      dark ? TColors.yellow : TColors.primary,
                                 ),
                                 const SizedBox(
                                   height: TSizes.spaceBtwItems / 2,
@@ -448,7 +447,7 @@ class StudentDetailScreen extends StatelessWidget {
               ListTile(
                 leading: Icon(
                   Iconsax.camera,
-                  color: dark ? TColors.yellow : TColors.deepPurple,
+                  color: dark ? TColors.yellow : TColors.primary,
                 ),
                 title: const Text('Take a Photo'),
                 onTap: () {
@@ -465,7 +464,7 @@ class StudentDetailScreen extends StatelessWidget {
               ListTile(
                 leading: Icon(
                   Iconsax.gallery,
-                  color: dark ? TColors.yellow : TColors.deepPurple,
+                  color: dark ? TColors.yellow : TColors.primary,
                 ),
                 title: const Text('Choose from Gallery'),
                 onTap: () {
@@ -570,7 +569,7 @@ class StudentDetailScreen extends StatelessWidget {
       case 'excused':
         return Colors.blue;
       default:
-        return dark ? TColors.yellow : TColors.deepPurple;
+        return dark ? TColors.yellow : TColors.primary;
     }
   }
 
@@ -688,7 +687,7 @@ class StudentDetailScreen extends StatelessWidget {
           ElevatedButton(
             onPressed: () {
               //print(
-                  // 'Updating attendance record for sessionId: $sessionId with status: ${selectedStatus.value} and remarks: ${remarksController.text}');
+              // 'Updating attendance record for sessionId: $sessionId with status: ${selectedStatus.value} and remarks: ${remarksController.text}');
               studentDetailController.updateAttendanceRecord(
                 sessionId: sessionId,
                 status: selectedStatus.value,
@@ -699,7 +698,7 @@ class StudentDetailScreen extends StatelessWidget {
               Get.back();
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: dark ? TColors.yellow : TColors.deepPurple,
+              backgroundColor: dark ? TColors.yellow : TColors.primary,
               foregroundColor: dark ? Colors.black : Colors.white,
             ),
             child: const Text('Update'),

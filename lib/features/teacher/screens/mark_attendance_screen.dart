@@ -1,9 +1,10 @@
-import 'package:attedance__/app/routes/app_routes.dart';
-import 'package:attedance__/common/utils/device/device_utility.dart';
-import 'package:attedance__/common/widgets/student_avatar.dart'; // Add this import
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:shimmer/shimmer.dart';
+import '../../../app/routes/app_routes.dart';
+import '../../../common/utils/device/device_utility.dart';
+import '../../../common/widgets/student_avatar.dart';
 import '../controllers/attendance_controller.dart';
 import '../../../common/utils/constants/colors.dart';
 import '../../../common/utils/constants/sized.dart';
@@ -47,20 +48,15 @@ class MarkAttendanceScreen extends StatelessWidget {
 
     final screenSize = MediaQuery.of(context).size;
     //print('Screen size: $screenSize');
-    final isTablet = screenSize.width < 1024 && screenSize.width > 500;
     final isMobile = screenSize.width <= 500;
     final isLandscape = DeviceUtility.isLandscapeOrientation(context);
     //print(
-        // 'Device type - isTablet: $isTablet, isMobile: $isMobile, isLandscape: $isLandscape');
+    // 'Device type - isTablet: $isTablet, isMobile: $isMobile, isLandscape: $isLandscape');
 
     final cardPadding = isMobile
         ? (isLandscape ? TSizes.xs : TSizes.sm)
         : (isLandscape ? TSizes.sm : TSizes.md);
     //print('Card padding: $cardPadding');
-
-    final avatarSize =
-        isTablet ? (isLandscape ? 18.0 : 22.0) : (isLandscape ? 16.0 : 20.0);
-    //print('Avatar size: $avatarSize');
 
     // Check if session is running
     final isSessionRunning =
@@ -133,7 +129,53 @@ class MarkAttendanceScreen extends StatelessWidget {
         //print('Body state updated');
         if (attendanceController.isLoading.value) {
           //print('Loading students...');
-          return const Center(child: CircularProgressIndicator());
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 100,
+                  height: 100,
+                  child: Shimmer.fromColors(
+                    baseColor: dark ? TColors.darkerGrey : Colors.grey.shade300,
+                    highlightColor: dark ? TColors.yellow : TColors.primary,
+                    child: const Icon(
+                      Iconsax.user,
+                      size: 100,
+                      color: TColors.primary,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: TSizes.spaceBtwItems),
+                Shimmer.fromColors(
+                  baseColor:
+                      dark ? Colors.blueGrey[800]! : Colors.blueGrey[300]!,
+                  highlightColor: dark ? TColors.turquoise : TColors.twitter,
+                  child: Container(
+                    width: 180,
+                    height: 20,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: TSizes.spaceBtwItems / 2),
+                Shimmer.fromColors(
+                  baseColor: dark ? Colors.teal[800]! : Colors.teal[300]!,
+                  highlightColor: dark ? Colors.teal[600]! : Colors.teal[100]!,
+                  child: Container(
+                    width: 120,
+                    height: 15,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
         }
 
         if (attendanceController.currentSessionId.value.isEmpty) {
@@ -145,7 +187,7 @@ class MarkAttendanceScreen extends StatelessWidget {
                 Icon(
                   Iconsax.calendar_1,
                   size: 64,
-                  color: dark ? TColors.yellow : TColors.deepPurple,
+                  color: dark ? TColors.yellow : TColors.primary,
                 ),
                 const SizedBox(height: TSizes.spaceBtwItems),
                 Text(
@@ -172,7 +214,7 @@ class MarkAttendanceScreen extends StatelessWidget {
                 Icon(
                   Iconsax.people,
                   size: 64,
-                  color: dark ? TColors.yellow : TColors.deepPurple,
+                  color: dark ? TColors.yellow : TColors.primary,
                 ),
                 const SizedBox(height: TSizes.spaceBtwItems),
                 Text(
@@ -196,7 +238,7 @@ class MarkAttendanceScreen extends StatelessWidget {
             //print('Refreshing student list');
             await attendanceController.loadStudentsForSession();
           },
-          color: dark ? TColors.yellow : TColors.deepPurple,
+          color: dark ? TColors.yellow : TColors.primary,
           backgroundColor: dark ? TColors.darkerGrey : Colors.white,
           displacement: 40.0,
           strokeWidth: 3.0,
@@ -263,7 +305,7 @@ class MarkAttendanceScreen extends StatelessWidget {
                     onChanged: isSessionRunning
                         ? (value) {
                             //print(
-                                // 'Updating attendance status for ${student.name} to $value');
+                            // 'Updating attendance status for ${student.name} to $value');
                             attendanceController.updateStudentStatus(
                               student.id,
                               value!,
@@ -304,7 +346,7 @@ class MarkAttendanceScreen extends StatelessWidget {
       case 'excused':
         return Colors.blue;
       default:
-        return dark ? TColors.yellow : TColors.deepPurple;
+        return dark ? TColors.yellow : TColors.primary;
     }
   }
 
@@ -333,8 +375,8 @@ class MarkAttendanceScreen extends StatelessWidget {
               attendanceController.submitAttendance();
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: dark ? TColors.yellow : TColors.deepPurple,
-              foregroundColor: dark ? Colors.black : Colors.white,
+              backgroundColor: dark ? TColors.yellow : TColors.primary,
+              foregroundColor: dark ? TColors.dark : Colors.white,
             ),
             child: const Text('Submit'),
           ),

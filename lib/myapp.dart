@@ -1,9 +1,11 @@
-import 'package:attedance__/app/routes/app_routes.dart';
-import 'package:attedance__/app/theme/custom_themes/text_field_theme.dart';
-import 'package:attedance__/common/translations/app_translations.dart';
-import 'package:attedance__/services/language_service.dart';
+import '../../services/language_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import 'app/routes/app_routes.dart';
+import 'app/theme/custom_themes/text_field_theme.dart';
+import 'common/translations/app_translations.dart';
+import 'common/utils/constants/colors.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -21,13 +23,27 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
         brightness: Brightness.light,
+        scaffoldBackgroundColor:
+            TColors.backgroundLight, // Use our defined light background
         inputDecorationTheme: TTextFieldTheme.lightInputDecoration,
+        // Add border theme for better visibility
+        dividerTheme: DividerThemeData(
+          color: TColors.borderPrimary,
+          thickness: 1.0,
+        ),
       ),
       // Dark theme design for UI in Dark Theme
       darkTheme: ThemeData(
         primarySwatch: Colors.blue,
         brightness: Brightness.dark,
+        scaffoldBackgroundColor:
+            TColors.backgroundDark, // Use our defined dark background
         inputDecorationTheme: TTextFieldTheme.darkInputDecoration,
+        // Add border theme for better visibility
+        dividerTheme: DividerThemeData(
+          color: Colors.white24,
+          thickness: 1.0,
+        ),
       ),
       themeMode: ThemeMode.system, // Respects system theme setting
       debugShowCheckedModeBanner: false, // Remove debug banner from UI

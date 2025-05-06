@@ -1,9 +1,10 @@
-import 'package:attedance__/features/authentication/screens/forgot_password/forgot_password_2.dart';
 import '../../../../../common/utils/constants/colors.dart';
 import '../../../../../common/utils/constants/text_strings.dart';
 import '../../../../../common/utils/helpers/helper_function.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../../forgot_password/forgot_password_2.dart';
 
 class RememberAndForget extends StatefulWidget {
   final Function(bool) onRememberChanged;
@@ -32,7 +33,7 @@ class _RememberAndForgetState extends State<RememberAndForget> {
   Widget build(BuildContext context) {
     final dark = THelperFunction.isDarkMode(context);
 
-// add some responsive and adpative code for small --- big ui screens
+    // add some responsive and adpative code for small --- big ui screens
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -40,7 +41,7 @@ class _RememberAndForgetState extends State<RememberAndForget> {
           children: [
             Checkbox(
               value: _isChecked,
-              activeColor: dark ? TColors.buttonPrimary : TColors.deepPurple,
+              activeColor: dark ? TColors.buttonPrimary : TColors.primary,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(4),
               ),

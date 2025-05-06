@@ -33,10 +33,10 @@ class Textfields extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dark = THelperFunction.isDarkMode(context);
-    
+
     // Get the current theme's InputDecorationTheme
     // final inputTheme = Theme.of(context).inputDecorationTheme;
-    
+
     return TextFormField(
       controller: controller,
       expands: expands,
@@ -52,12 +52,12 @@ class Textfields extends StatelessWidget {
         // focusedBorder: inputTheme.focusedBorder,
         // errorBorder: inputTheme.errorBorder,
         // focusedErrorBorder: inputTheme.focusedErrorBorder,
-        
+
         // Other decoration properties
         labelText: labelText,
         prefixIcon: IconTheme(
           data: IconThemeData(
-            color: dark ? TColors.yellow : TColors.deepPurple,
+            color: dark ? TColors.yellow : TColors.primary,
           ),
           child: prefixIcon,
         ),

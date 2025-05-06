@@ -1,9 +1,10 @@
-import 'package:attedance__/app/routes/app_routes.dart';
-import 'package:attedance__/services/storage_service.dart';
-import 'package:attedance__/common/utils/helpers/snackbar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+import '../../../app/routes/app_routes.dart';
+import '../../../common/utils/helpers/snackbar_helper.dart';
+import '../../../services/storage_service.dart';
 
 class SupabaseAuthController extends GetxController {
   static SupabaseAuthController get instance => Get.find();

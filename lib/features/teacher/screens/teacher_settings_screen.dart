@@ -1,15 +1,17 @@
-import 'package:attedance__/features/teacher/controllers/teacher_profile_controller.dart';
-import 'package:attedance__/features/teacher/screens/teacher_profile_screen.dart';
-import 'package:attedance__/app/routes/app_routes.dart';
-import 'package:attedance__/services/language_service.dart';
-import 'package:attedance__/services/storage_service.dart';
-import 'package:attedance__/common/utils/constants/colors.dart';
-import 'package:attedance__/common/utils/constants/sized.dart';
-import 'package:attedance__/common/utils/helpers/helper_function.dart';
-import 'package:attedance__/common/utils/helpers/snackbar_helper.dart';
+import '../../../common/utils/constants/colors.dart';
+import '../../../common/utils/constants/sized.dart';
+import '../../../common/utils/helpers/helper_function.dart';
+import '../../../common/utils/helpers/snackbar_helper.dart';
+import './../controllers/teacher_profile_controller.dart';
+import '../../../app/routes/app_routes.dart';
+import '/../services/language_service.dart';
+import '/../services/storage_service.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+
+import 'teacher_profile_screen.dart';
 
 class TeacherSettingsScreen extends StatelessWidget {
   const TeacherSettingsScreen({super.key});
@@ -62,16 +64,14 @@ class TeacherSettingsScreen extends StatelessWidget {
                   title: 'Email Notifications',
                   icon: Iconsax.notification,
                   dark: dark,
-                  trailing: Obx(
-                    () {
-                      //print('Email Notifications switch updated');
-                      return Switch(
-                        value: controller.emailNotifications.value,
-                        onChanged: controller.toggleEmailNotifications,
-                        activeColor: dark ? TColors.yellow : TColors.deepPurple,
-                      );
-                    },
-                  ),
+                  trailing: Obx(() {
+                    //print('Email Notifications switch updated');
+                    return Switch(
+                      value: controller.emailNotifications.value,
+                      onChanged: controller.toggleEmailNotifications,
+                      activeColor: dark ? TColors.yellow : TColors.primary,
+                    );
+                  }),
                 ),
               ],
             ),
@@ -93,19 +93,17 @@ class TeacherSettingsScreen extends StatelessWidget {
                       //print('Dark Mode toggled');
                       controller.toggleTheme();
                     },
-                    activeColor: dark ? TColors.yellow : TColors.deepPurple,
+                    activeColor: dark ? TColors.yellow : TColors.primary,
                   ),
                 ),
                 _buildProfileMenuItem(
                   title: 'language'.tr,
                   icon: Iconsax.language_square,
                   dark: dark,
-                  trailing: Obx(
-                    () {
-                      //print('Language updated');
-                      return Text(languageService.getCurrentLanguageName());
-                    },
-                  ),
+                  trailing: Obx(() {
+                    //print('Language updated');
+                    return Text(languageService.getCurrentLanguageName());
+                  }),
                   onTap: () {
                     //print('Opening Language Selection Dialog');
                     _showLanguageSelectionDialog(context, languageService);
@@ -164,8 +162,7 @@ class TeacherSettingsScreen extends StatelessWidget {
                             ListTile(
                               leading: Icon(
                                 Iconsax.document_1,
-                                color:
-                                    dark ? TColors.yellow : TColors.deepPurple,
+                                color: dark ? TColors.yellow : TColors.primary,
                               ),
                               title: const Text('Cache Size'),
                               subtitle: Text(cacheSizeText),
@@ -212,7 +209,7 @@ class TeacherSettingsScreen extends StatelessWidget {
                                               );
                                             } catch (e) {
                                               //print(
-                                                  // 'Failed to clear cache: ${e.toString()}');
+                                              // 'Failed to clear cache: ${e.toString()}');
                                               // Dismiss loading dialog
                                               Get.back();
 
@@ -236,8 +233,7 @@ class TeacherSettingsScreen extends StatelessWidget {
                             ListTile(
                               leading: Icon(
                                 Iconsax.trash,
-                                color:
-                                    dark ? TColors.yellow : TColors.deepPurple,
+                                color: dark ? TColors.yellow : TColors.primary,
                               ),
                               title: const Text('Clear All Data'),
                               subtitle: const Text(
@@ -266,7 +262,7 @@ class TeacherSettingsScreen extends StatelessWidget {
                                         onPressed: () async {
                                           try {
                                             //print(
-                                                // 'Clearing All Data Confirmed');
+                                            // 'Clearing All Data Confirmed');
                                             // Show loading indicator
                                             Get.back();
                                             Get.dialog(
@@ -295,7 +291,7 @@ class TeacherSettingsScreen extends StatelessWidget {
                                             );
                                           } catch (e) {
                                             //print(
-                                                // 'Failed to clear all data: ${e.toString()}');
+                                            // 'Failed to clear all data: ${e.toString()}');
                                             // Dismiss loading dialog
                                             Get.back();
 
@@ -317,8 +313,7 @@ class TeacherSettingsScreen extends StatelessWidget {
                             ListTile(
                               leading: Icon(
                                 Iconsax.export,
-                                color:
-                                    dark ? TColors.yellow : TColors.deepPurple,
+                                color: dark ? TColors.yellow : TColors.primary,
                               ),
                               title: const Text('Export Data'),
                               subtitle: const Text(
@@ -350,7 +345,7 @@ class TeacherSettingsScreen extends StatelessWidget {
                                   );
                                 } catch (e) {
                                   //print(
-                                      // 'Failed to export data: ${e.toString()}');
+                                  // 'Failed to export data: ${e.toString()}');
                                   // Dismiss loading dialog
                                   Get.back();
 
@@ -496,7 +491,7 @@ class TeacherSettingsScreen extends StatelessWidget {
                 trailing: isSelected
                     ? Icon(
                         Icons.check_circle,
-                        color: dark ? TColors.yellow : TColors.deepPurple,
+                        color: dark ? TColors.yellow : TColors.primary,
                       )
                     : null,
                 onTap: () {
@@ -567,10 +562,10 @@ class TeacherSettingsScreen extends StatelessWidget {
       leading: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: (dark ? TColors.yellow : TColors.deepPurple).withAlpha(26),
+          color: (dark ? TColors.yellow : TColors.primary).withAlpha(26),
           shape: BoxShape.circle,
         ),
-        child: Icon(icon, color: dark ? TColors.yellow : TColors.deepPurple),
+        child: Icon(icon, color: dark ? TColors.yellow : TColors.primary),
       ),
       title: Text(title),
       trailing: trailing ?? const Icon(Iconsax.arrow_right_3, size: 18),

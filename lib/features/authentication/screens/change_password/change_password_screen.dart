@@ -133,33 +133,33 @@ class ChangePasswordScreen extends StatelessWidget {
                   Text(
                     'Password Requirements:',
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                          fontWeight: FontWeight.bold,
+                        ),
                   ),
                   const SizedBox(height: TSizes.sm),
                   _buildRequirementItem(
                     context,
                     'At least 8 characters long',
                     Iconsax.tick_circle,
-                    dark ? TColors.yellow : TColors.deepPurple,
+                    dark ? TColors.yellow : TColors.primary,
                   ),
                   _buildRequirementItem(
                     context,
                     'Contains uppercase and lowercase letters',
                     Iconsax.tick_circle,
-                    dark ? TColors.yellow : TColors.deepPurple,
+                    dark ? TColors.yellow : TColors.primary,
                   ),
                   _buildRequirementItem(
                     context,
                     'Contains at least one number',
                     Iconsax.tick_circle,
-                    dark ? TColors.yellow : TColors.deepPurple,
+                    dark ? TColors.yellow : TColors.primary,
                   ),
                   _buildRequirementItem(
                     context,
                     'Contains at least one special character',
                     Iconsax.tick_circle,
-                    dark ? TColors.yellow : TColors.deepPurple,
+                    dark ? TColors.yellow : TColors.primary,
                   ),
                 ],
               ),
@@ -171,21 +171,19 @@ class ChangePasswordScreen extends StatelessWidget {
               width: double.infinity,
               child: Obx(
                 () => ElevatedButton(
-                  onPressed:
-                      controller.isLoading.value
-                          ? null
-                          : controller.changePassword,
+                  onPressed: controller.isLoading.value
+                      ? null
+                      : controller.changePassword,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: dark ? TColors.yellow : TColors.deepPurple,
-                    foregroundColor: dark ? Colors.black : Colors.white,
+                    backgroundColor: dark ? TColors.yellow : TColors.primary,
+                    foregroundColor: dark ? TColors.dark : Colors.white,
                     padding: const EdgeInsets.symmetric(
                       vertical: TSizes.buttonHeight,
                     ),
                   ),
-                  child:
-                      controller.isLoading.value
-                          ? const CircularProgressIndicator()
-                          : const Text('Change Password'),
+                  child: controller.isLoading.value
+                      ? const CircularProgressIndicator()
+                      : const Text('Change Password'),
                 ),
               ),
             ),

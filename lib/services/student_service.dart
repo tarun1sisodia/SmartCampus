@@ -1,7 +1,8 @@
 import 'dart:io';
-import 'package:attedance__/models/student_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:path/path.dart' as path;
+
+import '../models/student_model.dart';
 
 class StudentService {
   final supabase = Supabase.instance.client;

@@ -1,16 +1,16 @@
-import 'package:attedance__/app/bindings/app_bindings.dart';
-import 'package:attedance__/common/utils/helpers/snackbar_helper.dart';
-import 'package:attedance__/features/teacher/screens/carousel_attendance_screen.dart';
-import 'package:attedance__/features/teacher/screens/mark_attendance_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
+import '../../../app/bindings/app_bindings.dart';
+import '../../../common/utils/helpers/snackbar_helper.dart';
 import '../controllers/attendance_controller.dart';
 import '../../../models/class_model.dart';
 import '../../../common/utils/constants/colors.dart';
 import '../../../common/utils/constants/sized.dart';
 import '../../../common/utils/helpers/helper_function.dart';
+import 'carousel_attendance_screen.dart';
+import 'mark_attendance_screen.dart';
 
 class AttendanceScreen extends StatelessWidget {
   final ClassModel classModel;
@@ -70,7 +70,7 @@ class AttendanceScreen extends StatelessWidget {
             // Show loading indicator while refreshing
             attendanceController.attendanceSessions();
           },
-          color: dark ? TColors.yellow : TColors.deepPurple,
+          color: dark ? TColors.yellow : TColors.primary,
           backgroundColor: dark ? TColors.darkerGrey : Colors.white,
           displacement: 40.0,
           strokeWidth: 3.0,
@@ -105,7 +105,7 @@ class AttendanceScreen extends StatelessWidget {
                         Icon(
                           Iconsax.people,
                           size: 16,
-                          color: dark ? TColors.yellow : TColors.deepPurple,
+                          color: dark ? TColors.yellow : TColors.primary,
                         ),
                         const SizedBox(width: 4),
                         Text(
@@ -152,7 +152,7 @@ class AttendanceScreen extends StatelessWidget {
                             Icon(
                               Iconsax.calendar_1,
                               size: 64,
-                              color: dark ? TColors.yellow : TColors.deepPurple,
+                              color: dark ? TColors.yellow : TColors.primary,
                             ),
                             const SizedBox(height: TSizes.spaceBtwItems),
                             Text(
@@ -178,8 +178,9 @@ class AttendanceScreen extends StatelessWidget {
                           //print('Building session item at index: $index');
                           final session =
                               attendanceController.attendanceSessions[index];
-                          final formattedDate = DateFormat('EEEE, MMMM d, yyyy')
-                              .format(session.date);
+                          final formattedDate = DateFormat(
+                            'EEEE, MMMM d, yyyy',
+                          ).format(session.date);
 
                           return Card(
                             margin: const EdgeInsets.only(
@@ -202,11 +203,11 @@ class AttendanceScreen extends StatelessWidget {
                               },
                               leading: CircleAvatar(
                                 backgroundColor:
-                                    dark ? TColors.yellow : TColors.deepPurple,
+                                    dark ? TColors.yellow : TColors.primary,
                                 child: Text(
                                   DateFormat('d').format(session.date),
                                   style: TextStyle(
-                                    color: dark ? Colors.black : Colors.white,
+                                    color: dark ? TColors.dark : Colors.white,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -228,8 +229,9 @@ class AttendanceScreen extends StatelessWidget {
                                       session.endTime != null)
                                     Text(
                                       'Time: ${session.startTime} - ${session.endTime}',
-                                      style:
-                                          Theme.of(context).textTheme.bodySmall,
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.bodySmall,
                                     ),
                                   Text(
                                     'Created: ${DateFormat('MMM d, yyyy').format(session.createdAt ?? DateTime.now())}',
@@ -246,7 +248,7 @@ class AttendanceScreen extends StatelessWidget {
                                     tooltip: 'Carousel View',
                                     onPressed: () {
                                       //print(
-                                          // 'Navigating to carousel attendance screen');
+                                      // 'Navigating to carousel attendance screen');
                                       // Check if session is running before allowing access
                                       if (!attendanceController
                                           .isSessionRunning(session.id)) {
@@ -304,8 +306,9 @@ class AttendanceScreen extends StatelessWidget {
                 title: const Text('Date'),
                 subtitle: Obx(
                   () => Text(
-                    DateFormat('EEEE, MMMM d, yyyy')
-                        .format(attendanceController.sessionDate.value),
+                    DateFormat(
+                      'EEEE, MMMM d, yyyy',
+                    ).format(attendanceController.sessionDate.value),
                   ),
                 ),
                 trailing: const Icon(Iconsax.calendar),
@@ -314,8 +317,9 @@ class AttendanceScreen extends StatelessWidget {
                   final pickedDate = await showDatePicker(
                     context: context,
                     initialDate: attendanceController.sessionDate.value,
-                    firstDate:
-                        DateTime.now().subtract(const Duration(days: 30)),
+                    firstDate: DateTime.now().subtract(
+                      const Duration(days: 30),
+                    ),
                     lastDate: DateTime.now().add(const Duration(days: 30)),
                   );
 
@@ -335,8 +339,9 @@ class AttendanceScreen extends StatelessWidget {
                   labelText: 'Start Time (Optional)',
                   hintText: 'e.g., 9:00 AM',
                   border: OutlineInputBorder(
-                    borderRadius:
-                        BorderRadius.circular(TSizes.inputFieldRadius),
+                    borderRadius: BorderRadius.circular(
+                      TSizes.inputFieldRadius,
+                    ),
                   ),
                   suffixIcon: IconButton(
                     icon: const Icon(Iconsax.clock),
@@ -366,8 +371,9 @@ class AttendanceScreen extends StatelessWidget {
                   labelText: 'End Time (Optional)',
                   hintText: 'e.g., 10:00 AM',
                   border: OutlineInputBorder(
-                    borderRadius:
-                        BorderRadius.circular(TSizes.inputFieldRadius),
+                    borderRadius: BorderRadius.circular(
+                      TSizes.inputFieldRadius,
+                    ),
                   ),
                   suffixIcon: IconButton(
                     icon: const Icon(Iconsax.clock),
@@ -392,19 +398,20 @@ class AttendanceScreen extends StatelessWidget {
         ),
         actions: [
           TextButton(
-              onPressed: () {
-                //print('Canceling session creation');
-                Get.back();
-              },
-              child: const Text('Cancel')),
+            onPressed: () {
+              //print('Canceling session creation');
+              Get.back();
+            },
+            child: const Text('Cancel'),
+          ),
           ElevatedButton(
             onPressed: () {
               //print('Creating new attendance session');
               attendanceController.createAttendanceSession();
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: dark ? TColors.yellow : TColors.deepPurple,
-              foregroundColor: dark ? Colors.black : Colors.white,
+              backgroundColor: dark ? TColors.yellow : TColors.primary,
+              foregroundColor: dark ? TColors.dark : Colors.white,
             ),
             child: const Text('Create'),
           ),

@@ -1,7 +1,3 @@
-import 'package:attedance__/features/authentication/controllers/signup_controller.dart';
-import 'package:attedance__/features/authentication/controllers/supabase_auth_controller.dart';
-import 'package:attedance__/features/authentication/screens/login/login_widgets/remember_checkbox.dart';
-import 'package:attedance__/features/authentication/screens/signup/singup_widgets/textfields.dart';
 import 'package:attedance__/common/utils/constants/colors.dart';
 import 'package:attedance__/common/utils/constants/sized.dart';
 import 'package:attedance__/common/utils/constants/text_strings.dart';
@@ -9,6 +5,11 @@ import 'package:attedance__/common/utils/helpers/helper_function.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+
+import '../../../controllers/signup_controller.dart';
+import '../../../controllers/supabase_auth_controller.dart';
+import '../../signup/singup_widgets/textfields.dart';
+import 'remember_checkbox.dart';
 
 class LoginForm extends StatelessWidget {
   LoginForm({super.key});
@@ -33,7 +34,7 @@ class LoginForm extends StatelessWidget {
             // Email field
             Textfields(
               controller: controller.emailController,
-              iconColor: dark ? TColors.yellow : TColors.deepPurple,
+              iconColor: dark ? TColors.yellow : TColors.primary,
               prefixIcon: const Icon(Iconsax.direct_right),
               labelText: TTexts.email,
               keyboardType: TextInputType.emailAddress,
@@ -53,7 +54,7 @@ class LoginForm extends StatelessWidget {
             Obx(
               () => Textfields(
                 controller: controller.passwordController,
-                iconColor: dark ? TColors.yellow : TColors.deepPurple,
+                iconColor: dark ? TColors.yellow : TColors.primary,
                 prefixIcon: const Icon(Iconsax.password_check),
                 labelText: TTexts.password,
                 obscureText: !_passwordVisible.value,
@@ -91,10 +92,11 @@ class LoginForm extends StatelessWidget {
                 height: TSizes.appBarHeight,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: dark ? TColors.yellow : TColors.deepPurple,
+                    backgroundColor: dark ? TColors.yellow : TColors.primary,
                     shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(TSizes.borderRadiusMd),
+                      borderRadius: BorderRadius.circular(
+                        TSizes.borderRadiusMd,
+                      ),
                     ),
                   ),
                   onPressed: controller.isLoading.value
@@ -109,12 +111,14 @@ class LoginForm extends StatelessWidget {
                         },
                   child: controller.isLoading.value
                       ? const CircularProgressIndicator()
-                      : Text(TTexts.signIn,
+                      : Text(
+                          TTexts.signIn,
                           style: TextStyle(
-                            color: dark ? TColors.deepPurple : Colors.white,
+                            color: dark ? TColors.primary : Colors.white,
                             fontSize: TSizes.fontSizeMd,
                             fontWeight: FontWeight.bold,
-                          )),
+                          ),
+                        ),
                 ),
               ),
             ),
@@ -137,12 +141,14 @@ class LoginForm extends StatelessWidget {
                   }
                   Get.toNamed('/signup');
                 },
-                child: Text(TTexts.createAccount,
-                    style: TextStyle(
-                      color: dark ? TColors.yellow : TColors.deepPurple,
-                      fontSize: TSizes.fontSizeMd,
-                      fontWeight: FontWeight.bold,
-                    )),
+                child: Text(
+                  TTexts.createAccount,
+                  style: TextStyle(
+                    color: dark ? TColors.yellow : TColors.primary,
+                    fontSize: TSizes.fontSizeMd,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ),
           ],

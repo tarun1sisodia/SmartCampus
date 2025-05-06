@@ -1,10 +1,10 @@
-import 'package:attedance__/features/teacher/models/attendance_ui_models.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import '../../../models/attendance_session_model.dart';
 import '../../../services/attendance_service.dart';
 import '../../../common/utils/helpers/snackbar_helper.dart';
+import '../models/attendance_ui_models.dart';
 
 class SessionDetailsController extends GetxController {
   final AttendanceService attendanceService = AttendanceService();

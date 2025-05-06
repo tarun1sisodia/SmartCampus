@@ -65,7 +65,7 @@ class AttendanceStatsCard extends StatelessWidget {
                   : 0,
               backgroundColor: Colors.grey.withAlpha(51),
               valueColor: AlwaysStoppedAnimation<Color>(
-                dark ? TColors.yellow : TColors.deepPurple,
+                dark ? TColors.yellow : TColors.primary,
               ),
               minHeight: 8,
               borderRadius: BorderRadius.circular(4),

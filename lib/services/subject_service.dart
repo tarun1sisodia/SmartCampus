@@ -1,4 +1,4 @@
-import 'package:attedance__/models/subject_model.dart';
+import '../models/subject_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SubjectService {

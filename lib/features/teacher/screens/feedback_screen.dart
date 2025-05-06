@@ -98,7 +98,7 @@ class FeedbackScreen extends StatelessWidget {
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(TSizes.inputFieldRadius),
                   borderSide: BorderSide(
-                    color: dark ? TColors.yellow : TColors.deepPurple,
+                    color: dark ? TColors.yellow : TColors.primary,
                     width: 2,
                   ),
                 ),
@@ -133,9 +133,8 @@ class FeedbackScreen extends StatelessWidget {
                             controller.submitFeedback();
                           },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          dark ? TColors.yellow : TColors.deepPurple,
-                      foregroundColor: dark ? Colors.black : Colors.white,
+                      backgroundColor: dark ? TColors.yellow : TColors.primary,
+                      foregroundColor: dark ? TColors.dark : Colors.white,
                     ),
                     child: controller.isSubmitting.value
                         ? const CircularProgressIndicator()

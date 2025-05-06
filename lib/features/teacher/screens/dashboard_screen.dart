@@ -1,17 +1,17 @@
-import 'package:attedance__/common/utils/constants/image_strings.dart';
-import 'package:attedance__/features/teacher/controllers/teacher_profile_controller.dart';
-import 'package:attedance__/features/teacher/screens/teacher_profile_screen.dart';
-import 'package:attedance__/features/teacher/screens/teacher_settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:shimmer/shimmer.dart';
+import '../../../common/utils/constants/image_strings.dart';
 import '../controllers/dashboard_controller.dart';
 import '../../../common/utils/constants/colors.dart';
 import '../../../common/utils/constants/sized.dart';
 import '../../../common/utils/helpers/helper_function.dart';
+import '../controllers/teacher_profile_controller.dart';
 import 'class_list_screen.dart';
+import 'teacher_profile_screen.dart';
+import 'teacher_settings_screen.dart';
 
 class DashboardScreen extends StatelessWidget {
   DashboardScreen({super.key}) {
@@ -23,11 +23,6 @@ class DashboardScreen extends StatelessWidget {
   final profileController = Get.put(TeacherProfileController());
   final RxBool isLoading = RxBool(true);
   final RxBool isSearching = RxBool(false);
-
-  final String userName =
-      Supabase.instance.client.auth.currentUser?.userMetadata?['name'] ??
-          'Teacher';
-
   @override
   Widget build(BuildContext context) {
     //print('Building DashboardScreen');
@@ -37,356 +32,927 @@ class DashboardScreen extends StatelessWidget {
       profileController.loadUserData();
     }
 
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(kToolbarHeight),
-        child: Obx(() {
-          // Animated app bar with greeting
-          return AnimatedCrossFade(
-            duration: const Duration(milliseconds: 800),
-            firstChild: _buildGreetingAppBar(context, dark),
-            secondChild: _buildRegularAppBar(context, dark),
-            crossFadeState: dashboardController.showGreetingAnimation.value
-                ? CrossFadeState.showFirst
-                : CrossFadeState.showSecond,
-          );
-        }),
-      ),
-      body: Obx(() {
-        //print('Dashboard state updated');
-        if (dashboardController.isLoading.value) {
-          //print('Dashboard is loading');
-          return const Center(child: CircularProgressIndicator());
-        }
+    return SafeArea(
+      child: Scaffold(
+        // appBar: PreferredSize(
+        //   preferredSize: const Size.fromHeight(kToolbarHeight),
+        //   child: Obx(() {
+        //     // Animated app bar with greeting
+        //     return AnimatedCrossFade(
+        //       duration: const Duration(milliseconds: 800),
+        //       firstChild: _buildGreetingAppBar(context, dark),
+        //       secondChild: _buildRegularAppBar(context, dark),
+        //       crossFadeState: dashboardController.showGreetingAnimation.value
+        //           ? CrossFadeState.showFirst
+        //           : CrossFadeState.showSecond,
+        //     );
+        //   }),
+        // ),
+        body: Obx(() {
+          //print('Dashboard state updated');
 
-        if (dashboardController.classes.isEmpty) {
-          //print('No data available');
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'No data available',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-                const SizedBox(height: TSizes.spaceBtwItems),
-                ElevatedButton(
-                  onPressed: () {
-                    //print('Creating initial data');
-                    dashboardController.createInitialData();
-                  },
-                  child: const Text('Create Sample Data'),
-                ),
-              ],
-            ),
-          );
-        }
-
-        return RefreshIndicator(
-          onRefresh: () async {
-            //print('Refreshing dashboard data');
-            await dashboardController.loadDashboardData();
-          },
-          color: dark ? TColors.yellow : TColors.deepPurple,
-          backgroundColor: dark ? TColors.darkerGrey : Colors.white,
-          child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            padding: const EdgeInsets.all(TSizes.defaultSpace),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: dark ? TColors.dark : TColors.light,
-                    borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
-                  ),
-                  padding: const EdgeInsets.symmetric(horizontal: TSizes.md),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Iconsax.search_normal,
-                        color: dark ? TColors.yellow : TColors.deepPurple,
-                      ),
-                      const SizedBox(width: TSizes.spaceBtwItems),
-                      Expanded(
-                        child: TextField(
-                          controller: searchController,
-                          decoration: InputDecoration(
-                            hintText: 'Search classes, students...',
-                            border: InputBorder.none,
-                            hintStyle: TextStyle(
-                              color: dark ? Colors.white70 : Colors.black54,
-                            ),
-                          ),
-                          style: TextStyle(
-                            color: dark ? Colors.white : Colors.black,
-                          ),
-                          onChanged: (value) {
-                            //print('Search query: $value');
-                            isSearching.value = value.isNotEmpty;
-                            dashboardController.searchClasses(value);
-                          },
-                        ),
-                      ),
-                      Obx(
-                        () => isSearching.value
-                            ? IconButton(
-                                icon: const Icon(Icons.clear),
-                                onPressed: () {
-                                  //print('Clearing search');
-                                  searchController.clear();
-                                  isSearching.value = false;
-                                  dashboardController.searchClasses('');
-                                },
-                              )
-                            : const SizedBox.shrink(),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: TSizes.spaceBtwSections),
-                Row(
-                  children: [
-                    _buildStatCard(
-                      context,
-                      dark,
-                      title: 'Classes',
-                      value: dashboardController.totalClasses.value.toString(),
-                      icon: Iconsax.book_1,
-                      color: dark ? TColors.yellow : TColors.deepPurple,
-                    ),
-                    const SizedBox(width: TSizes.spaceBtwItems),
-                    _buildStatCard(
-                      context,
-                      dark,
-                      title: 'Students',
-                      value: dashboardController.totalStudents.value.toString(),
-                      icon: Iconsax.people,
-                      color: dark ? TColors.yellow : TColors.deepPurple,
-                    ),
-                  ],
-                ),
-                const SizedBox(height: TSizes.spaceBtwItems),
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(TSizes.md),
-                  decoration: BoxDecoration(
-                    color: dark ? TColors.darkerGrey : Colors.white,
-                    borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withAlpha(26),
-                        spreadRadius: 1,
-                        blurRadius: 5,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
+          if (dashboardController.isLoading.value) {
+            return SafeArea(
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Padding(
+                  padding: const EdgeInsets.all(TSizes.defaultSpace),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'Average Attendance',
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleMedium
-                            ?.copyWith(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: TSizes.spaceBtwItems),
-                      CircularPercentIndicator(
-                        radius: 80.0,
-                        lineWidth: 12.0,
-                        animation: true,
-                        percent:
-                            dashboardController.averageAttendance.value / 100,
-                        center: Text(
-                          '${dashboardController.averageAttendance.value.toStringAsFixed(1)}%',
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleLarge
-                              ?.copyWith(fontWeight: FontWeight.bold),
-                        ),
-                        circularStrokeCap: CircularStrokeCap.round,
-                        progressColor:
-                            dark ? TColors.yellow : TColors.deepPurple,
-                        backgroundColor:
-                            dark ? Colors.grey.shade800 : Colors.grey.shade200,
-                      ),
-                      const SizedBox(height: TSizes.spaceBtwItems),
-                      Text(
-                        'Overall attendance across all classes',
-                        style: Theme.of(context).textTheme.bodySmall,
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: TSizes.spaceBtwSections),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Recent Classes',
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleMedium
-                          ?.copyWith(fontWeight: FontWeight.bold),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        //print('Navigating to ClassListScreen');
-                        Get.to(() => ClassListScreen());
-                      },
-                      child: Text(
-                        'View All',
-                        style: TextStyle(
-                          color: dark ? TColors.yellow : TColors.deepPurple,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: TSizes.spaceBtwItems),
-                dashboardController.classes.isEmpty
-                    ? Center(
-                        child: Column(
+                      // App Bar shimmer
+                      Shimmer.fromColors(
+                        baseColor:
+                            dark ? TColors.darkerGrey : Colors.grey.shade300,
+                        highlightColor: dark
+                            ? TColors.yellow.withOpacity(0.5)
+                            : TColors.primary.withOpacity(0.5),
+                        child: Row(
                           children: [
-                            Icon(
-                              Iconsax.book_1,
-                              size: 48,
-                              color: dark ? TColors.yellow : TColors.deepPurple,
-                            ),
-                            const SizedBox(height: TSizes.spaceBtwItems / 2),
-                            Text(
-                              'No Classes Yet',
-                              style: Theme.of(context).textTheme.titleMedium,
-                            ),
-                            const SizedBox(height: TSizes.spaceBtwItems / 2),
-                            ElevatedButton(
-                              onPressed: () {
-                                //print('Navigating to create class');
-                                Get.to(() => ClassListScreen());
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    dark ? TColors.yellow : TColors.deepPurple,
-                                foregroundColor:
-                                    dark ? Colors.black : Colors.white,
+                            // Profile image shimmer
+                            Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
                               ),
-                              child: const Text('Create Class'),
+                            ),
+                            const SizedBox(width: 12),
+                            // Title shimmer
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    height: 16,
+                                    width: 150,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Container(
+                                    height: 12,
+                                    width: 100,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            // Action buttons shimmer
+                            Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                              ),
                             ),
                           ],
                         ),
-                      )
-                    : ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount:
-                            dashboardController.filteredClasses.length > 3
-                                ? 3
-                                : dashboardController.filteredClasses.length,
-                        itemBuilder: (context, index) {
-                          final classItem =
-                              dashboardController.filteredClasses[index];
-                          final stats =
-                              dashboardController.classStats[classItem.id];
+                      ),
 
-                          //print('Rendering class: ${classItem.subjectName}');
-                          return Card(
-                            margin: const EdgeInsets.only(
-                              bottom: TSizes.spaceBtwItems,
-                            ),
-                            elevation: 2,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                TSizes.cardRadiusMd,
-                              ),
-                            ),
-                            child: ListTile(
-                              contentPadding: const EdgeInsets.all(TSizes.md),
-                              leading: CircleAvatar(
-                                backgroundColor:
-                                    dark ? TColors.yellow : TColors.deepPurple,
-                                child: Text(
-                                  classItem.subjectName?.substring(0, 1) ?? 'C',
-                                  style: TextStyle(
-                                    color: dark ? Colors.black : Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                      const SizedBox(height: TSizes.spaceBtwItems),
+
+                      // Search bar shimmer
+                      Shimmer.fromColors(
+                        baseColor:
+                            dark ? TColors.darkerGrey : Colors.grey.shade300,
+                        highlightColor: dark
+                            ? TColors.yellow.withOpacity(0.5)
+                            : TColors.primary.withOpacity(0.5),
+                        child: Container(
+                          height: 50,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius:
+                                BorderRadius.circular(TSizes.cardRadiusMd),
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(height: TSizes.spaceBtwSections),
+
+                      // Stats cards shimmer (2 cards in a row)
+                      Shimmer.fromColors(
+                        baseColor:
+                            dark ? TColors.darkerGrey : Colors.grey.shade300,
+                        highlightColor: dark
+                            ? TColors.yellow.withOpacity(0.5)
+                            : TColors.primary.withOpacity(0.5),
+                        child: Row(
+                          children: [
+                            // First stat card
+                            Expanded(
+                              child: Container(
+                                height: 120,
+                                padding: const EdgeInsets.all(TSizes.md),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(
+                                      TSizes.cardRadiusMd),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      width: 32,
+                                      height: 32,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withOpacity(0.5),
+                                        shape: BoxShape.circle,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                        height: TSizes.spaceBtwItems),
+                                    Container(
+                                      height: 24,
+                                      width: 40,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withOpacity(0.5),
+                                        borderRadius: BorderRadius.circular(4),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                        height: TSizes.spaceBtwItems / 2),
+                                    Container(
+                                      height: 14,
+                                      width: 60,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withOpacity(0.5),
+                                        borderRadius: BorderRadius.circular(4),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              title: Text(
-                                classItem.subjectName ?? 'Unknown Subject',
+                            ),
+                            const SizedBox(width: TSizes.spaceBtwItems),
+                            // Second stat card
+                            Expanded(
+                              child: Container(
+                                height: 120,
+                                padding: const EdgeInsets.all(TSizes.md),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(
+                                      TSizes.cardRadiusMd),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      width: 32,
+                                      height: 32,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withOpacity(0.5),
+                                        shape: BoxShape.circle,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                        height: TSizes.spaceBtwItems),
+                                    Container(
+                                      height: 24,
+                                      width: 40,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withOpacity(0.5),
+                                        borderRadius: BorderRadius.circular(4),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                        height: TSizes.spaceBtwItems / 2),
+                                    Container(
+                                      height: 14,
+                                      width: 60,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withOpacity(0.5),
+                                        borderRadius: BorderRadius.circular(4),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      const SizedBox(height: TSizes.spaceBtwItems),
+
+                      // Attendance chart shimmer (big container)
+                      Shimmer.fromColors(
+                        baseColor:
+                            dark ? TColors.darkerGrey : Colors.grey.shade300,
+                        highlightColor: dark
+                            ? TColors.yellow.withOpacity(0.5)
+                            : TColors.primary.withOpacity(0.5),
+                        child: Container(
+                          height: 220,
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(TSizes.md),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius:
+                                BorderRadius.circular(TSizes.cardRadiusMd),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                height: 20,
+                                width: 180,
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.5),
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                              ),
+                              const SizedBox(height: TSizes.spaceBtwItems),
+                              Container(
+                                width: 160,
+                                height: 160,
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.5),
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                              const SizedBox(height: TSizes.spaceBtwItems),
+                              Container(
+                                height: 12,
+                                width: 200,
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.5),
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(height: TSizes.spaceBtwSections),
+
+                      // Recent classes header shimmer
+                      Shimmer.fromColors(
+                        baseColor:
+                            dark ? TColors.darkerGrey : Colors.grey.shade300,
+                        highlightColor: dark
+                            ? TColors.yellow.withOpacity(0.5)
+                            : TColors.primary.withOpacity(0.5),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              height: 20,
+                              width: 120,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                            ),
+                            Container(
+                              height: 20,
+                              width: 60,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      const SizedBox(height: TSizes.spaceBtwItems),
+
+                      // Recent classes list shimmer (multiple cards)
+                      // Using a fixed height container instead of Expanded to avoid overflow
+                      SizedBox(
+                        height: 300, // Fixed height for the list
+                        child: ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: 3,
+                          itemBuilder: (context, index) {
+                            return Shimmer.fromColors(
+                              baseColor: dark
+                                  ? TColors.darkerGrey
+                                  : Colors.grey.shade300,
+                              highlightColor: dark
+                                  ? TColors.yellow.withOpacity(0.5)
+                                  : TColors.primary.withOpacity(0.5),
+                              child: Container(
+                                height: 100,
+                                margin: const EdgeInsets.only(
+                                    bottom: TSizes.spaceBtwItems),
+                                padding: const EdgeInsets.all(TSizes.md),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(
+                                      TSizes.cardRadiusMd),
+                                ),
+                                child: Row(
+                                  children: [
+                                    // Leading circle avatar
+                                    Container(
+                                      width: 50,
+                                      height: 50,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withOpacity(0.5),
+                                        shape: BoxShape.circle,
+                                      ),
+                                    ),
+                                    const SizedBox(width: TSizes.spaceBtwItems),
+                                    // Title and subtitle
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            height: 16,
+                                            width: 150,
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  Colors.white.withOpacity(0.5),
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
+                                            ),
+                                          ),
+                                          const SizedBox(height: 8),
+                                          Container(
+                                            height: 12,
+                                            width: 200,
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  Colors.white.withOpacity(0.5),
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Container(
+                                            height: 12,
+                                            width: 120,
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  Colors.white.withOpacity(0.5),
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    // Trailing icon
+                                    Container(
+                                      width: 24,
+                                      height: 24,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withOpacity(0.5),
+                                        shape: BoxShape.circle,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          }
+
+          if (dashboardController.classes.isEmpty) {
+            //print('No data available');
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'No data available',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  const SizedBox(height: TSizes.spaceBtwItems),
+                  ElevatedButton(
+                    onPressed: () {
+                      //print('Creating initial data');
+                      // dashboardController.createInitialData();
+                      Get.snackbar('Info', 'Creating initial data...');
+                    },
+                    child: const Text('Create Class & Sessions'),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          // In your build method, modify the RefreshIndicator's child:
+
+          return RefreshIndicator(
+            onRefresh: () async {
+              await dashboardController.loadDashboardData();
+            },
+            color: dark ? TColors.yellow : TColors.primary,
+            backgroundColor: dark ? TColors.darkerGrey : Colors.white,
+            child: CustomScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              slivers: [
+                // SliverAppBar that collapses on scroll
+                SliverAppBar(
+                  floating: true,
+                  snap: true,
+                  pinned: false,
+                  expandedHeight: kToolbarHeight,
+                  flexibleSpace: FlexibleSpaceBar(
+                    background: Obx(() {
+                      return AnimatedCrossFade(
+                        duration: const Duration(milliseconds: 800),
+                        firstChild: _buildGreetingAppBar(context, dark),
+                        secondChild: _buildRegularAppBar(context, dark),
+                        crossFadeState:
+                            dashboardController.showGreetingAnimation.value
+                                ? CrossFadeState.showFirst
+                                : CrossFadeState.showSecond,
+                      );
+                    }),
+                  ),
+                ),
+
+                // Dashboard content
+                SliverPadding(
+                  padding: const EdgeInsets.all(TSizes.defaultSpace),
+                  sliver: SliverList(
+                    delegate: SliverChildListDelegate(
+                      [
+                        // Search container
+                        Container(
+                          decoration: BoxDecoration(
+                            color: dark ? TColors.dark : TColors.light,
+                            borderRadius:
+                                BorderRadius.circular(TSizes.cardRadiusMd),
+                          ),
+                          padding:
+                              const EdgeInsets.symmetric(horizontal: TSizes.md),
+                          child: Row(
+                            children: [
+                              Icon(Iconsax.search_normal,
+                                  color:
+                                      dark ? TColors.yellow : TColors.primary),
+                              const SizedBox(width: TSizes.spaceBtwItems),
+                              Expanded(
+                                child: TextField(
+                                  controller: searchController,
+                                  decoration: InputDecoration(
+                                    hintText: 'Search classes, students...',
+                                    border: InputBorder.none,
+                                    hintStyle: TextStyle(
+                                      color: dark
+                                          ? Colors.white70
+                                          : Colors.black54,
+                                    ),
+                                  ),
+                                  style: TextStyle(
+                                    color: dark ? Colors.white : Colors.black,
+                                  ),
+                                  onChanged: (value) {
+                                    isSearching.value = value.isNotEmpty;
+                                    dashboardController.searchClasses(value);
+                                  },
+                                ),
+                              ),
+                              Obx(
+                                () => isSearching.value
+                                    ? IconButton(
+                                        icon: const Icon(Icons.clear),
+                                        onPressed: () {
+                                          searchController.clear();
+                                          isSearching.value = false;
+                                          dashboardController.searchClasses('');
+                                        },
+                                      )
+                                    : const SizedBox.shrink(),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        SizedBox(height: TSizes.spaceBtwSections),
+
+                        // Stats cards - with fixed height to prevent overflow
+                        Row(
+                          children: [
+                            _buildStatCard(context, dark,
+                                title: 'Classes',
+                                value: dashboardController.totalClasses.value
+                                    .toString(),
+                                icon: Iconsax.book_1,
+                                color: dark ? TColors.yellow : TColors.primary),
+                            const SizedBox(width: TSizes.spaceBtwItems),
+                            _buildStatCard(context, dark,
+                                title: 'Students',
+                                value: dashboardController.totalStudents.value
+                                    .toString(),
+                                icon: Iconsax.people,
+                                color: dark ? TColors.yellow : TColors.primary),
+                          ],
+                        ),
+
+                        const SizedBox(height: TSizes.spaceBtwItems),
+
+                        // Attendance chart - with fixed height
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(TSizes.md),
+                          decoration: BoxDecoration(
+                            color: dark ? TColors.darkerGrey : Colors.white,
+                            borderRadius:
+                                BorderRadius.circular(TSizes.cardRadiusMd),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withAlpha(26),
+                                spreadRadius: 1,
+                                blurRadius: 5,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min, // Minimize height
+                            children: [
+                              Text(
+                                'Average Attendance',
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleMedium
                                     ?.copyWith(fontWeight: FontWeight.bold),
                               ),
-                              subtitle: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const SizedBox(
-                                    height: TSizes.spaceBtwItems / 2,
-                                  ),
-                                  Text(
-                                    '${classItem.courseName} - Semester ${classItem.semester}',
-                                    style:
-                                        Theme.of(context).textTheme.bodyMedium,
-                                  ),
-                                  if (stats != null)
-                                    Text(
-                                      'Attendance: ${(stats['averageAttendance'] as double).toStringAsFixed(1)}% (${stats['totalSessions']} sessions)',
-                                      style:
-                                          Theme.of(context).textTheme.bodySmall,
-                                    ),
-                                ],
+                              const SizedBox(height: TSizes.spaceBtwItems),
+                              CircularPercentIndicator(
+                                radius: 80.0,
+                                lineWidth: 12.0,
+                                animation: true,
+                                percent: dashboardController
+                                        .averageAttendance.value /
+                                    100,
+                                center: Text(
+                                  '${dashboardController.averageAttendance.value.toStringAsFixed(1)}%',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleLarge
+                                      ?.copyWith(fontWeight: FontWeight.bold),
+                                ),
+                                circularStrokeCap: CircularStrokeCap.round,
+                                progressColor:
+                                    dark ? TColors.yellow : TColors.primary,
+                                backgroundColor: dark
+                                    ? Colors.grey.shade800
+                                    : Colors.grey.shade200,
                               ),
-                              trailing: const Icon(Iconsax.arrow_right_3),
-                              onTap: () {
-                                //print(
-                                    // 'Navigating to class details: ${classItem.subjectName}');
+                              const SizedBox(height: TSizes.spaceBtwItems),
+                              Text(
+                                'Overall attendance across all classes',
+                                style: Theme.of(context).textTheme.bodySmall,
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        const SizedBox(height: TSizes.spaceBtwSections),
+
+                        // Recent classes header
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Recent Classes',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                            ),
+                            TextButton(
+                              onPressed: () {
                                 Get.to(() => ClassListScreen());
                               },
+                              child: Text(
+                                'View All',
+                                style: TextStyle(
+                                    color: dark
+                                        ? TColors.yellow
+                                        : TColors.primary),
+                              ),
                             ),
-                          );
-                        },
-                      ),
+                          ],
+                        ),
+
+                        const SizedBox(height: TSizes.spaceBtwItems),
+
+                        // Recent classes list - with fixed height
+                        dashboardController.classes.isEmpty
+                            ? Center(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(Iconsax.book_1,
+                                        size: 48,
+                                        color: dark
+                                            ? TColors.yellow
+                                            : TColors.primary),
+                                    const SizedBox(
+                                        height: TSizes.spaceBtwItems / 2),
+                                    Text(
+                                      'No Classes Yet',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium,
+                                    ),
+                                    const SizedBox(
+                                        height: TSizes.spaceBtwItems / 2),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        Get.to(() => ClassListScreen());
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: dark
+                                            ? TColors.yellow
+                                            : TColors.primary,
+                                        foregroundColor:
+                                            dark ? TColors.dark : Colors.white,
+                                      ),
+                                      child: const Text('Create Class'),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : SizedBox(
+                                height: 350, // Fixed height for class list
+                                child: ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount: dashboardController
+                                              .filteredClasses.length >
+                                          3
+                                      ? 3
+                                      : dashboardController
+                                          .filteredClasses.length,
+                                  itemBuilder: (context, index) {
+                                    final classItem = dashboardController
+                                        .filteredClasses[index];
+                                    final stats = dashboardController
+                                        .classStats[classItem.id];
+
+                                    return Card(
+                                      margin: const EdgeInsets.only(
+                                        bottom: TSizes.spaceBtwItems,
+                                      ),
+                                      elevation: 2,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(
+                                          TSizes.cardRadiusMd,
+                                        ),
+                                      ),
+                                      child: ListTile(
+                                        contentPadding:
+                                            const EdgeInsets.all(TSizes.md),
+                                        leading: CircleAvatar(
+                                          backgroundColor: dark
+                                              ? TColors.yellow
+                                              : TColors.primary,
+                                          child: Text(
+                                            classItem.subjectName
+                                                    ?.substring(0, 1) ??
+                                                'C',
+                                            style: TextStyle(
+                                              color: dark
+                                                  ? TColors.dark
+                                                  : Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                        title: Text(
+                                          classItem.subjectName ??
+                                              'Unknown Subject',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleMedium
+                                              ?.copyWith(
+                                                  fontWeight: FontWeight.bold),
+                                        ),
+                                        subtitle: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisSize: MainAxisSize
+                                              .min, // Minimize height
+                                          children: [
+                                            const SizedBox(
+                                              height: TSizes.spaceBtwItems / 2,
+                                            ),
+                                            Text(
+                                              '${classItem.courseName} - Semester ${classItem.semester}',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium,
+                                            ),
+                                            if (stats != null)
+                                              Text(
+                                                'Attendance: ${(stats['averageAttendance'] as double).toStringAsFixed(1)}% (${stats['totalSessions']} sessions)',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodySmall,
+                                              ),
+                                          ],
+                                        ),
+                                        trailing:
+                                            const Icon(Iconsax.arrow_right_3),
+                                        onTap: () {
+                                          Get.to(() => ClassListScreen());
+                                        },
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
-          ),
-        );
-      }),
+          );
+        }),
+      ),
     );
   }
 
-  // Add these new methods for the animated app bars
-  // Modify the _buildGreetingAppBar method to remove the name display
   Widget _buildGreetingAppBar(BuildContext context, bool dark) {
-    return AppBar(
-      automaticallyImplyLeading: false, // Remove back button during animation
-      title: Row(
-        children: [
-          // Animated profile image
-          TweenAnimationBuilder<double>(
-            tween: Tween(begin: 0.0, end: 1.0),
-            duration: const Duration(milliseconds: 800),
-            builder: (context, value, child) {
-              return Opacity(
-                opacity: value,
-                child: Transform.scale(
-                  scale:
-                      0.5 + (value * 0.5), // Start at 50% size and grow to 100%
-                  child: GestureDetector(
-                    onTap: () {
-                      //print('Navigating to TeacherProfileScreen');
-                      Get.to(() => TeacherProfileScreen());
-                    },
-                    child: Container(
+    return Container(
+      color: Theme.of(context).scaffoldBackgroundColor,
+      child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Row(
+            children: [
+              // Animated profile image
+              TweenAnimationBuilder<double>(
+                tween: Tween(begin: 0.0, end: 1.0),
+                duration: const Duration(milliseconds: 800),
+                builder: (context, value, child) {
+                  return Opacity(
+                    opacity: value,
+                    child: Transform.scale(
+                      scale: 0.5 +
+                          (value * 0.5), // Start at 50% size and grow to 100%
+                      child: GestureDetector(
+                        onTap: () {
+                          Get.to(() => TeacherProfileScreen());
+                        },
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: dark ? TColors.yellow : TColors.primary,
+                              width: 2,
+                            ),
+                            image: profileController
+                                            .user.value?.profileImageUrl !=
+                                        null &&
+                                    profileController
+                                        .user.value!.profileImageUrl!.isNotEmpty
+                                ? DecorationImage(
+                                    image: NetworkImage(
+                                      profileController
+                                          .user.value!.profileImageUrl!,
+                                    ),
+                                    fit: BoxFit.cover,
+                                    onError: (exception, stackTrace) {},
+                                  )
+                                : const DecorationImage(
+                                    image: AssetImage(TImageStrings.appLogo),
+                                    fit: BoxFit.contain,
+                                  ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(width: 12),
+
+              // Animated greeting text
+              Expanded(
+                child: TweenAnimationBuilder<double>(
+                  tween: Tween(begin: 0.0, end: 1.0),
+                  duration: const Duration(milliseconds: 1000),
+                  builder: (context, value, child) {
+                    return Opacity(
+                      opacity: value,
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 20 * (1 - value)),
+                        child: Text(
+                          dashboardController.greeting.value,
+                          style:
+                              Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+
+              // Animated settings icon
+              TweenAnimationBuilder<double>(
+                tween: Tween(begin: 0.0, end: 1.0),
+                duration: const Duration(milliseconds: 1200),
+                builder: (context, value, child) {
+                  return Opacity(
+                    opacity: value,
+                    child: IconButton(
+                      icon: const Icon(Iconsax.setting),
+                      onPressed: () {
+                        Get.to(() => const TeacherSettingsScreen());
+                      },
+                    ),
+                  );
+                },
+              ),
+
+              // Refresh button
+              TweenAnimationBuilder<double>(
+                tween: Tween(begin: 0.0, end: 1.0),
+                duration: const Duration(milliseconds: 1200),
+                builder: (context, value, child) {
+                  return Opacity(
+                    opacity: value,
+                    child: IconButton(
+                      onPressed: () {
+                        dashboardController.loadDashboardData();
+                      },
+                      icon: const Icon(Iconsax.refresh),
+                      tooltip: 'Refresh',
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRegularAppBar(BuildContext context, bool dark) {
+    return Container(
+      color: Theme.of(context).scaffoldBackgroundColor,
+      child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Row(
+            children: [
+              // Profile image
+              Hero(
+                tag: 'profileImage',
+                child: GestureDetector(
+                  onTap: () {
+                    Get.to(() => TeacherProfileScreen());
+                  },
+                  child: Obx(() {
+                    return Container(
                       width: 40,
                       height: 40,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: dark ? TColors.yellow : TColors.deepPurple,
+                          color: dark ? TColors.yellow : TColors.primary,
                           width: 2,
                         ),
                         image: profileController.user.value?.profileImageUrl !=
@@ -399,146 +965,53 @@ class DashboardScreen extends StatelessWidget {
                                       .user.value!.profileImageUrl!,
                                 ),
                                 fit: BoxFit.cover,
-                                onError: (exception, stackTrace) {
-                                  //print(
-                                      // 'Error loading profile image: $exception');
-                                },
+                                onError: (exception, stackTrace) {},
                               )
                             : const DecorationImage(
                                 image: AssetImage(TImageStrings.appLogo),
                                 fit: BoxFit.contain,
                               ),
                       ),
-                    ),
-                  ),
+                    );
+                  }),
                 ),
-              );
-            },
-          ),
-          const SizedBox(width: 12),
+              ),
+              const SizedBox(width: 12),
 
-          // Animated greeting text - REMOVE THE NAME PART
-          Expanded(
-            child: TweenAnimationBuilder<double>(
-              tween: Tween(begin: 0.0, end: 1.0),
-              duration: const Duration(milliseconds: 1000),
-              builder: (context, value, child) {
-                return Opacity(
-                  opacity: value,
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 20 * (1 - value)),
-                    child: Text(
-                      dashboardController.greeting.value,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
-      ),
-      actions: [
-        // Animated settings icon
-        TweenAnimationBuilder<double>(
-          tween: Tween(begin: 0.0, end: 1.0),
-          duration: const Duration(milliseconds: 1200),
-          builder: (context, value, child) {
-            return Opacity(
-              opacity: value,
-              child: IconButton(
+              // User greeting
+              Expanded(
+                child: Obx(() {
+                  return Text(
+                    'Hi, ${profileController.user.value?.name ?? 'Teacher'}',
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  );
+                }),
+              ),
+
+              // Settings button
+              IconButton(
                 icon: const Icon(Iconsax.setting),
                 onPressed: () {
-                  //print('Navigating to TeacherSettingsScreen');
                   Get.to(() => const TeacherSettingsScreen());
                 },
               ),
-            );
-          },
-        ),
-      ],
-    );
-  }
 
-  Widget _buildRegularAppBar(BuildContext context, bool dark) {
-    return AppBar(
-      leading: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Hero(
-          tag: 'profileImage',
-          child: GestureDetector(
-            onTap: () {
-              //print('Navigating to TeacherProfileScreen');
-              Get.to(() => TeacherProfileScreen());
-            },
-            child: Obx(() {
-              //print('Profile image updated');
-              return Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: dark ? TColors.yellow : TColors.deepPurple,
-                    width: 2,
-                  ),
-                  image: profileController.user.value?.profileImageUrl !=
-                              null &&
-                          profileController
-                              .user.value!.profileImageUrl!.isNotEmpty
-                      ? DecorationImage(
-                          image: NetworkImage(
-                            profileController.user.value!.profileImageUrl!,
-                          ),
-                          fit: BoxFit.cover,
-                          onError: (exception, stackTrace) {
-                            //print('Error loading profile image: $exception');
-                          },
-                        )
-                      : const DecorationImage(
-                          image: AssetImage(TImageStrings.appLogo),
-                          fit: BoxFit.contain,
-                        ),
-                ),
-              );
-            }),
+              // Refresh button
+              IconButton(
+                onPressed: () {
+                  dashboardController.loadDashboardData();
+                },
+                icon: const Icon(Iconsax.refresh),
+                tooltip: 'Refresh',
+              ),
+            ],
           ),
         ),
       ),
-      title: Obx(
-        () {
-          //print('User name updated: ${profileController.user.value?.name}');
-          return Text(
-            'Hi, ${profileController.user.value?.name ?? 'Teacher'}',
-            style: Theme.of(context)
-                .textTheme
-                .titleLarge
-                ?.copyWith(fontWeight: FontWeight.bold),
-          );
-        },
-      ),
-      actions: [
-        IconButton(
-          icon: const Icon(Iconsax.setting),
-          onPressed: () {
-            //print('Navigating to TeacherSettingsScreen');
-            Get.to(() => const TeacherSettingsScreen());
-          },
-        ),
-        const SizedBox(width: TSizes.sm),
-        IconButton(
-          onPressed: () {
-            //print('Refreshing dashboard data');
-            dashboardController.loadDashboardData();
-          },
-          icon: const Icon(Iconsax.refresh),
-          tooltip: 'Refresh',
-        ),
-      ],
     );
   }
 
@@ -550,7 +1023,6 @@ class DashboardScreen extends StatelessWidget {
     required IconData icon,
     required Color color,
   }) {
-    //print('Building stat card: $title');
     return Expanded(
       child: Container(
         padding: const EdgeInsets.all(TSizes.md),
@@ -568,15 +1040,18 @@ class DashboardScreen extends StatelessWidget {
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min, // Add this to minimize height
           children: [
             Icon(icon, color: color, size: 32),
             const SizedBox(height: TSizes.spaceBtwItems),
-            Text(
-              value,
-              style: Theme.of(context)
-                  .textTheme
-                  .headlineMedium
-                  ?.copyWith(fontWeight: FontWeight.bold),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                value,
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
             ),
             const SizedBox(height: TSizes.spaceBtwItems / 2),
             Text(title, style: Theme.of(context).textTheme.bodyMedium),

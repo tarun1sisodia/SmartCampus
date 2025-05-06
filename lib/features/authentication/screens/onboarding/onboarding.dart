@@ -1,15 +1,15 @@
-import 'package:attedance__/common/utils/constants/text_strings.dart';
-import 'package:attedance__/features/authentication/screens/onboarding/widgets/onboarding_page.dart';
-
-import '../../controllers/controllers_onboarding/onboarding_controller.dart';
-import 'widgets/onboarding_dot_navigation.dart';
-import 'widgets/onboarding_next_button.dart';
-import 'widgets/onboarding_skip.dart';
 import '../../../../common/utils/constants/image_strings.dart';
+import '../../../../common/utils/constants/text_strings.dart';
 import '../../../../common/utils/helpers/helper_function.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
+
+import '../../controllers/controllers_onboarding/onboarding_controller.dart';
+import 'widgets/onboarding_dot_navigation.dart';
+import 'widgets/onboarding_next_button.dart';
+import 'widgets/onboarding_page.dart';
+import 'widgets/onboarding_skip.dart';
 
 class Onboarding extends StatelessWidget {
   Onboarding({super.key});

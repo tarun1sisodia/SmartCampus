@@ -1,8 +1,8 @@
-import 'package:attedance__/common/utils/helpers/helper_function.dart';
 import 'package:flutter/material.dart';
 import '../../../../../common/utils/constants/colors.dart';
 import '../../../../../common/utils/constants/sized.dart';
 import '../../../../../common/utils/constants/text_strings.dart';
+import '../../../../../common/utils/helpers/helper_function.dart';
 
 class TermsPolicy extends StatelessWidget {
   const TermsPolicy({super.key});

@@ -1,7 +1,7 @@
-import 'package:attedance__/models/course_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import '../../../models/course_model.dart';
 import '../controllers/class_controller.dart';
 import '../../../common/utils/constants/colors.dart';
 import '../../../common/utils/constants/sized.dart';
@@ -30,7 +30,7 @@ class CreateClassScreen extends StatelessWidget {
       body: Obx(
         () {
           //print(
-              // 'classController.isLoading: ${classController.isLoading.value}');
+          // 'classController.isLoading: ${classController.isLoading.value}');
           return classController.isLoading.value
               ? const Center(child: CircularProgressIndicator())
               : Center(
@@ -140,6 +140,10 @@ class CreateClassScreen extends StatelessWidget {
                               ),
                             ),
                           ),
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                                RegExp(r'^[A-Z]$')),
+                          ],
                           onChanged: (value) {
                             //print('Section input: $value');
                           },
@@ -157,9 +161,9 @@ class CreateClassScreen extends StatelessWidget {
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor:
-                                  dark ? TColors.yellow : TColors.deepPurple,
+                                  dark ? TColors.yellow : TColors.primary,
                               foregroundColor:
-                                  dark ? Colors.black : Colors.white,
+                                  dark ? TColors.dark : Colors.white,
                             ),
                             child: const Text('Create Class'),
                           ),

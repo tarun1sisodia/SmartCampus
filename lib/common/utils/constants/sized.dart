@@ -1,73 +1,106 @@
+/// TSizes implements:
+/// - Fitts's Law: Appropriate sizing for interactive elements
+/// - Law of Proximity: Consistent spacing system
+/// - Miller's Law: Limited number of size options
+/// - Law of Similarity: Consistent sizing patterns
 class TSizes {
-  TSizes._() {
-    //print('TSizes initialized');
-  }
+  TSizes._();
 
-  // Padding and margin sizes (reduced)
-  static const double xs = 3.0; // was 4.0
-  static const double sm = 6.0; // was 8.0
-  static const double md = 12.0; // was 16.0
-  static const double lg = 18.0; // was 24.0
-  static const double xl = 24.0; // was 32.0
+  // SPACING SYSTEM - For consistent spacing throughout the app (Law of Proximity)
+  static const double xs = 4.0;
+  static const double sm = 8.0;
+  static const double md = 16.0;
+  static const double lg = 24.0;
+  static const double xl = 32.0;
+  static const double xxl = 48.0;
 
-  // Icon sizes (kept the same)
+  // ICON SIZES - For consistent icon sizing (Law of Similarity)
   static const double iconXs = 12.0;
   static const double iconSm = 16.0;
   static const double iconMd = 24.0;
   static const double iconLg = 32.0;
+  static const double iconXl = 48.0;
 
-  // Font sizes (kept the same)
+  // FONT SIZES - For consistent typography (Visual Hierarchy)
   static const double fontSizeSm = 14.0;
   static const double fontSizeMd = 16.0;
   static const double fontSizeLg = 18.0;
+  static const double fontSizeXl = 20.0;
+  static const double fontSizeXxl = 24.0;
 
-  // Button sizes (slightly reduced)
-  static const double buttonHeight = 16.0; // was 18.0
-  static const double buttonRadius = 10.0; // was 12.0
-  static const double buttonWidth = 110.0; // was 120.0
-  static const double buttonElevation = 3.0; // was 4.0
-
-  // AppBar height (kept the same)
+  // BUTTON SIZES - For appropriate touch targets (Fitts's Law)
+  static const double buttonHeight = 48.0; // Minimum recommended touch target
+  static const double buttonRadius = 10.0;
+  static const double buttonWidth = 120.0;
+  static const double buttonElevation = 2.0;
+  
+  // APPBAR HEIGHT - For consistent navigation (Jakob's Law)
   static const double appBarHeight = 56.0;
 
-  // Image sizes (reduced)
-  static const double imageThumbSize = 70.0; // was 80.0
+  // IMAGE SIZES - For consistent imagery
+  static const double imageThumbSize = 80.0;
+  static const double imagePreviewSize = 150.0;
+  static const double imageBannerHeight = 200.0;
 
-  // Default spacing between sections (reduced)
-  static const double defaultSpace = 19.0; // was 24.0
-  static const double spaceBtwItems = 10.0; // was 16.0
-  static const double spaceBtwSections = 20.0; // was 32.0
+  // SPACING BETWEEN ELEMENTS - For consistent layout (Law of Proximity)
+  static const double defaultSpace = 16.0;
+  static const double spaceBtwItems = 16.0;
+  static const double spaceBtwSections = 32.0;
+  static const double spaceBtwInputFields = 16.0;
 
-  // Border radius (slightly reduced)
-  static const double borderRadiusSm = 3.0; // was 4.0
-  static const double borderRadiusMd = 6.0; // was 8.0
-  static const double borderRadiusLg = 10.0; // was 12.0
+  // BORDER RADIUS - For consistent component styling (Law of Similarity)
+  static const double borderRadiusXs = 4.0;
+  static const double borderRadiusSm = 8.0;
+  static const double borderRadiusMd = 12.0;
+  static const double borderRadiusLg = 16.0;
+  static const double borderRadiusXl = 20.0;
 
-  // Divider height (kept the same)
+  // DIVIDER HEIGHT - For subtle separation
   static const double dividerHeight = 1.0;
+  static const double dividerThickness = 1.0;
 
-  // Product item dimensions (reduced)
-  static const double productImageSize = 100.0; // was 120.0
-  static const double productImageRadius = 14.0; // was 16.0
-  static const double productItemHeight = 140.0; // was 160.0
+  // PRODUCT ITEM DIMENSIONS - For consistent product display
+  static const double productImageSize = 120.0;
+  static const double productImageRadius = 16.0;
+  static const double productItemHeight = 160.0;
 
-  // Input field (slightly reduced)
-  static const double inputFieldRadius = 10.0; // was 12.0
-  static const double spaceBtwInputFields = 12.0; // was 16.0
+  // INPUT FIELD - For consistent form elements (Fitts's Law)
+  static const double inputFieldRadius = 12.0;
+  static const double inputFieldHeight = 56.0;
+  static const double inputIconSize = 24.0;
 
-  // Card sizes (slightly reduced)
-  static const double cardRadiusLg = 14.0; // was 16.0
-  static const double cardRadiusMd = 10.0; // was 12.0
-  static const double cardRadiusSm = 8.0; // was 10.0
-  static const double cardRadiusXs = 5.0; // was 6.0
+  // CARD SIZES - For consistent card styling (Law of Common Region)
+  static const double cardRadiusLg = 16.0;
+  static const double cardRadiusMd = 12.0;
+  static const double cardRadiusSm = 8.0;
+  static const double cardRadiusXs = 6.0;
   static const double cardElevation = 2.0;
+  static const double cardBorderWidth = 1.0;
 
-  // Image carousel height (reduced)
-  static const double imageCarouselHeight = 180.0; // was 200.0
+  // CHIP RADIUS - For consistent chip styling
+  static const double chipRadius = 8.0;
 
-  // Loading indicator size (kept the same)
+  // IMAGE CAROUSEL HEIGHT - For consistent carousel display
+  static const double imageCarouselHeight = 200.0;
+
+  // LOADING INDICATOR SIZE - For consistent loading states
   static const double loadingIndicatorSize = 36.0;
+  static const double loadingIndicatorSmall = 24.0;
 
-  // Grid view spacing (reduced)
-  static const double gridViewSpacing = 10.0; // was 16.0
+  // GRID VIEW SPACING - For consistent grid layouts
+  static const double gridViewSpacing = 16.0;
+  static const double gridViewChildAspectRatio = 0.7;
+  
+  // BOTTOM NAVIGATION BAR - For consistent navigation (Jakob's Law)
+  static const double bottomNavBarHeight = 80.0;
+  static const double bottomNavBarIconSize = 24.0;
+  
+  // AVATAR SIZES - For consistent user representation
+  static const double avatarSizeSmall = 32.0;
+  static const double avatarSizeMedium = 40.0;
+  static const double avatarSizeLarge = 56.0;
+  
+  // TOOLTIP - For consistent help elements
+  static const double tooltipRadius = 4.0;
+  static const double tooltipHeight = 32.0;
 }

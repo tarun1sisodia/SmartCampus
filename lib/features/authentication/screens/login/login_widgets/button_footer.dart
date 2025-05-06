@@ -60,7 +60,7 @@ class FooterButton extends StatelessWidget {
               icon: Image(
                 height: TSizes.iconMd,
                 width: TSizes.iconMd,
-                color: dark ? TColors.white : TColors.black,
+                color: dark ? TColors.white : TColors.dark,
                 image: AssetImage(TImageStrings.apple),
               ),
             ),

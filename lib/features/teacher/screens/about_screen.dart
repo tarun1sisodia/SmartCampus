@@ -1,8 +1,12 @@
+import 'package:attedance__/common/utils/constants/image_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../../common/utils/constants/colors.dart';
 import '../../../common/utils/constants/sized.dart';
 import '../../../common/utils/helpers/helper_function.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import 'legal_screen.dart';
 
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
@@ -27,11 +31,13 @@ class AboutScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: dark ? TColors.yellow : TColors.deepPurple,
+                  color: dark ? TColors.yellow : TColors.purple,
                   width: 2,
                 ),
                 image: const DecorationImage(
-                  image: AssetImage('assets/logos/smartcampus.png'),
+                  image: AssetImage(
+                    TImageStrings.appLogo,
+                  ),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -47,7 +53,7 @@ class AboutScreen extends StatelessWidget {
             ),
             const SizedBox(height: TSizes.xs),
             Text(
-              'Version 1.0.0',
+              'Version 0.0.1',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: TSizes.spaceBtwSections),
@@ -62,9 +68,9 @@ class AboutScreen extends StatelessWidget {
             ),
             const SizedBox(height: TSizes.spaceBtwItems),
             Text(
-              'Attendance App is a comprehensive solution for teachers to manage class attendance efficiently. With features like real-time attendance tracking, detailed reports, and student management, it simplifies the administrative tasks for educators.',
+              'The Attendance Management System is a cross-platform Flutter application designed to simplify and streamline the process of tracking student attendance in educational institutions. It provides teachers with tools to manage classes, record attendance, and analyze attendance data efficiently.',
               style: Theme.of(context).textTheme.bodyMedium,
-              textAlign: TextAlign.center,
+              textAlign: TextAlign.start,
             ),
             const SizedBox(height: TSizes.spaceBtwSections),
 
@@ -81,13 +87,13 @@ class AboutScreen extends StatelessWidget {
               leading: Container(
                 padding: const EdgeInsets.all(TSizes.sm),
                 decoration: BoxDecoration(
-                  color: (dark ? TColors.yellow : TColors.deepPurple)
+                  color: (dark ? TColors.yellow : TColors.primary)
                       .withOpacity(0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
                   Iconsax.code,
-                  color: dark ? TColors.yellow : TColors.deepPurple,
+                  color: dark ? TColors.yellow : TColors.primary,
                 ),
               ),
               title: const Text('Tarun Sisodia'),
@@ -95,38 +101,113 @@ class AboutScreen extends StatelessWidget {
             ),
             const SizedBox(height: TSizes.spaceBtwItems),
 
-            // Contact info
             ListTile(
               leading: Container(
                 padding: const EdgeInsets.all(TSizes.sm),
                 decoration: BoxDecoration(
-                  color: (dark ? TColors.yellow : TColors.deepPurple)
+                  color: (dark ? TColors.yellow : TColors.primary)
                       .withOpacity(0.1),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(
-                  Iconsax.global,
-                  color: dark ? TColors.yellow : TColors.deepPurple,
+                child: Image.asset(
+                  TImageStrings.google,
+                  height: 24,
+                  width: 24,
                 ),
               ),
-              title: const Text('Website'),
-              subtitle: const Text('www.attendanceapp.com'),
+              title: const Text('Google Developer'),
+              subtitle: const Text('g.dev/tarun1sisodia'),
+              onTap: () async {
+                const url = 'https://g.dev/tarun1sisodia';
+                if (await canLaunchUrl(Uri.parse(url))) {
+                  await launchUrl(Uri.parse(url),
+                      mode: LaunchMode.externalApplication);
+                }
+              },
             ),
             ListTile(
               leading: Container(
                 padding: const EdgeInsets.all(TSizes.sm),
                 decoration: BoxDecoration(
-                  color: (dark ? TColors.yellow : TColors.deepPurple)
-                      .withOpacity(0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(Iconsax.filter_edit5),
+              ),
+              title: const Text('GitHub'),
+              subtitle: const Text('github.com/tarun1sisodia/tarun1sisodia'),
+              onTap: () async {
+                const url = 'https://github.com/tarun1sisodia/tarun1sisodia';
+                if (await canLaunchUrl(Uri.parse(url))) {
+                  await launchUrl(Uri.parse(url),
+                      mode: LaunchMode.externalApplication);
+                }
+              },
+            ),
+            ListTile(
+              leading: Container(
+                padding: const EdgeInsets.all(TSizes.sm),
+                decoration: BoxDecoration(
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
-                  Iconsax.message,
-                  color: dark ? TColors.yellow : TColors.deepPurple,
+                  Iconsax.instagram,
                 ),
               ),
-              title: const Text('Google Developer'),
-              subtitle: const Text('g.dev/tarun1sisodia'),
+              title: const Text('Instagram'),
+              subtitle: const Text('instagram.com/tarun1sisodia'),
+              onTap: () async {
+                const url = 'https://instagram.com/tarun1sisodia';
+                if (await canLaunchUrl(Uri.parse(url))) {
+                  await launchUrl(Uri.parse(url),
+                      mode: LaunchMode.externalApplication);
+                }
+              },
+            ),
+            ListTile(
+              leading: Container(
+                padding: const EdgeInsets.all(TSizes.sm),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                ),
+                child: Image.asset(
+                  dark
+                      ? TImageStrings.linkedinLight
+                      : TImageStrings.linkedinDark,
+                  height: 24,
+                  width: 24,
+                ),
+              ),
+              title: const Text('LinkedIn'),
+              subtitle: const Text('linkedin.com/in/tarun1sisodia'),
+              onTap: () async {
+                const url = 'https://linkedin.com/in/tarun1sisodia';
+                if (await canLaunchUrl(Uri.parse(url))) {
+                  await launchUrl(Uri.parse(url),
+                      mode: LaunchMode.externalApplication);
+                }
+              },
+            ),
+            ListTile(
+              leading: Container(
+                padding: const EdgeInsets.all(TSizes.sm),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                ),
+                child: Image.asset(
+                  TImageStrings.twitter,
+                  height: 24,
+                  width: 24,
+                ),
+              ),
+              title: const Text('X (Twitter)'),
+              subtitle: const Text('x.com/tarun1sisodia'),
+              onTap: () async {
+                const url = 'https://x.com/tarun1sisodia';
+                if (await canLaunchUrl(Uri.parse(url))) {
+                  await launchUrl(Uri.parse(url),
+                      mode: LaunchMode.externalApplication);
+                }
+              },
             ),
             const SizedBox(height: TSizes.spaceBtwSections),
 
@@ -141,34 +222,55 @@ class AboutScreen extends StatelessWidget {
             const SizedBox(height: TSizes.spaceBtwItems),
             TextButton(
               onPressed: () {
-                // Show privacy policy
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const LegalScreen(
+                      initialSection: 'privacy_policy',
+                    ),
+                  ),
+                );
               },
               child: Text(
                 'Privacy Policy',
                 style: TextStyle(
-                  color: dark ? TColors.yellow : TColors.deepPurple,
+                  color: dark ? TColors.yellow : TColors.primary,
                 ),
               ),
             ),
             TextButton(
               onPressed: () {
-                // Show terms of service
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const LegalScreen(
+                      initialSection: 'terms_of_service',
+                    ),
+                  ),
+                );
               },
               child: Text(
                 'Terms of Service',
                 style: TextStyle(
-                  color: dark ? TColors.yellow : TColors.deepPurple,
+                  color: dark ? TColors.yellow : TColors.primary,
                 ),
               ),
             ),
             TextButton(
               onPressed: () {
-                // Show licenses
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const LegalScreen(
+                      initialSection: 'open_source_licenses',
+                    ),
+                  ),
+                );
               },
               child: Text(
                 'Open Source Licenses',
                 style: TextStyle(
-                  color: dark ? TColors.yellow : TColors.deepPurple,
+                  color: dark ? TColors.yellow : TColors.primary,
                 ),
               ),
             ),

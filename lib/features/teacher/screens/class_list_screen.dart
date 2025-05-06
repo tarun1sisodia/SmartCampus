@@ -1,11 +1,12 @@
-import 'package:attedance__/app/routes/app_routes.dart';
-import 'package:attedance__/models/class_model.dart';
-import 'package:attedance__/models/course_model.dart';
-import 'package:attedance__/models/subject_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:shimmer/shimmer.dart';
+import '../../../app/routes/app_routes.dart';
+import '../../../models/class_model.dart';
+import '../../../models/course_model.dart';
+import '../../../models/subject_model.dart';
 import '../controllers/class_controller.dart';
 import '../../../common/utils/constants/colors.dart';
 import '../../../common/utils/constants/sized.dart';
@@ -19,9 +20,9 @@ class ClassListScreen extends StatelessWidget {
 
   ClassListScreen({super.key});
 
+  // Modify your Scaffold in the build method to use a conditional FAB
   @override
   Widget build(BuildContext context) {
-    ////print('Building ClassListScreen');
     final dark = THelperFunction.isDarkMode(context);
 
     return Obx(() {
@@ -58,7 +59,6 @@ class ClassListScreen extends StatelessWidget {
             if (!classController.isSelectionMode.value) ...[
               IconButton(
                 onPressed: () {
-                  ////print('Refreshing classes');
                   classController.loadClasses();
                 },
                 icon: const Icon(Iconsax.refresh),
@@ -67,7 +67,6 @@ class ClassListScreen extends StatelessWidget {
               const SizedBox(width: TSizes.sm),
               IconButton(
                 onPressed: () {
-                  ////print('Navigating to reports');
                   Get.toNamed(AppRoutes.reports);
                 },
                 icon: const Icon(Iconsax.chart),
@@ -76,18 +75,23 @@ class ClassListScreen extends StatelessWidget {
             ],
           ],
         ),
-        floatingActionButton: classController.isSelectionMode.value
-            ? null // Hide FAB in selection mode
-            : FloatingActionButton(
-                onPressed: () {
-                  ////print('Opening create class screen');
-                  Get.to(() => CreateClassScreen());
-                },
-                backgroundColor: dark ? TColors.blue : TColors.yellow,
-                child: const Icon(Iconsax.add),
-              ),
+        // Only show FAB when not in selection mode AND not loading
+        floatingActionButton: (!classController.isSelectionMode.value &&
+                !classController.isLoading.value)
+            ? AnimatedOpacity(
+                opacity: classController.isLoading.value ? 0.0 : 1.0,
+                duration: const Duration(milliseconds: 300),
+                child: FloatingActionButton.extended(
+                  onPressed: () {
+                    Get.to(() => CreateClassScreen());
+                  },
+                  backgroundColor: dark ? TColors.blue : TColors.yellow,
+                  icon: const Icon(Iconsax.book_square),
+                  label: const Text('Create Class'),
+                ),
+              )
+            : null,
         body: _buildBody(context, dark),
-        // Add bottom action bar when in selection mode
         bottomNavigationBar: classController.isSelectionMode.value
             ? _buildSelectionActionBar(context, dark)
             : null,
@@ -95,10 +99,209 @@ class ClassListScreen extends StatelessWidget {
     });
   }
 
+  // Inside the _buildBody method, replace the existing loading UI with this enhanced version:
+
   Widget _buildBody(BuildContext context, bool dark) {
     if (classController.isLoading.value) {
-      ////print('Loading classes...');
-      return const Center(child: CircularProgressIndicator());
+      return Column(
+        children: [
+          // // AppBar shimmer
+          // Padding(
+          //   padding: const EdgeInsets.symmetric(
+          //     horizontal: TSizes.defaultSpace,
+          //     vertical: TSizes.sm,
+          //   ),
+          //   child: Shimmer.fromColors(
+          //     baseColor: dark ? TColors.darkerGrey : Colors.grey.shade300,
+          //     highlightColor: dark ? TColors.yellow : TColors.primary,
+          //     child: Row(
+          //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //       children: [
+          //         // Title shimmer
+          //         Container(
+          //           height: 24,
+          //           width: 120,
+          //           decoration: BoxDecoration(
+          //             color: Colors.white,
+          //             borderRadius: BorderRadius.circular(4),
+          //           ),
+          //         ),
+          //         // Action buttons shimmer
+          //         Row(
+          //           children: [
+          //             Container(
+          //               width: 40,
+          //               height: 40,
+          //               decoration: BoxDecoration(
+          //                 color: Colors.white,
+          //                 shape: BoxShape.circle,
+          //               ),
+          //             ),
+          //             const SizedBox(width: TSizes.sm),
+          //             Container(
+          //               width: 40,
+          //               height: 40,
+          //               decoration: BoxDecoration(
+          //                 color: Colors.white,
+          //                 shape: BoxShape.circle,
+          //               ),
+          //             ),
+          //           ],
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          // ),
+
+          // // Divider shimmer
+          // Shimmer.fromColors(
+          //   baseColor: dark ? TColors.darkerGrey : Colors.grey.shade300,
+          //   highlightColor: dark ? TColors.yellow : TColors.primary,
+          //   child: Container(
+          //     height: 1,
+          //     width: double.infinity,
+          //     color: Colors.white,
+          //   ),
+          // ),
+
+          // Class cards shimmer
+          Expanded(
+            child: ListView.builder(
+              itemCount: 6, // Number of shimmer items to display
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: TSizes.defaultSpace,
+                    vertical: TSizes.spaceBtwItems / 2,
+                  ),
+                  child: Shimmer.fromColors(
+                    baseColor: dark ? TColors.darkerGrey : Colors.grey.shade300,
+                    highlightColor: dark ? TColors.yellow : TColors.primary,
+                    child: Card(
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(TSizes.cardRadiusMd),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(TSizes.md),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                // Circle avatar shimmer
+                                Container(
+                                  width: 48,
+                                  height: 48,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                                const SizedBox(width: TSizes.spaceBtwItems),
+                                // Class title and subtitle shimmer
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        height: 16,
+                                        width: double.infinity,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(4),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Container(
+                                        height: 14,
+                                        width: 150,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(4),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                // Options button shimmer
+                                Container(
+                                  width: 40,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: TSizes.spaceBtwItems),
+                            // Divider shimmer
+                            Container(
+                              height: 1,
+                              width: double.infinity,
+                              color: Colors.white,
+                            ),
+                            const SizedBox(height: TSizes.spaceBtwItems),
+                            // Action buttons shimmer
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Container(
+                                  height: 40,
+                                  width: 80,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(
+                                        TSizes.buttonRadius),
+                                  ),
+                                ),
+                                Container(
+                                  height: 40,
+                                  width: 80,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(
+                                        TSizes.buttonRadius),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+
+          // Floating action button shimmer
+          Padding(
+            padding: const EdgeInsets.all(TSizes.defaultSpace),
+            child: Align(
+              alignment: Alignment.bottomRight,
+              child: Shimmer.fromColors(
+                baseColor: dark ? TColors.darkerGrey : Colors.grey.shade300,
+                highlightColor: dark ? TColors.yellow : TColors.primary,
+                child: Container(
+                  width: 180,
+                  height: 56,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(28),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
     }
 
     if (classController.classes.isEmpty) {
@@ -110,7 +313,7 @@ class ClassListScreen extends StatelessWidget {
             Icon(
               Iconsax.book_1,
               size: 64,
-              color: dark ? TColors.yellow : TColors.deepPurple,
+              color: dark ? TColors.yellow : TColors.primary,
             ),
             const SizedBox(height: TSizes.spaceBtwItems),
             Text(
@@ -132,8 +335,8 @@ class ClassListScreen extends StatelessWidget {
               icon: const Icon(Iconsax.add),
               label: const Text('Create Class'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: dark ? TColors.yellow : TColors.deepPurple,
-                foregroundColor: dark ? Colors.black : Colors.white,
+                backgroundColor: dark ? TColors.yellow : TColors.primary,
+                foregroundColor: dark ? TColors.dark : Colors.white,
               ),
             ),
           ],
@@ -146,7 +349,7 @@ class ClassListScreen extends StatelessWidget {
         ////print('Refreshing classes via pull-to-refresh');
         return classController.loadClasses();
       },
-      color: dark ? TColors.yellow : TColors.deepPurple,
+      color: dark ? TColors.yellow : TColors.primary,
       backgroundColor: dark ? TColors.darkerGrey : Colors.white,
       child: ListView.builder(
         physics: const AlwaysScrollableScrollPhysics(),
@@ -175,7 +378,7 @@ class ClassListScreen extends StatelessWidget {
                 // Add border when selected
                 side: isSelected
                     ? BorderSide(
-                        color: dark ? TColors.yellow : TColors.deepPurple,
+                        color: dark ? TColors.yellow : TColors.primary,
                         width: 2,
                       )
                     : BorderSide.none,
@@ -197,11 +400,11 @@ class ClassListScreen extends StatelessWidget {
                         children: [
                           CircleAvatar(
                             backgroundColor:
-                                dark ? TColors.yellow : TColors.deepPurple,
+                                dark ? TColors.yellow : TColors.primary,
                             child: Text(
                               classItem.subjectName?.substring(0, 1) ?? 'C',
                               style: TextStyle(
-                                color: dark ? Colors.black : Colors.white,
+                                color: dark ? TColors.dark : Colors.white,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -231,7 +434,7 @@ class ClassListScreen extends StatelessWidget {
                               icon: const Icon(Iconsax.more),
                               onPressed: () {
                                 ////print(
-                                    // 'Opening options for class ${classItem.id}');
+                                // 'Opening options for class ${classItem.id}');
                                 _showClassOptions(context, classItem);
                               },
                             ),
@@ -250,7 +453,7 @@ class ClassListScreen extends StatelessWidget {
                               label: 'Students',
                               onTap: () {
                                 ////print(
-                                    // 'Opening students for class ${classItem.id}');
+                                // 'Opening students for class ${classItem.id}');
                                 Get.to(() =>
                                     AddStudentScreen(classModel: classItem));
                               },
@@ -262,7 +465,7 @@ class ClassListScreen extends StatelessWidget {
                               label: 'Attendance',
                               onTap: () {
                                 ////print(
-                                    // 'Opening attendance for class ${classItem.id}');
+                                // 'Opening attendance for class ${classItem.id}');
                                 Get.to(() =>
                                     AttendanceScreen(classModel: classItem));
                               },
@@ -334,7 +537,7 @@ class ClassListScreen extends StatelessWidget {
             Icon(
               icon,
               size: 24,
-              color: dark ? TColors.yellow : TColors.deepPurple,
+              color: dark ? TColors.yellow : TColors.primary,
             ),
             const SizedBox(height: 4),
             Text(label),
@@ -390,7 +593,7 @@ class ClassListScreen extends StatelessWidget {
                   onPressed: () => Navigator.pop(context),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: dark ? Colors.grey[800] : Colors.grey[200],
-                    foregroundColor: dark ? Colors.white : Colors.black,
+                    foregroundColor: dark ? Colors.white : TColors.dark,
                   ),
                   child: const Text('Cancel'),
                 ),
@@ -588,8 +791,8 @@ class ClassListScreen extends StatelessWidget {
                 Navigator.pop(context);
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: dark ? TColors.yellow : TColors.deepPurple,
-                foregroundColor: dark ? Colors.black : Colors.white,
+                backgroundColor: dark ? TColors.yellow : TColors.primary,
+                foregroundColor: dark ? TColors.dark : Colors.white,
               ),
               child: Text('Update Class'),
             ),

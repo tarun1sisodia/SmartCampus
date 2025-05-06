@@ -41,6 +41,15 @@ class CarouselAttendanceController extends GetxController {
   void onInit() {
     super.onInit();
 
+    // Ensure the timer updates the UI when the session starts
+    ever(isTimerRunning, (_) {
+      if (isTimerRunning.value) {
+        _startTimer();
+      } else {
+        _stopTimer();
+      }
+    });
+
     // Listen to changes in the students list to update statistics
     ever(attendanceController.students, (_) => updateStatistics());
 
@@ -58,6 +67,7 @@ class CarouselAttendanceController extends GetxController {
       // Load students for the current session if a session ID is already set
       if (attendanceController.currentSessionId.value.isNotEmpty) {
         attendanceController.loadStudentsForSession();
+        _initializeSessionTimer();
       }
     });
   }
@@ -207,11 +217,15 @@ class CarouselAttendanceController extends GetxController {
       _timer!.cancel();
     }
 
-    //print('Starting timer. Start time: $sessionStartTime, End time: $sessionEndTime');
+    print('Starting timer with isTimerRunning set to true');
     isTimerRunning.value = true;
+    print('isTimerRunning value after setting: ${isTimerRunning.value}');
+
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       elapsedTime.value++;
       _updateRemainingTime();
+      print(
+          'Timer tick: ${elapsedTime.value}, isTimerRunning: ${isTimerRunning.value}');
     });
   }
 

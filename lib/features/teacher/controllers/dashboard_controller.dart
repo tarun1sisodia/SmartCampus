@@ -1,11 +1,11 @@
 import 'dart:math';
 
-import 'package:attedance__/services/course_service.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../models/class_model.dart';
 import '../../../services/class_service.dart';
 import '../../../services/attendance_service.dart';
+import '../../../services/course_service.dart';
 import '../../../services/subject_service.dart';
 import '../../../common/utils/helpers/snackbar_helper.dart';
 
@@ -91,6 +91,13 @@ class DashboardController extends GetxController {
     Future.delayed(const Duration(seconds: 5), () {
       showGreetingAnimation.value = false;
     });
+  }
+
+  bool hasError() {
+    return TSnackBar.hasError(
+      greeting.value,
+      handle: true,
+    );
   }
 
   Future<void> loadDashboardData() async {
@@ -248,7 +255,7 @@ class DashboardController extends GetxController {
               classModel.section?.toLowerCase().contains(query) ?? false;
 
           //print(
-              // 'Class ${classModel.id}: matchesSubject=$matchesSubject, matchesCourse=$matchesCourse, matchesSection=$matchesSection');
+          // 'Class ${classModel.id}: matchesSubject=$matchesSubject, matchesCourse=$matchesCourse, matchesSection=$matchesSection');
           return matchesSubject || matchesCourse || matchesSection;
         }).toList(),
       );

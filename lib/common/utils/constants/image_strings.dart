@@ -12,6 +12,11 @@ class TImageStrings {
   static const String facebook = "assets/icons/facebook.png";
   static const String apple = "assets/icons/apple-logo.png";
   static const String microsoft = "assets/icons/microsoft.png";
+  static const String github = "assets/icons/github.png";
+  static const String twitter = "assets/icons/twitter.png";
+  static const String linkedinLight = "assets/icons/linkedin_light.png";
+  static const String linkedinDark = "assets/icons/linkedin_dark.png";
+  static const String instagram = "assets/icons/instagram.png";
 
   static const String onboardingImage1 = "assets/animations/hello_robo.json";
   static const String onboardingImage2 =

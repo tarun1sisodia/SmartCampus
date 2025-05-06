@@ -1,10 +1,11 @@
-import 'package:attedance__/common/utils/constants/colors.dart';
-import 'package:attedance__/common/utils/constants/image_strings.dart';
-import 'package:attedance__/common/utils/constants/sized.dart';
-import 'package:attedance__/common/utils/helpers/helper_function.dart';
-import 'package:attedance__/features/teacher/controllers/teacher_profile_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../../../common/utils/constants/colors.dart';
+import '../../../common/utils/constants/image_strings.dart';
+import '../../../common/utils/constants/sized.dart';
+import '../../../common/utils/helpers/helper_function.dart';
+import '../controllers/teacher_profile_controller.dart';
 
 class TeacherGreeting extends StatelessWidget {
   const TeacherGreeting({super.key});
@@ -47,7 +48,7 @@ class TeacherGreeting extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(
-                color: dark ? TColors.yellow : TColors.deepPurple,
+                color: dark ? TColors.yellow : TColors.primary,
                 width: 2,
               ),
               image: const DecorationImage(
@@ -69,20 +70,18 @@ class TeacherGreeting extends StatelessWidget {
                 Text(
                   greeting,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: dark ? TColors.yellow : TColors.deepPurple,
+                        color: dark ? TColors.yellow : TColors.primary,
                       ),
                 ),
                 const SizedBox(height: TSizes.xs),
-                Obx(
-                  () {
-                    //print('Rebuilding user name text');
-                    return Text(
-                      userName,
-                      style: Theme.of(context).textTheme.headlineSmall,
-                      overflow: TextOverflow.ellipsis,
-                    );
-                  },
-                ),
+                Obx(() {
+                  //print('Rebuilding user name text');
+                  return Text(
+                    userName,
+                    style: Theme.of(context).textTheme.headlineSmall,
+                    overflow: TextOverflow.ellipsis,
+                  );
+                }),
               ],
             ),
           ),

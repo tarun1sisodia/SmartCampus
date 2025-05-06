@@ -1,5 +1,6 @@
-import 'package:attedance__/models/class_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+import '../models/class_model.dart';
 
 class ClassService {
   final supabase = Supabase.instance.client;

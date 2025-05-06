@@ -1,5 +1,5 @@
-import 'package:attedance__/features/splash/splash_screen.dart';
-import 'package:attedance__/features/teacher/controllers/calendar_controller.dart';
+import '../../features/splash/splash_screen.dart';
+import '../../features/teacher/controllers/calendar_controller.dart';
 
 import '../../app/bindings/app_bindings.dart';
 import '../../features/authentication/screens/change_password/change_password_screen.dart';
@@ -34,7 +34,7 @@ class AppRoutes {
   static const String forgotPassword = '/forgot-password';
   static const String resetConfirmation = '/reset-confirmation';
   static const String verifyEmail = '/verify-email';
-  static const String home = '/home'; // Add home route
+  static const String home = '/home'; 
   static const String attendanceReports = '/attendance-reports';
   static const String studentDetail = '/student-detail';
   // Add these new route constants
@@ -51,6 +51,8 @@ class AppRoutes {
   static const String carouselAttendance = '/CarouselAttendanceScreen';
   static const String changePassword = '/change-password';
   static const String allSessions = '/all-sessions';
+  static const String biometricVerification = '/biometric-verification';
+  static const String createClass = '/create-class';
 
   /// Get all application routes
   static List<GetPage> routes = [
@@ -74,6 +76,7 @@ class AppRoutes {
       binding: OnboardingBinding(),
       transition: Transition.fadeIn,
     ),
+
     GetPage(
       name: changePassword,
       page: () {
@@ -186,6 +189,7 @@ class AppRoutes {
       binding: HomeBinding(),
       transition: Transition.rightToLeft,
     ),
+   
     GetPage(
       name: feedback,
       page: () {

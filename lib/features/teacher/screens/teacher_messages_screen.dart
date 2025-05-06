@@ -1,9 +1,9 @@
-import 'package:attedance__/common/utils/constants/colors.dart';
-import 'package:attedance__/common/utils/constants/sized.dart';
-import 'package:attedance__/common/utils/helpers/helper_function.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import '../../../common/utils/constants/colors.dart';
+import '../../../common/utils/constants/sized.dart';
+import '../../../common/utils/helpers/helper_function.dart';
 
 class TeacherMessagesScreen extends StatelessWidget {
   const TeacherMessagesScreen({super.key});
@@ -174,27 +174,24 @@ class TeacherMessagesScreen extends StatelessWidget {
           vertical: TSizes.sm,
         ),
         decoration: BoxDecoration(
-          color:
-              isSelected
-                  ? (dark ? TColors.yellow : TColors.deepPurple)
-                  : Colors.transparent,
+          color: isSelected
+              ? (dark ? TColors.yellow : TColors.primary)
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(TSizes.buttonRadius),
           border: Border.all(
-            color:
-                isSelected
-                    ? (dark ? TColors.yellow : TColors.deepPurple)
-                    : Colors.grey,
+            color: isSelected
+                ? (dark ? TColors.yellow : TColors.primary)
+                : Colors.grey,
           ),
         ),
         child: Text(
           label,
           style: Theme.of(context).textTheme.labelLarge?.copyWith(
-            color:
-                isSelected
-                    ? (dark ? Colors.black : Colors.white)
-                    : (dark ? Colors.white : Colors.black),
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-          ),
+                color: isSelected
+                    ? (dark ? TColors.dark : Colors.white)
+                    : (dark ? Colors.white : TColors.dark),
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+              ),
         ),
       ),
     );
@@ -213,12 +210,11 @@ class TeacherMessagesScreen extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: TSizes.spaceBtwItems),
       decoration: BoxDecoration(
-        color:
-            isUnread
-                ? (dark
-                    ? TColors.darkerGrey.withOpacity(0.3)
-                    : TColors.light.withOpacity(0.5))
-                : Colors.transparent,
+        color: isUnread
+            ? (dark
+                ? TColors.darkerGrey.withOpacity(0.3)
+                : TColors.light.withOpacity(0.5))
+            : Colors.transparent,
         borderRadius: BorderRadius.circular(TSizes.borderRadiusMd),
       ),
       child: ListTile(
@@ -227,12 +223,12 @@ class TeacherMessagesScreen extends StatelessWidget {
           vertical: TSizes.sm,
         ),
         leading: CircleAvatar(
-          backgroundColor: dark ? TColors.yellow : TColors.deepPurple,
+          backgroundColor: dark ? TColors.yellow : TColors.primary,
           radius: 24,
           child: Text(
             avatarText,
             style: TextStyle(
-              color: dark ? Colors.black : Colors.white,
+              color: dark ? TColors.dark : Colors.white,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -243,8 +239,9 @@ class TeacherMessagesScreen extends StatelessWidget {
               child: Text(
                 name,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: isUnread ? FontWeight.bold : FontWeight.normal,
-                ),
+                      fontWeight:
+                          isUnread ? FontWeight.bold : FontWeight.normal,
+                    ),
               ),
             ),
             Text(
@@ -258,10 +255,11 @@ class TeacherMessagesScreen extends StatelessWidget {
         subtitle: Text(
           message,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            fontWeight: isUnread ? FontWeight.bold : FontWeight.normal,
-            color:
-                isUnread ? (dark ? Colors.white : Colors.black) : Colors.grey,
-          ),
+                fontWeight: isUnread ? FontWeight.bold : FontWeight.normal,
+                color: isUnread
+                    ? (dark ? Colors.white : TColors.dark)
+                    : Colors.grey,
+              ),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
@@ -297,12 +295,12 @@ class _MessageDetailScreen extends StatelessWidget {
         title: Row(
           children: [
             CircleAvatar(
-              backgroundColor: dark ? TColors.yellow : TColors.deepPurple,
+              backgroundColor: dark ? TColors.yellow : TColors.primary,
               radius: 18,
               child: Text(
                 avatarText,
                 style: TextStyle(
-                  color: dark ? Colors.black : Colors.white,
+                  color: dark ? TColors.dark : Colors.white,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -381,7 +379,7 @@ class _MessageDetailScreen extends StatelessWidget {
               color: Theme.of(context).scaffoldBackgroundColor,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: TColors.dark.withOpacity(0.05),
                   blurRadius: 10,
                   offset: const Offset(0, -5),
                 ),
@@ -420,7 +418,7 @@ class _MessageDetailScreen extends StatelessWidget {
                 IconButton(
                   icon: Icon(
                     Iconsax.send_1,
-                    color: dark ? TColors.yellow : TColors.deepPurple,
+                    color: dark ? TColors.yellow : TColors.primary,
                   ),
                   onPressed: () {
                     // Send message
@@ -469,9 +467,9 @@ class _MessageDetailScreen extends StatelessWidget {
                 Text(
                   time,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Colors.grey,
-                    fontSize: 10,
-                  ),
+                        color: Colors.grey,
+                        fontSize: 10,
+                      ),
                 ),
               ],
             ),
@@ -500,7 +498,7 @@ class _MessageDetailScreen extends StatelessWidget {
             ),
             padding: const EdgeInsets.all(TSizes.md),
             decoration: BoxDecoration(
-              color: dark ? TColors.yellow : TColors.deepPurple,
+              color: dark ? TColors.yellow : TColors.primary,
               borderRadius: BorderRadius.circular(TSizes.borderRadiusMd),
             ),
             child: Column(
@@ -509,8 +507,8 @@ class _MessageDetailScreen extends StatelessWidget {
                 Text(
                   message,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: dark ? Colors.black : Colors.white,
-                  ),
+                        color: dark ? TColors.dark : Colors.white,
+                      ),
                 ),
                 const SizedBox(height: TSizes.xs),
                 Row(
@@ -519,15 +517,15 @@ class _MessageDetailScreen extends StatelessWidget {
                     Text(
                       time,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: dark ? Colors.black54 : Colors.white70,
-                        fontSize: 10,
-                      ),
+                            color: dark ? TColors.dark54 : Colors.white70,
+                            fontSize: 10,
+                          ),
                     ),
                     const SizedBox(width: TSizes.xs),
                     Icon(
                       Iconsax.tick_circle,
                       size: 12,
-                      color: dark ? Colors.black54 : Colors.white70,
+                      color: dark ? TColors.dark54 : Colors.white70,
                     ),
                   ],
                 ),

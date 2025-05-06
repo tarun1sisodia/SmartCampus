@@ -1,11 +1,3 @@
-import 'package:attedance__/features/teacher/screens/student_detail_screen.dart';
-import 'package:attedance__/models/attendance_session_model.dart';
-import 'package:attedance__/models/class_model.dart';
-import 'package:attedance__/models/student_model.dart';
-import 'package:attedance__/services/attendance_service.dart';
-import 'package:attedance__/services/class_service.dart';
-import 'package:attedance__/services/student_service.dart';
-import 'package:attedance__/common/utils/helpers/snackbar_helper.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:csv/csv.dart'; // Ensure this import is present
@@ -13,6 +5,15 @@ import 'dart:io';
 import 'package:share_plus/share_plus.dart';
 import 'package:intl/intl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+import '../../../common/utils/helpers/snackbar_helper.dart';
+import '../../../models/attendance_session_model.dart';
+import '../../../models/class_model.dart';
+import '../../../models/student_model.dart';
+import '../../../services/attendance_service.dart';
+import '../../../services/class_service.dart';
+import '../../../services/student_service.dart';
+import '../screens/student_detail_screen.dart';
 
 class AttendanceReportsController extends GetxController {
   final attendanceService = AttendanceService();
@@ -86,12 +87,12 @@ class AttendanceReportsController extends GetxController {
       //printntnt('Loading attendance data for class: ${selectedClassId.value}');
       isLoading.value = true;
 
-      final classSessions =
-          await attendanceService.getAttendanceSessionsForDateRange(
-        classId: selectedClassId.value,
-        startDate: startDate.value,
-        endDate: endDate.value,
-      );
+      final classSessions = await attendanceService
+          .getAttendanceSessionsForDateRange(
+            classId: selectedClassId.value,
+            startDate: startDate.value,
+            endDate: endDate.value,
+          );
       //printntnt('Sessions fetched: ${classSessions.length}');
       sessions.assignAll(classSessions);
 
@@ -126,13 +127,13 @@ class AttendanceReportsController extends GetxController {
       //print('Overall stats - Present: ${presentCount.value}, Absent: ${absentCount.value}, Late: ${lateCount.value}, Average: ${averageAttendance.value}');
 
       for (var student in students) {
-        final studentStat =
-            await attendanceService.getAttendanceStatsForStudentInDateRange(
-          classId: selectedClassId.value,
-          studentId: student.id,
-          startDate: startDate.value,
-          endDate: endDate.value,
-        );
+        final studentStat = await attendanceService
+            .getAttendanceStatsForStudentInDateRange(
+              classId: selectedClassId.value,
+              studentId: student.id,
+              startDate: startDate.value,
+              endDate: endDate.value,
+            );
 
         studentStats[student.id] = studentStat;
         //printntnt('Stats for student ${student.name}: $studentStat');
@@ -244,10 +245,9 @@ class AttendanceReportsController extends GetxController {
 
       //printntnt('CSV file saved at: $filePath');
 
-      await Share.shareXFiles(
-        [XFile(filePath)],
-        text: 'Attendance Report for $className',
-      );
+      await Share.shareXFiles([
+        XFile(filePath),
+      ], text: 'Attendance Report for $className');
 
       TSnackBar.showSuccess(message: 'Report exported successfully');
     } catch (e) {

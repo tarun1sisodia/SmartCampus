@@ -1,7 +1,10 @@
-import 'package:attedance__/common/utils/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:iconsax/iconsax.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:table_calendar/table_calendar.dart';
+import '../../../common/utils/constants/colors.dart';
+import '../../../common/utils/helpers/helper_function.dart';
 import '../controllers/calendar_controller.dart';
 import '../../../models/attendance_session_model.dart';
 
@@ -27,7 +30,7 @@ class CalendarScreen extends StatelessWidget {
             },
           ),
           IconButton(
-            icon: const Icon(Icons.refresh),
+            icon: const Icon(Iconsax.refresh),
             onPressed: () {
               //printnt('Refresh button pressed');
               controller.refreshData();
@@ -37,9 +40,25 @@ class CalendarScreen extends StatelessWidget {
       ),
       body: Obx(() {
         //printnt('Building body with Obx');
+        // In the build method, update the loading section:
+
         if (controller.isLoading.value) {
-          //printnt('Showing loading indicator');
-          return CircularProgressIndicator();
+          final dark = THelperFunction.isDarkMode(context);
+          return Column(
+            children: [
+              _buildShimmerActiveSessionsIndicator(),
+              _buildShimmerCalendar(),
+              Expanded(
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(8.0),
+                  itemCount: 5, // Simulate 5 shimmer items
+                  itemBuilder: (context, index) {
+                    return _buildShimmerSessionCard();
+                  },
+                ),
+              ),
+            ],
+          );
         }
 
         return Column(
@@ -50,6 +69,117 @@ class CalendarScreen extends StatelessWidget {
           ],
         );
       }),
+    );
+  }
+
+  Widget _buildShimmerSessionCard() {
+    final dark = THelperFunction.isDarkMode(Get.context!);
+
+    return Shimmer.fromColors(
+      baseColor: dark ? TColors.darkerGrey : Colors.grey.shade300,
+      highlightColor: dark
+          ? TColors.yellow.withOpacity(0.5)
+          : TColors.primary.withOpacity(0.5),
+      child: Card(
+        margin: const EdgeInsets.symmetric(vertical: 4.0),
+        child: Container(
+          height: 80.0,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildShimmerActiveSessionsIndicator() {
+    final dark = THelperFunction.isDarkMode(Get.context!);
+
+    return Shimmer.fromColors(
+      baseColor: dark ? TColors.darkerGrey : Colors.grey.shade300,
+      highlightColor: dark
+          ? TColors.yellow.withOpacity(0.5)
+          : TColors.primary.withOpacity(0.5),
+      child: Container(
+        margin: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 12,
+              height: 12,
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.5),
+                shape: BoxShape.circle,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Container(
+              width: 150,
+              height: 12,
+              color: Colors.white.withOpacity(0.5),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildShimmerCalendar() {
+    final dark = THelperFunction.isDarkMode(Get.context!);
+
+    return Shimmer.fromColors(
+      baseColor: dark ? TColors.darkerGrey : Colors.grey.shade300,
+      highlightColor: dark
+          ? TColors.yellow.withOpacity(0.5)
+          : TColors.primary.withOpacity(0.5),
+      child: Container(
+        margin: const EdgeInsets.all(8.0),
+        height: 300.0,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        // Add some internal structure to make it look more like a calendar
+        child: Column(
+          children: [
+            // Calendar header
+            Container(
+              height: 50,
+              margin: const EdgeInsets.all(8.0),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.5),
+                borderRadius: BorderRadius.circular(4.0),
+              ),
+            ),
+            // Calendar grid
+            Expanded(
+              child: GridView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 7,
+                  childAspectRatio: 1.0,
+                ),
+                itemCount: 35, // 5 weeks of 7 days
+                itemBuilder: (context, index) {
+                  return Container(
+                    margin: const EdgeInsets.all(4.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.5),
+                      borderRadius: BorderRadius.circular(4.0),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -67,7 +197,7 @@ class CalendarScreen extends StatelessWidget {
         margin: const EdgeInsets.all(8.0),
         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
         decoration: BoxDecoration(
-          color: AppColors.primary.withOpacity(0.1),
+          color: TColors.primary.withOpacity(0.1),
           borderRadius: BorderRadius.circular(8.0),
         ),
         child: Row(
@@ -85,7 +215,7 @@ class CalendarScreen extends StatelessWidget {
               '$activeCount active ${activeCount == 1 ? 'session' : 'sessions'} right now',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: AppColors.primary,
+                color: TColors.primary,
               ),
             ),
           ],
@@ -126,32 +256,32 @@ class CalendarScreen extends StatelessWidget {
         },
         calendarStyle: CalendarStyle(
           markerDecoration: BoxDecoration(
-            color: AppColors.primary,
+            color: TColors.primary,
             shape: BoxShape.circle,
           ),
           todayDecoration: BoxDecoration(
-            color: AppColors.primary.withOpacity(0.5),
+            color: TColors.primary.withOpacity(0.5),
             shape: BoxShape.circle,
           ),
           selectedDecoration: BoxDecoration(
-            color: AppColors.primary,
+            color: TColors.primary,
             shape: BoxShape.circle,
           ),
         ),
         // Add this to customize the format button text
         availableCalendarFormats: const {
-          CalendarFormat.month: 'week',
-          CalendarFormat.twoWeeks: 'Month',
-          CalendarFormat.week: '2 Week',
+          CalendarFormat.month: 'Month',
+          CalendarFormat.twoWeeks: '2 Weeks',
+          CalendarFormat.week: 'Week',
         },
         // Optional: You can also customize the header style
         headerStyle: HeaderStyle(
           formatButtonTextStyle: TextStyle(
-            color: AppColors.primary,
+            color: TColors.primary,
             fontSize: 14.0,
           ),
           formatButtonDecoration: BoxDecoration(
-            border: Border.all(color: AppColors.primary),
+            border: Border.all(color: TColors.primary),
             borderRadius: BorderRadius.circular(12.0),
           ),
         ),
@@ -208,7 +338,7 @@ class CalendarScreen extends StatelessWidget {
         side: isActive
             ? BorderSide(color: Colors.green, width: 2.0)
             : isMySession
-                ? BorderSide(color: AppColors.primary, width: 1.0)
+                ? BorderSide(color: TColors.primary, width: 1.0)
                 : BorderSide.none,
       ),
       child: ListTile(
@@ -230,7 +360,7 @@ class CalendarScreen extends StatelessWidget {
                 session.subjectName ?? 'Unknown Subject',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: isMySession ? AppColors.primary : Colors.grey[700],
+                  color: isMySession ? TColors.primary : Colors.grey[700],
                 ),
               ),
             ),
@@ -286,7 +416,7 @@ class CalendarScreen extends StatelessWidget {
               ),
               decoration: BoxDecoration(
                 color: isMySession
-                    ? AppColors.primary.withOpacity(0.1)
+                    ? TColors.primary.withOpacity(0.1)
                     : Colors.grey.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(4.0),
               ),
@@ -295,7 +425,7 @@ class CalendarScreen extends StatelessWidget {
                     ? 'MY CLASS'
                     : 'Teacher: ${controller.getTeacherNameForSession(session)}',
                 style: TextStyle(
-                  color: isMySession ? AppColors.primary : Colors.grey[700],
+                  color: isMySession ? TColors.primary : Colors.grey[700],
                   fontWeight: FontWeight.bold,
                   fontSize: 12.0,
                 ),
@@ -307,19 +437,21 @@ class CalendarScreen extends StatelessWidget {
         onTap: () {
           //printnt('Session card tapped, navigating to details. Session ID: ${session.id}');
           // Use Get.toNamed with proper arguments
-          Get.toNamed(
-            '/sessiondetails', // Make sure this matches exactly with the route name in app_routes.dart
-            arguments: {
-              'sessionId': session.id,
-              'classDetails': {
-                'subjectName': session.subjectName ?? 'Unknown Subject',
-                'courseName': session.courseName ?? 'Unknown Course',
-                'semester': session.semester ?? 0,
-                'section': session.section ?? 'Unknown',
-              },
-            },
-          );
-                },
+          // Get.toNamed(
+          //   '/sessiondetails', // Make sure this matches exactly with the route name in app_routes.dart
+          //   arguments: {
+          //     'sessionId': session.id,
+          //     'classDetails': {
+          //       'subjectName': session.subjectName ?? 'Unknown Subject',
+          //       'courseName': session.courseName ?? 'Unknown Course',
+          //       'semester': session.semester ?? 0,
+          //       'section': session.section ?? 'Unknown',
+          //     },
+          //   },
+          // );
+          Get.snackbar('Still in Development', 'Contact your Developer',
+              snackPosition: SnackPosition.BOTTOM);
+        },
       ),
     );
   }
@@ -493,7 +625,7 @@ class CalendarScreen extends StatelessWidget {
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.grey[300],
-                    foregroundColor: Colors.black,
+                    foregroundColor: TColors.dark,
                   ),
                   child: Text('Reset Filters'),
                 ),

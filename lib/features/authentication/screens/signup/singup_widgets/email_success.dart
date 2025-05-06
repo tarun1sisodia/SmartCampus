@@ -1,11 +1,12 @@
-import 'package:attedance__/features/authentication/screens/login/login.dart';
-import 'package:attedance__/common/utils/constants/image_strings.dart';
-import 'package:attedance__/common/utils/constants/sized.dart';
-import 'package:attedance__/common/utils/constants/text_strings.dart';
-import 'package:attedance__/common/utils/helpers/helper_function.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../../../../../common/utils/constants/image_strings.dart';
+import '../../../../../common/utils/constants/sized.dart';
+import '../../../../../common/utils/constants/text_strings.dart';
+import '../../../../../common/utils/helpers/helper_function.dart';
+import '../../login/login.dart';
 
 class EmailSuccess extends StatelessWidget {
   const EmailSuccess({super.key});

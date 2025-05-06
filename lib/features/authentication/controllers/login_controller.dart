@@ -1,7 +1,8 @@
-import 'package:attedance__/services/storage_service.dart';
-import 'package:attedance__/common/utils/helpers/snackbar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../../../common/utils/helpers/snackbar_helper.dart';
+import '../../../services/storage_service.dart';
 
 class LoginController extends GetxController {
   static LoginController get instance => Get.find();

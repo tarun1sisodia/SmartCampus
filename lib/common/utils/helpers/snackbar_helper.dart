@@ -14,8 +14,7 @@ enum MessageSource {
 
 /// A utility class for showing consistent, styled snackbars throughout the app
 class TSnackBar {
-  TSnackBar._()
-  {
+  TSnackBar._() {
     //printnt('TSnackBar initialized');
   } // Private constructor to prevent instantiation
 
@@ -50,7 +49,7 @@ class TSnackBar {
         break;
       case MessageType.info:
         icon = Iconsax.information;
-        backgroundColor = TColors.deepPurple;
+        backgroundColor = TColors.primary;
         break;
     }
 
@@ -84,7 +83,7 @@ class TSnackBar {
       forwardAnimationCurve: Curves.easeOutCirc,
       reverseAnimationCurve: Curves.easeInCirc,
       overlayBlur: 0,
-      overlayColor: Colors.black.withAlpha(20),
+      overlayColor: TColors.dark.withAlpha(20),
     );
   }
 
@@ -115,6 +114,14 @@ class TSnackBar {
       type: MessageType.error,
       source: source,
     );
+  }
+
+  /// Convenience method to check if there is an error message
+  static bool hasError(String message, {bool handle = false}) {
+    bool containsError = message.toLowerCase().contains('error') ||
+        message.toLowerCase().contains('failed') ||
+        message.toLowerCase().contains('exception');
+    return handle ? containsError : false;
   }
 
   /// Convenience method for showing warning messages

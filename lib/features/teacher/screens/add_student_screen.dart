@@ -1,14 +1,14 @@
-import 'package:attedance__/common/widgets/student_avatar.dart';
-import 'package:attedance__/features/teacher/controllers/student_controller.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shimmer/shimmer.dart';
+import '../../../common/widgets/student_avatar.dart';
 import '../../../models/class_model.dart';
 import '../../../common/utils/constants/colors.dart';
 import '../../../common/utils/constants/sized.dart';
 import '../../../common/utils/helpers/helper_function.dart';
+import '../controllers/student_controller.dart';
 
 class AddStudentScreen extends StatelessWidget {
   final ClassModel classModel;
@@ -62,7 +62,6 @@ class AddStudentScreen extends StatelessWidget {
                   IconButton(
                     icon: const Icon(Iconsax.import),
                     onPressed: () {
-                      //print('Import students button pressed');
                       _showImportStudentsDialog(context);
                     },
                   ),
@@ -81,67 +80,122 @@ class AddStudentScreen extends StatelessWidget {
             )
           : FloatingActionButton(
               onPressed: () {
-                //print('Add student FAB pressed');
                 _showAddStudentDialog(context);
               },
               backgroundColor: dark ? TColors.blue : TColors.yellow,
-              child: const Icon(Iconsax.add),
+              child: const Icon(Iconsax.user_add),
             )),
       body: Obx(() {
-        //print('Building Obx body');
         if (studentController.isLoading.value) {
-          //print('Loading state: true');
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        if (studentController.students.isEmpty) {
-          //print('No students found');
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Iconsax.people,
-                  size: 64,
-                  color: dark ? TColors.yellow : TColors.deepPurple,
-                ),
-                const SizedBox(height: TSizes.spaceBtwItems),
-                Text(
-                  'No Students Yet',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                const SizedBox(height: TSizes.spaceBtwItems / 2),
-                Text(
-                  'Add students to this class',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: TSizes.spaceBtwItems),
-                ElevatedButton.icon(
-                  onPressed: () {
-                    //print('Add student button pressed');
-                    _showAddStudentDialog(context);
-                  },
-                  icon: const Icon(Iconsax.add),
-                  label: const Text('Add Student'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: dark ? TColors.yellow : TColors.deepPurple,
-                    foregroundColor: dark ? Colors.black : Colors.white,
+          return SingleChildScrollView(
+            child: ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              padding: const EdgeInsets.all(TSizes.defaultSpace),
+              itemCount: 9,
+              itemBuilder: (context, index) {
+                return Shimmer.fromColors(
+                   baseColor: dark ? TColors.darkerGrey : Colors.grey.shade300,
+                  highlightColor: dark ? TColors.yellow : TColors.primary,
+                  child: Card(
+                    margin: const EdgeInsets.only(bottom: TSizes.spaceBtwItems),
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
+                    ),
+                    child: ListTile(
+                      contentPadding: const EdgeInsets.all(TSizes.md),
+                      leading: CircleAvatar(
+                        backgroundColor: Colors.grey,
+                        radius: 24,
+                      ),
+                      title: Container(
+                        height: 16,
+                        width: 100,
+                        color: Colors.grey,
+                      ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: TSizes.spaceBtwItems / 2),
+                          Container(
+                            height: 14,
+                            width: 150,
+                            color: Colors.grey,
+                          ),
+                        ],
+                      ),
+                      trailing: Container(
+                        height: 24,
+                        width: 24,
+                        color: Colors.grey,
+                      ),
+                    ),
                   ),
-                ),
-              ],
+                );
+              },
             ),
           );
         }
 
-        //print(
-            // 'Building student list with ${studentController.students.length} students');
+        if (studentController.students.isEmpty) {
+          return RefreshIndicator(
+            onRefresh: () async {
+              //print('Refreshing student data');
+              await studentController.loadStudentsForClass(classModel.id);
+            },
+            color: dark ? TColors.yellow : TColors.primary,
+            backgroundColor: dark ? TColors.darkerGrey : Colors.white,
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Iconsax.user_add,
+                    size: 72,
+                    color: dark ? TColors.yellow : TColors.primary,
+                  ),
+                  const SizedBox(height: TSizes.spaceBtwItems),
+                  Text(
+                    'Start Adding Students!',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          color: dark ? TColors.yellow : TColors.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                  const SizedBox(height: TSizes.spaceBtwItems / 2),
+                  Text(
+                    'Tap the button below to add students',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: dark ? TColors.light : TColors.dark,
+                        ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: TSizes.spaceBtwItems),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      _showAddStudentDialog(context);
+                    },
+                    icon: const Icon(Iconsax.add_circle),
+                    label: const Text('Manually Add Students'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: dark ? TColors.yellow : TColors.primary,
+                      foregroundColor: dark ? TColors.dark : TColors.light,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: TSizes.lg, vertical: TSizes.sm),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+
         return ListView.builder(
           padding: const EdgeInsets.all(TSizes.defaultSpace),
           itemCount: studentController.students.length,
           itemBuilder: (context, index) {
             final student = studentController.students[index];
-            //print('Building list item for student: ${student.name}');
             return Obx(() {
               final isSelected =
                   studentController.selectedStudentIds.contains(student.id);
@@ -150,13 +204,12 @@ class AddStudentScreen extends StatelessWidget {
                 elevation: 2,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
-                  side:
-                      studentController.selectedStudentIds.contains(student.id)
-                          ? BorderSide(
-                              color: dark ? TColors.yellow : TColors.deepPurple,
-                              width: 2.5,
-                            )
-                          : BorderSide.none,
+                  side: isSelected
+                      ? BorderSide(
+                          color: dark ? TColors.yellow : TColors.primary,
+                          width: 2.5,
+                        )
+                      : BorderSide.none,
                 ),
                 color: isSelected
                     ? (dark
@@ -177,30 +230,25 @@ class AddStudentScreen extends StatelessWidget {
                   },
                   child: ListTile(
                     contentPadding: const EdgeInsets.all(TSizes.md),
-                    // Inside your ListTile, update the leading widget:
-
                     leading: studentController.isSelectionMode.value
                         ? Container(
                             width: 24,
                             height: 24,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: studentController.selectedStudentIds
-                                      .contains(student.id)
-                                  ? (dark ? TColors.yellow : TColors.deepPurple)
+                              color: isSelected
+                                  ? (dark ? TColors.yellow : TColors.primary)
                                   : Colors.transparent,
                               border: Border.all(
-                                color:
-                                    dark ? TColors.yellow : TColors.deepPurple,
+                                color: dark ? TColors.yellow : TColors.primary,
                                 width: 2,
                               ),
                             ),
-                            child: studentController.selectedStudentIds
-                                    .contains(student.id)
+                            child: isSelected
                                 ? Icon(
                                     Icons.check,
                                     size: 16,
-                                    color: dark ? Colors.black : Colors.white,
+                                    color: dark ? TColors.dark : Colors.white,
                                   )
                                 : null,
                           )
@@ -210,7 +258,6 @@ class AddStudentScreen extends StatelessWidget {
                             size: 40,
                             isDarkMode: dark,
                           ),
-
                     title: Text(
                       student.name,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -233,8 +280,6 @@ class AddStudentScreen extends StatelessWidget {
                             icon: const Icon(Iconsax.trash),
                             color: Colors.red,
                             onPressed: () {
-                              //print(
-                                  // 'Delete button pressed for student: ${student.name}');
                               _showDeleteConfirmation(
                                   context, student.id, student.name);
                             },
@@ -276,7 +321,7 @@ class AddStudentScreen extends StatelessWidget {
                         color: dark ? TColors.darkerGrey : Colors.grey[200],
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: dark ? TColors.yellow : TColors.deepPurple,
+                          color: dark ? TColors.yellow : TColors.primary,
                           width: 2,
                         ),
                       ),
@@ -289,8 +334,7 @@ class AddStudentScreen extends StatelessWidget {
                             : Icon(
                                 Iconsax.camera,
                                 size: 40,
-                                color:
-                                    dark ? TColors.yellow : TColors.deepPurple,
+                                color: dark ? TColors.yellow : TColors.primary,
                               ),
                       ),
                     ),
@@ -327,12 +371,21 @@ class AddStudentScreen extends StatelessWidget {
           ),
         ),
         actions: [
-          TextButton(
-              onPressed: () {
-                //print('Add student dialog cancelled');
-                Get.back();
-              },
-              child: const Text('Cancel')),
+          ElevatedButton(
+            onPressed: () {
+              //print('Add student dialog cancelled');
+              Get.back();
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+              // side: BorderSide(
+              //   color: Colors.grey,
+              //   width: 1,
+              // ),
+            ),
+            child: const Text('Cancel'),
+          ),
           ElevatedButton(
             onPressed: () {
               //print('Attempting to add student');
@@ -354,8 +407,8 @@ class AddStudentScreen extends StatelessWidget {
               Get.back();
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: dark ? TColors.yellow : TColors.deepPurple,
-              foregroundColor: dark ? Colors.black : Colors.white,
+              backgroundColor: dark ? TColors.yellow : TColors.primary,
+              foregroundColor: dark ? TColors.dark : Colors.white,
             ),
             child: const Text('Add'),
           ),
@@ -388,7 +441,7 @@ class AddStudentScreen extends StatelessWidget {
               ListTile(
                 leading: Icon(
                   Iconsax.camera,
-                  color: dark ? TColors.yellow : TColors.deepPurple,
+                  color: dark ? TColors.yellow : TColors.primary,
                 ),
                 title: const Text('Take a Photo'),
                 onTap: () {
@@ -399,7 +452,7 @@ class AddStudentScreen extends StatelessWidget {
               ListTile(
                 leading: Icon(
                   Iconsax.gallery,
-                  color: dark ? TColors.yellow : TColors.deepPurple,
+                  color: dark ? TColors.yellow : TColors.primary,
                 ),
                 title: const Text('Choose from Gallery'),
                 onTap: () {
@@ -426,7 +479,7 @@ class AddStudentScreen extends StatelessWidget {
                   onPressed: () => Navigator.pop(context),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: dark ? Colors.grey[800] : Colors.grey[200],
-                    foregroundColor: dark ? Colors.white : Colors.black,
+                    foregroundColor: dark ? Colors.white : TColors.dark,
                   ),
                   child: const Text('Cancel'),
                 ),
@@ -438,112 +491,96 @@ class AddStudentScreen extends StatelessWidget {
     );
   }
 
-  // Update the student list item to show student images
-  Widget _buildStudentListItem(
-      BuildContext context, bool dark, dynamic student) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: TSizes.spaceBtwItems),
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
-      ),
-      child: ListTile(
-        contentPadding: const EdgeInsets.all(TSizes.md),
-        leading: student.imageUrl != null && student.imageUrl.isNotEmpty
-            ? ClipOval(
-                child: CachedNetworkImage(
-                  imageUrl: student.imageUrl,
-                  width: 50,
-                  height: 50,
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) => CircleAvatar(
-                    backgroundColor: dark ? TColors.yellow : TColors.deepPurple,
-                    child: const CircularProgressIndicator(color: Colors.white),
-                  ),
-                  errorWidget: (context, url, error) => CircleAvatar(
-                    backgroundColor: dark ? TColors.yellow : TColors.deepPurple,
-                    child: Text(
-                      student.name.substring(0, 1),
-                      style: TextStyle(
-                        color: dark ? Colors.black : Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              )
-            : CircleAvatar(
-                backgroundColor: dark ? TColors.yellow : TColors.deepPurple,
-                child: Text(
-                  student.name.substring(0, 1),
-                  style: TextStyle(
-                    color: dark ? Colors.black : Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-        title: Text(
-          student.name,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-        ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: TSizes.spaceBtwItems / 2),
-            Text(
-              'Roll Number: ${student.rollNumber}',
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-          ],
-        ),
-        trailing: IconButton(
-          icon: const Icon(Iconsax.trash),
-          color: Colors.red,
-          onPressed: () {
-            // Existing delete functionality
-          },
-        ),
-      ),
-    );
-  }
-
   void _showImportStudentsDialog(BuildContext context) {
-    //print('Opening import students dialog');
     final dark = THelperFunction.isDarkMode(context);
-
-    // Add a search controller for filtering students
     final searchController = TextEditingController();
+    final selectedSemester = RxInt(0);
 
-    // Add a semester filter
-    final selectedSemester = RxInt(0); // 0 means all semesters
-
-    //print('Fetching available students');
     studentController.fetchAvailableStudents();
 
     Get.dialog(
       AlertDialog(
-        title: const Text('Import Students'),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(TSizes.cardRadiusLg),
+        ),
         content: SizedBox(
           width: double.maxFinite,
-          height: 500, // Increased height for additional filters
+          height: 500,
           child: Obx(() {
-            //print('Building import dialog content');
             if (studentController.isFetchingAvailableStudents.value) {
-              //print('Fetching available students: Loading');
-              return const Center(child: CircularProgressIndicator());
+              return ListView.builder(
+                itemCount: 6,
+                itemBuilder: (context, index) {
+                  return Shimmer.fromColors(
+                    baseColor: dark ? TColors.darkerGrey : Colors.grey.shade300,
+                  highlightColor: dark ? TColors.yellow : TColors.primary,
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        backgroundColor: Colors.grey,
+                        radius: 24,
+                      ),
+                      title: Container(
+                        height: 16,
+                        width: 100,
+                        color: Colors.grey,
+                      ),
+                      subtitle: Container(
+                        height: 14,
+                        width: 150,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  );
+                },
+              );
             }
 
             if (studentController.availableStudents.isEmpty) {
-              //print('No available students found');
-              return const Text('No students available for import.');
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Iconsax.people,
+                        size: 80,
+                        color: dark ? TColors.yellow : TColors.primary),
+                    const SizedBox(height: TSizes.spaceBtwItems),
+                    Text(
+                      'No Students Available',
+                      style:
+                          Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: dark ? TColors.yellow : TColors.primary,
+                              ),
+                    ),
+                    const SizedBox(height: TSizes.sm),
+                    Text(
+                      'There are no students available to import at the moment.',
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: Colors.grey,
+                          ),
+                    ),
+                    const SizedBox(height: TSizes.spaceBtwItems),
+                    Container(
+                      padding: const EdgeInsets.all(TSizes.sm),
+                      decoration: BoxDecoration(
+                        color: dark ? TColors.darkBackground : TColors.light,
+                        borderRadius:
+                            BorderRadius.circular(TSizes.cardRadiusMd),
+                        border: Border.all(color: Colors.grey.withOpacity(0.2)),
+                      ),
+                      child: Text(
+                        'Try adding new students first using supabase',
+                        style: Theme.of(context).textTheme.labelLarge,
+                      ),
+                    ),
+                  ],
+                ),
+              );
             }
 
-            // Filter students based on search text and semester
             final filteredStudents =
                 studentController.availableStudents.where((student) {
-              // Filter by search text (name or roll number)
               final searchMatch = searchController.text.isEmpty ||
                   student.name
                       .toLowerCase()
@@ -551,33 +588,26 @@ class AddStudentScreen extends StatelessWidget {
                   student.rollNumber
                       .toLowerCase()
                       .contains(searchController.text.toLowerCase());
-
-              // Filter by semester (if selected)
               final semesterMatch = selectedSemester.value == 0 ||
                   _getSemesterFromRollNumber(student.rollNumber) ==
                       selectedSemester.value;
-
               return searchMatch && semesterMatch;
             }).toList();
 
-            //print(
-                // 'Building available students list with ${filteredStudents.length} filtered students');
             return Column(
-              mainAxisSize: MainAxisSize.min,
               children: [
-                // Search field
                 TextField(
                   controller: searchController,
                   decoration: InputDecoration(
                     labelText: 'Search by name or roll number',
-                    prefixIcon: const Icon(Iconsax.search_normal),
+                    prefixIcon: Icon(Iconsax.search_normal,
+                        color: dark ? TColors.yellow : TColors.primary),
                     border: OutlineInputBorder(
                       borderRadius:
                           BorderRadius.circular(TSizes.inputFieldRadius),
                     ),
                   ),
-                  onChanged: (_) =>
-                      Get.forceAppUpdate(), // Force UI update on search
+                  onChanged: (_) => Get.forceAppUpdate(),
                 ),
                 const SizedBox(height: TSizes.spaceBtwItems),
 
@@ -610,7 +640,7 @@ class AddStudentScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: TSizes.spaceBtwItems),
+                const SizedBox(height: TSizes.borderRadiusSm),
 
                 // Sorting options
                 Row(
@@ -675,69 +705,90 @@ class AddStudentScreen extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: TSizes.spaceBtwItems),
-
-                // Student list
                 Expanded(
                   child: filteredStudents.isEmpty
-                      ? const Center(child: Text('No matching students found'))
+                      ? Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.search_off_rounded,
+                                size: 48,
+                                color: Colors.grey[400],
+                              ),
+                              const SizedBox(height: 16),
+                              Text(
+                                'No matching students found',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.grey[600],
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
                       : ListView.builder(
                           itemCount: filteredStudents.length,
                           itemBuilder: (context, index) {
                             final student = filteredStudents[index];
-                            //print(
-                                // 'Building checkbox for student: ${student.name}');
-
-                            // Get semester from roll number for display
                             final semester =
                                 _getSemesterFromRollNumber(student.rollNumber);
                             final semesterText =
                                 semester > 0 ? 'Semester $semester' : '';
 
-                            return Obx(() => CheckboxListTile(
-                                  value: studentController.selectedStudents
-                                      .any((s) => s.id == student.id),
-                                  onChanged: (isSelected) {
-                                    //print(
-                                        // 'Student selection changed: ${student.name}, selected: $isSelected');
-                                    if (isSelected == true) {
-                                      studentController.selectStudent(student);
-                                    } else {
-                                      studentController
-                                          .deselectStudent(student);
-                                    }
-                                  },
-                                  title: Text(student.name),
-                                  subtitle: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                          'Roll Number: ${student.rollNumber}'),
-                                      if (semesterText.isNotEmpty)
-                                        Text(
-                                          semesterText,
-                                          style: TextStyle(
-                                            color: dark
-                                                ? TColors.yellow
-                                                : TColors.deepPurple,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                    ],
+                            return Obx(() => Card(
+                                  margin: const EdgeInsets.only(
+                                      bottom: TSizes.spaceBtwItems),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        TSizes.cardRadiusMd),
                                   ),
-                                  secondary: CircleAvatar(
-                                    backgroundColor: dark
-                                        ? TColors.yellow
-                                        : TColors.deepPurple,
-                                    child: Text(
-                                      student.name.substring(0, 1),
-                                      style: TextStyle(
-                                        color:
-                                            dark ? Colors.black : Colors.white,
+                                  child: CheckboxListTile(
+                                    value: studentController.selectedStudents
+                                        .any((s) => s.id == student.id),
+                                    onChanged: (isSelected) {
+                                      if (isSelected == true) {
+                                        studentController
+                                            .selectStudent(student);
+                                      } else {
+                                        studentController
+                                            .deselectStudent(student);
+                                      }
+                                    },
+                                    title: Text(student.name),
+                                    subtitle: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                            'Roll Number: ${student.rollNumber}'),
+                                        if (semesterText.isNotEmpty)
+                                          Text(
+                                            semesterText,
+                                            style: TextStyle(
+                                              color: dark
+                                                  ? TColors.yellow
+                                                  : TColors.primary,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                      ],
+                                    ),
+                                    secondary: CircleAvatar(
+                                      backgroundColor: dark
+                                          ? TColors.yellow
+                                          : TColors.primary,
+                                      child: Text(
+                                        student.name.substring(0, 1),
+                                        style: TextStyle(
+                                          color: dark
+                                              ? TColors.dark
+                                              : Colors.white,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                  dense: true,
                                 ));
                           },
                         ),
@@ -747,24 +798,31 @@ class AddStudentScreen extends StatelessWidget {
           }),
         ),
         actions: [
-          TextButton(
-              onPressed: () {
-                // //print('Import dialog cancelled');
-                Get.back();
-              },
-              child: const Text('Cancel')),
+          ElevatedButton(
+            onPressed: () {
+              //print('Add student dialog cancelled');
+              Get.back();
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+              // side: BorderSide(
+              //   color: Colors.grey,
+              //   width: 1,
+              // ),
+            ),
+            child: const Text('Cancel'),
+          ),
           Obx(() => ElevatedButton(
                 onPressed: studentController.selectedStudents.isEmpty
                     ? null
                     : () {
-                        //print(
-                            // 'Importing ${studentController.selectedStudents.length} students');
                         studentController.importSelectedStudents();
                         Get.back();
                       },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: dark ? TColors.yellow : TColors.deepPurple,
-                  foregroundColor: dark ? Colors.black : Colors.white,
+                  backgroundColor: dark ? TColors.yellow : TColors.primary,
+                  foregroundColor: dark ? TColors.dark : Colors.white,
                 ),
                 child: Text(
                     'Import (${studentController.selectedStudents.length})'),
@@ -822,11 +880,19 @@ class AddStudentScreen extends StatelessWidget {
           'Are you sure you want to remove $studentName from the class?',
         ),
         actions: [
-          TextButton(
+          ElevatedButton(
             onPressed: () {
-              //print('Delete dialog cancelled');
+              //print('Add student dialog cancelled');
               Get.back();
             },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+              // side: BorderSide(
+              //   color: Colors.grey,
+              //   width: 1,
+              // ),
+            ),
             child: const Text('Cancel'),
           ),
           ElevatedButton(
@@ -859,11 +925,19 @@ class AddStudentScreen extends StatelessWidget {
           'Are you sure you want to remove $count selected ${count == 1 ? 'student' : 'students'} from the class?',
         ),
         actions: [
-          TextButton(
+          ElevatedButton(
             onPressed: () {
-              //print('Delete dialog cancelled');
+              //print('Add student dialog cancelled');
               Get.back();
             },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+              // side: BorderSide(
+              //   color: Colors.grey,
+              //   width: 1,
+              // ),
+            ),
             child: const Text('Cancel'),
           ),
           ElevatedButton(

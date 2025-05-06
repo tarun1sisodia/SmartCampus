@@ -1,7 +1,8 @@
-import 'package:attedance__/features/authentication/screens/signup/singup_widgets/signup_form.dart';
 import 'package:flutter/material.dart';
-import 'package:attedance__/common/utils/constants/sized.dart';
-import 'package:attedance__/common/utils/constants/text_strings.dart';
+
+import '../../../../common/utils/constants/sized.dart';
+import '../../../../common/utils/constants/text_strings.dart';
+import 'singup_widgets/signup_form.dart';
 
 class Signup extends StatelessWidget {
   const Signup({super.key});

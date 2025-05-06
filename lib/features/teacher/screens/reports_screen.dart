@@ -162,7 +162,7 @@ class ReportsScreen extends StatelessWidget {
               ),
               Icon(
                 Iconsax.arrow_right_3,
-                color: dark ? TColors.yellow : TColors.deepPurple,
+                color: dark ? TColors.yellow : TColors.primary,
               ),
             ],
           ),
@@ -238,7 +238,7 @@ class ReportsScreen extends StatelessWidget {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: dark ? Colors.grey[800] : Colors.grey[200],
-                  foregroundColor: dark ? Colors.white : Colors.black,
+                  foregroundColor: dark ? Colors.white : TColors.dark,
                 ),
                 child: const Text('Cancel'),
               ),
@@ -316,7 +316,7 @@ class ReportsScreen extends StatelessWidget {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: dark ? Colors.grey[800] : Colors.grey[200],
-                  foregroundColor: dark ? Colors.white : Colors.black,
+                  foregroundColor: dark ? Colors.white : TColors.dark,
                 ),
                 child: const Text('Cancel'),
               ),

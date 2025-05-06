@@ -1,12 +1,15 @@
-import 'package:attedance__/app/routes/app_routes.dart';
-import 'package:attedance__/common/utils/constants/colors.dart';
-import 'package:attedance__/common/utils/constants/sized.dart';
-import 'package:attedance__/common/utils/helpers/helper_function.dart';
-import 'package:attedance__/features/teacher/controllers/teacher_profile_controller.dart';
 import 'package:flutter/material.dart';
+
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+
+import '../../../app/routes/app_routes.dart';
+import '../../../common/utils/constants/image_strings.dart';
+import '../controllers/teacher_profile_controller.dart';
+import '../../../common/utils/constants/colors.dart';
+import '../../../common/utils/constants/sized.dart';
+import '../../../common/utils/helpers/helper_function.dart';
 
 class TeacherProfileScreen extends StatelessWidget {
   const TeacherProfileScreen({super.key});
@@ -19,7 +22,7 @@ class TeacherProfileScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Teacher Profile',
+          'My Profile',
           style: Theme.of(context).textTheme.headlineSmall,
         ),
         actions: [
@@ -135,9 +138,11 @@ class TeacherProfileScreen extends StatelessWidget {
                             Get.defaultDialog(
                               title: 'Sign Out',
                               middleText: 'Are you sure you want to sign out?',
-                              textConfirm: 'Yes',
-                              textCancel: 'No',
+                              textConfirm: 'Sign Out',
+                              textCancel: 'Cancel',
                               confirmTextColor: Colors.white,
+                              buttonColor: Colors.red,
+                              cancelTextColor: Colors.grey,
                               onConfirm: () {
                                 Get.back();
                                 controller.logout();
@@ -147,8 +152,13 @@ class TeacherProfileScreen extends StatelessWidget {
                     icon: const Icon(Iconsax.logout),
                     label: const Text('Sign Out'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
+                      backgroundColor: Colors.red.shade600,
                       foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      elevation: 4,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
                   ),
                 ),
@@ -160,11 +170,11 @@ class TeacherProfileScreen extends StatelessWidget {
                   height: 55,
                   child: OutlinedButton.icon(
                     onPressed: () => Get.offAllNamed(AppRoutes.login),
-                    icon: const Icon(Iconsax.login),
-                    label: const Text('Return to Login Page'),
+                    icon: const Icon(Iconsax.user_add4),
+                    label: const Text('Add Another Account'),
                     style: OutlinedButton.styleFrom(
                       side: BorderSide(
-                        color: dark ? TColors.yellow : TColors.deepPurple,
+                        color: dark ? TColors.yellow : TColors.primary,
                       ),
                     ),
                   ),
@@ -242,7 +252,7 @@ class TeacherProfileScreen extends StatelessWidget {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: dark ? TColors.yellow : TColors.deepPurple,
+                      color: dark ? TColors.yellow : TColors.primary,
                       width: 2,
                     ),
                     image: controller.user.value?.profileImageUrl != null &&
@@ -257,7 +267,7 @@ class TeacherProfileScreen extends StatelessWidget {
                             },
                           )
                         : const DecorationImage(
-                            image: AssetImage('assets/logos/smartcampus.png'),
+                            image: AssetImage(TImageStrings.appLogo),
                             fit: BoxFit.cover,
                           ),
                   ),
@@ -273,7 +283,7 @@ class TeacherProfileScreen extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.all(4),
                   decoration: BoxDecoration(
-                    color: dark ? TColors.yellow : TColors.deepPurple,
+                    color: dark ? TColors.yellow : TColors.primary,
                     shape: BoxShape.circle,
                   ),
                   child: InkWell(
@@ -281,7 +291,7 @@ class TeacherProfileScreen extends StatelessWidget {
                     child: Icon(
                       Iconsax.camera,
                       size: 20,
-                      color: dark ? Colors.black : Colors.white,
+                      color: dark ? TColors.dark : Colors.white,
                     ),
                   ),
                 ),
@@ -320,64 +330,235 @@ class TeacherProfileScreen extends StatelessWidget {
     return Column(
       children: [
         // Name
-        ListTile(
-          leading: Icon(
-            Iconsax.user,
-            color: dark ? TColors.yellow : TColors.deepPurple,
-          ),
-          title: Text('Name', style: Theme.of(context).textTheme.titleMedium),
-          subtitle: Text(
-            controller.user.value?.name ?? 'Not available',
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
-        ),
-        const Divider(),
+        Obx(() {
+          return dark
+              ? Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: TColors.yellow,
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  padding: const EdgeInsets.all(12),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Iconsax.user,
+                        color: TColors.yellow,
+                      ),
+                      const SizedBox(width: 12),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Name',
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                          Text(
+                            controller.user.value?.name ?? 'Not available',
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                )
+              : Card(
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: ListTile(
+                    leading: Icon(
+                      Iconsax.user,
+                      color: TColors.primary,
+                    ),
+                    title: Text(
+                      'Name',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    subtitle: Text(
+                      controller.user.value?.name ?? 'Not available',
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                  ),
+                );
+        }),
+        const SizedBox(height: TSizes.spaceBtwItems),
 
         // Email
-        ListTile(
-          leading: Icon(
-            Iconsax.direct,
-            color: dark ? TColors.yellow : TColors.deepPurple,
-          ),
-          title: Text('Email', style: Theme.of(context).textTheme.titleMedium),
-          subtitle: Text(
-            controller.user.value?.email ?? 'Not available',
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
-        ),
-        const Divider(),
+        Obx(() {
+          return dark
+              ? Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: TColors.yellow,
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  padding: const EdgeInsets.all(12),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Iconsax.direct,
+                        color: TColors.yellow,
+                      ),
+                      const SizedBox(width: 12),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Email',
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                          Text(
+                            controller.user.value?.email ?? 'Not available',
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                )
+              : Card(
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: ListTile(
+                    leading: Icon(
+                      Iconsax.direct,
+                      color: TColors.primary,
+                    ),
+                    title: Text(
+                      'Email',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    subtitle: Text(
+                      controller.user.value?.email ?? 'Not available',
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                  ),
+                );
+        }),
+        const SizedBox(height: TSizes.spaceBtwItems),
 
         // Phone
-        ListTile(
-          leading: Icon(
-            Iconsax.call,
-            color: dark ? TColors.yellow : TColors.deepPurple,
-          ),
-          title: Text('Phone', style: Theme.of(context).textTheme.titleMedium),
-          subtitle: Text(
-            controller.user.value?.phone ?? 'Not available',
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
-        ),
-        const Divider(),
+        Obx(() {
+          return dark
+              ? Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: TColors.yellow,
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  padding: const EdgeInsets.all(12),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Iconsax.call,
+                        color: TColors.yellow,
+                      ),
+                      const SizedBox(width: 12),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Phone',
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                          Text(
+                            controller.user.value?.phone ?? 'Not available',
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                )
+              : Card(
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: ListTile(
+                    leading: Icon(
+                      Iconsax.call,
+                      color: TColors.primary,
+                    ),
+                    title: Text(
+                      'Phone',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    subtitle: Text(
+                      controller.user.value?.phone ?? 'Not available',
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                  ),
+                );
+        }),
+        const SizedBox(height: TSizes.spaceBtwItems),
 
         // Member Since
-        ListTile(
-          leading: Icon(
-            Iconsax.calendar,
-            color: dark ? TColors.yellow : TColors.deepPurple,
-          ),
-          title: Text(
-            'Member Since',
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-          subtitle: Text(
-            controller.user.value?.createdAt != null
-                ? '${controller.user.value!.createdAt!.day}/${controller.user.value!.createdAt!.month}/${controller.user.value!.createdAt!.year}'
-                : 'Not available',
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
-        ),
+        Obx(() {
+          return dark
+              ? Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: TColors.yellow,
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  padding: const EdgeInsets.all(12),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Iconsax.calendar,
+                        color: TColors.yellow,
+                      ),
+                      const SizedBox(width: 12),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Member Since',
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                          Text(
+                            controller.user.value?.createdAt != null
+                                ? '${controller.user.value!.createdAt!.day}/${controller.user.value!.createdAt!.month}/${controller.user.value!.createdAt!.year}'
+                                : 'Not available',
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                )
+              : Card(
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: ListTile(
+                    leading: Icon(
+                      Iconsax.calendar,
+                      color: TColors.primary,
+                    ),
+                    title: Text(
+                      'Member Since',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    subtitle: Text(
+                      controller.user.value?.createdAt != null
+                          ? '${controller.user.value!.createdAt!.day}/${controller.user.value!.createdAt!.month}/${controller.user.value!.createdAt!.year}'
+                          : 'Not available',
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                  ),
+                );
+        }),
       ],
     );
   }
@@ -397,7 +578,7 @@ class TeacherProfileScreen extends StatelessWidget {
               labelText: 'Name',
               prefixIcon: Icon(
                 Iconsax.user,
-                color: dark ? TColors.yellow : TColors.deepPurple,
+                color: dark ? TColors.yellow : TColors.primary,
               ),
             ),
             validator: (value) {
@@ -416,14 +597,12 @@ class TeacherProfileScreen extends StatelessWidget {
               labelText: 'Phone',
               prefixIcon: Icon(
                 Iconsax.call,
-                color: dark ? TColors.yellow : TColors.deepPurple,
+                color: dark ? TColors.yellow : TColors.primary,
               ),
             ),
             keyboardType: TextInputType.phone,
             maxLength: 10,
-            inputFormatters: [
-              FilteringTextInputFormatter.digitsOnly,
-            ],
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter your phone number';
@@ -463,7 +642,7 @@ class TeacherProfileScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: TSizes.md),
         margin: const EdgeInsets.symmetric(horizontal: 4),
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey.withOpacity(0.2)),
+          border: Border.all(color: TColors.linkedin),
           borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
         ),
         child: Column(
@@ -478,65 +657,6 @@ class TeacherProfileScreen extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildSection({
-    required BuildContext context,
-    required String title,
-    required List<Widget> items,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: Theme.of(
-            context,
-          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: TSizes.spaceBtwItems / 2),
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
-            color: Theme.of(context).cardColor,
-            border: Border.all(color: Colors.grey.withOpacity(0.1)),
-          ),
-          child: ListView.separated(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: items.length,
-            separatorBuilder: (_, __) => Divider(
-              height: 1,
-              color: Colors.grey.withOpacity(0.1),
-              indent: 70,
-            ),
-            itemBuilder: (_, index) => items[index],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildProfileMenuItem({
-    required String title,
-    required IconData icon,
-    Widget? trailing,
-    VoidCallback? onTap,
-    required bool dark,
-  }) {
-    return ListTile(
-      onTap: onTap,
-      leading: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: (dark ? TColors.yellow : TColors.deepPurple).withOpacity(0.1),
-          shape: BoxShape.circle,
-        ),
-        child: Icon(icon, color: dark ? TColors.yellow : TColors.deepPurple),
-      ),
-      title: Text(title),
-      trailing: trailing ?? const Icon(Iconsax.arrow_right_3, size: 18),
     );
   }
 }

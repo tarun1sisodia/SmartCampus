@@ -1,10 +1,11 @@
 import 'dart:async';
-import 'package:attedance__/features/teacher/screens/feedback_screen.dart';
-import 'package:attedance__/services/feedback_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:attedance__/services/storage_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+import '../../../services/feedback_service.dart';
+import '../../../services/storage_service.dart';
+import '../screens/feedback_screen.dart';
 
 class FeedbackController extends GetxController {
   final FeedbackService _feedbackService = Get.find<FeedbackService>();
@@ -53,10 +54,7 @@ class FeedbackController extends GetxController {
   void showFeedbackDialog() {
     //printnt('Showing feedback dialog');
     _feedbackService.markFeedbackAsShown();
-    Get.dialog(
-      FeedbackScreen(),
-      barrierDismissible: true,
-    );
+    Get.dialog(FeedbackScreen(), barrierDismissible: true);
   }
 
   void setRating(int value) {

@@ -28,7 +28,7 @@ class SessionTimerWidget extends StatelessWidget {
         Icon(
           isSessionActive ? Iconsax.timer_1 : Iconsax.timer_pause,
           color: isSessionActive
-              ? (dark ? TColors.yellow : TColors.deepPurple)
+              ? (dark ? TColors.yellow : TColors.primary)
               : Colors.red,
           size: 20,
         ),
@@ -38,7 +38,7 @@ class SessionTimerWidget extends StatelessWidget {
           style: Theme.of(context).textTheme.titleSmall?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: isSessionActive
-                    ? (dark ? TColors.yellow : TColors.deepPurple)
+                    ? (dark ? TColors.yellow : TColors.primary)
                     : Colors.red,
               ),
         ),
