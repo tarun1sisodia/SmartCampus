@@ -76,11 +76,11 @@ Tracks attendance with detailed information:
 ## Installation
 1. Clone the repository:
    ```bash
-   git clone https://github.com/tarun1sisodia/attendance__.git
+   git clone https://github.com/tarun1sisodia/smartcampus.git
    ```
 2. Navigate to the project directory:
    ```bash
-   cd attedance__
+   cd smartcampus
    ```
 3. Update Supabase secrets:
    Replace the placeholder Supabase URL and API key in the `lib/main.dart` file with your own.
