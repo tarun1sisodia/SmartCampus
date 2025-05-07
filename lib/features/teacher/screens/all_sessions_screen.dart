@@ -306,7 +306,11 @@ class AllSessionsScreen extends StatelessWidget {
                                 color: dark ? TColors.yellow : TColors.primary,
                                 width: 2,
                               )
-                            : BorderSide.none,
+                            : BorderSide(
+                                color:
+                                    dark ? TColors.darkerGrey : TColors.primary,
+                                width: 1.5,
+                              ),
                       ),
                       child: ExpansionTile(
                         // Disable expansion when in selection mode

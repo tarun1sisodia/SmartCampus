@@ -55,6 +55,7 @@ class TColors {
 
   // CONTAINER COLORS - For cards, dialogs, etc.
   static const Color lightContainer = Color(0xFFF6F6F6);
+  static const Color lightContainerHighlight = Color(0xFFF8F8F8);
   static Color darkContainer = TColors.white.withOpacity(0.1);
 
   // BUTTON COLORS - For interactive elements

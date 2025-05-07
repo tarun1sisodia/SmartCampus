@@ -681,30 +681,28 @@ class DashboardScreen extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            ElevatedButton(
-                                onPressed: null,
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: dark
-                                      ? TColors.uxGradient3.colors.first
-                                      : TColors.uxGradient3.colors.last,
-                                ),
-                                child: Text(
-                                  'Recent Classes',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleMedium
-                                      ?.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                        fontFamily: 'Poppins',
-                                      ),
-                                )),
+                            Text(
+                              'Recent Classes',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.normal,
+                                    fontFamily: 'Poppins',
+                                    // color: dark
+                                    //     ? TColors.darkBackground
+                                    //     : TColors.dark
+                                  ),
+                              textScaler: TextScaler.linear(1.2),
+                              textAlign: TextAlign.start,
+                            ),
                             ElevatedButton(
                               onPressed: () {
                                 Get.to(() => ClassListScreen());
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: dark
-                                    ? TColors.uxGradient4.colors.first
+                                    ? TColors.cardGradient3.colors.first
                                     : TColors.cardGradient3.colors.last,
                                 foregroundColor:
                                     dark ? TColors.dark : Colors.white,
@@ -713,7 +711,9 @@ class DashboardScreen extends StatelessWidget {
                                 'View All',
                                 style: TextStyle(
                                     fontFamily: 'Poppins',
-                                    color: dark ? TColors.white : TColors.dark),
+                                    color: dark
+                                        ? TColors.darkBackground
+                                        : TColors.dark),
                               ),
                             ),
                           ],
@@ -778,11 +778,18 @@ class DashboardScreen extends StatelessWidget {
                                       margin: const EdgeInsets.only(
                                         bottom: TSizes.spaceBtwItems,
                                       ),
-                                      elevation: 2,
+                                      elevation: 5,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(
                                           TSizes.cardRadiusMd,
                                         ),
+                                        // for borders on on recent classes list
+                                        // side: BorderSide(
+                                        //   color: dark
+                                        //       ? Colors.white
+                                        //       : Colors.black,
+                                        //   width: 0.5,
+                                        // ),
                                       ),
                                       child: ListTile(
                                         contentPadding:

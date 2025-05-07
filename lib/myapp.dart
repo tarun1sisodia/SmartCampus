@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
         checkboxTheme: TCheckboxTheme.lightCheckBoxTheme,
         bottomSheetTheme: TBottomSheetTheme.lightBottomSheetTheme,
         dividerTheme: DividerThemeData(
-          color: TColors.borderPrimary,
+          color: TColors.darkGrey,
           thickness: 1.0,
         ),
       ),

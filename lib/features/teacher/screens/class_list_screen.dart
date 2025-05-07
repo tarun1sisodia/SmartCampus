@@ -381,7 +381,10 @@ class ClassListScreen extends StatelessWidget {
                         color: dark ? TColors.yellow : TColors.primary,
                         width: 2,
                       )
-                    : BorderSide.none,
+                    : BorderSide(
+                        color: dark ? TColors.darkerGrey : TColors.primary,
+                        width: 2,
+                      ),
               ),
               child: InkWell(
                 onTap: () {
@@ -568,8 +571,9 @@ class ClassListScreen extends StatelessWidget {
               ),
               const SizedBox(height: TSizes.spaceBtwItems),
               ListTile(
-                leading: const Icon(Iconsax.edit),
-                title: const Text('Edit Class'),
+                leading: const Icon(Iconsax.edit, color: TColors.primaryDark),
+                title: const Text('Edit Class',
+                    style: TextStyle(color: TColors.primaryDark)),
                 onTap: () {
                   Navigator.pop(context); // Close the bottom sheet
                   ////print('Edit class ${classItem.id}');
@@ -592,7 +596,7 @@ class ClassListScreen extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () => Navigator.pop(context),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: dark ? Colors.grey[800] : Colors.grey[200],
+                    backgroundColor: dark ? TColors.indigo : TColors.coral,
                     foregroundColor: dark ? Colors.white : TColors.dark,
                   ),
                   child: const Text('Cancel'),
