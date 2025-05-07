@@ -775,18 +775,14 @@ class AddStudentScreen extends StatelessWidget {
                                           ),
                                       ],
                                     ),
-                                    secondary: CircleAvatar(
-                                      backgroundColor: dark
-                                          ? TColors.yellow
-                                          : TColors.primary,
-                                      child: Text(
-                                        student.name.substring(0, 1),
-                                        style: TextStyle(
-                                          color: dark
-                                              ? TColors.dark
-                                              : Colors.white,
-                                        ),
-                                      ),
+                                    secondary: StudentAvatar(
+                                      imageUrl: student.imageUrl?.isNotEmpty ==
+                                              true
+                                          ? student.imageUrl
+                                          : 'assets/images/images.png', // Provide a default image path
+                                      name: student.name,
+                                      size: 40,
+                                      isDarkMode: dark,
                                     ),
                                   ),
                                 ));
