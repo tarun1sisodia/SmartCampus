@@ -489,7 +489,7 @@ class ClassListScreen extends StatelessWidget {
     return BottomAppBar(
       color: dark ? TColors.darkerGrey : Colors.white,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 1.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

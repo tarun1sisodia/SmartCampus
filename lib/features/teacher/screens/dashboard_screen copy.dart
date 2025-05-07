@@ -160,7 +160,7 @@ class DashboardScreen extends StatelessWidget {
                             // First stat card
                             Expanded(
                               child: Container(
-                                height: 130,
+                                height: 120,
                                 padding: const EdgeInsets.all(TSizes.md),
                                 decoration: BoxDecoration(
                                   color: Colors.white,
@@ -206,7 +206,7 @@ class DashboardScreen extends StatelessWidget {
                             // Second stat card
                             Expanded(
                               child: Container(
-                                height: 130,
+                                height: 120,
                                 padding: const EdgeInsets.all(TSizes.md),
                                 decoration: BoxDecoration(
                                   color: Colors.white,
@@ -262,7 +262,7 @@ class DashboardScreen extends StatelessWidget {
                             ? TColors.yellow.withOpacity(0.5)
                             : TColors.primary.withOpacity(0.5),
                         child: Container(
-                          height: 265,
+                          height: 220,
                           width: double.infinity,
                           padding: const EdgeInsets.all(TSizes.md),
                           decoration: BoxDecoration(
@@ -274,7 +274,7 @@ class DashboardScreen extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Container(
-                                height: 25,
+                                height: 20,
                                 width: 180,
                                 decoration: BoxDecoration(
                                   color: Colors.white.withOpacity(0.5),
@@ -384,7 +384,7 @@ class DashboardScreen extends StatelessWidget {
                                             MainAxisAlignment.center,
                                         children: [
                                           Container(
-                                            height: 10,
+                                            height: 16,
                                             width: 150,
                                             decoration: BoxDecoration(
                                               color:
