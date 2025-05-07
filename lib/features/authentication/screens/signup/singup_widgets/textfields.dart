@@ -35,7 +35,7 @@ class Textfields extends StatelessWidget {
     final dark = THelperFunction.isDarkMode(context);
 
     // Get the current theme's InputDecorationTheme
-    // final inputTheme = Theme.of(context).inputDecorationTheme;
+    final inputTheme = Theme.of(context).inputDecorationTheme;
 
     return TextFormField(
       controller: controller,
@@ -45,15 +45,25 @@ class Textfields extends StatelessWidget {
       validator: validator,
       onChanged: onChanged,
       onSaved: onSaved,
+      style: TextStyle(
+        color: dark ? Colors.white : Colors.black,
+      ),
       decoration: InputDecoration(
-        // Apply the theme's border properties
-        // border: inputTheme.border,
-        // enabledBorder: inputTheme.enabledBorder,
-        // focusedBorder: inputTheme.focusedBorder,
-        // errorBorder: inputTheme.errorBorder,
-        // focusedErrorBorder: inputTheme.focusedErrorBorder,
+        // Apply all theme properties
+        border: inputTheme.border,
+        enabledBorder: inputTheme.enabledBorder,
+        focusedBorder: inputTheme.focusedBorder,
+        errorBorder: inputTheme.errorBorder,
+        focusedErrorBorder: inputTheme.focusedErrorBorder,
+        filled: inputTheme.filled,
+        fillColor: inputTheme.fillColor,
+        contentPadding: inputTheme.contentPadding,
+        hintStyle: inputTheme.hintStyle,
+        labelStyle: inputTheme.labelStyle,
+        errorStyle: inputTheme.errorStyle,
+        floatingLabelStyle: inputTheme.floatingLabelStyle,
 
-        // Other decoration properties
+        // Custom properties for this specific field
         labelText: labelText,
         prefixIcon: IconTheme(
           data: IconThemeData(

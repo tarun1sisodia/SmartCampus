@@ -106,6 +106,97 @@ class TColors {
     end: Alignment.bottomRight,
   );
 
+  // CARD GRADIENTS - For card backgrounds
+  static const Gradient cardGradient1 = LinearGradient(
+    colors: [Color(0xFFFEAC5E), Color(0xFFC779D0), Color(0xFF4BC0C8)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  static const Gradient cardGradient2 = LinearGradient(
+    colors: [Color(0xFF43C6AC), Color(0xFFF8FFAE)],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+  );
+
+  static const Gradient cardGradient3 = LinearGradient(
+    colors: [Color(0xFF30E8BF), Color(0xFFFF8235)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  static const Gradient cardGradient4 = LinearGradient(
+    colors: [Color(0xFF8E2DE2), Color(0xFF4A00E0)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  static const Gradient cardGradient5 = LinearGradient(
+    colors: [Color(0xFFDA4453), Color(0xFF89216B)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+  // UX-OPTIMIZED GRADIENTS - For light and dark mode harmony
+  static const Gradient uxGradient1 = LinearGradient(
+    colors: [Color(0xFF4B68FF), Color(0xFF6F85FF)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  static const Gradient uxGradient2 = LinearGradient(
+    colors: [Color(0xFFFFE248), Color(0xFFFFF176)],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+  );
+
+  static const Gradient uxGradient3 = LinearGradient(
+    colors: [Color(0xFF4CAF50), Color(0xFF81C784)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  static const Gradient uxGradient4 = LinearGradient(
+    colors: [Color(0xFFE53935), Color(0xFFFF6F61)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  static const Gradient uxGradient5 = LinearGradient(
+    colors: [Color(0xFF2196F3), Color(0xFF64B5F6)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  static const Gradient uxGradient6 = LinearGradient(
+    colors: [Color(0xFFFFC107), Color(0xFFFFE082)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  static const Gradient uxGradient7 = LinearGradient(
+    colors: [Color(0xFF6B3FF7), Color(0xFF9C67FF)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  static const Gradient uxGradient8 = LinearGradient(
+    colors: [Color(0xFF2EC272), Color(0xFF66E6A8)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  static const Gradient uxGradient9 = LinearGradient(
+    colors: [Color(0xFFFF8C00), Color(0xFFFFB74D)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  static const Gradient uxGradient10 = LinearGradient(
+    colors: [Color(0xFF4B0082), Color(0xFF8A2BE2)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
   // MATERIAL COLORS - For variety
   static const Color teal = Colors.teal;
   static const Color amber = Colors.amber;
