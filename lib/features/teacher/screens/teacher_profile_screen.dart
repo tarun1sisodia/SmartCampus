@@ -22,7 +22,7 @@ class TeacherProfileScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'My Profile',
+          'Profile',
           style: Theme.of(context).textTheme.headlineSmall,
         ),
         actions: [
@@ -171,7 +171,7 @@ class TeacherProfileScreen extends StatelessWidget {
                   child: OutlinedButton.icon(
                     onPressed: () => Get.offAllNamed(AppRoutes.login),
                     icon: const Icon(Iconsax.user_add4),
-                    label: const Text('Add Another Account'),
+                    label: const Text('Login Existing Account'),
                     style: OutlinedButton.styleFrom(
                       side: BorderSide(
                         color: dark ? TColors.yellow : TColors.primary,
@@ -576,10 +576,8 @@ class TeacherProfileScreen extends StatelessWidget {
             controller: controller.nameController,
             decoration: InputDecoration(
               labelText: 'Name',
-              prefixIcon: Icon(
-                Iconsax.user,
-                color: dark ? TColors.yellow : TColors.primary,
-              ),
+              prefixIcon: Icon(Iconsax.user,
+                  color: dark ? TColors.yellow : TColors.blue),
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -595,10 +593,8 @@ class TeacherProfileScreen extends StatelessWidget {
             controller: controller.phoneController,
             decoration: InputDecoration(
               labelText: 'Phone',
-              prefixIcon: Icon(
-                Iconsax.call,
-                color: dark ? TColors.yellow : TColors.primary,
-              ),
+              prefixIcon: Icon(Iconsax.call,
+                  color: dark ? TColors.yellow : TColors.blue),
             ),
             keyboardType: TextInputType.phone,
             maxLength: 10,
@@ -619,7 +615,7 @@ class TeacherProfileScreen extends StatelessWidget {
           // Update Button
           SizedBox(
             width: double.infinity,
-            height: 50,
+            height: 55,
             child: ElevatedButton(
               onPressed: controller.isLoading.value
                   ? null
@@ -628,7 +624,11 @@ class TeacherProfileScreen extends StatelessWidget {
                     },
               child: controller.isLoading.value
                   ? const CircularProgressIndicator()
-                  : const Text('Update Profile'),
+                  : const Text(
+                      'Update Profile',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
             ),
           ),
         ],
@@ -660,5 +660,3 @@ class TeacherProfileScreen extends StatelessWidget {
     );
   }
 }
-
-// Consolidated TeacherProfileController
