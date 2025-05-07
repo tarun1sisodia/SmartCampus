@@ -130,7 +130,7 @@ class TeacherProfileScreen extends StatelessWidget {
                 // Sign Out Button
                 SizedBox(
                   width: double.infinity,
-                  height: 55,
+                  height: 60,
                   child: ElevatedButton.icon(
                     onPressed: controller.isLoading.value
                         ? null
@@ -181,7 +181,7 @@ class TeacherProfileScreen extends StatelessWidget {
                 ),
 
                 const SizedBox(height: TSizes.spaceBtwItems),
-                SizedBox(
+                /* SizedBox(
                   width: double.infinity,
                   height: 55,
                   child: ElevatedButton.icon(
@@ -212,14 +212,14 @@ class TeacherProfileScreen extends StatelessWidget {
                 ),
 
                 const SizedBox(height: TSizes.spaceBtwSections),
-
+*/
                 // App version
-                Text(
-                  'App Version 0.0.1',
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
+                // Text(
+                //   'App Version 0.0.1',
+                //   style: Theme.of(context).textTheme.bodySmall,
+                // ),
 
-                const SizedBox(height: TSizes.spaceBtwSections),
+                // const SizedBox(height: TSizes.spaceBtwSections),
               ],
             ),
           ),
@@ -364,7 +364,7 @@ class TeacherProfileScreen extends StatelessWidget {
                   ),
                 )
               : Card(
-                  elevation: 2,
+                  elevation: 5,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -421,7 +421,7 @@ class TeacherProfileScreen extends StatelessWidget {
                   ),
                 )
               : Card(
-                  elevation: 2,
+                  elevation: 5,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -478,7 +478,7 @@ class TeacherProfileScreen extends StatelessWidget {
                   ),
                 )
               : Card(
-                  elevation: 2,
+                  elevation: 5,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -537,7 +537,7 @@ class TeacherProfileScreen extends StatelessWidget {
                   ),
                 )
               : Card(
-                  elevation: 2,
+                  elevation: 5,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
