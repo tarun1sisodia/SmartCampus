@@ -98,7 +98,7 @@ class StudentAvatar extends StatelessWidget {
             Positioned.fill(
               child: Container(
                 decoration: BoxDecoration(
-                  color: TColors.dark.withOpacity(0.5),
+                  color: TColors.dark.withAlpha((0.5 * 255).toInt()),
                   shape: BoxShape.circle,
                 ),
                 child: Center(

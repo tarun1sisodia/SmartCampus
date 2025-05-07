@@ -3,7 +3,7 @@ class StudentModel {
   final String name;
   final String rollNumber;
   final String classId;
-  final String? imageUrl; // Add this field
+  final String? imageUrl;
   final DateTime? createdAt;
   final DateTime? updatedAt;
   String? attendanceStatus; // For tracking attendance in UI
@@ -13,7 +13,7 @@ class StudentModel {
     required this.name,
     required this.rollNumber,
     required this.classId,
-    this.imageUrl, // Add this parameter
+    this.imageUrl, 
     this.createdAt,
     this.updatedAt,
     this.attendanceStatus,
