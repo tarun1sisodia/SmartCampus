@@ -11,7 +11,7 @@ class TCardTheme {
 
   // Light theme card
   static final CardTheme lightCardTheme = CardTheme(
-    color: TColors.white,
+    color: TColors.darkGrey,
     shadowColor: TColors.dark.withOpacity(0.1),
     elevation: 2,
 

@@ -441,7 +441,8 @@ class StudentDetailScreen extends StatelessWidget {
             children: [
               Text(
                 'Update Student Photo',
-                style: Theme.of(context).textTheme.titleLarge,
+                style: TextStyle(fontFamily: 'Poppins'),
+                textScaler: TextScaler.linear(1.5),
               ),
               const SizedBox(height: TSizes.spaceBtwItems),
               ListTile(
@@ -449,7 +450,11 @@ class StudentDetailScreen extends StatelessWidget {
                   Iconsax.camera,
                   color: dark ? TColors.yellow : TColors.primary,
                 ),
-                title: const Text('Take a Photo'),
+                title: const Text(
+                  'Take a Photo',
+                  style: TextStyle(fontFamily: 'Poppins'),
+                  textScaler: TextScaler.linear(1.1),
+                ),
                 onTap: () {
                   Navigator.pop(context);
                   studentDetailController
@@ -466,7 +471,11 @@ class StudentDetailScreen extends StatelessWidget {
                   Iconsax.gallery,
                   color: dark ? TColors.yellow : TColors.primary,
                 ),
-                title: const Text('Choose from Gallery'),
+                title: const Text(
+                  'Choose from Gallery',
+                  style: TextStyle(fontFamily: 'Poppins'),
+                  textScaler: TextScaler.linear(1.1),
+                ),
                 onTap: () {
                   Navigator.pop(context);
                   studentDetailController
@@ -485,18 +494,31 @@ class StudentDetailScreen extends StatelessWidget {
                     Iconsax.trash,
                     color: Colors.red,
                   ),
-                  title: const Text('Remove Photo'),
+                  title: const Text(
+                    'Remove Photo',
+                  ),
                   onTap: () {
                     Navigator.pop(context);
                     // Show confirmation dialog
                     Get.dialog(
                       AlertDialog(
-                        title: const Text('Remove Photo'),
+                        title: const Text(
+                          'Remove Photo',
+                          style: TextStyle(fontFamily: 'Poppins'),
+                          textScaler: TextScaler.linear(1.1),
+                        ),
                         content: const Text(
                             'Are you sure you want to remove this student\'s photo?'),
                         actions: [
-                          TextButton(
+                          ElevatedButton(
                             onPressed: () => Get.back(),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: dark
+                                  ? TColors.uxGradient2.colors.first
+                                  : TColors.uxGradient2.colors.first,
+                              foregroundColor:
+                                  dark ? Colors.black : Colors.black,
+                            ),
                             child: const Text('Cancel'),
                           ),
                           ElevatedButton(
@@ -521,7 +543,9 @@ class StudentDetailScreen extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () => Navigator.pop(context),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: dark ? Colors.grey[800] : Colors.grey[200],
+                    backgroundColor: dark
+                        ? TColors.uxGradient4.colors.first
+                        : TColors.uxGradient4.colors.first,
                     foregroundColor: dark ? Colors.white : Colors.black,
                   ),
                   child: const Text('Cancel'),
@@ -677,11 +701,15 @@ class StudentDetailScreen extends StatelessWidget {
           ],
         ),
         actions: [
-          TextButton(
+          ElevatedButton(
             onPressed: () {
-              //print('Cancelled update attendance');
+              //print('Canceling export Excel options');
               Get.back();
             },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: dark ? Colors.red : Colors.red,
+              foregroundColor: dark ? Colors.white : TColors.dark,
+            ),
             child: const Text('Cancel'),
           ),
           ElevatedButton(

@@ -39,7 +39,7 @@ class ReportsScreen extends StatelessWidget {
             title: 'Attendance Summary',
             description: 'View overall attendance statistics',
             icon: Iconsax.chart_2,
-            color: Colors.blue,
+            color: Colors.deepOrange,
             onTap: () {
               //print('Navigating to attendance summary report');
               Get.toNamed('/attendance-reports');
@@ -54,6 +54,7 @@ class ReportsScreen extends StatelessWidget {
             onTap: () {
               //print('Student Performance report coming soon');
               TSnackBar.showInfo(message: 'Coming soon!');
+              _exportStudentPerformanceAsPdf();
             },
           ),
           _buildReportCard(
@@ -85,7 +86,7 @@ class ReportsScreen extends StatelessWidget {
             title: 'Export as Excel',
             description: 'Generate and download Excel spreadsheets',
             icon: Iconsax.document_text,
-            color: Colors.teal,
+            color: Colors.purple,
             onTap: () {
               //print('Showing export Excel options');
               _showExportExcelOptions(context);
@@ -126,6 +127,7 @@ class ReportsScreen extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
       ),
+      color: dark ? TColors.linkedin : TColors.accent,
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
@@ -315,7 +317,7 @@ class ReportsScreen extends StatelessWidget {
                   Get.back();
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: dark ? Colors.grey[800] : Colors.grey[200],
+                  backgroundColor: dark ? Colors.red : Colors.red,
                   foregroundColor: dark ? Colors.white : TColors.dark,
                 ),
                 child: const Text('Cancel'),

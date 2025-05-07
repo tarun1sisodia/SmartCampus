@@ -14,7 +14,8 @@ import 'class_list_screen.dart';
 
 class CarouselAttendanceScreen extends StatelessWidget {
   final carouselAttendanceController = Get.put(CarouselAttendanceController());
-  final CarouselSliderController carouselController =CarouselSliderController();
+  final CarouselSliderController carouselController =
+      CarouselSliderController();
 
   CarouselAttendanceScreen({super.key});
 
@@ -33,29 +34,29 @@ class CarouselAttendanceScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Carousel Attendance'),
+        title: const Text('Carousel'),
         actions: [
           // Session timer in app bar
-          Obx(
-            () {
-              //print(
-              // 'Timer running: ${carouselAttendanceController.isTimerRunning.value}');
-              return carouselAttendanceController.isTimerRunning.value
-                  ? Padding(
-                      padding: const EdgeInsets.only(right: TSizes.sm),
-                      child: Center(
-                        child: SessionTimerWidget(
-                          remainingTime:
-                              carouselAttendanceController.remainingTime.value,
-                          isSessionActive: !carouselAttendanceController
-                              .remainingTime.value
-                              .contains('Ended'),
-                        ),
-                      ),
-                    )
-                  : const SizedBox.shrink();
-            },
-          ),
+          // Obx(
+          //   () {
+          //     //print(
+          //     // 'Timer running: ${carouselAttendanceController.isTimerRunning.value}');
+          //     return carouselAttendanceController.isTimerRunning.value
+          //         ? Padding(
+          //             padding: const EdgeInsets.only(right: TSizes.sm),
+          //             child: Center(
+          //               child: SessionTimerWidget(
+          //                 remainingTime:
+          //                     carouselAttendanceController.remainingTime.value,
+          //                 isSessionActive: !carouselAttendanceController
+          //                     .remainingTime.value
+          //                     .contains('Ended'),
+          //               ),
+          //             ),
+          //           )
+          //         : const SizedBox.shrink();
+          //   },
+          // ),
           IconButton(
             onPressed: () {
               //print('Refresh button pressed');

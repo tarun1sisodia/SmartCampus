@@ -46,7 +46,7 @@ class AttendanceReportsScreen extends StatelessWidget {
               children: [
                 // Shimmer for Class selection card
                 Shimmer.fromColors(
-                 baseColor: dark ? TColors.darkerGrey : Colors.grey.shade300,
+                  baseColor: dark ? TColors.darkerGrey : Colors.grey.shade300,
                   highlightColor: dark ? TColors.yellow : TColors.primary,
                   child: Card(
                     elevation: 2,
@@ -78,7 +78,7 @@ class AttendanceReportsScreen extends StatelessWidget {
 
                 // Shimmer for Date range card
                 Shimmer.fromColors(
-                 baseColor: dark ? TColors.darkerGrey : Colors.grey.shade300,
+                  baseColor: dark ? TColors.darkerGrey : Colors.grey.shade300,
                   highlightColor: dark ? TColors.yellow : TColors.primary,
                   child: Card(
                     elevation: 2,
@@ -122,7 +122,7 @@ class AttendanceReportsScreen extends StatelessWidget {
 
                 // Shimmer for Attendance summary
                 Shimmer.fromColors(
-baseColor: dark ? TColors.darkerGrey : Colors.grey.shade300,
+                  baseColor: dark ? TColors.darkerGrey : Colors.grey.shade300,
                   highlightColor: dark ? TColors.yellow : TColors.primary,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -703,7 +703,7 @@ baseColor: dark ? TColors.darkerGrey : Colors.grey.shade300,
                                   style: Theme.of(context)
                                       .textTheme
                                       .titleSmall
-                                      ?.copyWith(fontWeight: FontWeight.bold),
+                                      ?.copyWith(fontFamily: 'Poppins'),
                                   textAlign: TextAlign.center,
                                 ),
                               ),
@@ -846,7 +846,7 @@ baseColor: dark ? TColors.darkerGrey : Colors.grey.shade300,
                                             style: const TextStyle(
                                               color: Colors.white,
                                               fontWeight: FontWeight.bold,
-                                              fontSize: 12,
+                                              fontSize: 10,
                                             ),
                                             textAlign: TextAlign.center,
                                           ),
@@ -928,6 +928,10 @@ baseColor: dark ? TColors.darkerGrey : Colors.grey.shade300,
       return Colors.blue;
     } else if (percentage >= 60) {
       return Colors.orange;
+    } else if (percentage >= 50) {
+      return Colors.orange;
+    } else if (percentage >= 20) {
+      return Colors.blueAccent;
     } else {
       return Colors.red;
     }

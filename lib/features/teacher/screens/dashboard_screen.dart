@@ -160,7 +160,7 @@ class DashboardScreen extends StatelessWidget {
                             // First stat card
                             Expanded(
                               child: Container(
-                                height: 120,
+                                height: 130,
                                 padding: const EdgeInsets.all(TSizes.md),
                                 decoration: BoxDecoration(
                                   color: Colors.white,
@@ -206,7 +206,7 @@ class DashboardScreen extends StatelessWidget {
                             // Second stat card
                             Expanded(
                               child: Container(
-                                height: 120,
+                                height: 130,
                                 padding: const EdgeInsets.all(TSizes.md),
                                 decoration: BoxDecoration(
                                   color: Colors.white,
@@ -262,7 +262,7 @@ class DashboardScreen extends StatelessWidget {
                             ? TColors.yellow.withOpacity(0.5)
                             : TColors.primary.withOpacity(0.5),
                         child: Container(
-                          height: 220,
+                          height: 265,
                           width: double.infinity,
                           padding: const EdgeInsets.all(TSizes.md),
                           decoration: BoxDecoration(
@@ -274,7 +274,7 @@ class DashboardScreen extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Container(
-                                height: 20,
+                                height: 25,
                                 width: 180,
                                 decoration: BoxDecoration(
                                   color: Colors.white.withOpacity(0.5),
@@ -354,7 +354,7 @@ class DashboardScreen extends StatelessWidget {
                                   ? TColors.yellow.withOpacity(0.5)
                                   : TColors.primary.withOpacity(0.5),
                               child: Container(
-                                height: 100,
+                                height: 80,
                                 margin: const EdgeInsets.only(
                                     bottom: TSizes.spaceBtwItems),
                                 padding: const EdgeInsets.all(TSizes.md),
@@ -384,7 +384,7 @@ class DashboardScreen extends StatelessWidget {
                                             MainAxisAlignment.center,
                                         children: [
                                           Container(
-                                            height: 16,
+                                            height: 10,
                                             width: 150,
                                             decoration: BoxDecoration(
                                               color:
@@ -558,82 +558,120 @@ class DashboardScreen extends StatelessWidget {
                         SizedBox(height: TSizes.spaceBtwSections),
 
                         // Stats cards - with fixed height to prevent overflow
-                        Row(
-                          children: [
-                            _buildStatCard(context, dark,
+                        SizedBox(
+                          child: Row(
+                            children: [
+                              _buildStatCard(
+                                context,
+                                dark,
                                 title: 'Classes',
                                 value: dashboardController.totalClasses.value
                                     .toString(),
                                 icon: Iconsax.book_1,
-                                color: dark ? TColors.yellow : TColors.primary),
-                            const SizedBox(width: TSizes.spaceBtwItems),
-                            _buildStatCard(context, dark,
+                                color: dark
+                                    ? TColors.primaryGradient.colors.first
+                                    : TColors.cardGradient1.colors.first,
+                              ),
+                              const SizedBox(width: TSizes.spaceBtwItems),
+                              _buildStatCard(
+                                context,
+                                dark,
                                 title: 'Students',
                                 value: dashboardController.totalStudents.value
                                     .toString(),
                                 icon: Iconsax.people,
-                                color: dark ? TColors.yellow : TColors.primary),
-                          ],
+                                color: dark
+                                    ? TColors.primaryGradient.colors.last
+                                    : TColors.cardGradient2.colors.first,
+                              ),
+                            ],
+                          ),
                         ),
 
                         const SizedBox(height: TSizes.spaceBtwItems),
 
-                        // Attendance chart - with fixed height
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(TSizes.md),
-                          decoration: BoxDecoration(
-                            color: dark ? TColors.darkerGrey : Colors.white,
-                            borderRadius:
-                                BorderRadius.circular(TSizes.cardRadiusMd),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withAlpha(26),
-                                spreadRadius: 1,
-                                blurRadius: 5,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min, // Minimize height
-                            children: [
-                              Text(
-                                'Average Attendance',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleMedium
-                                    ?.copyWith(fontWeight: FontWeight.bold),
-                              ),
-                              const SizedBox(height: TSizes.spaceBtwItems),
-                              CircularPercentIndicator(
-                                radius: 80.0,
-                                lineWidth: 12.0,
-                                animation: true,
-                                percent: dashboardController
-                                        .averageAttendance.value /
-                                    100,
-                                center: Text(
-                                  '${dashboardController.averageAttendance.value.toStringAsFixed(1)}%',
+                        // Attendance chart - with gradient background
+                        SizedBox(
+                          height: 270, // Fixed height for attendance chart
+                          child: Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(TSizes.md),
+                            decoration: BoxDecoration(
+                              gradient: dark
+                                  ? TColors.cardGradient1
+                                  : TColors.cardGradient2,
+                              borderRadius:
+                                  BorderRadius.circular(TSizes.cardRadiusMd),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withAlpha(26),
+                                  spreadRadius: 1,
+                                  blurRadius: 5,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min, // Minimize height
+                              children: [
+                                Text(
+                                  'Average Attendance',
                                   style: Theme.of(context)
                                       .textTheme
-                                      .titleLarge
-                                      ?.copyWith(fontWeight: FontWeight.bold),
+                                      .titleMedium
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.normal,
+                                        fontFamily: 'Poppins',
+                                        color: dark
+                                            ? TColors.textWhite
+                                            : TColors.textPrimary,
+                                      ),
                                 ),
-                                circularStrokeCap: CircularStrokeCap.round,
-                                progressColor:
-                                    dark ? TColors.yellow : TColors.primary,
-                                backgroundColor: dark
-                                    ? Colors.grey.shade800
-                                    : Colors.grey.shade200,
-                              ),
-                              const SizedBox(height: TSizes.spaceBtwItems),
-                              Text(
-                                'Overall attendance across all classes',
-                                style: Theme.of(context).textTheme.bodySmall,
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
+                                const SizedBox(height: TSizes.spaceBtwItems),
+                                CircularPercentIndicator(
+                                  radius: 80.0,
+                                  lineWidth: 12.0,
+                                  animation: true,
+                                  percent: dashboardController
+                                          .averageAttendance.value /
+                                      100,
+                                  center: Text(
+                                    '${dashboardController.averageAttendance.value.toStringAsFixed(1)}%',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleLarge
+                                        ?.copyWith(
+                                          fontWeight: FontWeight.normal,
+                                          fontFamily: 'Poppins',
+                                          color: dark
+                                              ? TColors.textWhite
+                                              : TColors.textPrimary,
+                                        ),
+                                  ),
+                                  circularStrokeCap: CircularStrokeCap.round,
+                                  progressColor: dark
+                                      ? TColors.cardGradient4.colors.first
+                                      : TColors.cardGradient4.colors.last,
+                                  backgroundColor:
+                                      dark ? TColors.black : TColors.white,
+                                ),
+                                const SizedBox(height: TSizes.spaceBtwItems),
+                                Text(
+                                  'Overall attendance across all classes',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.normal,
+                                        fontFamily: 'Poppins',
+                                        color: dark
+                                            ? TColors.black
+                                            : TColors.black,
+                                      ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
 
@@ -643,30 +681,43 @@ class DashboardScreen extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              'Recent Classes',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleMedium
-                                  ?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                            ),
-                            TextButton(
+                            ElevatedButton(
+                                onPressed: null,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: dark
+                                      ? TColors.uxGradient3.colors.first
+                                      : TColors.uxGradient3.colors.last,
+                                ),
+                                child: Text(
+                                  'Recent Classes',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleMedium
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'Poppins',
+                                      ),
+                                )),
+                            ElevatedButton(
                               onPressed: () {
                                 Get.to(() => ClassListScreen());
                               },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: dark
+                                    ? TColors.uxGradient4.colors.first
+                                    : TColors.cardGradient3.colors.last,
+                                foregroundColor:
+                                    dark ? TColors.dark : Colors.white,
+                              ),
                               child: Text(
                                 'View All',
                                 style: TextStyle(
-                                    color: dark
-                                        ? TColors.yellow
-                                        : TColors.primary),
+                                    fontFamily: 'Poppins',
+                                    color: dark ? TColors.white : TColors.dark),
                               ),
                             ),
                           ],
                         ),
-
                         const SizedBox(height: TSizes.spaceBtwItems),
 
                         // Recent classes list - with fixed height
@@ -707,7 +758,7 @@ class DashboardScreen extends StatelessWidget {
                                 ),
                               )
                             : SizedBox(
-                                height: 350, // Fixed height for class list
+                                height: 440, // Fixed height for class list
                                 child: ListView.builder(
                                   shrinkWrap: true,
                                   physics: const NeverScrollableScrollPhysics(),
@@ -771,7 +822,7 @@ class DashboardScreen extends StatelessWidget {
                                               height: TSizes.spaceBtwItems / 2,
                                             ),
                                             Text(
-                                              '${classItem.courseName} - Semester ${classItem.semester}',
+                                              '${classItem.courseName} - Semester ${classItem.semester} - Section ${classItem.section}',
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .bodyMedium,
@@ -984,7 +1035,8 @@ class DashboardScreen extends StatelessWidget {
                   return Text(
                     'Hi, ${profileController.user.value?.name ?? 'Teacher'}',
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.normal,
+                          fontFamily: 'Poppins',
                         ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -1027,7 +1079,7 @@ class DashboardScreen extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(TSizes.md),
         decoration: BoxDecoration(
-          color: dark ? TColors.darkerGrey : Colors.white,
+          gradient: dark ? TColors.cardGradient5 : TColors.cardGradient1,
           borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
           boxShadow: [
             BoxShadow(
@@ -1040,9 +1092,9 @@ class DashboardScreen extends StatelessWidget {
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min, // Add this to minimize height
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, color: color, size: 32),
+            Icon(icon, color: Colors.white, size: 32),
             const SizedBox(height: TSizes.spaceBtwItems),
             FittedBox(
               fit: BoxFit.scaleDown,
@@ -1050,11 +1102,18 @@ class DashboardScreen extends StatelessWidget {
                 value,
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                       fontWeight: FontWeight.bold,
+                      fontFamily: 'Poppins',
+                      color: Colors.white,
                     ),
               ),
             ),
             const SizedBox(height: TSizes.spaceBtwItems / 2),
-            Text(title, style: Theme.of(context).textTheme.bodyMedium),
+            Text(
+              title,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Colors.white,
+                  ),
+            ),
           ],
         ),
       ),

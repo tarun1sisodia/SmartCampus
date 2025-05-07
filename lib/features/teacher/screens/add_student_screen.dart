@@ -95,7 +95,7 @@ class AddStudentScreen extends StatelessWidget {
               itemCount: 9,
               itemBuilder: (context, index) {
                 return Shimmer.fromColors(
-                   baseColor: dark ? TColors.darkerGrey : Colors.grey.shade300,
+                  baseColor: dark ? TColors.darkerGrey : Colors.grey.shade300,
                   highlightColor: dark ? TColors.yellow : TColors.primary,
                   child: Card(
                     margin: const EdgeInsets.only(bottom: TSizes.spaceBtwItems),
@@ -513,7 +513,7 @@ class AddStudentScreen extends StatelessWidget {
                 itemBuilder: (context, index) {
                   return Shimmer.fromColors(
                     baseColor: dark ? TColors.darkerGrey : Colors.grey.shade300,
-                  highlightColor: dark ? TColors.yellow : TColors.primary,
+                    highlightColor: dark ? TColors.yellow : TColors.primary,
                     child: ListTile(
                       leading: CircleAvatar(
                         backgroundColor: Colors.grey,
@@ -886,8 +886,8 @@ class AddStudentScreen extends StatelessWidget {
               Get.back();
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
+              backgroundColor: Colors.yellow,
+              foregroundColor: Colors.black,
               // side: BorderSide(
               //   color: Colors.grey,
               //   width: 1,
@@ -931,8 +931,8 @@ class AddStudentScreen extends StatelessWidget {
               Get.back();
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
+              backgroundColor: Colors.yellow,
+              foregroundColor: Colors.black,
               // side: BorderSide(
               //   color: Colors.grey,
               //   width: 1,
@@ -948,7 +948,7 @@ class AddStudentScreen extends StatelessWidget {
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
+              foregroundColor: Colors.black,
             ),
             child: const Text('Remove'),
           ),
