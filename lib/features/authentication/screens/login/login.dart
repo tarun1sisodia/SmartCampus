@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../common/styles/spacing_styles.dart';
+import '../../../../common/utils/constants/image_strings.dart';
 import '../../../../common/utils/constants/sized.dart';
+import '../../../../common/utils/helpers/snackbar_helper.dart';
+import '../../../../services/google_sign_in_service.dart';
 import '../../controllers/login_controller.dart';
 import 'login_widgets/login_form.dart';
 import 'login_widgets/logo_text.dart';
@@ -23,7 +26,7 @@ class Login extends StatelessWidget {
             LogoAndText(),
             const SizedBox(height: TSizes.spaceBtwItems),
             LoginForm(),
-            const SizedBox(height: TSizes.spaceBtwItems),
+            // const SizedBox(height: TSizes.spaceBtwItems),
             // RememberAndForget(
             //   initialValue: controller.rememberMe.value,
             //   onRememberChanged: controller.setRememberMe,
@@ -31,6 +34,53 @@ class Login extends StatelessWidget {
             // const SizedBox(height: TSizes.spaceBtwItems),
             // CustomDivider(dividerText: TTexts.orSignInWith),
             // const SizedBox(height: TSizes.spaceBtwItems),
+            // Add this at the bottom of your form, after the Sign up button
+            const SizedBox(height: TSizes.sm),
+            Row(
+              children: [
+                Expanded(child: Divider()),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: TSizes.sm),
+                  child:
+                      Text("OR", style: Theme.of(context).textTheme.bodySmall),
+                ),
+                Expanded(child: Divider()),
+              ],
+            ),
+            const SizedBox(height: TSizes.spaceBtwItems),
+            SizedBox(
+              width: double.infinity,
+              height: TSizes.appBarHeight,
+              child: OutlinedButton.icon(
+                icon: Image(
+                  height: TSizes.iconMd,
+                  width: TSizes.iconMd,
+                  image: AssetImage(TImageStrings.google),
+                ),
+                label: Text("Sign up with Google"),
+                onPressed: () async {
+                  try {
+                    final googleSignInService = Get.find<GoogleSignInService>();
+                    final user = await googleSignInService.signInWithGoogle();
+                    if (user != null) {
+                      // Navigate to dashboard or home screen
+                      Get.offAllNamed('/dashboard');
+                    } else {
+                      TSnackBar.showError(
+                        message: 'Google sign-up failed',
+                        title: 'Error',
+                      );
+                    }
+                  } catch (e) {
+                    TSnackBar.showError(
+                      message: 'An error occurred: ${e.toString()}',
+                      title: 'Error',
+                    );
+                  }
+                },
+              ),
+            ),
+
             // FooterButton(),
           ],
         ),

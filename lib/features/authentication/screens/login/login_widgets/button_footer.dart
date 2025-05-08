@@ -3,6 +3,8 @@ import '../../../../../common/utils/constants/image_strings.dart';
 import '../../../../../common/utils/constants/sized.dart';
 import '../../../../../common/utils/helpers/helper_function.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../../../../../services/google_sign_in_service.dart';
 
 class FooterButton extends StatelessWidget {
   const FooterButton({super.key});
@@ -22,7 +24,28 @@ class FooterButton extends StatelessWidget {
               ),
             ),
             child: IconButton(
-              onPressed: () {},
+              onPressed: () async {
+                try {
+                  final googleSignInService = Get.find<GoogleSignInService>();
+                  final user = await googleSignInService.signInWithGoogle();
+                  if (user != null) {
+                    // Navigate to home or dashboard after successful login
+                    Get.offAllNamed('/dashboard'); // Adjust route as needed
+                  } else {
+                    Get.snackbar(
+                      'Sign In Failed',
+                      'Unable to sign in with Google',
+                      snackPosition: SnackPosition.BOTTOM,
+                    );
+                  }
+                } catch (e) {
+                  Get.snackbar(
+                    'Error',
+                    'An error occurred: ${e.toString()}',
+                    snackPosition: SnackPosition.BOTTOM,
+                  );
+                }
+              },
               icon: Image(
                 height: TSizes.iconMd,
                 width: TSizes.iconMd,
@@ -39,7 +62,9 @@ class FooterButton extends StatelessWidget {
               ),
             ),
             child: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                // Facebook login implementation
+              },
               icon: Image(
                 height: TSizes.iconMd,
                 width: TSizes.iconMd,
@@ -56,7 +81,9 @@ class FooterButton extends StatelessWidget {
               ),
             ),
             child: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                // Apple login implementation
+              },
               icon: Image(
                 height: TSizes.iconMd,
                 width: TSizes.iconMd,
@@ -74,7 +101,9 @@ class FooterButton extends StatelessWidget {
               ),
             ),
             child: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                // Microsoft login implementation
+              },
               icon: Image(
                 height: TSizes.iconMd,
                 width: TSizes.iconMd,
