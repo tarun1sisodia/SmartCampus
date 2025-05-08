@@ -5,10 +5,12 @@ import 'package:iconsax/iconsax.dart';
 
 import '../../../../../app/routes/app_routes.dart';
 import '../../../../../common/utils/constants/colors.dart';
+import '../../../../../common/utils/constants/image_strings.dart';
 import '../../../../../common/utils/constants/sized.dart';
 import '../../../../../common/utils/constants/text_strings.dart';
 import '../../../../../common/utils/helpers/helper_function.dart';
 import '../../../../../common/utils/helpers/snackbar_helper.dart';
+import '../../../../../services/google_sign_in_service.dart';
 import '../../../controllers/signup_controller.dart';
 import 'textfields.dart';
 
@@ -183,6 +185,52 @@ class SignupForm extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           )),
                 ),
+              ),
+            ),
+            // Add this at the bottom of your form, after the Sign up button
+            const SizedBox(height: TSizes.spaceBtwSections),
+            Row(
+              children: [
+                Expanded(child: Divider()),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: TSizes.sm),
+                  child:
+                      Text("OR", style: Theme.of(context).textTheme.bodySmall),
+                ),
+                Expanded(child: Divider()),
+              ],
+            ),
+            const SizedBox(height: TSizes.spaceBtwItems),
+            SizedBox(
+              width: double.infinity,
+              height: TSizes.appBarHeight,
+              child: OutlinedButton.icon(
+                icon: Image(
+                  height: TSizes.iconMd,
+                  width: TSizes.iconMd,
+                  image: AssetImage(TImageStrings.google),
+                ),
+                label: Text("Sign up with Google"),
+                onPressed: () async {
+                  try {
+                    final googleSignInService = Get.find<GoogleSignInService>();
+                    final user = await googleSignInService.signInWithGoogle();
+                    if (user != null) {
+                      // Navigate to dashboard or home screen
+                      Get.offAllNamed('/dashboard');
+                    } else {
+                      TSnackBar.showError(
+                        message: 'Google sign-up failed',
+                        title: 'Error',
+                      );
+                    }
+                  } catch (e) {
+                    TSnackBar.showError(
+                      message: 'An error occurred: ${e.toString()}',
+                      title: 'Error',
+                    );
+                  }
+                },
               ),
             ),
           ],

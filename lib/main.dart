@@ -8,6 +8,7 @@ import 'app/bindings/app_bindings.dart';
 import 'common/utils/constants/colors.dart';
 import 'common/utils/local_storage/storage_utility.dart';
 import 'myapp.dart';
+import 'services/google_sign_in_service.dart';
 import 'services/language_service.dart';
 
 /// The main entry point of the app.
@@ -54,6 +55,8 @@ Future<void> main() async {
     //print('FeedbackService initialized.');
     await Get.putAsync(() => LanguageService().init());
     //print('LanguageService initialized.');
+    await Get.putAsync(() => GoogleSignInService().init());
+
 
     // Initialize global bindings
     //print('calling the file to initialize global bindings...');

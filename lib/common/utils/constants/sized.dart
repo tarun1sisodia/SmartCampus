@@ -29,11 +29,11 @@ class TSizes {
   static const double fontSizeXxl = 24.0;
 
   // BUTTON SIZES - For appropriate touch targets (Fitts's Law)
-  static const double buttonHeight = 48.0; // Minimum recommended touch target
+  static const double buttonHeight = 38.0; // Minimum recommended touch target
   static const double buttonRadius = 10.0;
-  static const double buttonWidth = 120.0;
+  static const double buttonWidth = 110.0;
   static const double buttonElevation = 2.0;
-  
+
   // APPBAR HEIGHT - For consistent navigation (Jakob's Law)
   static const double appBarHeight = 56.0;
 
@@ -90,16 +90,16 @@ class TSizes {
   // GRID VIEW SPACING - For consistent grid layouts
   static const double gridViewSpacing = 16.0;
   static const double gridViewChildAspectRatio = 0.7;
-  
+
   // BOTTOM NAVIGATION BAR - For consistent navigation (Jakob's Law)
   static const double bottomNavBarHeight = 80.0;
   static const double bottomNavBarIconSize = 24.0;
-  
+
   // AVATAR SIZES - For consistent user representation
   static const double avatarSizeSmall = 32.0;
   static const double avatarSizeMedium = 40.0;
   static const double avatarSizeLarge = 56.0;
-  
+
   // TOOLTIP - For consistent help elements
   static const double tooltipRadius = 4.0;
   static const double tooltipHeight = 32.0;

@@ -384,7 +384,9 @@ class AttendanceReportsScreen extends StatelessWidget {
                   elevation: 2,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
+                      
                   ),
+                  
                   child: Padding(
                     padding: const EdgeInsets.all(TSizes.md),
                     child: Column(
@@ -502,6 +504,7 @@ class AttendanceReportsScreen extends StatelessWidget {
                     elevation: 2,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
+                      
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(TSizes.md),

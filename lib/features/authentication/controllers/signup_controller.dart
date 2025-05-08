@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../common/utils/helpers/snackbar_helper.dart';
+import '../../../services/google_sign_in_service.dart';
 
 class SignupController extends GetxController {
   // Text controllers for form fields
@@ -18,7 +19,6 @@ class SignupController extends GetxController {
 
   // Supabase client
   final supabase = Supabase.instance.client;
-
 
   @override
   void onClose() {
@@ -107,6 +107,48 @@ class SignupController extends GetxController {
           title: 'Registration Failed',
           source: MessageSource.server,
         );
+      } else {
+        TSnackBar.showServerError(message: e.toString());
+      }
+
+      rethrow;
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  // Add this method to your SignupController class
+  Future<void> signUpWithGoogle() async {
+    try {
+      isLoading.value = true;
+      errorMessage.value = '';
+
+      final googleSignInService = Get.find<GoogleSignInService>();
+      final user = await googleSignInService.signInWithGoogle();
+
+      if (user == null) {
+        errorMessage.value = 'Google sign-up failed';
+        TSnackBar.showError(
+          message: 'Unable to sign up with Google',
+          title: 'Sign Up Failed',
+        );
+        return;
+      }
+
+      // Success message
+      TSnackBar.showSuccess(
+        message: 'Successfully signed in with Google!',
+        title: 'Welcome',
+      );
+
+      // Navigate to appropriate screen
+      Get.offAllNamed('/dashboard');
+    } catch (e) {
+      errorMessage.value = e.toString();
+
+      if (e.toString().contains('network') ||
+          e.toString().contains('connection')) {
+        TSnackBar.showNetworkError();
       } else {
         TSnackBar.showServerError(message: e.toString());
       }

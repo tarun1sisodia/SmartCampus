@@ -34,6 +34,10 @@ class TCardTheme {
     elevation: 3,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
+      // side: BorderSide(
+      //   color: TColors.darkerGrey,
+      //   width: 0.5,
+      // ),
     ),
     margin: EdgeInsets.all(TSizes.sm),
     clipBehavior: Clip.antiAlias,

@@ -50,7 +50,7 @@ class AllSessionsScreen extends StatelessWidget {
       title: Text(
         allSessionsController.isSelectionMode.value
             ? '${allSessionsController.selectedSessionIds.length} Selected'
-            : 'All Sessions',
+            : 'Sessions',
         style: Theme.of(context).textTheme.headlineSmall,
       ),
       leading: allSessionsController.isSelectionMode.value
@@ -336,6 +336,7 @@ class AllSessionsScreen extends StatelessWidget {
                               // Pre-compute the status to avoid calling during build
                               final isRunning = allSessionsController
                                   .isSessionRunning(session);
+
                               final isClosed = allSessionsController
                                   .isSessionClosed(session);
 
@@ -437,34 +438,29 @@ class AllSessionsScreen extends StatelessWidget {
                                     Flexible(
                                       flex: 4,
                                       child: ElevatedButton.icon(
-                                        onPressed: allSessionsController
-                                                .isSessionClosed(session)
-                                            ? null // Disable the button if session is closed
-                                            : () {
-                                                print(
-                                                    'Standard button pressed for session: ${session.id}');
-                                                // Check if session is running before allowing access
-                                                if (!allSessionsController
-                                                    .isSessionRunning(
-                                                        session)) {
-                                                  TSnackBar.showInfo(
-                                                    message:
-                                                        'This session is currently not active',
-                                                    title: 'Session Inactive',
-                                                  );
-                                                  return;
-                                                }
-                                                allSessionsController
-                                                    .attendanceController
-                                                    .currentSessionId
-                                                    .value = session.id;
-                                                allSessionsController
-                                                    .attendanceController
-                                                    .selectedClass
-                                                    .value = session.classModel;
-                                                Get.to(() =>
-                                                    MarkAttendanceScreen());
-                                              },
+                                        onPressed: () {
+                                          //print(
+                                          // 'Navigating to carousel attendance screen');
+                                          // Check if session is running before allowing access
+                                          if (!attendanceController
+                                              .isSessionRunning(session.id)) {
+                                            // Show a message that the session is closed
+                                            TSnackBar.showInfo(
+                                              message:
+                                                  'This session is currently closed',
+                                              title: 'Session Closed',
+                                            );
+                                            return; // Don't proceed further
+                                          }
+                                          // Set current session and navigate to carousel attendance
+                                          attendanceController.currentSessionId
+                                              .value = session.id;
+                                          Get.to(
+                                            () => CarouselAttendanceScreen(),
+                                            binding:
+                                                CarouselAttendanceBinding(),
+                                          );
+                                        },
                                         icon:
                                             const Icon(Iconsax.clipboard_text),
                                         label: const Text('Standard',
@@ -493,37 +489,28 @@ class AllSessionsScreen extends StatelessWidget {
                                     ),
 
                                     ElevatedButton.icon(
-                                      onPressed: allSessionsController
-                                              .isSessionClosed(session)
-                                          ? null // Disable the button if session is closed
-                                          : () {
-                                              print(
-                                                  'Carousel button pressed for session: ${session.id}');
-                                              // Check if session is running before allowing access
-                                              if (!allSessionsController
-                                                  .isSessionRunning(session)) {
-                                                TSnackBar.showInfo(
-                                                  message:
-                                                      'This session is currently not active',
-                                                  title: 'Session Inactive',
-                                                );
-                                                return;
-                                              }
-                                              allSessionsController
-                                                  .attendanceController
-                                                  .currentSessionId
-                                                  .value = session.id;
-                                              allSessionsController
-                                                  .attendanceController
-                                                  .selectedClass
-                                                  .value = session.classModel;
-                                              Get.to(
-                                                () =>
-                                                    CarouselAttendanceScreen(),
-                                                binding:
-                                                    CarouselAttendanceBinding(),
-                                              );
-                                            },
+                                      onPressed: () {
+                                        //print(
+                                        // 'Navigating to carousel attendance screen');
+                                        // Check if session is running before allowing access
+                                        if (!attendanceController
+                                            .isSessionRunning(session.id)) {
+                                          // Show a message that the session is closed
+                                          TSnackBar.showInfo(
+                                            message:
+                                                'This session is currently closed',
+                                            title: 'Session Closed',
+                                          );
+                                          return; // Don't proceed further
+                                        }
+                                        // Set current session and navigate to carousel attendance
+                                        attendanceController.currentSessionId
+                                            .value = session.id;
+                                        Get.to(
+                                          () => CarouselAttendanceScreen(),
+                                          binding: CarouselAttendanceBinding(),
+                                        );
+                                      },
                                       icon: const Icon(Iconsax.play_circle),
                                       label: const Text('Carousel',
                                           overflow: TextOverflow.ellipsis,
