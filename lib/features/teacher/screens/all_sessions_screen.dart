@@ -7,7 +7,6 @@ import '../../../app/bindings/app_bindings.dart';
 import '../../../common/utils/helpers/snackbar_helper.dart';
 import '../controllers/all_sessions_controller.dart';
 import '../controllers/attendance_controller.dart';
-import '../screens/mark_attendance_screen.dart';
 import '../screens/carousel_attendance_screen.dart';
 import '../../../common/utils/constants/colors.dart';
 import '../../../common/utils/constants/sized.dart';

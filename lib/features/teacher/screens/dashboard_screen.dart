@@ -19,8 +19,8 @@ class DashboardScreen extends StatelessWidget {
   }
 
   final dashboardController = Get.find<DashboardController>();
-  final searchController = TextEditingController();
   final profileController = Get.put(TeacherProfileController());
+  final searchController = TextEditingController();
   final RxBool isLoading = RxBool(true);
   final RxBool isSearching = RxBool(false);
   @override

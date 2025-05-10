@@ -315,6 +315,10 @@ class AttendanceReportsScreen extends StatelessWidget {
                   elevation: 2,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
+                    side: BorderSide(
+                      color: dark ? TColors.indigo : Colors.grey.shade300,
+                      width: 2,
+                    ),
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(TSizes.md),
@@ -384,9 +388,11 @@ class AttendanceReportsScreen extends StatelessWidget {
                   elevation: 2,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
-                      
+                    side: BorderSide(
+                      color: dark ? TColors.indigo : Colors.grey.shade300,
+                      width: 2,
+                    ),
                   ),
-                  
                   child: Padding(
                     padding: const EdgeInsets.all(TSizes.md),
                     child: Column(
@@ -504,7 +510,10 @@ class AttendanceReportsScreen extends StatelessWidget {
                     elevation: 2,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
-                      
+                      side: BorderSide(
+                        color: dark ? TColors.indigo : Colors.grey.shade300,
+                        width: 2,
+                      ),
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(TSizes.md),
@@ -517,15 +526,27 @@ class AttendanceReportsScreen extends StatelessWidget {
                                 radius: 60.0,
                                 lineWidth: 10.0,
                                 animation: true,
+                                animationDuration: 2000,
                                 percent:
                                     reportsController.averageAttendance.value /
                                         100,
-                                center: Text(
-                                  '${reportsController.averageAttendance.value.toStringAsFixed(1)}%',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleMedium
-                                      ?.copyWith(fontWeight: FontWeight.bold),
+                                center: TweenAnimationBuilder<double>(
+                                  tween: Tween<double>(
+                                    begin: 0,
+                                    end: reportsController
+                                        .averageAttendance.value,
+                                  ),
+                                  duration: const Duration(seconds: 2),
+                                  builder: (context, value, child) {
+                                    return Text(
+                                      '${value.toStringAsFixed(1)}%',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium
+                                          ?.copyWith(
+                                              fontWeight: FontWeight.bold),
+                                    );
+                                  },
                                 ),
                                 footer: Padding(
                                   padding: const EdgeInsets.only(top: 8.0),
@@ -616,6 +637,10 @@ class AttendanceReportsScreen extends StatelessWidget {
                     elevation: 2,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
+                      // side: BorderSide(
+                      //   color: dark ? TColors.darkerGrey : Colors.grey.shade300,
+                      //   width: 1,
+                      // ),
                     ),
                     child: Column(
                       children: [
@@ -652,6 +677,11 @@ class AttendanceReportsScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(
                               TSizes.borderRadiusSm,
                             ),
+                            // border: Border.all(
+                            //   color: dark
+                            //       ? const Color.fromARGB(255, 67, 115, 226)
+                            //       : const Color.fromARGB(255, 28, 219, 229),
+                            // ),
                           ),
                           child: Row(
                             children: [
@@ -932,9 +962,9 @@ class AttendanceReportsScreen extends StatelessWidget {
     } else if (percentage >= 60) {
       return Colors.orange;
     } else if (percentage >= 50) {
-      return Colors.orange;
+      return Colors.orange.shade300;
     } else if (percentage >= 20) {
-      return Colors.blueAccent;
+      return Colors.redAccent.shade200;
     } else {
       return Colors.red;
     }

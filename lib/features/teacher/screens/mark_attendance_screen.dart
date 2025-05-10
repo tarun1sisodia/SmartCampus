@@ -375,7 +375,7 @@ class MarkAttendanceScreen extends StatelessWidget {
               attendanceController.submitAttendance();
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: dark ? TColors.yellow : TColors.primary,
+              backgroundColor: dark ? TColors.green : TColors.primary,
               foregroundColor: dark ? TColors.dark : Colors.white,
             ),
             child: const Text('Submit'),
