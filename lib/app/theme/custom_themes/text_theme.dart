@@ -17,7 +17,7 @@ class TtextTheme {
       letterSpacing: -0.5,
       height: 1.2,
     ),
-    
+
     // Headline styles for section headers
     headlineLarge: TextStyle().copyWith(
       fontSize: 32,
@@ -40,7 +40,7 @@ class TtextTheme {
       letterSpacing: 0,
       height: 1.4,
     ),
-    
+
     // Title styles for card titles, dialogs, etc.
     titleLarge: TextStyle().copyWith(
       fontSize: 16,
@@ -63,7 +63,7 @@ class TtextTheme {
       letterSpacing: 0.1,
       height: 1.4,
     ),
-    
+
     // Body styles for main content
     bodyLarge: TextStyle().copyWith(
       fontSize: 14,
@@ -86,7 +86,7 @@ class TtextTheme {
       letterSpacing: 0.25,
       height: 1.5,
     ),
-    
+
     // Label styles for buttons, fields, etc.
     labelLarge: TextStyle().copyWith(
       fontSize: 12,
@@ -103,7 +103,7 @@ class TtextTheme {
       height: 1.4,
     ),
     labelSmall: TextStyle(
-      fontSize: 12, 
+      fontSize: 12,
       color: TColors.textPrimary,
       letterSpacing: 0.5,
       height: 1.4,
@@ -119,7 +119,7 @@ class TtextTheme {
       letterSpacing: -0.5,
       height: 1.2,
     ),
-    
+
     // Headline styles
     headlineLarge: TextStyle().copyWith(
       fontSize: 32,
@@ -142,7 +142,7 @@ class TtextTheme {
       letterSpacing: 0,
       height: 1.4,
     ),
-    
+
     // Title styles
     titleLarge: TextStyle().copyWith(
       fontSize: 16,
@@ -165,7 +165,7 @@ class TtextTheme {
       letterSpacing: 0.1,
       height: 1.4,
     ),
-    
+
     // Body styles
     bodyLarge: TextStyle().copyWith(
       fontSize: 14,
@@ -184,11 +184,11 @@ class TtextTheme {
     bodySmall: TextStyle().copyWith(
       fontSize: 14,
       fontWeight: FontWeight.w500,
-      color: TColors.white.withOpacity(0.8), // Slightly dimmed for hierarchy
+      color: TColors.white.withAlpha(204), // Slightly dimmed for hierarchy
       letterSpacing: 0.25,
       height: 1.5,
     ),
-    
+
     // Label styles
     labelLarge: TextStyle().copyWith(
       fontSize: 12,
@@ -205,7 +205,7 @@ class TtextTheme {
       height: 1.4,
     ),
     labelSmall: TextStyle(
-      fontSize: 12, 
+      fontSize: 12,
       color: TColors.white,
       letterSpacing: 0.5,
       height: 1.4,

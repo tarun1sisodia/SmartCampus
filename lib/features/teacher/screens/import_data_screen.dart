@@ -100,12 +100,12 @@ class ImportDataScreen extends StatelessWidget {
                           ? Container(
                               padding: const EdgeInsets.all(TSizes.md),
                               decoration: BoxDecoration(
-                                color: Colors.grey.withOpacity(0.1),
+                                color: Colors.grey.withAlpha(26),
                                 borderRadius: BorderRadius.circular(
                                   TSizes.borderRadiusMd,
                                 ),
                                 border: Border.all(
-                                  color: Colors.grey.withOpacity(0.3),
+                                  color: Colors.grey.withAlpha(77),
                                 ),
                               ),
                               child: Row(
@@ -170,12 +170,12 @@ class ImportDataScreen extends StatelessWidget {
                                 width: double.infinity,
                                 padding: const EdgeInsets.all(TSizes.lg),
                                 decoration: BoxDecoration(
-                                  color: Colors.grey.withOpacity(0.1),
+                                  color: Colors.grey.withAlpha(26),
                                   borderRadius: BorderRadius.circular(
                                     TSizes.borderRadiusMd,
                                   ),
                                   border: Border.all(
-                                    color: Colors.grey.withOpacity(0.3),
+                                    color: Colors.grey.withAlpha(77),
                                     style: BorderStyle.solid,
                                   ),
                                 ),
@@ -325,10 +325,10 @@ class ImportDataScreen extends StatelessWidget {
             horizontal: TSizes.sm,
           ),
           decoration: BoxDecoration(
-            color: isSelected ? color.withOpacity(0.1) : Colors.transparent,
+            color: isSelected ? color.withAlpha(26) : Colors.transparent,
             borderRadius: BorderRadius.circular(TSizes.borderRadiusMd),
             border: Border.all(
-              color: isSelected ? color : Colors.grey.withOpacity(0.3),
+              color: isSelected ? color : Colors.grey.withAlpha(77),
               width: isSelected ? 2 : 1,
             ),
           ),

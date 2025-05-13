@@ -365,7 +365,7 @@ class CalendarController extends GetxController {
 
       // Sample the first session to check data
       if (allSessions.isNotEmpty) {
-     final sample = allSessions.first;
+        allSessions.first;
         //print('Sample session - ID: ${sample.id}, Subject: ${sample.subjectName}, Course: ${sample.courseName}');
       }
 

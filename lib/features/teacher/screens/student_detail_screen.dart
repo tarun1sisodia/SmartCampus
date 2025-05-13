@@ -156,7 +156,7 @@ class StudentDetailScreen extends StatelessWidget {
                                   Positioned.fill(
                                     child: Container(
                                       decoration: BoxDecoration(
-                                        color: Colors.black.withOpacity(0.5),
+                                        color: Colors.black.withAlpha(128),
                                         shape: BoxShape.circle,
                                       ),
                                       child: const Center(
@@ -751,10 +751,10 @@ class StudentDetailScreen extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: isSelected ? color.withOpacity(0.2) : Colors.transparent,
+          color: isSelected ? color.withAlpha(13) : Colors.transparent,
           borderRadius: BorderRadius.circular(TSizes.borderRadiusMd),
           border: Border.all(
-            color: isSelected ? color : Colors.grey.withOpacity(0.3),
+            color: isSelected ? color : Colors.grey.withAlpha(77),
             width: isSelected ? 2 : 1,
           ),
         ),

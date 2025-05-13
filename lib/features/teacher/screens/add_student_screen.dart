@@ -213,8 +213,8 @@ class AddStudentScreen extends StatelessWidget {
                 ),
                 color: isSelected
                     ? (dark
-                        ? TColors.darkerGrey.withOpacity(0.7)
-                        : Colors.grey.withOpacity(0.1))
+                        ? TColors.darkerGrey.withAlpha(179)
+                        : Colors.grey.withAlpha(25))
                     : null,
                 child: InkWell(
                   onTap: () {
@@ -567,7 +567,7 @@ class AddStudentScreen extends StatelessWidget {
                         color: dark ? TColors.darkBackground : TColors.light,
                         borderRadius:
                             BorderRadius.circular(TSizes.cardRadiusMd),
-                        border: Border.all(color: Colors.grey.withOpacity(0.2)),
+                        border: Border.all(color: Colors.grey.withAlpha(13)),
                       ),
                       child: Text(
                         'Try adding new students first using supabase',

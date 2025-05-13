@@ -41,7 +41,7 @@ class TStorageUtility {
   }
 
   /// Reads data of type T from local storage
-  /// Usage: final token = storage.readData<String>('user_token')
+  /// Usage: final token = storage.readData String>('user_token')
   T? readData<T>(String key) {
     return _storage.read<T>(key);
   }

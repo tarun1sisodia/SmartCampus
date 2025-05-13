@@ -340,12 +340,12 @@ class AttendanceController extends GetxController {
       final sessionDate = session.date;
 
       // Debug information
-      print('Checking if session is running:');
-      print('Session ID: $sessionId');
-      print('Session date: $sessionDate');
-      print('Current date: $now');
-      print('Session start time: ${session.startTime}');
-      print('Session end time: ${session.endTime}');
+      // print('Checking if session is running:');
+      // print('Session ID: $sessionId');
+      // print('Session date: $sessionDate');
+      // print('Current date: $now');
+      // print('Session start time: ${session.startTime}');
+      // print('Session end time: ${session.endTime}');
 
       // Check if the session is today
       if (sessionDate.year == now.year &&
@@ -353,7 +353,8 @@ class AttendanceController extends GetxController {
           sessionDate.day == now.day) {
         // If there's no specific time, consider it running all day
         if (session.startTime == null || session.endTime == null) {
-          print('No specific time set, considering session running all day');
+          Get.snackbar('No specific time set', 'considering session running all day');
+          // print('No specific time set, considering session running all day');
           return true;
         }
 
@@ -415,19 +416,20 @@ class AttendanceController extends GetxController {
             sessionEnd = DateTime(now.year, now.month, now.day, hour, minute);
           }
 
-          print('Parsed start time: $sessionStart');
-          print('Parsed end time: $sessionEnd');
-          print('Current time: $now');
+          // print('Parsed start time: $sessionStart');
+          // print('Parsed end time: $sessionEnd');
+          // print('Current time: $now');
 
           // Check if current time is between start and end
           bool isAfterStart = now.isAfter(sessionStart);
           bool isBeforeEnd = now.isBefore(sessionEnd);
-          print('Is after start: $isAfterStart');
-          print('Is before end: $isBeforeEnd');
+          // print('Is after start: $isAfterStart');
+          // print('Is before end: $isBeforeEnd');
 
           return isAfterStart && isBeforeEnd;
         } catch (e) {
-          print('Error parsing session time: $e');
+          Get.snackbar('Check the code at Attendance Controller', 'Open The Code ');
+          // print('Error parsing session time: $e');
           // If parsing fails, default to running
           return true;
         }
@@ -435,7 +437,7 @@ class AttendanceController extends GetxController {
 
       return false;
     } catch (e) {
-      print('Error in isSessionRunning: $e');
+      // print('Error in isSessionRunning: $e');
       return false;
     }
   }

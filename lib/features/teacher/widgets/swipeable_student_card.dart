@@ -22,8 +22,8 @@ class SwipeableStudentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dark = THelperFunction.isDarkMode(context);
-    final screenSize = MediaQuery.of(context).size;
-    final isMobile = screenSize.width <= 500;
+    // final screenSize = MediaQuery.of(context).size;
+    // final isMobile = screenSize.width <= 500;
     final isLandscape = DeviceUtility.isLandscapeOrientation(context);
 
     // Card height calculation - taller in portrait, shorter in landscape

@@ -119,7 +119,8 @@ class CarouselAttendanceController extends GetxController {
             sessionStartTime.value = parsedStartTime;
           }
         } catch (e) {
-          print('Error parsing start time: $e');
+          Get.snackbar('Error Parsing Start time','Carousel Attendance Controller');
+          // print('Error parsing start time: $e');
         }
       }
 
@@ -162,7 +163,8 @@ class CarouselAttendanceController extends GetxController {
             sessionEndTime.value = parsedEndTime;
           }
         } catch (e) {
-          print('Error parsing end time: $e');
+          Get.snackbar('Error parsing end time:','The Code');
+          // print('Error parsing end time: $e');
         }
       }
 

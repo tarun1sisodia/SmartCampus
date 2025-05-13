@@ -14,7 +14,7 @@ class TElevatedButtonTheme {
     style: ElevatedButton.styleFrom(
       // Subtle elevation for depth perception
       elevation: 2,
-      shadowColor: TColors.dark.withOpacity(0.3),
+      shadowColor: TColors.dark.withAlpha(77),
 
       // Clear color contrast (Aesthetic-Usability Effect)
       foregroundColor: TColors.white,
@@ -54,7 +54,7 @@ class TElevatedButtonTheme {
   static final darkElevatedButton = ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
       elevation: 2,
-      shadowColor: TColors.dark.withOpacity(0.5),
+      shadowColor: TColors.dark.withAlpha(128),
       foregroundColor: TColors.white,
       backgroundColor: TColors.primary,
       disabledForegroundColor: TColors.grey,

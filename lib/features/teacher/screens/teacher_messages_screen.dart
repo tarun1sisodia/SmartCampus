@@ -212,8 +212,8 @@ class TeacherMessagesScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: isUnread
             ? (dark
-                ? TColors.darkerGrey.withOpacity(0.3)
-                : TColors.light.withOpacity(0.5))
+                ? TColors.darkerGrey.withAlpha(77)
+                : TColors.light.withAlpha(128))
             : Colors.transparent,
         borderRadius: BorderRadius.circular(TSizes.borderRadiusMd),
       ),
@@ -379,7 +379,7 @@ class _MessageDetailScreen extends StatelessWidget {
               color: Theme.of(context).scaffoldBackgroundColor,
               boxShadow: [
                 BoxShadow(
-                  color: TColors.dark.withOpacity(0.05),
+                  color: TColors.dark.withAlpha(13),
                   blurRadius: 10,
                   offset: const Offset(0, -5),
                 ),

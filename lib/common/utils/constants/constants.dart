@@ -49,17 +49,17 @@ class TColors {
   // BACKGROUND COLORS - For surfaces and containers
   static const Color light = Color(0xFFF6F6F6);
   static const Color dark = Color(0xFF272727);
-  static Color dark54 = Color(0xFF272727).withOpacity(0.54);
+  static Color dark54 = Color(0xFF272727).withAlpha(138);
   static const Color primaryBackground = Color(0xFFF3F5FF);
   static const Color secondaryBackground = Color(0xFFFFFDE7);
-  
+
   // Background colors from AppColors
   static const Color backgroundLight = Color(0xFFF6F6F6); // Same as light
   static const Color backgroundDark = Color(0xFF272727); // Same as dark
 
   // CONTAINER COLORS - For cards, dialogs, etc.
   static const Color lightContainer = Color(0xFFF6F6F6);
-  static Color darkContainer = TColors.white.withOpacity(0.1);
+  static Color darkContainer = TColors.white.withAlpha(26);
 
   // BUTTON COLORS - For interactive elements
   static const Color buttonPrimary = primary;
@@ -126,13 +126,13 @@ class TColors {
   // DARK MODE SPECIFIC COLORS
   static const Color darkSurface = Color(0xFF121212);
   static const Color darkBackground = Color(0xFF1E1E1E);
-  static Color darkElevated = Colors.white.withOpacity(0.05);
-  
+  static Color darkElevated = Colors.white.withAlpha(13);
+
   // SWIPE CARD COLORS - From AppColors
   static const Color presentSwipe = Color(0xFF4CAF50); // Same as success
   static const Color absentSwipe = Color(0xFFE53935); // Same as error
   static const Color unopenedCard = Color(0xFFE0E0E0); // Same as grey
-  
+
   // Add deepPurple for backward compatibility (used in several files)
   static const Color deepPurple = Color(0xFF673AB7);
 }

@@ -65,8 +65,8 @@ class DashboardScreen extends StatelessWidget {
                         baseColor:
                             dark ? TColors.darkerGrey : Colors.grey.shade300,
                         highlightColor: dark
-                            ? TColors.yellow.withOpacity(0.5)
-                            : TColors.primary.withOpacity(0.5),
+                            ? TColors.yellow.withAlpha(128)
+                            : TColors.primary.withAlpha(128),
                         child: Row(
                           children: [
                             // Profile image shimmer
@@ -134,8 +134,8 @@ class DashboardScreen extends StatelessWidget {
                         baseColor:
                             dark ? TColors.darkerGrey : Colors.grey.shade300,
                         highlightColor: dark
-                            ? TColors.yellow.withOpacity(0.5)
-                            : TColors.primary.withOpacity(0.5),
+                            ? TColors.yellow.withAlpha(128)
+                            : TColors.primary.withAlpha(128),
                         child: Container(
                           height: 50,
                           decoration: BoxDecoration(
@@ -153,8 +153,8 @@ class DashboardScreen extends StatelessWidget {
                         baseColor:
                             dark ? TColors.darkerGrey : Colors.grey.shade300,
                         highlightColor: dark
-                            ? TColors.yellow.withOpacity(0.5)
-                            : TColors.primary.withOpacity(0.5),
+                            ? TColors.yellow.withAlpha(128)
+                            : TColors.primary.withAlpha(128),
                         child: Row(
                           children: [
                             // First stat card
@@ -174,7 +174,7 @@ class DashboardScreen extends StatelessWidget {
                                       width: 32,
                                       height: 32,
                                       decoration: BoxDecoration(
-                                        color: Colors.white.withOpacity(0.5),
+                                        color: Colors.white.withAlpha(128),
                                         shape: BoxShape.circle,
                                       ),
                                     ),
@@ -184,7 +184,7 @@ class DashboardScreen extends StatelessWidget {
                                       height: 24,
                                       width: 40,
                                       decoration: BoxDecoration(
-                                        color: Colors.white.withOpacity(0.5),
+                                        color: Colors.white.withAlpha(128),
                                         borderRadius: BorderRadius.circular(4),
                                       ),
                                     ),
@@ -194,7 +194,7 @@ class DashboardScreen extends StatelessWidget {
                                       height: 14,
                                       width: 60,
                                       decoration: BoxDecoration(
-                                        color: Colors.white.withOpacity(0.5),
+                                        color: Colors.white.withAlpha(128),
                                         borderRadius: BorderRadius.circular(4),
                                       ),
                                     ),
@@ -220,7 +220,7 @@ class DashboardScreen extends StatelessWidget {
                                       width: 32,
                                       height: 32,
                                       decoration: BoxDecoration(
-                                        color: Colors.white.withOpacity(0.5),
+                                        color: Colors.white.withAlpha(128),
                                         shape: BoxShape.circle,
                                       ),
                                     ),
@@ -230,7 +230,7 @@ class DashboardScreen extends StatelessWidget {
                                       height: 24,
                                       width: 40,
                                       decoration: BoxDecoration(
-                                        color: Colors.white.withOpacity(0.5),
+                                        color: Colors.white.withAlpha(128),
                                         borderRadius: BorderRadius.circular(4),
                                       ),
                                     ),
@@ -240,7 +240,7 @@ class DashboardScreen extends StatelessWidget {
                                       height: 14,
                                       width: 60,
                                       decoration: BoxDecoration(
-                                        color: Colors.white.withOpacity(0.5),
+                                        color: Colors.white.withAlpha(128),
                                         borderRadius: BorderRadius.circular(4),
                                       ),
                                     ),
@@ -259,8 +259,8 @@ class DashboardScreen extends StatelessWidget {
                         baseColor:
                             dark ? TColors.darkerGrey : Colors.grey.shade300,
                         highlightColor: dark
-                            ? TColors.yellow.withOpacity(0.5)
-                            : TColors.primary.withOpacity(0.5),
+                            ? TColors.yellow.withAlpha(128)
+                            : TColors.primary.withAlpha(128),
                         child: Container(
                           height: 265,
                           width: double.infinity,
@@ -277,7 +277,7 @@ class DashboardScreen extends StatelessWidget {
                                 height: 25,
                                 width: 180,
                                 decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.5),
+                                  color: Colors.white.withAlpha(128),
                                   borderRadius: BorderRadius.circular(4),
                                 ),
                               ),
@@ -286,7 +286,7 @@ class DashboardScreen extends StatelessWidget {
                                 width: 160,
                                 height: 160,
                                 decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.5),
+                                  color: Colors.white.withAlpha(128),
                                   shape: BoxShape.circle,
                                 ),
                               ),
@@ -295,7 +295,7 @@ class DashboardScreen extends StatelessWidget {
                                 height: 12,
                                 width: 200,
                                 decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.5),
+                                  color: Colors.white.withAlpha(128),
                                   borderRadius: BorderRadius.circular(4),
                                 ),
                               ),
@@ -311,8 +311,8 @@ class DashboardScreen extends StatelessWidget {
                         baseColor:
                             dark ? TColors.darkerGrey : Colors.grey.shade300,
                         highlightColor: dark
-                            ? TColors.yellow.withOpacity(0.5)
-                            : TColors.primary.withOpacity(0.5),
+                            ? TColors.yellow.withAlpha(128)
+                            : TColors.primary.withAlpha(128),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -351,8 +351,8 @@ class DashboardScreen extends StatelessWidget {
                                   ? TColors.darkerGrey
                                   : Colors.grey.shade300,
                               highlightColor: dark
-                                  ? TColors.yellow.withOpacity(0.5)
-                                  : TColors.primary.withOpacity(0.5),
+                                  ? TColors.yellow.withAlpha(128)
+                                  : TColors.primary.withAlpha(128),
                               child: Container(
                                 height: 80,
                                 margin: const EdgeInsets.only(
@@ -370,7 +370,7 @@ class DashboardScreen extends StatelessWidget {
                                       width: 50,
                                       height: 50,
                                       decoration: BoxDecoration(
-                                        color: Colors.white.withOpacity(0.5),
+                                        color: Colors.white.withAlpha(128),
                                         shape: BoxShape.circle,
                                       ),
                                     ),
@@ -388,7 +388,7 @@ class DashboardScreen extends StatelessWidget {
                                             width: 150,
                                             decoration: BoxDecoration(
                                               color:
-                                                  Colors.white.withOpacity(0.5),
+                                                  Colors.white.withAlpha(128),
                                               borderRadius:
                                                   BorderRadius.circular(4),
                                             ),
@@ -399,7 +399,7 @@ class DashboardScreen extends StatelessWidget {
                                             width: 200,
                                             decoration: BoxDecoration(
                                               color:
-                                                  Colors.white.withOpacity(0.5),
+                                                  Colors.white.withAlpha(128),
                                               borderRadius:
                                                   BorderRadius.circular(4),
                                             ),
@@ -410,7 +410,7 @@ class DashboardScreen extends StatelessWidget {
                                             width: 120,
                                             decoration: BoxDecoration(
                                               color:
-                                                  Colors.white.withOpacity(0.5),
+                                                  Colors.white.withAlpha(128),
                                               borderRadius:
                                                   BorderRadius.circular(4),
                                             ),
@@ -423,7 +423,7 @@ class DashboardScreen extends StatelessWidget {
                                       width: 24,
                                       height: 24,
                                       decoration: BoxDecoration(
-                                        color: Colors.white.withOpacity(0.5),
+                                        color: Colors.white.withAlpha(128),
                                         shape: BoxShape.circle,
                                       ),
                                     ),

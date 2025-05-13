@@ -49,13 +49,11 @@ final ThemeData appTheme = ThemeData(
     primary: TColors.primary,
     secondary: TColors.secondary,
     error: TColors.error,
-    background: TColors.backgroundLight,
     // Expanded color scheme for better visual hierarchy
     surface: Colors.white,
     onPrimary: Colors.white,
     onSecondary: Colors.white,
     onSurface: TColors.textPrimary,
-    onBackground: TColors.textPrimary,
   ),
   scaffoldBackgroundColor: TColors.backgroundLight,
 

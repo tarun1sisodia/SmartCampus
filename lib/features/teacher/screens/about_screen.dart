@@ -88,7 +88,7 @@ class AboutScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(TSizes.sm),
                 decoration: BoxDecoration(
                   color: (dark ? TColors.yellow : TColors.primary)
-                      .withOpacity(0.1),
+                      .withAlpha(26),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
@@ -106,7 +106,7 @@ class AboutScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(TSizes.sm),
                 decoration: BoxDecoration(
                   color: (dark ? TColors.yellow : TColors.primary)
-                      .withOpacity(0.1),
+                      .withAlpha(26),
                   shape: BoxShape.circle,
                 ),
                 child: Image.asset(

@@ -33,8 +33,8 @@ class OnboardingNextButton extends StatelessWidget {
               ),
               elevation: 5,
               shadowColor: dark
-                  ? TColors.buttonPrimary.withOpacity(0.5)
-                  : TColors.primary.withOpacity(0.5),
+                  ? TColors.buttonPrimary.withAlpha(128)
+                  : TColors.primary.withAlpha(128),
               padding: const EdgeInsets.all(0),
             ),
             child: FittedBox(
