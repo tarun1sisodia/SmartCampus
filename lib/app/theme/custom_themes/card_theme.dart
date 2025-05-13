@@ -12,7 +12,7 @@ class TCardTheme {
   // Light theme card
   static final CardTheme lightCardTheme = CardTheme(
     color: TColors.lightContainerHighlight,
-    shadowColor: TColors.dark.withOpacity(0.1),
+    shadowColor: TColors.dark.withAlpha(26),
     elevation: 2,
 
     // Consistent corner radius (Aesthetic-Usability Effect)
@@ -30,7 +30,7 @@ class TCardTheme {
   // Dark theme card
   static final CardTheme darkCardTheme = CardTheme(
     color: TColors.darkSurface,
-    shadowColor: Colors.black.withOpacity(0.3),
+    shadowColor: Colors.black.withAlpha(77),
     elevation: 3,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),

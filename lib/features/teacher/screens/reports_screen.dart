@@ -127,7 +127,7 @@ class ReportsScreen extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
       ),
-      color: dark ? TColors.linkedin : TColors.accent,
+      color: dark ? TColors.backgroundDark : TColors.backgroundLight,
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
@@ -358,8 +358,8 @@ class ReportsScreen extends StatelessWidget {
         final classModel = reportsController.classes.firstWhere(
           (c) => c.id == reportsController.selectedClassId.value,
         );
-        final className =
-            '${classModel.subjectName} - ${classModel.courseName} Year ${classModel.semester}';
+
+        '${classModel.subjectName} - ${classModel.courseName} Year ${classModel.semester}';
 
         return pw.Column(
           crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -413,6 +413,8 @@ class ReportsScreen extends StatelessWidget {
                               'Attendance',
                               '${attendancePercentage.toStringAsFixed(1)}%',
                             ),
+                            _buildPdfStat(
+                                'Total Sessions', totalSessions.toString())
                           ],
                         ),
                       ],
@@ -452,7 +454,7 @@ class ReportsScreen extends StatelessWidget {
     );
   }
 
-  pw.Widget _buildPdfTableCell(String text, {bool isHeader = false}) {
+  /* pw.Widget _buildPdfTableCell(String text, {bool isHeader = false}) {
     //print('Building PDF table cell: $text');
     return pw.Padding(
       padding: const pw.EdgeInsets.all(8),
@@ -466,7 +468,7 @@ class ReportsScreen extends StatelessWidget {
       ),
     );
   }
-
+*/
   Future<void> _savePdfBasedOnPlatform(
     List<int> bytes,
     String fileName,
@@ -546,9 +548,9 @@ void _downloadFileForWeb(String fileName, List<int> bytes) {
   //print('Downloading file for web: $fileName');
   final blob = html.Blob([bytes]);
   final url = html.Url.createObjectUrlFromBlob(blob);
-  final anchor = html.AnchorElement(href: url)
-    ..target = 'blank'
-    ..download = fileName
-    ..click();
+  // final anchor = html.AnchorElement(href: url)
+  //   ..target = 'blank'
+  //   ..download = fileName
+  //   ..click();
   html.Url.revokeObjectUrl(url);
 }

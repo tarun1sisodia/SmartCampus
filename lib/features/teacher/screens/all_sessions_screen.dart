@@ -17,7 +17,7 @@ class AllSessionsScreen extends StatelessWidget {
   late final AllSessionsController allSessionsController;
 
   AllSessionsScreen({super.key}) {
-    print('AllSessionsScreen initialized');
+    // print('AllSessionsScreen initialized');
     // Initialize the controller in the constructor
     if (Get.isRegistered<AllSessionsController>()) {
       allSessionsController = Get.put(AllSessionsController());
@@ -28,9 +28,9 @@ class AllSessionsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('Building AllSessionsScreen');
+    // print('Building AllSessionsScreen');
     final dark = THelperFunction.isDarkMode(context);
-    print('Dark mode: $dark');
+    // print('Dark mode: $dark');
 
     return Obx(() {
       return Scaffold(
@@ -77,7 +77,7 @@ class AllSessionsScreen extends StatelessWidget {
         if (!allSessionsController.isSelectionMode.value)
           IconButton(
             onPressed: () {
-              print('Refresh button pressed');
+              // print('Refresh button pressed');
               allSessionsController.loadAllSessions();
             },
             icon: const Icon(Iconsax.refresh),
@@ -88,8 +88,7 @@ class AllSessionsScreen extends StatelessWidget {
 
   Widget _buildBody(BuildContext context, bool dark) {
     return Obx(() {
-      print(
-          'Obx triggered: isLoading=${allSessionsController.isLoading.value}');
+      // print('Obx triggered: isLoading=${allSessionsController.isLoading.value}');
       if (allSessionsController.isLoading.value) {
         return Column(
           children: [
@@ -188,7 +187,7 @@ class AllSessionsScreen extends StatelessWidget {
       }
 
       if (allSessionsController.allSessions.isEmpty) {
-        print('No sessions found');
+        // print('No sessions found');
         return Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -216,7 +215,7 @@ class AllSessionsScreen extends StatelessWidget {
 
       return RefreshIndicator(
         onRefresh: () async {
-          print('RefreshIndicator triggered');
+          // print('RefreshIndicator triggered');
           await allSessionsController.loadAllSessions();
         },
         color: dark ? TColors.yellow : TColors.primary,
@@ -242,14 +241,14 @@ class AllSessionsScreen extends StatelessWidget {
                           ),
                         ),
                         onChanged: (value) {
-                          print('Search text changed: $value');
+                          // print('Search text changed: $value');
                           allSessionsController.filterSessions();
                         },
                       ),
                     ),
                     IconButton(
                       onPressed: () {
-                        print('Filter button pressed');
+                        // print('Filter button pressed');
                         _showFilterOptions(context);
                       },
                       icon: const Icon(Iconsax.filter),
@@ -267,7 +266,7 @@ class AllSessionsScreen extends StatelessWidget {
                 itemCount: allSessionsController.filteredSessions.length,
                 itemBuilder: (context, index) {
                   final session = allSessionsController.filteredSessions[index];
-                  print('Rendering session: ${session.id}');
+                  // print('Rendering session: ${session.id}');
                   final formattedDate = DateFormat(
                     'EEEE, MMMM d, yyyy',
                   ).format(session.date);
@@ -438,7 +437,7 @@ class AllSessionsScreen extends StatelessWidget {
                                       flex: 4,
                                       child: ElevatedButton.icon(
                                         onPressed: () {
-                                          //print(
+                                          // print(
                                           // 'Navigating to carousel attendance screen');
                                           // Check if session is running before allowing access
                                           if (!attendanceController
@@ -473,12 +472,11 @@ class AllSessionsScreen extends StatelessWidget {
                                               ? TColors.dark
                                               : Colors.white,
                                           disabledBackgroundColor: dark
-                                              ? TColors.yellow.withOpacity(0.5)
-                                              : TColors.primary
-                                                  .withOpacity(0.5),
+                                              ? TColors.yellow.withAlpha(128)
+                                              : TColors.primary.withAlpha(128),
                                           disabledForegroundColor: dark
-                                              ? TColors.dark.withOpacity(0.5)
-                                              : Colors.white.withOpacity(0.5),
+                                              ? TColors.dark.withAlpha(128)
+                                              : Colors.white.withAlpha(128),
                                           padding: const EdgeInsets.symmetric(
                                             horizontal: TSizes.sm,
                                             vertical: TSizes.sm,
@@ -489,7 +487,7 @@ class AllSessionsScreen extends StatelessWidget {
 
                                     ElevatedButton.icon(
                                       onPressed: () {
-                                        //print(
+                                        // print(
                                         // 'Navigating to carousel attendance screen');
                                         // Check if session is running before allowing access
                                         if (!attendanceController
@@ -521,11 +519,11 @@ class AllSessionsScreen extends StatelessWidget {
                                         foregroundColor:
                                             dark ? Colors.white : TColors.dark,
                                         disabledBackgroundColor: dark
-                                            ? TColors.blue.withOpacity(0.5)
-                                            : TColors.yellow.withOpacity(0.5),
+                                            ? TColors.blue.withAlpha(128)
+                                            : TColors.yellow.withAlpha(128),
                                         disabledForegroundColor: dark
-                                            ? Colors.white.withOpacity(0.5)
-                                            : TColors.dark.withOpacity(0.5),
+                                            ? Colors.white.withAlpha(128)
+                                            : TColors.dark.withAlpha(128),
                                         padding: const EdgeInsets.symmetric(
                                           horizontal: TSizes.sm,
                                           vertical: TSizes.sm,
@@ -536,8 +534,7 @@ class AllSessionsScreen extends StatelessWidget {
                                     // Add delete button
                                     IconButton(
                                       onPressed: () {
-                                        print(
-                                            'Delete button pressed for session: ${session.id}');
+                                        // print('Delete button pressed for session: ${session.id}');
                                         _showDeleteConfirmation(
                                           context,
                                           session.id,
@@ -597,7 +594,7 @@ class AllSessionsScreen extends StatelessWidget {
   }
 
   void _showFilterOptions(BuildContext context) {
-    print('Showing filter options');
+    // print('Showing filter options');
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -733,7 +730,7 @@ class AllSessionsScreen extends StatelessWidget {
   }
 
   void _showDeleteConfirmation(BuildContext context, String sessionId) {
-    print('Showing delete confirmation for session: $sessionId');
+    // print('Showing delete confirmation for session: $sessionId');
     showDialog(
       context: context,
       builder: (context) {
@@ -767,7 +764,7 @@ class AllSessionsScreen extends StatelessWidget {
   // Add method for confirming deletion of multiple sessions
   void _showDeleteSelectedConfirmation(BuildContext context) {
     final count = allSessionsController.selectedSessionIds.length;
-    print('Showing delete confirmation for $count selected sessions');
+    // print('Showing delete confirmation for $count selected sessions');
 
     showDialog(
       context: context,

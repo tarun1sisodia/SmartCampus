@@ -29,7 +29,7 @@ class GoogleSignInService extends GetxService {
 
       return res.user;
     } catch (error) {
-      print('Error signing in with Google: $error');
+      // print('Error signing in with Google: $error');
       return null;
     }
   }

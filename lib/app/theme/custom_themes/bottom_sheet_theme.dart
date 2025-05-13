@@ -21,7 +21,7 @@ class TBottomSheetTheme {
     modalBackgroundColor: TColors.white,
 
     // Shadow for depth perception
-    shadowColor: TColors.dark.withOpacity(0.1),
+    shadowColor: TColors.dark.withAlpha(26),
     elevation: 5,
 
     // Constraints for consistent sizing
@@ -47,7 +47,7 @@ class TBottomSheetTheme {
     dragHandleSize: Size(40, 4),
     backgroundColor: TColors.dark,
     modalBackgroundColor: TColors.dark,
-    shadowColor: Colors.black.withOpacity(0.5),
+    shadowColor: Colors.black.withAlpha(128),
     elevation: 5,
     constraints: BoxConstraints(
       minWidth: double.infinity,

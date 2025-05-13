@@ -49,7 +49,7 @@ class TAppTheme {
     // Implementing Law of Common Region with consistent surface treatments
     colorScheme: ColorScheme.light(
       primary: TColors.blue,
-      secondary: TColors.blue.withOpacity(0.8),
+      secondary: TColors.blue.withAlpha(204),
       surface: TColors.white,
       error: Colors.red.shade700,
     ),

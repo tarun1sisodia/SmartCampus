@@ -19,7 +19,7 @@ class ProfileImageViewScreen extends StatelessWidget {
     final imageSize = size.width * 0.8; // 80% of screen width
 
     return Scaffold(
-      backgroundColor: TColors.dark.withOpacity(0.9),
+      backgroundColor: TColors.dark.withAlpha(230),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -44,7 +44,7 @@ class ProfileImageViewScreen extends StatelessWidget {
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: TColors.dark.withOpacity(0.3),
+                    color: TColors.dark.withAlpha(77),
                     blurRadius: 20,
                     spreadRadius: 5,
                   ),

@@ -9,7 +9,7 @@ class HelpScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dark = THelperFunction.isDarkMode(context);
+    THelperFunction.isDarkMode(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -125,7 +125,7 @@ class HelpScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(TSizes.md),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
+                  color: color.withAlpha(26),
                   borderRadius: BorderRadius.circular(TSizes.borderRadiusMd),
                 ),
                 child: Icon(icon, color: color, size: 32),
@@ -264,7 +264,7 @@ class HelpScreen extends StatelessWidget {
               leading: Container(
                 padding: const EdgeInsets.all(TSizes.sm),
                 decoration: BoxDecoration(
-                  color: Colors.blue.withOpacity(0.1),
+                  color: Colors.blue.withAlpha(26),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(Iconsax.message, color: Colors.blue),
@@ -279,7 +279,7 @@ class HelpScreen extends StatelessWidget {
               leading: Container(
                 padding: const EdgeInsets.all(TSizes.sm),
                 decoration: BoxDecoration(
-                  color: Colors.green.withOpacity(0.1),
+                  color: Colors.green.withAlpha(26),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(Iconsax.call, color: Colors.green),
@@ -294,7 +294,7 @@ class HelpScreen extends StatelessWidget {
               leading: Container(
                 padding: const EdgeInsets.all(TSizes.sm),
                 decoration: BoxDecoration(
-                  color: Colors.purple.withOpacity(0.1),
+                  color: Colors.purple.withAlpha(26),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(Iconsax.global, color: Colors.purple),

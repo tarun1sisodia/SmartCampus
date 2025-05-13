@@ -43,7 +43,7 @@ class CalendarScreen extends StatelessWidget {
         // In the build method, update the loading section:
 
         if (controller.isLoading.value) {
-          final dark = THelperFunction.isDarkMode(context);
+          THelperFunction.isDarkMode(context);
           return Column(
             children: [
               _buildShimmerActiveSessionsIndicator(),
@@ -77,9 +77,8 @@ class CalendarScreen extends StatelessWidget {
 
     return Shimmer.fromColors(
       baseColor: dark ? TColors.darkerGrey : Colors.grey.shade300,
-      highlightColor: dark
-          ? TColors.yellow.withOpacity(0.5)
-          : TColors.primary.withOpacity(0.5),
+      highlightColor:
+          dark ? TColors.yellow.withAlpha(128) : TColors.primary.withAlpha(128),
       child: Card(
         margin: const EdgeInsets.symmetric(vertical: 4.0),
         child: Container(
@@ -98,9 +97,8 @@ class CalendarScreen extends StatelessWidget {
 
     return Shimmer.fromColors(
       baseColor: dark ? TColors.darkerGrey : Colors.grey.shade300,
-      highlightColor: dark
-          ? TColors.yellow.withOpacity(0.5)
-          : TColors.primary.withOpacity(0.5),
+      highlightColor:
+          dark ? TColors.yellow.withAlpha(128) : TColors.primary.withAlpha(128),
       child: Container(
         margin: const EdgeInsets.all(8.0),
         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
@@ -114,7 +112,7 @@ class CalendarScreen extends StatelessWidget {
               width: 12,
               height: 12,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.5),
+                color: Colors.white.withAlpha(128),
                 shape: BoxShape.circle,
               ),
             ),
@@ -122,7 +120,7 @@ class CalendarScreen extends StatelessWidget {
             Container(
               width: 150,
               height: 12,
-              color: Colors.white.withOpacity(0.5),
+              color: Colors.white.withAlpha(128),
             ),
           ],
         ),
@@ -135,9 +133,8 @@ class CalendarScreen extends StatelessWidget {
 
     return Shimmer.fromColors(
       baseColor: dark ? TColors.darkerGrey : Colors.grey.shade300,
-      highlightColor: dark
-          ? TColors.yellow.withOpacity(0.5)
-          : TColors.primary.withOpacity(0.5),
+      highlightColor:
+          dark ? TColors.yellow.withAlpha(128) : TColors.primary.withAlpha(128),
       child: Container(
         margin: const EdgeInsets.all(8.0),
         height: 300.0,
@@ -153,7 +150,7 @@ class CalendarScreen extends StatelessWidget {
               height: 50,
               margin: const EdgeInsets.all(8.0),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.5),
+                color: Colors.white.withAlpha(128),
                 borderRadius: BorderRadius.circular(4.0),
               ),
             ),
@@ -170,7 +167,7 @@ class CalendarScreen extends StatelessWidget {
                   return Container(
                     margin: const EdgeInsets.all(4.0),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.5),
+                      color: Colors.white.withAlpha(128),
                       borderRadius: BorderRadius.circular(4.0),
                     ),
                   );
@@ -197,7 +194,7 @@ class CalendarScreen extends StatelessWidget {
         margin: const EdgeInsets.all(8.0),
         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
         decoration: BoxDecoration(
-          color: TColors.primary.withOpacity(0.1),
+          color: TColors.primary.withAlpha(26),
           borderRadius: BorderRadius.circular(8.0),
         ),
         child: Row(
@@ -260,7 +257,7 @@ class CalendarScreen extends StatelessWidget {
             shape: BoxShape.circle,
           ),
           todayDecoration: BoxDecoration(
-            color: TColors.primary.withOpacity(0.5),
+            color: TColors.primary.withAlpha(128),
             shape: BoxShape.circle,
           ),
           selectedDecoration: BoxDecoration(
@@ -270,9 +267,9 @@ class CalendarScreen extends StatelessWidget {
         ),
         // Add this to customize the format button text
         availableCalendarFormats: const {
-          CalendarFormat.month: 'Month',
-          CalendarFormat.twoWeeks: '2 Weeks',
-          CalendarFormat.week: 'Week',
+          CalendarFormat.month: 'Week',
+          CalendarFormat.twoWeeks: 'Month',
+          CalendarFormat.week: '2 Week',
         },
         // Optional: You can also customize the header style
         headerStyle: HeaderStyle(
@@ -395,7 +392,7 @@ class CalendarScreen extends StatelessWidget {
                   vertical: 4.0,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.green.withOpacity(0.1),
+                  color: Colors.green.withAlpha(26),
                   borderRadius: BorderRadius.circular(4.0),
                 ),
                 child: Text(
@@ -416,8 +413,8 @@ class CalendarScreen extends StatelessWidget {
               ),
               decoration: BoxDecoration(
                 color: isMySession
-                    ? TColors.primary.withOpacity(0.1)
-                    : Colors.grey.withOpacity(0.1),
+                    ? TColors.primary.withAlpha(26)
+                    : Colors.grey.withAlpha(26),
                 borderRadius: BorderRadius.circular(4.0),
               ),
               child: Text(

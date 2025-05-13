@@ -196,7 +196,7 @@ class SessionDetailsScreen extends StatelessWidget {
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: Colors.green.withOpacity(0.1),
+                      color: Colors.green.withAlpha(26),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Row(
@@ -514,8 +514,8 @@ class SessionDetailsScreen extends StatelessWidget {
                   return ListTile(
                     leading: CircleAvatar(
                       backgroundColor: record.isPresent
-                          ? Colors.green.withOpacity(0.2)
-                          : Colors.red.withOpacity(0.2),
+                          ? Colors.green.withAlpha(13)
+                          : Colors.red.withAlpha(13),
                       child: Icon(
                         record.isPresent ? Icons.check : Icons.close,
                         color: record.isPresent ? Colors.green : Colors.red,

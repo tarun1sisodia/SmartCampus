@@ -125,7 +125,7 @@ class ChangePasswordScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 color: dark ? TColors.darkerGrey : Colors.grey.shade100,
                 borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
-                border: Border.all(color: Colors.grey.withOpacity(0.2)),
+                border: Border.all(color: Colors.grey.withAlpha(13)),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

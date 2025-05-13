@@ -38,9 +38,9 @@ class TCheckboxTheme {
     // Border color based on state
     overlayColor: WidgetStateProperty.resolveWith((states) {
       if (states.contains(WidgetState.pressed)) {
-        return TColors.primary.withOpacity(0.1);
+        return TColors.primary.withAlpha(26);
       } else if (states.contains(WidgetState.hovered)) {
-        return TColors.primary.withOpacity(0.05);
+        return TColors.primary.withAlpha(13);
       } else {
         return Colors.transparent;
       }
@@ -81,9 +81,9 @@ class TCheckboxTheme {
     }),
     overlayColor: WidgetStateProperty.resolveWith((states) {
       if (states.contains(WidgetState.pressed)) {
-        return TColors.primary.withOpacity(0.1);
+        return TColors.primary.withAlpha(26);
       } else if (states.contains(WidgetState.hovered)) {
-        return TColors.primary.withOpacity(0.05);
+        return TColors.primary.withAlpha(13);
       } else {
         return Colors.transparent;
       }

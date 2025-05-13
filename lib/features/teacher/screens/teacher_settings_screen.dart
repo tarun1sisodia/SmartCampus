@@ -154,7 +154,8 @@ class TeacherSettingsScreen extends StatelessWidget {
                       AlertDialog(
                         title: Text(
                           'Storage & Data',
-                          style: Theme.of(context).textTheme.titleLarge,
+                          style: TextStyle(
+                              fontFamily: 'Poppins', fontSize: cacheSize),
                         ),
                         content: Column(
                           mainAxisSize: MainAxisSize.min,

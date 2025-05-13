@@ -16,39 +16,76 @@ import '../screens/profile_image_view_screen.dart';
 
 // Consolidated TeacherProfileController
 class TeacherProfileController extends GetxController {
-  // Add these at the top of your TeacherProfileController class
+  // Services for handling class and attendance-related operations
   final classService = ClassService();
   final attendanceService = AttendanceService();
-   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  // Add these observable properties to store statistics
-  final classCount = 0.obs;
-  final studentCount = 0.obs;
-  final averageAttendance = 0.0.obs;
-  final isStatsLoading = false.obs;
+  // Form key for validating forms
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  // fetch statistics
+  // Observable properties to store teacher statistics
+  final classCount = 0.obs; // Number of classes the teacher has
+  final studentCount = 0.obs; // Total number of students across all classes
+  final averageAttendance = 0.0.obs; // Average attendance percentage
+  final isStatsLoading = false.obs; // Loading state for statistics
+
+  // Supabase client instance
+  final supabase = Supabase.instance.client;
+
+  // Observable user data
+  final Rx<UserModel?> user = Rx<UserModel?>(null);
+
+  // Controllers for form fields (name and phone)
+  final nameController = TextEditingController();
+  final phoneController = TextEditingController();
+
+  // UI state variables
+  final isLoading = false.obs; // Loading state for general operations
+  final errorMessage = ''.obs; // Error message for UI display
+  final isEditMode = false.obs; // Toggle for edit mode
+  final emailNotifications = true.obs; // Email notification toggle
+  final isUploadingImage = false.obs; // Loading state for image upload
+
+  // Dispose controllers when the controller is closed
+  @override
+  void onClose() {
+    nameController.dispose();
+    phoneController.dispose();
+    super.onClose();
+  }
+
+  // Initialize the controller and load user data and statistics
+  @override
+  void onInit() {
+    super.onInit();
+    loadUserData();
+    loadTeacherStats();
+  }
+
+  // Fetch and calculate teacher statistics
   Future<void> loadTeacherStats() async {
     try {
       isStatsLoading.value = true;
 
+      // Get the currently authenticated user
       final currentUser = supabase.auth.currentUser;
       if (currentUser == null) {
         return;
       }
 
-      // Get classes count
+      // Fetch the classes associated with the teacher
       final classes = await classService.getTeacherClasses(currentUser.id);
       classCount.value = classes.length;
 
-      // Get total student count
+      // Initialize counters for students and attendance
       int totalStudents = 0;
       double totalAttendancePercentage = 0.0;
       int classesWithAttendance = 0;
 
+      // Iterate through each class to calculate statistics
       for (var classModel in classes) {
-        // Get students for this class
         try {
+          // Fetch the number of students in the class
           final response = await supabase
               .from('class_students')
               .select('id')
@@ -56,11 +93,11 @@ class TeacherProfileController extends GetxController {
 
           totalStudents += response.length;
         } catch (e) {
-          //printnt('Error getting students for class ${classModel.id}: $e');
+          // Handle errors while fetching students
         }
 
-        // Get attendance stats for this class
         try {
+          // Fetch attendance statistics for the class
           final stats = await attendanceService.getAttendanceStatsForClass(
             classModel.id,
           );
@@ -69,15 +106,14 @@ class TeacherProfileController extends GetxController {
             classesWithAttendance++;
           }
         } catch (e) {
-          //print('Error getting attendance stats for class ${classModel.id}: $e',          );
-          // Continue with next class if there's an error
+          // Handle errors while fetching attendance stats
         }
       }
 
-      // Update student count
+      // Update the total student count
       studentCount.value = totalStudents;
 
-      // Calculate average attendance
+      // Calculate the average attendance percentage
       if (classesWithAttendance > 0) {
         averageAttendance.value =
             totalAttendancePercentage / classesWithAttendance;
@@ -85,58 +121,29 @@ class TeacherProfileController extends GetxController {
         averageAttendance.value = 0.0;
       }
     } catch (e) {
-      //printnt('Error loading teacher stats: $e');
+      // Handle errors during statistics loading
     } finally {
       isStatsLoading.value = false;
     }
   }
 
-  // Update the onInit method to also load stats
-  @override
-  void onInit() {
-    super.onInit();
-    loadUserData();
-    loadTeacherStats();
-  }
-
-  // Add method to refresh all data
+  // Refresh both user data and statistics
   Future<void> refreshProfileData() async {
     await Future.wait([loadUserData(), loadTeacherStats()]);
   }
 
-  final supabase = Supabase.instance.client;
-
-  // User data
-  final Rx<UserModel?> user = Rx<UserModel?>(null);
-
-  // Form controllers for editing
-  final nameController = TextEditingController();
-  final phoneController = TextEditingController();
-
-  // UI state
-  final isLoading = false.obs;
-  final errorMessage = ''.obs;
-  final isEditMode = false.obs;
-  final emailNotifications = true.obs;
-  final isUploadingImage = false.obs;
-
-  @override
-  void onClose() {
-    nameController.dispose();
-    phoneController.dispose();
-    super.onClose();
-  }
-
+  // Load user data from Supabase or fallback to placeholder data
   Future<void> loadUserData() async {
     try {
       isLoading.value = true;
       errorMessage.value = '';
 
+      // Get the currently authenticated user
       final currentUser = supabase.auth.currentUser;
       if (currentUser == null) {
-        errorMessage.value = 'No authenticated user found';
+        errorMessage.value = 'You are not authenticated';
 
-        // Create a fallback user model with placeholder data
+        // Fallback user data
         user.value = UserModel(
           id: 'Tarun',
           name: 'Tarun ',
@@ -144,15 +151,15 @@ class TeacherProfileController extends GetxController {
           phone: 'Not available',
         );
 
-        // Set up form controllers with placeholder values
+        // Set form controllers with placeholder values
         nameController.text = user.value?.name ?? '';
         phoneController.text = user.value?.phone ?? '';
 
         return;
       }
 
-      // Try to fetch user data from the users table
       try {
+        // Fetch user data from the database
         final userData = await supabase
             .from('users')
             .select()
@@ -167,7 +174,7 @@ class TeacherProfileController extends GetxController {
             'email': currentUser.email ?? '',
           });
         } else {
-          // User doesn't exist in the database yet, create a new entry
+          // Create a new user entry in the database
           final newUserData = {
             'id': currentUser.id,
             'name': currentUser.userMetadata?['name'] ?? 'New Teacher',
@@ -176,59 +183,56 @@ class TeacherProfileController extends GetxController {
             'created_at': DateTime.now().toIso8601String(),
           };
 
-          // Insert the new user
           await supabase.from('users').insert(newUserData);
 
-          // Set the user model
           user.value = UserModel.fromJson(newUserData);
         }
       } catch (e) {
-        // If there's an error fetching from the database, create a basic user model from auth
+        // Fallback to basic user data from authentication
         user.value = UserModel(
           id: currentUser.id,
           name: currentUser.userMetadata?['name'] ?? 'New Teacher',
           email: currentUser.email ?? '',
           phone: currentUser.userMetadata?['phone'] ?? '',
         );
-
-        //printnt('Error fetching user data: $e');
       }
 
-      // Set up form controllers with current values
+      // Set form controllers with current user data
       nameController.text = user.value?.name ?? '';
       phoneController.text = user.value?.phone ?? '';
     } catch (e) {
       errorMessage.value = e.toString();
-      //printnt('Profile error: $e');
     } finally {
       isLoading.value = false;
     }
   }
 
+  // Toggle email notifications
   void toggleEmailNotifications(bool value) {
     emailNotifications.value = value;
   }
 
+  // Toggle between light and dark themes
   void toggleTheme() {
     Get.changeThemeMode(Get.isDarkMode ? ThemeMode.light : ThemeMode.dark);
   }
 
+  // Toggle edit mode and reset form controllers
   void toggleEditMode() {
     isEditMode.value = !isEditMode.value;
 
-    // Reset form controllers when entering edit mode
     if (isEditMode.value) {
       nameController.text = user.value?.name ?? '';
       phoneController.text = user.value?.phone ?? '';
     }
   }
 
+  // Update user profile information
   Future<void> updateProfile() async {
     try {
       isLoading.value = true;
       errorMessage.value = '';
 
-      // Get current user
       final currentUser = supabase.auth.currentUser;
 
       if (currentUser == null) {
@@ -236,17 +240,14 @@ class TeacherProfileController extends GetxController {
         return;
       }
 
-      // Update user data in the users table
       await supabase.from('users').update({
         'name': nameController.text.trim(),
         'phone': phoneController.text.trim(),
         'updated_at': DateTime.now().toIso8601String(),
       }).eq('id', currentUser.id);
 
-      // Refresh user data
       await loadUserData();
 
-      // Exit edit mode
       isEditMode.value = false;
 
       TSnackBar.showSuccess(message: 'Profile updated successfully');
@@ -260,13 +261,13 @@ class TeacherProfileController extends GetxController {
     }
   }
 
+  // Log out the user
   Future<void> logout() async {
     try {
       isLoading.value = true;
 
       await supabase.auth.signOut();
 
-      // Navigate to login screen
       Get.offAllNamed(AppRoutes.login);
 
       TSnackBar.showInfo(message: 'You have been signed out');
@@ -277,9 +278,9 @@ class TeacherProfileController extends GetxController {
     }
   }
 
+  // Pick and upload a profile image
   Future<void> pickAndUploadImage() async {
     try {
-      // Show image source selection dialog
       final ImageSource? source = await showDialog<ImageSource>(
         context: Get.context!,
         builder: (BuildContext context) {
@@ -315,16 +316,11 @@ class TeacherProfileController extends GetxController {
                 },
                 child: ElevatedButton(
                   onPressed: () {
-                    //print('Add student dialog cancelled');
                     Get.back();
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red,
                     foregroundColor: Colors.white,
-                    // side: BorderSide(
-                    //   color: Colors.grey,
-                    //   width: 1,
-                    // ),
                   ),
                   child: const Text('Cancel'),
                 ),
@@ -334,11 +330,10 @@ class TeacherProfileController extends GetxController {
         },
       );
 
-      if (source == null) return; // User canceled the dialog
+      if (source == null) return;
 
       isUploadingImage.value = true;
 
-      // Get current user
       final currentUser = supabase.auth.currentUser;
       if (currentUser == null) {
         TSnackBar.showError(
@@ -347,73 +342,59 @@ class TeacherProfileController extends GetxController {
         return;
       }
 
-      // Pick image
       final ImagePicker picker = ImagePicker();
-      final XFile? image = await picker.pickImage(
-        source: source,
-        maxWidth: 512,
-        maxHeight: 512,
-        imageQuality: 100,
-      );
+      final XFile? image =
+          await picker.pickImage(source: source, imageQuality: 100);
 
       if (image == null) {
         isUploadingImage.value = false;
-        return; // User canceled the picker
+        return;
       }
 
-      // Get file extension
       final fileExt = path.extension(image.path);
       final fileName = '${currentUser.id}$fileExt';
       final filePath = '${currentUser.id}/$fileName';
 
-      // Upload to Supabase Storage
       final file = File(image.path);
       await supabase.storage
           .from('profile_images')
           .upload(filePath, file, fileOptions: const FileOptions(upsert: true));
 
-      // Get the public URL
       final imageUrl =
           supabase.storage.from('profile_images').getPublicUrl(filePath);
 
-      // Update user record with the image URL
       await supabase
           .from('users')
           .update({'profile_image_url': imageUrl}).eq('id', currentUser.id);
 
-      // Refresh user data
       await loadUserData();
 
       TSnackBar.showSuccess(message: 'Profile image updated successfully');
     } catch (e) {
       TSnackBar.showError(message: 'Failed to upload image: ${e.toString()}');
-      //printnt('Image upload error: $e');
     } finally {
       isUploadingImage.value = false;
     }
   }
 
+  // Delete the user's account and associated data to run this function we need a admin account...
   Future<void> deleteAccount() async {
     try {
       isLoading.value = true;
 
-      // Get current user
       final currentUser = supabase.auth.currentUser;
       if (currentUser == null) {
         TSnackBar.showError(message: 'No authenticated user found');
         return;
       }
 
-      // Show a loading dialog
       Get.dialog(
         const Center(child: CircularProgressIndicator()),
         barrierDismissible: false,
       );
 
-      // 1. Delete user data from the users table
       await supabase.from('users').delete().eq('id', currentUser.id);
 
-      // 2. Delete profile image from storage if it exists
       if (user.value?.profileImageUrl != null &&
           user.value!.profileImageUrl!.isNotEmpty) {
         try {
@@ -421,66 +402,52 @@ class TeacherProfileController extends GetxController {
               '${currentUser.id}/${currentUser.id}${path.extension(user.value!.profileImageUrl!)}';
           await supabase.storage.from('profile_images').remove([filePath]);
         } catch (e) {
-          // Continue even if image deletion fails
-          //printnt('Failed to delete profile image: $e');
+          Get.snackbar('Delete Account can be only run by', 'Admin');
         }
       }
 
-      // 3. Delete the user's classes (optional - you may want to handle this differently)
       try {
         final classes = await classService.getTeacherClasses(currentUser.id);
         for (var classModel in classes) {
-          // Delete attendance sessions for this class
           await supabase
               .from('attendance_sessions')
               .delete()
               .eq('class_id', classModel.id);
 
-          // Delete class_students relationships
           await supabase
               .from('class_students')
               .delete()
               .eq('class_id', classModel.id);
 
-          // Delete the class itself
           await supabase.from('classes').delete().eq('id', classModel.id);
         }
       } catch (e) {
-        //printnt('Error deleting classes: $e');
-        // Continue with account deletion even if class deletion fails
+        Get.snackbar('Delete Account can be only run by', 'Admin');
       }
 
-      // 4. Finally, delete the user account from Supabase Auth
       await supabase.auth.admin.deleteUser(currentUser.id);
 
-      // Close the loading dialog
       Get.back();
 
-      // 5. Sign out (this will happen automatically, but we'll do it explicitly)
       await supabase.auth.signOut();
 
-      // 6. Navigate to splash screen
       Get.offAllNamed(AppRoutes.splash);
 
-      // Show success message
       TSnackBar.showSuccess(
         message: 'Your account has been deleted successfully',
       );
     } catch (e) {
-      // Close the loading dialog if it's open
       if (Get.isDialogOpen ?? false) {
         Get.back();
       }
 
       TSnackBar.showError(message: 'Failed to delete account: ${e.toString()}');
-      //printnt('Account deletion error: $e');
     } finally {
       isLoading.value = false;
     }
   }
 
-  // your TeacherProfileController class
-
+  // View the profile image in a separate screen
   void viewProfileImage() {
     if (user.value?.profileImageUrl != null &&
         user.value!.profileImageUrl!.isNotEmpty) {
@@ -489,7 +456,6 @@ class TeacherProfileController extends GetxController {
         transition: Transition.fadeIn,
       );
     } else {
-      // If no profile image, show a message
       TSnackBar.showInfo(message: 'No profile image available');
     }
   }
