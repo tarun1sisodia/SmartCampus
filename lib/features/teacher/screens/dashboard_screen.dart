@@ -558,88 +558,71 @@ class DashboardScreen extends StatelessWidget {
                         SizedBox(height: TSizes.spaceBtwSections),
 
                         // Stats cards - with fixed height to prevent overflow
-                        SizedBox(
-                          child: Row(
-                            children: [
-                              _buildStatCard(
-                                context,
-                                dark,
-                                title: 'Classes',
-                                value: dashboardController.totalClasses.value
-                                    .toString(),
-                                icon: Iconsax.book_1,
-                                color: dark
-                                    ? TColors.primaryGradient.colors.first
-                                    : TColors.cardGradient1.colors.first,
-                              ),
-                              const SizedBox(width: TSizes.spaceBtwItems),
-                              _buildStatCard(
-                                context,
-                                dark,
-                                title: 'Students',
-                                value: dashboardController.totalStudents.value
-                                    .toString(),
-                                icon: Iconsax.people,
-                                color: dark
-                                    ? TColors.primaryGradient.colors.last
-                                    : TColors.cardGradient2.colors.first,
-                              ),
-                            ],
+                        Obx(
+                          () => SizedBox(
+                            child: Row(
+                              children: [
+                                _buildStatCard(
+                                  context,
+                                  dark,
+                                  title: 'Classes',
+                                  value: dashboardController.totalClasses.value
+                                      .toString(),
+                                  icon: Iconsax.book_1,
+                                  color: dark
+                                      ? TColors.primaryGradient.colors.first
+                                      : TColors.cardGradient1.colors.first,
+                                ),
+                                const SizedBox(width: TSizes.spaceBtwItems),
+                                _buildStatCard(
+                                  context,
+                                  dark,
+                                  title: 'Students',
+                                  value: dashboardController.totalStudents.value
+                                      .toString(),
+                                  icon: Iconsax.people,
+                                  color: dark
+                                      ? TColors.primaryGradient.colors.last
+                                      : TColors.cardGradient2.colors.first,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
 
                         const SizedBox(height: TSizes.spaceBtwItems),
 
                         // Attendance chart - with gradient background
-                        SizedBox(
-                          height: 270, // Fixed height for attendance chart
-                          child: Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(TSizes.md),
-                            decoration: BoxDecoration(
-                              gradient: dark
-                                  ? TColors.cardGradient1
-                                  : TColors.cardGradient2,
-                              borderRadius:
-                                  BorderRadius.circular(TSizes.cardRadiusMd),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withAlpha(26),
-                                  spreadRadius: 1,
-                                  blurRadius: 5,
-                                  offset: const Offset(0, 2),
-                                ),
-                              ],
-                            ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min, // Minimize height
-                              children: [
-                                Text(
-                                  'Average Attendance',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleMedium
-                                      ?.copyWith(
-                                        fontWeight: FontWeight.normal,
-                                        fontFamily: 'Poppins',
-                                        color: dark
-                                            ? TColors.textWhite
-                                            : TColors.textPrimary,
-                                      ),
-                                ),
-                                const SizedBox(height: TSizes.spaceBtwItems),
-                                CircularPercentIndicator(
-                                  radius: 80.0,
-                                  lineWidth: 12.0,
-                                  animation: true,
-                                  percent: dashboardController
-                                          .averageAttendance.value /
-                                      100,
-                                  center: Text(
-                                    '${dashboardController.averageAttendance.value.toStringAsFixed(1)}%',
+                        Obx(
+                          () => SizedBox(
+                            height: 270, // Fixed height for attendance chart
+                            child: Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(TSizes.md),
+                              decoration: BoxDecoration(
+                                gradient: dark
+                                    ? TColors.cardGradient1
+                                    : TColors.cardGradient2,
+                                borderRadius:
+                                    BorderRadius.circular(TSizes.cardRadiusMd),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withAlpha(26),
+                                    spreadRadius: 1,
+                                    blurRadius: 5,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                mainAxisSize:
+                                    MainAxisSize.min, // Minimize height
+                                children: [
+                                  Text(
+                                    'Average Attendance',
                                     style: Theme.of(context)
                                         .textTheme
-                                        .titleLarge
+                                        .titleMedium
                                         ?.copyWith(
                                           fontWeight: FontWeight.normal,
                                           fontFamily: 'Poppins',
@@ -648,29 +631,51 @@ class DashboardScreen extends StatelessWidget {
                                               : TColors.textPrimary,
                                         ),
                                   ),
-                                  circularStrokeCap: CircularStrokeCap.round,
-                                  progressColor: dark
-                                      ? TColors.cardGradient4.colors.first
-                                      : TColors.cardGradient4.colors.last,
-                                  backgroundColor:
-                                      dark ? TColors.black : TColors.white,
-                                ),
-                                const SizedBox(height: TSizes.spaceBtwItems),
-                                Text(
-                                  'Overall attendance across all classes',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall
-                                      ?.copyWith(
-                                        fontWeight: FontWeight.normal,
-                                        fontFamily: 'Poppins',
-                                        color: dark
-                                            ? TColors.black
-                                            : TColors.black,
-                                      ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ],
+                                  const SizedBox(height: TSizes.spaceBtwItems),
+                                  CircularPercentIndicator(
+                                    radius: 80.0,
+                                    lineWidth: 12.0,
+                                    animation: true,
+                                    percent: dashboardController
+                                            .averageAttendance.value /
+                                        100,
+                                    center: Text(
+                                      '${dashboardController.averageAttendance.value.toStringAsFixed(1)}%',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleLarge
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.normal,
+                                            fontFamily: 'Poppins',
+                                            color: dark
+                                                ? TColors.textWhite
+                                                : TColors.textPrimary,
+                                          ),
+                                    ),
+                                    circularStrokeCap: CircularStrokeCap.round,
+                                    progressColor: dark
+                                        ? TColors.cardGradient4.colors.first
+                                        : TColors.cardGradient4.colors.last,
+                                    backgroundColor:
+                                        dark ? TColors.black : TColors.white,
+                                  ),
+                                  const SizedBox(height: TSizes.spaceBtwItems),
+                                  Text(
+                                    'Overall attendance across all classes',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodySmall
+                                        ?.copyWith(
+                                          fontWeight: FontWeight.normal,
+                                          fontFamily: 'Poppins',
+                                          color: dark
+                                              ? TColors.black
+                                              : TColors.black,
+                                        ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -721,138 +726,144 @@ class DashboardScreen extends StatelessWidget {
                         const SizedBox(height: TSizes.spaceBtwItems),
 
                         // Recent classes list - with fixed height
-                        dashboardController.classes.isEmpty
-                            ? Center(
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(Iconsax.book_1,
-                                        size: 48,
-                                        color: dark
-                                            ? TColors.yellow
-                                            : TColors.primary),
-                                    const SizedBox(
-                                        height: TSizes.spaceBtwItems / 2),
-                                    Text(
-                                      'No Classes Yet',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleMedium,
-                                    ),
-                                    const SizedBox(
-                                        height: TSizes.spaceBtwItems / 2),
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        Get.to(() => ClassListScreen());
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: dark
-                                            ? TColors.yellow
-                                            : TColors.primary,
-                                        foregroundColor:
-                                            dark ? TColors.dark : Colors.white,
+                        Obx(
+                          () => dashboardController.classes.isEmpty
+                              ? Center(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(Iconsax.book_1,
+                                          size: 48,
+                                          color: dark
+                                              ? TColors.yellow
+                                              : TColors.primary),
+                                      const SizedBox(
+                                          height: TSizes.spaceBtwItems / 2),
+                                      Text(
+                                        'No Classes Yet',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleMedium,
                                       ),
-                                      child: const Text('Create Class'),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            : SizedBox(
-                                height: 440, // Fixed height for class list
-                                child: ListView.builder(
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemCount: dashboardController
-                                              .filteredClasses.length >
-                                          3
-                                      ? 3
-                                      : dashboardController
-                                          .filteredClasses.length,
-                                  itemBuilder: (context, index) {
-                                    final classItem = dashboardController
-                                        .filteredClasses[index];
-                                    final stats = dashboardController
-                                        .classStats[classItem.id];
-
-                                    return Card(
-                                      margin: const EdgeInsets.only(
-                                        bottom: TSizes.spaceBtwItems,
-                                      ),
-                                      elevation: 5,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(
-                                          TSizes.cardRadiusMd,
-                                        ),
-                                        // for borders on on recent classes list
-                                        // side: BorderSide(
-                                        //   color: dark
-                                        //       ? Colors.white
-                                        //       : Colors.black,
-                                        //   width: 0.5,
-                                        // ),
-                                      ),
-                                      child: ListTile(
-                                        contentPadding:
-                                            const EdgeInsets.all(TSizes.md),
-                                        leading: CircleAvatar(
+                                      const SizedBox(
+                                          height: TSizes.spaceBtwItems / 2),
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          Get.to(() => ClassListScreen());
+                                        },
+                                        style: ElevatedButton.styleFrom(
                                           backgroundColor: dark
                                               ? TColors.yellow
                                               : TColors.primary,
-                                          child: Text(
-                                            classItem.subjectName
-                                                    ?.substring(0, 1) ??
-                                                'C',
-                                            style: TextStyle(
-                                              color: dark
-                                                  ? TColors.dark
-                                                  : Colors.white,
-                                              fontWeight: FontWeight.bold,
+                                          foregroundColor: dark
+                                              ? TColors.dark
+                                              : Colors.white,
+                                        ),
+                                        child: const Text('Create Class'),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              : SizedBox(
+                                  height: 440, // Fixed height for class list
+                                  child: ListView.builder(
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemCount: dashboardController
+                                                .filteredClasses.length >
+                                            3
+                                        ? 3
+                                        : dashboardController
+                                            .filteredClasses.length,
+                                    itemBuilder: (context, index) {
+                                      final classItem = dashboardController
+                                          .filteredClasses[index];
+                                      final stats = dashboardController
+                                          .classStats[classItem.id];
+
+                                      return Card(
+                                        margin: const EdgeInsets.only(
+                                          bottom: TSizes.spaceBtwItems,
+                                        ),
+                                        elevation: 5,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            TSizes.cardRadiusMd,
+                                          ),
+                                          // for borders on on recent classes list
+                                          // side: BorderSide(
+                                          //   color: dark
+                                          //       ? Colors.white
+                                          //       : Colors.black,
+                                          //   width: 0.5,
+                                          // ),
+                                        ),
+                                        child: ListTile(
+                                          contentPadding:
+                                              const EdgeInsets.all(TSizes.md),
+                                          leading: CircleAvatar(
+                                            backgroundColor: dark
+                                                ? TColors.yellow
+                                                : TColors.primary,
+                                            child: Text(
+                                              classItem.subjectName
+                                                      ?.substring(0, 1) ??
+                                                  'C',
+                                              style: TextStyle(
+                                                color: dark
+                                                    ? TColors.dark
+                                                    : Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                        title: Text(
-                                          classItem.subjectName ??
-                                              'Unknown Subject',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .titleMedium
-                                              ?.copyWith(
-                                                  fontWeight: FontWeight.bold),
-                                        ),
-                                        subtitle: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisSize: MainAxisSize
-                                              .min, // Minimize height
-                                          children: [
-                                            const SizedBox(
-                                              height: TSizes.spaceBtwItems / 2,
-                                            ),
-                                            Text(
-                                              '${classItem.courseName} - Semester ${classItem.semester} - Section ${classItem.section}',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyMedium,
-                                            ),
-                                            if (stats != null)
+                                          title: Text(
+                                            classItem.subjectName ??
+                                                'Unknown Subject',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleMedium
+                                                ?.copyWith(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                          ),
+                                          subtitle: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisSize: MainAxisSize
+                                                .min, // Minimize height
+                                            children: [
+                                              const SizedBox(
+                                                height:
+                                                    TSizes.spaceBtwItems / 2,
+                                              ),
                                               Text(
-                                                'Attendance: ${(stats['averageAttendance'] as double).toStringAsFixed(1)}% (${stats['totalSessions']} sessions)',
+                                                '${classItem.courseName} - Semester ${classItem.semester} - Section ${classItem.section}',
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .bodySmall,
+                                                    .bodyMedium,
                                               ),
-                                          ],
+                                              if (stats != null)
+                                                Text(
+                                                  'Attendance: ${(stats['averageAttendance'] as double).toStringAsFixed(1)}% (${stats['totalSessions']} sessions)',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodySmall,
+                                                ),
+                                            ],
+                                          ),
+                                          trailing:
+                                              const Icon(Iconsax.arrow_right_3),
+                                          onTap: () {
+                                            Get.to(() => ClassListScreen());
+                                          },
                                         ),
-                                        trailing:
-                                            const Icon(Iconsax.arrow_right_3),
-                                        onTap: () {
-                                          Get.to(() => ClassListScreen());
-                                        },
-                                      ),
-                                    );
-                                  },
+                                      );
+                                    },
+                                  ),
                                 ),
-                              ),
+                        ),
                       ],
                     ),
                   ),

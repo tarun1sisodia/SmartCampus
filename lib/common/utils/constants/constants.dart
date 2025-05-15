@@ -133,6 +133,6 @@ class TColors {
   static const Color absentSwipe = Color(0xFFE53935); // Same as error
   static const Color unopenedCard = Color(0xFFE0E0E0); // Same as grey
 
-  // Add deepPurple for backward compatibility (used in several files)
+  // deepPurple for backward compatibility (used in several files)
   static const Color deepPurple = Color(0xFF673AB7);
 }

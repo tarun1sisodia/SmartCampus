@@ -189,7 +189,7 @@ class TStorageUtility {
       if (await file.exists()) {
         await file.delete();
 
-        // Update the image paths map
+        // the image paths map
         imagePathsMap.remove(imageName);
         await saveData('image_paths', imagePathsMap);
         return true;
@@ -431,7 +431,7 @@ class TStorageUtility {
       if (await file.exists()) {
         await file.delete();
 
-        // Update the document paths map
+        // the document paths map
         docPathsMap.remove(docName);
         await saveData('document_paths', docPathsMap);
         return true;
@@ -618,10 +618,10 @@ class TStorageUtility {
     try {
       final currentProfile = await getTeacherProfile() ?? {};
 
-      // Update with new data
+      // with new data
       currentProfile.addAll(updates);
 
-      // Update profile image if provided
+      // profile image if provided
       if (newProfileImageBytes != null) {
         final teacherId = currentProfile['id']?.toString() ?? 'default';
         final imagePath =

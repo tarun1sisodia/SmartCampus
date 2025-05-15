@@ -119,7 +119,8 @@ class CarouselAttendanceController extends GetxController {
             sessionStartTime.value = parsedStartTime;
           }
         } catch (e) {
-          Get.snackbar('Error Parsing Start time','Carousel Attendance Controller');
+          Get.snackbar(
+              'Error Parsing Start time', 'Carousel Attendance Controller');
           // print('Error parsing start time: $e');
         }
       }
@@ -163,7 +164,7 @@ class CarouselAttendanceController extends GetxController {
             sessionEndTime.value = parsedEndTime;
           }
         } catch (e) {
-          Get.snackbar('Error parsing end time:','The Code');
+          Get.snackbar('Error parsing end time:', 'The Code');
           // print('Error parsing end time: $e');
         }
       }
@@ -236,7 +237,7 @@ class CarouselAttendanceController extends GetxController {
     }
   }
 
-  // Update attendance statistics
+  // attendance statistics
   void updateStatistics() {
     // Count number of students marked as present
     presentCount.value = attendanceController.students
@@ -341,4 +342,3 @@ class CarouselAttendanceController extends GetxController {
     return markedCount / attendanceController.students.length;
   }
 }
-

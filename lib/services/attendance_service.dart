@@ -36,7 +36,7 @@ class AttendanceService {
   }) async {
     try {
       //print(
-          // 'Fetching attendance sessions for date range: $startDate to $endDate');
+      // 'Fetching attendance sessions for date range: $startDate to $endDate');
       final response = await supabase
           .from('attendance_sessions')
           .select()
@@ -144,7 +144,7 @@ class AttendanceService {
   }) async {
     try {
       //print(
-          // 'Submitting attendance for student: $studentId in session: $sessionId');
+      // 'Submitting attendance for student: $studentId in session: $sessionId');
       // Check if record already exists
       final existingRecords = await supabase
           .from('attendance_records')
@@ -161,7 +161,7 @@ class AttendanceService {
       };
 
       if (existingRecords.isNotEmpty) {
-        // Update existing record
+        // existing record
         await supabase
             .from('attendance_records')
             .update(data)
@@ -183,7 +183,7 @@ class AttendanceService {
     try {
       //print('Closing attendance session: $sessionId');
 
-      // Update the session with a closed status
+      // the session with a closed status
       await supabase.from('attendance_sessions').update({
         'status': 'closed',
         'closed_at': DateTime.now().toIso8601String(),
@@ -261,7 +261,7 @@ class AttendanceService {
   }) async {
     try {
       //print(
-          // 'Fetching attendance statistics for date range: $startDate to $endDate');
+      // 'Fetching attendance statistics for date range: $startDate to $endDate');
       // Get sessions in date range
       final sessions = await getAttendanceSessionsForDateRange(
         classId: classId,
@@ -330,7 +330,7 @@ class AttendanceService {
   }) async {
     try {
       //print(
-          // 'Fetching attendance statistics for student: $studentId in class: $classId');
+      // 'Fetching attendance statistics for student: $studentId in class: $classId');
       // Get all sessions for the class
       final sessions = await getAttendanceSessions(classId);
       final totalSessions = sessions.length;
@@ -396,7 +396,7 @@ class AttendanceService {
   }) async {
     try {
       //print(
-          // 'Fetching attendance statistics for student: $studentId for date range: $startDate to $endDate');
+      // 'Fetching attendance statistics for student: $studentId for date range: $startDate to $endDate');
       // Get sessions in date range
       final sessions = await getAttendanceSessionsForDateRange(
         classId: classId,
@@ -615,7 +615,7 @@ class AttendanceService {
     }
   }
 
-  // Add these methods to the AttendanceService class
+  // these methods to the AttendanceService class
 
   /// Fetches a specific attendance session by its ID
   Future<AttendanceSessionModel> getSessionById(String sessionId) async {

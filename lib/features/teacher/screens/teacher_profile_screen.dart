@@ -612,7 +612,7 @@ class TeacherProfileScreen extends StatelessWidget {
           ),
           const SizedBox(height: TSizes.spaceBtwSections),
 
-          // Update Button
+          // Button
           SizedBox(
             width: double.infinity,
             height: 55,

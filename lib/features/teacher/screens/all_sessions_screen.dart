@@ -36,7 +36,7 @@ class AllSessionsScreen extends StatelessWidget {
       return Scaffold(
         appBar: _buildAppBar(context, dark),
         body: _buildBody(context, dark),
-        // Add bottom action bar when in selection mode
+        // bottom action bar when in selection mode
         bottomNavigationBar: allSessionsController.isSelectionMode.value
             ? _buildSelectionActionBar(context, dark)
             : null,
@@ -92,7 +92,7 @@ class AllSessionsScreen extends StatelessWidget {
       if (allSessionsController.isLoading.value) {
         return Column(
           children: [
-            // Add shimmer effect for search bar
+            // shimmer effect for search bar
             Padding(
               padding: const EdgeInsets.all(TSizes.defaultSpace),
               child: Shimmer.fromColors(
@@ -298,7 +298,7 @@ class AllSessionsScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(
                           TSizes.cardRadiusMd,
                         ),
-                        // Add border when selected
+                        // border when selected
                         side: isSelected
                             ? BorderSide(
                                 color: dark ? TColors.yellow : TColors.primary,
@@ -531,7 +531,7 @@ class AllSessionsScreen extends StatelessWidget {
                                       ),
                                     ),
 
-                                    // Add delete button
+                                    // delete button
                                     IconButton(
                                       onPressed: () {
                                         // print('Delete button pressed for session: ${session.id}');
@@ -561,7 +561,7 @@ class AllSessionsScreen extends StatelessWidget {
     });
   }
 
-  // Add bottom action bar for selection mode
+  // bottom action bar for selection mode
   Widget _buildSelectionActionBar(BuildContext context, bool dark) {
     return BottomAppBar(
       color: dark ? TColors.darkerGrey : Colors.white,
@@ -761,7 +761,7 @@ class AllSessionsScreen extends StatelessWidget {
     );
   }
 
-  // Add method for confirming deletion of multiple sessions
+  // method for confirming deletion of multiple sessions
   void _showDeleteSelectedConfirmation(BuildContext context) {
     final count = allSessionsController.selectedSessionIds.length;
     // print('Showing delete confirmation for $count selected sessions');

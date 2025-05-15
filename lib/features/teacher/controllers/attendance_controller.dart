@@ -161,7 +161,7 @@ class AttendanceController extends GetxController {
     }
   }
 
-  // Update a student's attendance status
+  // a student's attendance status
   /// Updates the attendance status of a student.
   ///
   /// This function finds the student in the list by their ID and updates
@@ -185,7 +185,7 @@ class AttendanceController extends GetxController {
     }
   }
 
-  // Update the submitAttendance method
+  // the submitAttendance method
 
   Future<void> submitAttendance() async {
     try {
@@ -323,8 +323,8 @@ class AttendanceController extends GetxController {
     }
   }
 
-  // Add this method to check if a session is currently running
-  // Update the isSessionRunning method to check the status column
+  // this method to check if a session is currently running
+  // the isSessionRunning method to check the status column
 
   bool isSessionRunning(String sessionId) {
     try {
@@ -353,7 +353,8 @@ class AttendanceController extends GetxController {
           sessionDate.day == now.day) {
         // If there's no specific time, consider it running all day
         if (session.startTime == null || session.endTime == null) {
-          Get.snackbar('No specific time set', 'considering session running all day');
+          Get.snackbar(
+              'No specific time set', 'considering session running all day');
           // print('No specific time set, considering session running all day');
           return true;
         }
@@ -428,7 +429,8 @@ class AttendanceController extends GetxController {
 
           return isAfterStart && isBeforeEnd;
         } catch (e) {
-          Get.snackbar('Check the code at Attendance Controller', 'Open The Code ');
+          Get.snackbar(
+              'Check the code at Attendance Controller', 'Open The Code ');
           // print('Error parsing session time: $e');
           // If parsing fails, default to running
           return true;
@@ -449,5 +451,4 @@ class AttendanceController extends GetxController {
     endTimeController.dispose();
     super.onClose();
   }
-  
 }

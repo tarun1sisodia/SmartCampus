@@ -313,10 +313,10 @@ class CalendarController extends GetxController {
     loadData();
   }
 
-// Add this to the CalendarController class
+// this to the CalendarController class
   final teacherNames = <String, String>{}.obs; // Map of teacher IDs to names
 
-// Add this method to fetch teacher names
+// this method to fetch teacher names
   Future<void> fetchTeacherNames() async {
     try {
       // Get unique teacher IDs from all sessions
@@ -345,7 +345,7 @@ class CalendarController extends GetxController {
     }
   }
 
-// Update the loadData method to also fetch teacher names
+// the loadData method to also fetch teacher names
   Future<void> loadData() async {
     try {
       isLoading.value = true;
@@ -389,7 +389,7 @@ class CalendarController extends GetxController {
     }
   }
 
-// Add a helper method to get teacher name for a session
+// a helper method to get teacher name for a session
   String getTeacherNameForSession(AttendanceSessionModel session) {
     if (session.createdBy == null) return 'Unknown Teacher';
     return teacherNames[session.createdBy] ?? 'Unknown Teacher';

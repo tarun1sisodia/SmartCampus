@@ -34,7 +34,7 @@ class Login extends StatelessWidget {
             // const SizedBox(height: TSizes.spaceBtwItems),
             // CustomDivider(dividerText: TTexts.orSignInWith),
             // const SizedBox(height: TSizes.spaceBtwItems),
-            // Add this at the bottom of your form, after the Sign up button
+            // this at the bottom of your form, after the Sign up button
             const SizedBox(height: TSizes.sm),
             Row(
               children: [

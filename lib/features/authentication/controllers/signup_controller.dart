@@ -117,7 +117,7 @@ class SignupController extends GetxController {
     }
   }
 
-  // Add this method to your SignupController class
+  // this method to your SignupController class
   Future<void> signUpWithGoogle() async {
     try {
       isLoading.value = true;

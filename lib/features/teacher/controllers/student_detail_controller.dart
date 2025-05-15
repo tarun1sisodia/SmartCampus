@@ -129,7 +129,7 @@ class StudentDetailController extends GetxController {
         imageUrl: student.value!.imageUrl!,
       );
 
-      // Update the student model with null image URL
+      // the student model with null image URL
       student.value = StudentModel(
         id: student.value!.id,
         name: student.value!.name,
@@ -170,7 +170,7 @@ class StudentDetailController extends GetxController {
       );
 
       if (imageUrl != null) {
-        // Update the student model with the new image URL
+        // the student model with the new image URL
         student.value = StudentModel(
           id: student.value!.id,
           name: student.value!.name,
@@ -194,7 +194,7 @@ class StudentDetailController extends GetxController {
     }
   }
 
-  // Update attendance record
+  // attendance record
   Future<void> updateAttendanceRecord({
     required String sessionId,
     required String status,

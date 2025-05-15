@@ -25,7 +25,7 @@ class StudentService {
           id: studentData['id'],
           name: studentData['name'],
           rollNumber: studentData['roll_number'],
-          imageUrl: studentData['image_url'], // Add this field
+          imageUrl: studentData['image_url'], // this field
           classId: json['class_id'],
           createdAt: studentData['created_at'] != null
               ? DateTime.parse(studentData['created_at'])
@@ -41,16 +41,16 @@ class StudentService {
     }
   }
 
-  // Add a student to a class
+  // a student to a class
   Future<void> addStudentToClass({
     required String name,
     required String rollNumber,
     required String classId,
-    File? imageFile, // Add this parameter
+    File? imageFile, // this parameter
   }) async {
     try {
       //print(
-          // 'Adding student to class: $classId, Name: $name, Roll Number: $rollNumber');
+      // 'Adding student to class: $classId, Name: $name, Roll Number: $rollNumber');
       final existingStudents = await supabase
           .from('students')
           .select()
@@ -82,7 +82,7 @@ class StudentService {
         studentId = existingStudents[0]['id'];
         //print('Student exists with ID: $studentId');
 
-        // Update student data if needed
+        // student data if needed
         final updateData = <String, dynamic>{};
         if (existingStudents[0]['name'] != name) {
           updateData['name'] = name;
@@ -116,7 +116,7 @@ class StudentService {
         studentId = response['id'];
         //print('Created new student with ID: $studentId');
       }
-      // Add student to class if not already added
+      // student to class if not already added
       final existingClassStudents = await supabase
           .from('class_students')
           .select()
@@ -137,7 +137,7 @@ class StudentService {
     }
   }
 
-  // Update student image
+  // student image
   Future<String?> updateStudentImage({
     required String studentId,
     required File imageFile,
@@ -159,7 +159,7 @@ class StudentService {
         final imageUrl =
             supabase.storage.from('student_images').getPublicUrl(filePath);
 
-        // Update student record with new image URL
+        // student record with new image URL
         await supabase
             .from('students')
             .update({'image_url': imageUrl}).eq('id', studentId);
@@ -193,7 +193,7 @@ class StudentService {
         // Delete the file from storage
         await supabase.storage.from('student_images').remove([storagePath]);
 
-        // Update student record to remove image URL
+        // student record to remove image URL
         await supabase
             .from('students')
             .update({'image_url': null}).eq('id', studentId);

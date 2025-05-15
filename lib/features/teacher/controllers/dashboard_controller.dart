@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../models/class_model.dart';
@@ -8,6 +9,7 @@ import '../../../services/attendance_service.dart';
 import '../../../services/course_service.dart';
 import '../../../services/subject_service.dart';
 import '../../../common/utils/helpers/snackbar_helper.dart';
+import 'dart:async';
 
 class DashboardController extends GetxController {
   final attendanceService = AttendanceService();
@@ -21,14 +23,16 @@ class DashboardController extends GetxController {
   final totalStudents = 0.obs;
   final averageAttendance = 0.0.obs;
 
+  final List<StreamSubscription> _subscriptions = [];
+
   // Map to store attendance stats for each class
   final classStats = <String, Map<String, dynamic>>{}.obs;
 
-  // Add these properties to the DashboardController class
+  // these properties to the DashboardController class
   final searchQuery = ''.obs;
   final filteredClasses = <ClassModel>[].obs;
 
-  // Add these for greeting animation
+  // these for greeting animation
   final greeting = ''.obs;
   final showGreetingAnimation = true.obs;
 
@@ -38,6 +42,41 @@ class DashboardController extends GetxController {
     //print('DashboardController initialized');
     loadDashboardData();
     initializeGreeting();
+    _setupRealtimeSubscriptions();
+  }
+
+  @override
+  void onClose() {
+    // Clean up subscriptions when controller is destroyed
+    for (var subscription in _subscriptions) {
+      subscription.cancel();
+    }
+    super.onClose();
+  }
+
+  void _setupRealtimeSubscriptions() {
+    final classesSubscription = Supabase.instance.client
+        .from('classes')
+        .stream(primaryKey: ['id']).listen((List<Map<String, dynamic>> data) {
+      loadDashboardData();
+    });
+    final recordsSubscription = Supabase.instance.client
+        .from('attendance_records')
+        .stream(primaryKey: ['id']).listen((List<Map<String, dynamic>> data) {
+      loadDashboardData();
+    });
+    final studentSubscription = Supabase.instance.client
+        .from('class_students')
+        .stream(primaryKey: ['id']).listen((List<Map<String, dynamic>> data) {
+      loadDashboardData();
+    });
+    final subjectSubscription = Supabase.instance.client
+        .from('subjects')
+        .stream(primaryKey: ['id']).listen((List<Map<String, dynamic>> data) {
+      // _getStudentCountForClass();
+    });
+    _subscriptions.addAll(
+        [classesSubscription, recordsSubscription, studentSubscription]);
   }
 
   // initialize greeting
@@ -64,7 +103,7 @@ class DashboardController extends GetxController {
     }
   }
 
-  // Add these random greeting messages
+  // these random greeting messages
   final List<String> _greetingMessages = [
     'Welcome back',
     'Great to see you again',
@@ -78,11 +117,11 @@ class DashboardController extends GetxController {
     return _greetingMessages[random.nextInt(_greetingMessages.length)];
   }
 
-  // Add method to reset greeting animation (can be called when revisiting the screen)
+  // method to reset greeting animation (can be called when revisiting the screen)
   void resetGreetingAnimation() {
     showGreetingAnimation.value = true;
 
-    // Update greeting text
+    // greeting text
     final baseGreeting = _getTimeBasedGreeting();
     final message = _getRandomGreetingMessage();
     greeting.value = '$baseGreeting! $message';
@@ -151,7 +190,7 @@ class DashboardController extends GetxController {
       } else {
         averageAttendance.value = 0.0;
       }
-
+      update();
       //print('Total students: $totalStudentsCount');
       //print('Average attendance: ${averageAttendance.value}');
     } catch (e) {
@@ -260,6 +299,7 @@ class DashboardController extends GetxController {
         }).toList(),
       );
     }
+    update();
     // //print('Filtered classes: ${filteredClasses.length}');
   }
 }

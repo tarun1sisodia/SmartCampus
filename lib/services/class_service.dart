@@ -94,7 +94,7 @@ class ClassService {
     }
   }
 
-  // Update an existing class
+  // an existing class
   Future<ClassModel> updateClass({
     required String classId,
     required String subjectId,

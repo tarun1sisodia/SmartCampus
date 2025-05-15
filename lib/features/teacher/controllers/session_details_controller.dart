@@ -104,7 +104,7 @@ class SessionDetailsController extends GetxController {
     try {
       await attendanceService.updateAttendanceRecord(recordId, isPresent);
 
-      // Update local record
+      // local record
       final index =
           attendanceRecords.indexWhere((record) => record.id == recordId);
       if (index != -1) {
