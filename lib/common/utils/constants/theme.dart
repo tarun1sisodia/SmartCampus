@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'constants.dart';
 
-/// AppDimensions implements several UX laws:
-/// - Fitts's Law: Appropriate sizing for interactive elements
-/// - Law of Proximity: Consistent spacing to group related elements
-/// - Miller's Law: Limited number of size options (small, medium, large)
+//AppDimensions implements several UX laws:
+//- Fitts's Law: Appropriate sizing for interactive elements
+//- Law of Proximity: Consistent spacing to group related elements
+//- Miller's Law: Limited number of size options (small, medium, large)
 class AppDimensions {
   AppDimensions._();
 
@@ -38,10 +38,10 @@ class AppDimensions {
   static const Duration animationSlow = Duration(milliseconds: 400);
 }
 
-/// AppTheme implements:
-/// - Aesthetic-Usability Effect: Visually pleasing, consistent design
-/// - Hick's Law: Limited color palette
-/// - Law of Similarity: Consistent styling across components
+//AppTheme implements:
+//- Aesthetic-Usability Effect: Visually pleasing, consistent design
+//- Hick's Law: Limited color palette
+//- Law of Similarity: Consistent styling across components
 final ThemeData appTheme = ThemeData(
   primaryColor: TColors.primary,
   colorScheme: ColorScheme.fromSeed(

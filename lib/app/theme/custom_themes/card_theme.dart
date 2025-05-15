@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import '../../../common/utils/constants/colors.dart';
 import '../../../common/utils/constants/sized.dart';
 
-/// TCardTheme implements:
-/// - Law of Common Region: Cards create visual boundaries around related content
-/// - Aesthetic-Usability Effect: Clean, consistent card design
-/// - Law of Proximity: Consistent internal spacing
+// TCardTheme implements:
+// - Law of Common Region: Cards create visual boundaries around related content
+// - Aesthetic-Usability Effect: Clean, consistent card design
+// - Law of Proximity: Consistent internal spacing
 class TCardTheme {
   TCardTheme._();
 

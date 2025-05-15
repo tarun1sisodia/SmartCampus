@@ -1,11 +1,11 @@
-/// A collection of validation functions for forms in the app.
+// collection of validation functions for forms in the app.
 class Validators {
   Validators._() {
     //print('Validators initialized');
   }
 
-  /// Validates an email address.
-  /// Returns an error message if invalid, or null if valid.
+  //alidates an email address.
+  //eturns an error message if invalid, or null if valid.
   static String? validateEmail(String? value) {
     if (value == null || value.isEmpty) {
       return 'Email is required';
@@ -23,8 +23,8 @@ class Validators {
     return null;
   }
 
-  /// Validates a password.
-  /// Returns an error message if invalid, or null if valid.
+  //alidates a password.
+  //eturns an error message if invalid, or null if valid.
   static String? validatePassword(String? value) {
     if (value == null || value.isEmpty) {
       return 'Password is required';
@@ -37,8 +37,8 @@ class Validators {
     return null;
   }
 
-  /// Validates a name.
-  /// Returns an error message if invalid, or null if valid.
+  //alidates a name.
+  //eturns an error message if invalid, or null if valid.
   static String? validateName(String? value) {
     if (value == null || value.isEmpty) {
       return 'Name is required';
@@ -51,8 +51,8 @@ class Validators {
     return null;
   }
 
-  /// Validates a roll number.
-  /// Returns an error message if invalid, or null if valid.
+  //alidates a roll number.
+  //eturns an error message if invalid, or null if valid.
   static String? validateRollNumber(String? value) {
     if (value == null || value.isEmpty) {
       return 'Roll number is required';
@@ -63,8 +63,8 @@ class Validators {
     return null;
   }
 
-  /// Validates a class degree.
-  /// Returns an error message if invalid, or null if valid.
+  //alidates a class degree.
+  //eturns an error message if invalid, or null if valid.
   static String? validateDegree(String? value) {
     if (value == null || value.isEmpty) {
       return 'Degree is required';
@@ -73,8 +73,8 @@ class Validators {
     return null;
   }
 
-  /// Validates a class year.
-  /// Returns an error message if invalid, or null if valid.
+  //alidates a class year.
+  //eturns an error message if invalid, or null if valid.
   static String? validateYear(String? value) {
     if (value == null || value.isEmpty) {
       return 'Year is required';
@@ -92,8 +92,8 @@ class Validators {
     return null;
   }
 
-  /// Validates a subject.
-  /// Returns an error message if invalid, or null if valid.
+  //alidates a subject.
+  //eturns an error message if invalid, or null if valid.
   static String? validateSubject(String? value) {
     if (value == null || value.isEmpty) {
       return 'Subject is required';
@@ -102,8 +102,8 @@ class Validators {
     return null;
   }
 
-  /// Validates a phone number.
-  /// Returns an error message if invalid, or null if valid.
+  //alidates a phone number.
+  //eturns an error message if invalid, or null if valid.
   static String? validatePhone(String? value) {
     if (value == null || value.isEmpty) {
       return null; // Phone is optional
@@ -117,8 +117,8 @@ class Validators {
     return null;
   }
 
-  /// Validates required field.
-  /// Returns an error message if empty, or null if valid.
+  //alidates required field.
+  //eturns an error message if empty, or null if valid.
   static String? validateRequired(String? value,
       {String fieldName = 'This field'}) {
     if (value == null || value.isEmpty) {

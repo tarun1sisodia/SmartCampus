@@ -24,9 +24,9 @@ import '../../features/teacher/screens/teacher_settings_screen.dart';
 import '../../navigation_menu.dart';
 import 'package:get/get.dart';
 
-/// A class that manages all routes for the app
+// A class that manages all routes for the app
 class AppRoutes {
-  /// Route names as constants to avoid typos
+  // Route names as constants to avoid typos
   static const String splash = '/';
   static const String onboarding = '/onboarding';
   static const String login = '/login';
@@ -54,7 +54,7 @@ class AppRoutes {
   static const String biometricVerification = '/biometric-verification';
   static const String createClass = '/create-class';
 
-  /// Get all application routes
+  // Get all application routes
   static List<GetPage> routes = [
     //to your routes
 
@@ -260,7 +260,7 @@ class AppRoutes {
     ),
   ];
 
-  /// Navigate to the initial route based on app state
+  // Navigate to the initial route based on app state
   static String getInitialRoute() {
     //print('Getting initial route');
     return splash; // this to the desired initial route

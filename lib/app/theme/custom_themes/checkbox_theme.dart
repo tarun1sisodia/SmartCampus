@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import '../../../common/utils/constants/colors.dart';
 import '../../../common/utils/constants/sized.dart';
 
-/// TCheckboxTheme implements:
-/// - Fitts's Law: Appropriate sizing for interactive elements
-/// - Aesthetic-Usability Effect: Clean, consistent checkbox design
-/// - Doherty Threshold: Clear visual feedback on interaction
+//TCheckboxTheme implements:
+//- Fitts's Law: Appropriate sizing for interactive elements
+//- Aesthetic-Usability Effect: Clean, consistent checkbox design
+//- Doherty Threshold: Clear visual feedback on interaction
 class TCheckboxTheme {
   TCheckboxTheme._();
 

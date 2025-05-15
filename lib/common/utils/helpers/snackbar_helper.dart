@@ -5,22 +5,22 @@ import 'package:iconsax/iconsax.dart';
 
 enum MessageType { success, error, warning, info }
 
-/// Enum defining different message sources
+//Enum defining different message sources
 enum MessageSource {
   server, // Messages from the server/backend
   client, // Messages from client-side validation
   app, // Messages from the app itself
 }
 
-/// A utility class for showing consistent, styled snackbars throughout the app
+//A utility class for showing consistent, styled snackbars throughout the app
 class TSnackBar {
   TSnackBar._() {
     //printnt('TSnackBar initialized');
   } // Private constructor to prevent instantiation
 
-  /// Enum defining different message types
+  //Enum defining different message types
 
-  /// Show a snackbar with customized styling based on type and source
+  //Show a snackbar with customized styling based on type and source
   static void show({
     required String title,
     required String message,
@@ -87,7 +87,7 @@ class TSnackBar {
     );
   }
 
-  /// Convenience method for showing success messages
+  //Convenience method for showing success messages
   static void showSuccess({
     required String message,
     String title = 'Success',
@@ -101,7 +101,7 @@ class TSnackBar {
     );
   }
 
-  /// Convenience method for showing error messages
+  //Convenience method for showing error messages
   static void showError({
     required String message,
     String title = 'Error',
@@ -116,7 +116,7 @@ class TSnackBar {
     );
   }
 
-  /// Convenience method to check if there is an error message
+  //Convenience method to check if there is an error message
   static bool hasError(String message, {bool handle = false}) {
     bool containsError = message.toLowerCase().contains('error') ||
         message.toLowerCase().contains('failed') ||
@@ -124,7 +124,7 @@ class TSnackBar {
     return handle ? containsError : false;
   }
 
-  /// Convenience method for showing warning messages
+  //Convenience method for showing warning messages
   static void showWarning({
     required String message,
     String title = 'Warning',
@@ -138,7 +138,7 @@ class TSnackBar {
     );
   }
 
-  /// Convenience method for showing info messages
+  //Convenience method for showing info messages
   static void showInfo({
     required String message,
     String title = 'Information',
@@ -152,7 +152,7 @@ class TSnackBar {
     );
   }
 
-  /// Show a server error message
+  //Show a server error message
   static void showServerError({
     required String message,
     String title = 'Server Error',
@@ -160,7 +160,7 @@ class TSnackBar {
     showError(title: title, message: message, source: MessageSource.server);
   }
 
-  /// Show a validation error message
+  //Show a validation error message
   static void showValidationError({
     required String message,
     String title = 'Validation Error',
@@ -168,7 +168,7 @@ class TSnackBar {
     showError(title: title, message: message, source: MessageSource.client);
   }
 
-  /// Show a network error message
+  //Show a network error message
   static void showNetworkError({
     String message = 'Please check your internet connection and try again.',
     String title = 'Network Error',
@@ -176,7 +176,7 @@ class TSnackBar {
     showError(title: title, message: message, source: MessageSource.server);
   }
 
-  /// Show an authentication error message
+  //Show an authentication error message
   static void showAuthError({
     required String message,
     String title = 'Authentication Error',

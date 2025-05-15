@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../../common/utils/constants/colors.dart';
 
-/// TAppbarTheme implements:
-/// - Jakob's Law: Following standard AppBar conventions users expect
-/// - Law of Similarity: Consistent styling between modes
-/// - Fitts's Law: Appropriate sizing for interactive elements
+// TAppbarTheme implements:
+// - Jakob's Law: Following standard AppBar conventions users expect
+// - Law of Similarity: Consistent styling between modes
+// - Fitts's Law: Appropriate sizing for interactive elements
 class TAppbarTheme {
   TAppbarTheme._();
 

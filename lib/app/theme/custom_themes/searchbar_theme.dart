@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import '../../../common/utils/constants/colors.dart';
 import '../../../common/utils/constants/sized.dart';
 
-/// TSearchbarTheme implements:
-/// - Jakob's Law: Familiar search patterns
-/// - Fitts's Law: Appropriate sizing for interactive elements
-/// - Aesthetic-Usability Effect: Clean, consistent search design
+//TSearchbarTheme implements:
+//- Jakob's Law: Familiar search patterns
+//- Fitts's Law: Appropriate sizing for interactive elements
+//- Aesthetic-Usability Effect: Clean, consistent search design
 class TSearchbarTheme {
   TSearchbarTheme._();
 

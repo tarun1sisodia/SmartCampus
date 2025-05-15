@@ -93,11 +93,11 @@ class AttendanceService {
 
   // Existing methods and properties
 
-  /// Deletes an attendance session by its ID.
-  ///
-  /// This method interacts with the backend to delete the session
-  /// with the specified [sessionId]. Throws an exception if the
-  /// deletion fails.
+  // Deletes an attendance session by its ID.
+  //
+  // This method interacts with the backend to delete the session
+  // with the specified [sessionId]. Throws an exception if the
+  // deletion fails.
   Future<void> deleteSession(String sessionId) async {
     try {
       //print('Deleting attendance session: $sessionId');
@@ -178,7 +178,7 @@ class AttendanceService {
     }
   }
 
-  /// Closes an attendance session by updating its status
+  // Closes an attendance session by updating its status
   Future<void> closeAttendanceSession(String sessionId) async {
     try {
       //print('Closing attendance session: $sessionId');
@@ -576,7 +576,7 @@ class AttendanceService {
     }
   }
 
-  /// Fetches all attendance sessions from the database
+  // Fetches all attendance sessions from the database
   Future<List<AttendanceSessionModel>> getAllAttendanceSessions() async {
     try {
       // Use the attendance_session_details view which already has all the joined data
@@ -597,7 +597,7 @@ class AttendanceService {
     }
   }
 
-  /// Fetches classes created by the current teacher
+  // Fetches classes created by the current teacher
   Future<List<ClassModel>> getTeacherClasses() async {
     try {
       final user = supabase.auth.currentUser;
@@ -617,7 +617,7 @@ class AttendanceService {
 
   // these methods to the AttendanceService class
 
-  /// Fetches a specific attendance session by its ID
+  // Fetches a specific attendance session by its ID
   Future<AttendanceSessionModel> getSessionById(String sessionId) async {
     try {
       //print('Fetching attendance session with ID: $sessionId');
@@ -634,7 +634,7 @@ class AttendanceService {
     }
   }
 
-  /// Updates an attendance record with new status
+  // Updates an attendance record with new status
   Future<void> updateAttendanceRecord(String recordId, bool isPresent) async {
     try {
       //print('Updating attendance record: $recordId to isPresent=$isPresent');
@@ -654,7 +654,7 @@ class AttendanceService {
     }
   }
 
-  /// Gets detailed attendance records including student information
+  // Gets detailed attendance records including student information
   Future<List<Map<String, dynamic>>> getDetailedAttendanceRecords(
       String sessionId) async {
     try {
@@ -697,7 +697,7 @@ class AttendanceService {
     }
   }
 
-  /// Gets attendance statistics for a specific session
+  // Gets attendance statistics for a specific session
   Future<Map<String, dynamic>> getSessionAttendanceStats(
       String sessionId) async {
     try {
@@ -740,7 +740,7 @@ class AttendanceService {
     }
   }
 
-  /// Exports attendance data for a session (returns data that can be used for CSV/PDF)
+  // Exports attendance data for a session (returns data that can be used for CSV/PDF)
   Future<List<Map<String, dynamic>>> exportSessionAttendanceData(
       String sessionId) async {
     try {
@@ -772,7 +772,7 @@ class AttendanceService {
     }
   }
 
-  /// Checks if a session is currently active
+  // Checks if a session is currently active
   bool isSessionActive(AttendanceSessionModel session) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
@@ -850,7 +850,7 @@ class AttendanceService {
     }
   }
 
-  /// Fetches a teacher's name by their user ID
+  // Fetches a teacher's name by their user ID
   Future<String> getTeacherName(String userId) async {
     try {
       //print('Fetching teacher name for user ID: $userId');

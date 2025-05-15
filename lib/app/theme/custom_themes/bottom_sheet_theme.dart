@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import '../../../common/utils/constants/colors.dart';
 import '../../../common/utils/constants/sized.dart';
 
-/// TBottomSheetTheme implements:
-/// - Law of Common Region: Creates visual boundaries around related content
-/// - Aesthetic-Usability Effect: Clean, consistent design
-/// - Law of Proximity: Consistent spacing
-/// - Jakob's Law: Familiar bottom sheet patterns
+// TBottomSheetTheme implements:
+// - Law of Common Region: Creates visual boundaries around related content
+// - Aesthetic-Usability Effect: Clean, consistent design
+// - Law of Proximity: Consistent spacing
+// - Jakob's Law: Familiar bottom sheet patterns
 class TBottomSheetTheme {
   TBottomSheetTheme._();
 

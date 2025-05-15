@@ -1,10 +1,9 @@
-/// TValidator: Robust validation utility for form inputs and data verification
+// TValidator: Robust validation utility for form inputs and data verification
 class TValidator {
-  TValidator._()
-  {
+  TValidator._() {
     //printnt('TValidator initialized');
   } // Private constructor to prevent instantiation
-  /// Validate email address
+  // Validate email address
   static String? email(String? value) {
     if (value == null || value.isEmpty) {
       return 'Email is required';
@@ -12,15 +11,15 @@ class TValidator {
 
     // Regular expression for email validation
     final emailRegExp = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-    
+
     if (!emailRegExp.hasMatch(value)) {
       return 'Invalid email address';
     }
-    
+
     return null;
   }
 
-  /// Validate password
+  // Validate password
   static String? password(String? value) {
     if (value == null || value.isEmpty) {
       return 'Password is required';
@@ -47,7 +46,7 @@ class TValidator {
     return null;
   }
 
-  /// Validate phone number
+  // Validate phone number
   static String? phoneNumber(String? value) {
     if (value == null || value.isEmpty) {
       return 'Phone number is required';
@@ -55,7 +54,7 @@ class TValidator {
 
     // Regular expression for phone number validation
     final phoneRegExp = RegExp(r'^\d{10}$');
-    
+
     if (!phoneRegExp.hasMatch(value)) {
       return 'Invalid phone number format (10 digits required)';
     }
@@ -63,7 +62,7 @@ class TValidator {
     return null;
   }
 
-  /// Validate name
+  // Validate name
   static String? name(String? value) {
     if (value == null || value.isEmpty) {
       return 'Name is required';
@@ -75,7 +74,7 @@ class TValidator {
 
     // Regular expression for name validation (letters and spaces only)
     final nameRegExp = RegExp(r'^[a-zA-Z ]+$');
-    
+
     if (!nameRegExp.hasMatch(value)) {
       return 'Name can only contain letters and spaces';
     }
@@ -83,7 +82,7 @@ class TValidator {
     return null;
   }
 
-  /// Validate price
+  // Validate price
   static String? price(String? value) {
     if (value == null || value.isEmpty) {
       return 'Price is required';
@@ -100,7 +99,7 @@ class TValidator {
     return null;
   }
 
-  /// Validate quantity
+  // Validate quantity
   static String? quantity(String? value) {
     if (value == null || value.isEmpty) {
       return 'Quantity is required';
@@ -117,7 +116,7 @@ class TValidator {
     return null;
   }
 
-  /// Validate card number
+  // Validate card number
   static String? cardNumber(String? value) {
     if (value == null || value.isEmpty) {
       return 'Card number is required';
@@ -125,7 +124,7 @@ class TValidator {
 
     // Remove any spaces or dashes
     final cleanNumber = value.replaceAll(RegExp(r'[\s-]'), '');
-    
+
     // Check if it contains only digits and has valid length
     if (!RegExp(r'^\d{16}$').hasMatch(cleanNumber)) {
       return 'Invalid card number';
@@ -134,7 +133,7 @@ class TValidator {
     return null;
   }
 
-  /// Validate CVV
+  // Validate CVV
   static String? cvv(String? value) {
     if (value == null || value.isEmpty) {
       return 'CVV is required';
@@ -147,7 +146,7 @@ class TValidator {
     return null;
   }
 
-  /// Validate date
+  // Validate date
   static String? date(String? value) {
     if (value == null || value.isEmpty) {
       return 'Date is required';
@@ -155,7 +154,7 @@ class TValidator {
 
     // Regular expression for date format MM/YY
     final dateRegExp = RegExp(r'^\d{2}/\d{2}$');
-    
+
     if (!dateRegExp.hasMatch(value)) {
       return 'Invalid date format (MM/YY)';
     }
@@ -163,7 +162,7 @@ class TValidator {
     return null;
   }
 
-  /// Validate postal code
+  // Validate postal code
   static String? postalCode(String? value) {
     if (value == null || value.isEmpty) {
       return 'Postal code is required';
@@ -171,7 +170,7 @@ class TValidator {
 
     // Regular expression for postal code (customize based on your country format)
     final postalRegExp = RegExp(r'^\d{6}$');
-    
+
     if (!postalRegExp.hasMatch(value)) {
       return 'Invalid postal code';
     }
