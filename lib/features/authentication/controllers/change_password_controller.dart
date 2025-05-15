@@ -30,7 +30,7 @@ class ChangePasswordController extends GetxController {
   void onInit() {
     super.onInit();
 
-    // Add listeners to text controllers
+    // listeners to text controllers
     newPasswordController.addListener(() {
       //printnt('New password changed: ${newPasswordController.text}');
       calculatePasswordStrength(newPasswordController.text);
@@ -161,7 +161,7 @@ class ChangePasswordController extends GetxController {
     return true;
   }
 
-  // Change password
+  // password
   Future<void> changePassword() async {
     //printnt('Attempting to change password');
     if (!validateFields()) return;
@@ -194,7 +194,7 @@ class ChangePasswordController extends GetxController {
         return;
       }
 
-      // Update password
+      // password
       await supabase.auth.updateUser(
         UserAttributes(password: newPasswordController.text),
       );

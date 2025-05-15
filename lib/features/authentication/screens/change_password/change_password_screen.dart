@@ -166,7 +166,7 @@ class ChangePasswordScreen extends StatelessWidget {
             ),
             const SizedBox(height: TSizes.spaceBtwSections),
 
-            // Change Password Button
+            // Password Button
             SizedBox(
               width: double.infinity,
               child: Obx(

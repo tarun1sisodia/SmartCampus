@@ -53,7 +53,7 @@ class TSnackBar {
         break;
     }
 
-    // Add source prefix to title if not app source
+    // source prefix to title if not app source
     String sourcePrefix = '';
     switch (source) {
       case MessageSource.server:

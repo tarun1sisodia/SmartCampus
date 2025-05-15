@@ -29,7 +29,7 @@ class AppBindings {
     // Auth controllers with permanent: true will persist throughout the app lifecycle
     Get.put(SupabaseAuthController(), permanent: true);
 
-    // Add attendance controller
+    // attendance controller
     Get.lazyPut<AttendanceController>(() => AttendanceController());
   }
 
@@ -180,7 +180,7 @@ class CreateClassScreen extends Bindings {
   }
 }
 
-// Add these bindings
+// these bindings
 class ReportsBinding extends Bindings {
   @override
   void dependencies() {

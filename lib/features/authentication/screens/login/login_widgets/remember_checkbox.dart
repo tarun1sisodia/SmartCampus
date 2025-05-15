@@ -33,7 +33,7 @@ class _RememberAndForgetState extends State<RememberAndForget> {
   Widget build(BuildContext context) {
     final dark = THelperFunction.isDarkMode(context);
 
-    // add some responsive and adpative code for small --- big ui screens
+    // some responsive and adpative code for small --- big ui screens
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [

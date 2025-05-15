@@ -20,7 +20,7 @@ class CalendarScreen extends StatelessWidget {
     //printnt('Building CalendarScreen');
     return Scaffold(
       appBar: AppBar(
-        title: Text('Class Calendar'),
+        title: Text('Calendar'),
         actions: [
           IconButton(
             icon: const Icon(Icons.filter_list),
@@ -142,7 +142,7 @@ class CalendarScreen extends StatelessWidget {
           color: Colors.white,
           borderRadius: BorderRadius.circular(8.0),
         ),
-        // Add some internal structure to make it look more like a calendar
+        // some internal structure to make it look more like a calendar
         child: Column(
           children: [
             // Calendar header
@@ -181,7 +181,7 @@ class CalendarScreen extends StatelessWidget {
   }
 
   Widget _buildActiveSessionsIndicator() {
-    //printnt('Building active sessions indicator');
+    //printnt('Building active sessions indicator');cecream_outli
     return Obx(() {
       final activeCount = controller.activeSessionsCount.value;
       //printnt('Active sessions count: $activeCount');
@@ -265,7 +265,7 @@ class CalendarScreen extends StatelessWidget {
             shape: BoxShape.circle,
           ),
         ),
-        // Add this to customize the format button text
+        //customize the format button text
         availableCalendarFormats: const {
           CalendarFormat.month: 'Week',
           CalendarFormat.twoWeeks: 'Month',
@@ -273,15 +273,16 @@ class CalendarScreen extends StatelessWidget {
         },
         // Optional: You can also customize the header style
         headerStyle: HeaderStyle(
-          formatButtonTextStyle: TextStyle(
-            color: TColors.primary,
-            fontSize: 14.0,
-          ),
-          formatButtonDecoration: BoxDecoration(
-            border: Border.all(color: TColors.primary),
-            borderRadius: BorderRadius.circular(12.0),
-          ),
-        ),
+            formatButtonTextStyle: TextStyle(
+              color: TColors.primary,
+              fontSize: 14.0,
+            ),
+            formatButtonDecoration: BoxDecoration(
+              border: Border.all(color: TColors.primary),
+              borderRadius: BorderRadius.circular(12.0),
+            ),
+            rightChevronIcon: Icon(Icons.arrow_forward_ios),
+            leftChevronIcon: Icon(Icons.arrow_back_ios)),
       );
     });
   }
@@ -494,7 +495,7 @@ class CalendarScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16.0),
 
-              // Add this new toggle for showing all sessions
+              // this new toggle for showing all sessions
               Obx(() => SwitchListTile(
                     title: Text('Show all teachers\' sessions'),
                     value: controller.showAllSessions.value,

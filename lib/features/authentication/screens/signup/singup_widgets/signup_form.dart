@@ -187,7 +187,7 @@ class SignupForm extends StatelessWidget {
                 ),
               ),
             ),
-            // Add this at the bottom of your form, after the Sign up button
+            // this at the bottom of your form, after the Sign up button
             const SizedBox(height: TSizes.spaceBtwSections),
             Row(
               children: [

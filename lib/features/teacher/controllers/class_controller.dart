@@ -173,7 +173,7 @@ class ClassController extends GetxController {
         section: section,
       );
       //printnt('Class created: $newClass');
-      // Add to the list
+      // to the list
       classes.insert(0, newClass);
 
       // Reset form
@@ -189,7 +189,7 @@ class ClassController extends GetxController {
     }
   }
 
-  // Update an existing class
+  // an existing class
   Future<void> updateClass(String classId) async {
     try {
       //printnt('Updating class with ID: $classId');
@@ -215,7 +215,7 @@ class ClassController extends GetxController {
 
       //printnt('Class updated: $updatedClass');
 
-      // Update in the list
+      // in the list
       final index = classes.indexWhere((c) => c.id == classId);
       if (index != -1) {
         classes[index] = updatedClass;
@@ -307,7 +307,7 @@ class ClassController extends GetxController {
       selectedClassIds.add(classId);
     }
 
-    // Update "all selected" state
+    // "all selected" state
     isAllSelected.value = selectedClassIds.length == classes.length;
   }
 

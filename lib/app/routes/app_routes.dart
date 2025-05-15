@@ -34,10 +34,10 @@ class AppRoutes {
   static const String forgotPassword = '/forgot-password';
   static const String resetConfirmation = '/reset-confirmation';
   static const String verifyEmail = '/verify-email';
-  static const String home = '/home'; 
+  static const String home = '/home';
   static const String attendanceReports = '/attendance-reports';
   static const String studentDetail = '/student-detail';
-  // Add these new route constants
+  // these new route constants
   static const String reports = '/reports';
   static const String settings = '/settings';
   static const String message = '/message';
@@ -189,7 +189,7 @@ class AppRoutes {
       binding: HomeBinding(),
       transition: Transition.rightToLeft,
     ),
-   
+
     GetPage(
       name: feedback,
       page: () {
@@ -263,6 +263,6 @@ class AppRoutes {
   /// Navigate to the initial route based on app state
   static String getInitialRoute() {
     //print('Getting initial route');
-    return splash; // Change this to the desired initial route
+    return splash; // this to the desired initial route
   }
 }

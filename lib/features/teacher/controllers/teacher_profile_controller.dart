@@ -110,7 +110,7 @@ class TeacherProfileController extends GetxController {
         }
       }
 
-      // Update the total student count
+      // the total student count
       studentCount.value = totalStudents;
 
       // Calculate the average attendance percentage
@@ -227,7 +227,7 @@ class TeacherProfileController extends GetxController {
     }
   }
 
-  // Update user profile information
+  // user profile information
   Future<void> updateProfile() async {
     try {
       isLoading.value = true;

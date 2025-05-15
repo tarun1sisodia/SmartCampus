@@ -375,7 +375,7 @@ class ClassListScreen extends StatelessWidget {
               elevation: 2,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
-                // Add border when selected
+                // border when selected
                 side: isSelected
                     ? BorderSide(
                         color: dark ? TColors.yellow : TColors.primary,
@@ -487,7 +487,7 @@ class ClassListScreen extends StatelessWidget {
     );
   }
 
-  // Add bottom action bar for selection mode
+  // bottom action bar for selection mode
   Widget _buildSelectionActionBar(BuildContext context, bool dark) {
     return BottomAppBar(
       color: dark ? TColors.darkerGrey : Colors.white,
@@ -524,7 +524,7 @@ class ClassListScreen extends StatelessWidget {
     required IconData icon,
     required String label,
     required VoidCallback onTap,
-    required bool dark, // Add this parameter
+    required bool dark, // this parameter
   }) {
     return InkWell(
       onTap: onTap,
@@ -790,7 +790,7 @@ class ClassListScreen extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                // Update the class
+                // the class
                 classController.updateClass(classItem.id);
                 Navigator.pop(context);
               },

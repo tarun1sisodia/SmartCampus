@@ -85,7 +85,7 @@ class StudentController extends GetxController {
     selectedImage.value = null;
   }
 
-  // Update addStudentToClass method to include image
+  // addStudentToClass method to include image
   Future<void> addStudentToClass() async {
     //printnt('Adding student to class');
     try {
@@ -138,7 +138,7 @@ class StudentController extends GetxController {
       selectedStudentIds.add(studentId);
     }
 
-    // Update "all selected" state
+    // "all selected" state
     isAllSelected.value = selectedStudentIds.length == students.length;
     // Force UI refresh
     students.refresh();
@@ -210,7 +210,7 @@ class StudentController extends GetxController {
       );
 
       if (imageUrl != null) {
-        // Update the student in the local list
+        // the student in the local list
         final index = students.indexWhere((s) => s.id == studentId);
         if (index != -1) {
           final updatedStudent = StudentModel(

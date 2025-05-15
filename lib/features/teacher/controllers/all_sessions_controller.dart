@@ -188,7 +188,7 @@ class AllSessionsController extends GetxController {
     }
   }
 
-// Add this method to check if a session is closed
+// this method to check if a session is closed
   bool isSessionClosed(AttendanceSessionWithClass session) {
     // Consider a session closed if its status is explicitly 'closed'
     if (session.status == 'closed') return true;
@@ -265,7 +265,7 @@ class AllSessionsController extends GetxController {
     }
   }
 
-// Add a method to close a session after attendance submission
+// a method to close a session after attendance submission
   Future<void> closeSession(String sessionId) async {
     try {
       isLoading.value = true;
@@ -273,7 +273,7 @@ class AllSessionsController extends GetxController {
       // Call the service method to close the session
       await attendanceService.closeAttendanceSession(sessionId);
 
-      // Update the local session data
+      // the local session data
       final sessionIndex = allSessions.indexWhere((s) => s.id == sessionId);
       if (sessionIndex >= 0) {
         final updatedSession = allSessions[sessionIndex];
@@ -350,7 +350,7 @@ class AllSessionsController extends GetxController {
       selectedSessionIds.add(sessionId);
     }
 
-    // Update "all selected" state
+    // "all selected" state
     isAllSelected.value = selectedSessionIds.length == filteredSessions.length;
   }
 
