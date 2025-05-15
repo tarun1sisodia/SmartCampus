@@ -1,3 +1,4 @@
+import 'package:attedance__/common/utils/helpers/snackbar_helper.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../models/class_model.dart';
@@ -172,6 +173,7 @@ class ClassService {
       //print('Class deleted successfully');
     } catch (e) {
       //print('Error deleting class: $e');
+      TSnackBar.showError(message: 'Oops Failed to Delete Class');
       throw 'Failed to delete class: $e';
     }
   }

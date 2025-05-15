@@ -1,3 +1,4 @@
+import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../models/attendance_record_model.dart';
@@ -35,8 +36,7 @@ class AttendanceService {
     required DateTime endDate,
   }) async {
     try {
-      //print(
-      // 'Fetching attendance sessions for date range: $startDate to $endDate');
+      //print('Fetching attendance sessions for date range: $startDate to $endDate');
       final response = await supabase
           .from('attendance_sessions')
           .select()
@@ -54,7 +54,7 @@ class AttendanceService {
     }
   }
 
-  // Create a new attendance session
+  // Create a new attendance session by class id
   Future<AttendanceSessionModel> createAttendanceSession({
     required String classId,
     required DateTime date,
@@ -66,6 +66,7 @@ class AttendanceService {
       //print('Creating new attendance session for class: $classId');
       final currentUser = supabase.auth.currentUser;
       if (currentUser == null) {
+        Get.snackbar('Your Are not Authorize', 'First Register or Login');
         throw 'User not authenticated';
       }
 
@@ -87,11 +88,10 @@ class AttendanceService {
       return AttendanceSessionModel.fromJson(response);
     } catch (e) {
       //print('Error creating attendance session: $e');
+      Get.snackbar('Failed to Create Attendance Session', '');
       throw 'Failed to create attendance session: $e';
     }
   }
-
-  // Existing methods and properties
 
   // Deletes an attendance session by its ID.
   //

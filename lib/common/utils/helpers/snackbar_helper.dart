@@ -15,7 +15,7 @@ enum MessageSource {
 //A utility class for showing consistent, styled snackbars throughout the app
 class TSnackBar {
   TSnackBar._() {
-    //printnt('TSnackBar initialized');
+    //print('TSnackBar initialized');
   } // Private constructor to prevent instantiation
 
   //Enum defining different message types
@@ -106,7 +106,7 @@ class TSnackBar {
     required String message,
     String title = 'Error',
     MessageSource source =
-        MessageSource.app, // No need for TSnackBar.MessageSource
+        MessageSource.app, 
   }) {
     show(
       title: title,
@@ -114,6 +114,7 @@ class TSnackBar {
       type: MessageType.error,
       source: source,
     );
+    
   }
 
   //Convenience method to check if there is an error message

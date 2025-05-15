@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+//it is not being used anywhere
 class TDeviceUtils {
   TDeviceUtils._() {
     //print('TDeviceUtils initialized');
@@ -9,7 +10,7 @@ class TDeviceUtils {
   static double screenWidth(BuildContext context) =>
       MediaQuery.of(context).size.width;
 }
-
+//it is not being used anywhere
 class TScreenResponsive {
   TScreenResponsive._();
   static bool isMobile(BuildContext context) =>
@@ -20,7 +21,7 @@ class TScreenResponsive {
   static bool isDesktop(BuildContext context) =>
       MediaQuery.of(context).size.width >= 1024;
 }
-
+//it is not being used anywhere
 extension TScreenSize on BuildContext {
   // Screen Height Percentages
   double get height => MediaQuery.of(this).size.height;

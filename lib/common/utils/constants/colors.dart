@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-//olors implements:
+//colors implements:
 //Aesthetic-Usability Effect: Pleasing, harmonious color palette
 //Hick's Law: Limited color options to reduce decision complexity
 //Law of Similarity: Consistent color application

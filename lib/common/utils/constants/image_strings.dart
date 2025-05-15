@@ -19,10 +19,8 @@ class TImageStrings {
   static const String instagram = "assets/icons/instagram.png";
 
   static const String onboardingImage1 = "assets/animations/hello_robo.json";
-  static const String onboardingImage2 =
-      "assets/images/onboarding_images/tap.gif";
-  static const String onboardingImage3 =
-      "assets/images/onboarding_images/activity-feed.gif";
+  static const String onboardingImage2 ="assets/images/onboarding_images/tap.gif";
+  static const String onboardingImage3 ="assets/images/onboarding_images/activity-feed.gif";
 
   static const String verifyemail = "assets/icons/verify.png";
   static const String successemail = "assets/icons/success.png";
