@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../../common/styles/spacing_styles.dart';
 import '../../../../common/utils/constants/image_strings.dart';
 import '../../../../common/utils/constants/sized.dart';
 import '../../../../common/utils/helpers/snackbar_helper.dart';
@@ -19,7 +18,12 @@ class Login extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        padding: TSpacingStyles.paddingWithAppBarHeight,
+        padding: EdgeInsets.only(
+          top: TSizes.appBarHeight,
+          left: TSizes.defaultSpace,
+          right: TSizes.defaultSpace,
+          bottom: TSizes.defaultSpace,
+        ),
         child: Column(
           children: [
             //for logo

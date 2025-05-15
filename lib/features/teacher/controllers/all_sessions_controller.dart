@@ -378,7 +378,7 @@ class AllSessionsController extends GetxController {
     selectedSessionIds.clear();
     isAllSelected.value = false;
   }
-
+//function to delete the sessions..
   Future<void> deleteSelectedSessions() async {
     try {
       isLoading.value = true;

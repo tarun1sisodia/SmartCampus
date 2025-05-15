@@ -1,3 +1,4 @@
+import 'package:attedance__/features/teacher/screens/attendance_reports_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:async';
@@ -301,8 +302,9 @@ class CarouselAttendanceController extends GetxController {
     try {
       isSubmitting.value = true;
       await attendanceController.submitAttendance();
-      Get.offNamed(
-          '/attendance-reports'); // Return to previous screen after submission
+      //replace the current screen only.. so back can't be performed
+      Get.off(
+          AttendanceReportsScreen); // Return to previous screen after submission
     } catch (e) {
       TSnackBar.showError(
         message: 'Failed to submit attendance: ${e.toString()}',

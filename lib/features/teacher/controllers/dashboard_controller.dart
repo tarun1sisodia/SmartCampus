@@ -1,8 +1,8 @@
 import 'dart:math';
 
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../../common/utils/helpers/helper_function.dart';
 import '../../../models/class_model.dart';
 import '../../../services/class_service.dart';
 import '../../../services/attendance_service.dart';
@@ -141,6 +141,7 @@ class DashboardController extends GetxController {
 
   Future<void> loadDashboardData() async {
     try {
+      THelperFunction.showAlert('Let me Check this','Alert is Running');
       //print('Loading dashboard data...');
       isLoading.value = true;
 
