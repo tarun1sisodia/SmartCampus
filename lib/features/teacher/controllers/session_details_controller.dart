@@ -25,7 +25,7 @@ class SessionDetailsController extends GetxController {
       final String sessionId = args['sessionId'];
       loadSessionDetails(sessionId);
     } else {
-      ////print('Error: Session ID not provided in arguments');
+      ///print('Error: Session ID not provided in arguments');
       isLoading.value =
           false; // Set loading to false so the UI can show an error state
     }
@@ -45,7 +45,7 @@ class SessionDetailsController extends GetxController {
       // Calculate attendance stats
       _calculateAttendanceStats();
     } catch (e) {
-      ////print('Error loading session details: $e');
+      ///print('Error loading session details: $e');
       TSnackBar.showError(
           message: 'Failed to load session details: ${e.toString()}');
     } finally {
@@ -67,7 +67,7 @@ class SessionDetailsController extends GetxController {
             isPresent: record['isPresent'],
           )));
     } catch (e) {
-      ////print('Error loading attendance records: $e');
+      ///print('Error loading attendance records: $e');
       TSnackBar.showError(message: 'Failed to load attendance records');
     }
   }
@@ -85,7 +85,7 @@ class SessionDetailsController extends GetxController {
         absent: stats['absent'],
       );
     } catch (e) {
-      ////print('Error calculating attendance stats: $e');
+      ///print('Error calculating attendance stats: $e');
       // Use local calculation as fallback
       final total = attendanceRecords.length;
       final present =
@@ -124,7 +124,7 @@ class SessionDetailsController extends GetxController {
         );
       }
     } catch (e) {
-      ////print('Error updating attendance: $e');
+      ///print('Error updating attendance: $e');
       TSnackBar.showError(message: 'Failed to update attendance');
     }
   }
@@ -176,7 +176,7 @@ class SessionDetailsController extends GetxController {
         message: 'Attendance data exported successfully',
       );
     } catch (e) {
-      ////print('Error exporting attendance data: $e');
+      ///print('Error exporting attendance data: $e');
       TSnackBar.showError(message: 'Failed to export attendance data');
     }
   }

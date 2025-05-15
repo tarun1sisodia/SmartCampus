@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import '../../../common/utils/constants/colors.dart';
 import '../../../common/utils/constants/sized.dart';
 
-/// TChipTheme implements:
-/// - Fitts's Law: Appropriate sizing for interactive elements
-/// - Aesthetic-Usability Effect: Clean, consistent chip design
-/// - Law of Proximity: Consistent spacing
-/// - Law of Similarity: Consistent styling
+//ChipTheme implements:
+// Fitts's Law: Appropriate sizing for interactive elements
+// Aesthetic-Usability Effect: Clean, consistent chip design
+// Law of Proximity: Consistent spacing
+// Law of Similarity: Consistent styling
 class TChipTheme {
   TChipTheme._();
 

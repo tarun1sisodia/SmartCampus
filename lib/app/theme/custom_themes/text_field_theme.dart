@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import '../../../common/utils/constants/colors.dart';
 import '../../../common/utils/constants/sized.dart';
 
-/// TTextFieldTheme implements:
-/// - Fitts's Law: Appropriate sizing for interactive elements
-/// - Aesthetic-Usability Effect: Clean, consistent input design
-/// - Law of Proximity: Consistent spacing
-/// - Jakob's Law: Familiar input patterns
+//TTextFieldTheme implements:
+//- Fitts's Law: Appropriate sizing for interactive elements
+//- Aesthetic-Usability Effect: Clean, consistent input design
+//- Law of Proximity: Consistent spacing
+//- Jakob's Law: Familiar input patterns
 class TTextFieldTheme {
   TTextFieldTheme._();
 

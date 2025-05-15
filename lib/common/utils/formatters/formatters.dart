@@ -2,7 +2,7 @@ import 'package:intl/intl.dart';
 
 class Formatters {
   Formatters._() {
-    ////print('Formatters initialized');
+    //rint('Formatters initialized');
   }
   static String formatDate(DateTime? date) {
     date ??= DateTime.now();

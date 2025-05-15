@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-/// TColors implements:
-/// - Aesthetic-Usability Effect: Pleasing, harmonious color palette
-/// - Hick's Law: Limited color options to reduce decision complexity
-/// - Law of Similarity: Consistent color application
-/// - Visual Hierarchy: Clear distinction between primary/secondary colors
+//olors implements:
+//Aesthetic-Usability Effect: Pleasing, harmonious color palette
+//Hick's Law: Limited color options to reduce decision complexity
+//Law of Similarity: Consistent color application
+//Visual Hierarchy: Clear distinction between primary/secondary colors
 class TColors {
   TColors._();
 

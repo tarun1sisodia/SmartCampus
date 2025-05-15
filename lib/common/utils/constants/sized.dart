@@ -1,8 +1,8 @@
-/// TSizes implements:
-/// - Fitts's Law: Appropriate sizing for interactive elements
-/// - Law of Proximity: Consistent spacing system
-/// - Miller's Law: Limited number of size options
-/// - Law of Similarity: Consistent sizing patterns
+//TSizes implements:
+//- Fitts's Law: Appropriate sizing for interactive elements
+//- Law of Proximity: Consistent spacing system
+//- Miller's Law: Limited number of size options
+//- Law of Similarity: Consistent sizing patterns
 class TSizes {
   TSizes._();
 

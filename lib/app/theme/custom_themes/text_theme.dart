@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../../common/utils/constants/colors.dart';
 
-/// TtextTheme implements:
-/// - Visual Hierarchy: Clear distinction between text styles
-/// - Law of Similarity: Consistent text styling
-/// - Aesthetic-Usability Effect: Readable, pleasing typography
+//TtextTheme implements:
+//- Visual Hierarchy: Clear distinction between text styles
+//- Law of Similarity: Consistent text styling
+//- Aesthetic-Usability Effect: Readable, pleasing typography
 class TtextTheme {
   TtextTheme._();
 

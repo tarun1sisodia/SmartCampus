@@ -11,11 +11,11 @@ import 'custom_themes/text_field_theme.dart';
 import 'custom_themes/text_theme.dart';
 import 'custom_themes/card_theme.dart'; // New file to create
 
-/// TAppTheme implements several UX laws:
-/// - Aesthetic-Usability Effect: Consistent, pleasing visual design
-/// - Law of Similarity: Consistent styling across components
-/// - Hick's Law: Limited color palette to reduce decision complexity
-/// - Jakob's Law: Following platform conventions users already know
+// TAppTheme implements several UX laws:
+// - Aesthetic-Usability Effect: Consistent, pleasing visual design
+// - Law of Similarity: Consistent styling across components
+// - Hick's Law: Limited color palette to reduce decision complexity
+// - Jakob's Law: Following platform conventions users already know
 class TAppTheme {
   TAppTheme._();
 

@@ -11,23 +11,23 @@ import 'myapp.dart';
 import 'services/google_sign_in_service.dart';
 import 'services/language_service.dart';
 
-/// The main entry point of the app.
-///
-/// Initializes the app's bindings, services, and global state.
-/// Checks if the user is already logged in and tries to log in
-/// automatically if credentials are saved.
-/// Starts the app normally even if auto-login fails.
-///
-/// Main entry point of the application.
-///
-/// Performs the following startup tasks:
-/// - Initializes Flutter bindings
-/// - Configures Supabase authentication
-/// - Initializes storage and global app services
-/// - Attempts automatic user login if credentials are saved
-/// - Launches the main application widget
-///
-/// Handles auto-login gracefully, continuing app startup even if login fails.
+// The main entry point of the app.
+//
+// Initializes the app's bindings, services, and global state.
+// Checks if the user is already logged in and tries to log in
+// automatically if credentials are saved.
+// Starts the app normally even if auto-login fails.
+//
+// Main entry point of the application.
+//
+// Performs the following startup tasks:
+// - Initializes Flutter bindings
+// - Configures Supabase authentication
+// - Initializes storage and global app services
+// - Attempts automatic user login if credentials are saved
+// - Launches the main application widget
+//
+// Handles auto-login gracefully, continuing app startup even if login fails.
 Future<void> main() async {
   try {
     //print('Starting app initialization...');
@@ -56,7 +56,6 @@ Future<void> main() async {
     await Get.putAsync(() => LanguageService().init());
     //print('LanguageService initialized.');
     await Get.putAsync(() => GoogleSignInService().init());
-
 
     // Initialize global bindings
     //print('calling the file to initialize global bindings...');

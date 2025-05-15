@@ -6,9 +6,9 @@ import 'package:get_storage/get_storage.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:crypto/crypto.dart';
 
-/// TStorageUtility: An advanced singleton class for local storage operations
-/// using GetStorage as the underlying storage mechanism with extended capabilities
-/// for handling complex data types, images, and encrypted sensitive data.
+// TStorageUtility: An advanced singleton class for local storage operations
+// using GetStorage as the underlying storage mechanism with extended capabilities
+// for handling complex data types, images, and encrypted sensitive data.
 class TStorageUtility {
   // Singleton pattern implementation ensures single instance throughout the app
   static final TStorageUtility _instance = TStorageUtility._internal();
@@ -34,45 +34,45 @@ class TStorageUtility {
   static const String _lastSyncKey = 'last_sync_timestamp';
   static const String _appSettingsKey = 'app_settings';
 
-  /// Saves data of any type T to local storage
-  /// Usage: await storage.saveData('user_token', 'abc123')
+  // Saves data of any type T to local storage
+  // Usage: await storage.saveData('user_token', 'abc123')
   Future<void> saveData<T>(String key, T value) async {
     await _storage.write(key, value);
   }
 
-  /// Reads data of type T from local storage
-  /// Usage: final token = storage.readData String>('user_token')
+  // Reads data of type T from local storage
+  // Usage: final token = storage.readData String>('user_token')
   T? readData<T>(String key) {
     return _storage.read<T>(key);
   }
 
-  /// Deletes specific data from storage
-  /// Usage: await storage.removeData('user_token')
+  // Deletes specific data from storage
+  // Usage: await storage.removeData('user_token')
   Future<void> removeData(String key) async {
     await _storage.remove(key);
   }
 
-  /// Clears all data from storage
-  /// Usage: await storage.clearAll()
+  // Clears all data from storage
+  // Usage: await storage.clearAll()
   Future<void> clearAll() async {
     await _storage.erase();
     await _clearCacheDirectory();
   }
 
-  /// Gets a string value from storage
-  /// Usage: final language = storage.getString('language_code')
+  // Gets a string value from storage
+  // Usage: final language = storage.getString('language_code')
   String? getString(String key) {
     return readData<String>(key);
   }
 
-  /// Saves a string value to storage
-  /// Usage: await storage.setString('language_code', 'en')
+  // Saves a string value to storage
+  // Usage: await storage.setString('language_code', 'en')
   Future<void> setString(String key, String value) async {
     await saveData(key, value);
   }
 
-  /// Saves a complex object by serializing it to JSON
-  /// Usage: await storage.saveObject('user_profile', userProfileObject)
+  // Saves a complex object by serializing it to JSON
+  // Usage: await storage.saveObject('user_profile', userProfileObject)
   Future<void> saveObject(String key, dynamic object) async {
     if (object == null) return;
 
@@ -85,8 +85,8 @@ class TStorageUtility {
     }
   }
 
-  /// Reads a complex object by deserializing from JSON
-  /// Usage: final userProfile = storage.readObject('user_profile', (json) => UserProfile.fromJson(json))
+  // Reads a complex object by deserializing from JSON
+  // Usage: final userProfile = storage.readObject('user_profile', (json) => UserProfile.fromJson(json))
   T? readObject<T>(String key, T Function(Map<String, dynamic>) fromJson) {
     try {
       final jsonString = _storage.read<String>(key);
@@ -100,8 +100,8 @@ class TStorageUtility {
     }
   }
 
-  /// Saves a list of complex objects
-  /// Usage: await storage.saveObjectList('students', studentsList)
+  // Saves a list of complex objects
+  // Usage: await storage.saveObjectList('students', studentsList)
   Future<void> saveObjectList<T>(String key, List<T> objects) async {
     try {
       final jsonString = jsonEncode(objects);
@@ -112,8 +112,8 @@ class TStorageUtility {
     }
   }
 
-  /// Reads a list of complex objects
-  /// Usage: final students = storage.readObjectList('students', (json) => Student.fromJson(json))
+  // Reads a list of complex objects
+  // Usage: final students = storage.readObjectList('students', (json) => Student.fromJson(json))
   List<T>? readObjectList<T>(
       String key, T Function(Map<String, dynamic>) fromJson) {
     try {
@@ -130,8 +130,8 @@ class TStorageUtility {
     }
   }
 
-  /// Saves an image to local storage and returns the file path
-  /// Usage: final imagePath = await storage.saveImage('teacher_profile', imageBytes)
+  // Saves an image to local storage and returns the file path
+  // Usage: final imagePath = await storage.saveImage('teacher_profile', imageBytes)
   Future<String?> saveImage(String imageName, Uint8List imageBytes) async {
     try {
       final directory = await _getImageDirectory();
@@ -154,8 +154,8 @@ class TStorageUtility {
     }
   }
 
-  /// Retrieves an image from local storage
-  /// Usage: final imageFile = await storage.getImage('teacher_profile')
+  // Retrieves an image from local storage
+  // Usage: final imageFile = await storage.getImage('teacher_profile')
   Future<File?> getImage(String imageName) async {
     try {
       final imagePathsMap = readData<Map<dynamic, dynamic>>('image_paths');
@@ -175,8 +175,8 @@ class TStorageUtility {
     }
   }
 
-  /// Deletes an image from local storage
-  /// Usage: await storage.deleteImage('teacher_profile')
+  // Deletes an image from local storage
+  // Usage: await storage.deleteImage('teacher_profile')
   Future<bool> deleteImage(String imageName) async {
     try {
       final imagePathsMap = readData<Map<dynamic, dynamic>>('image_paths');
@@ -201,92 +201,92 @@ class TStorageUtility {
     }
   }
 
-  /// Saves app theme preference
-  /// Usage: await storage.saveThemeMode(ThemeMode.dark)
+  // Saves app theme preference
+  // Usage: await storage.saveThemeMode(ThemeMode.dark)
   Future<void> saveThemeMode(ThemeMode themeMode) async {
     await saveData(_themeKey, themeMode.index);
   }
 
-  /// Gets app theme preference
-  /// Usage: final themeMode = storage.getThemeMode()
+  // Gets app theme preference
+  // Usage: final themeMode = storage.getThemeMode()
   ThemeMode getThemeMode() {
     final themeIndex = readData<int>(_themeKey);
     if (themeIndex == null) return ThemeMode.system;
     return ThemeMode.values[themeIndex];
   }
 
-  /// Saves app language preference
-  /// Usage: await storage.saveLanguage('en')
+  // Saves app language preference
+  // Usage: await storage.saveLanguage('en')
   Future<void> saveLanguage(String languageCode) async {
     await saveData(_languageKey, languageCode);
   }
 
-  /// Gets app language preference
-  /// Usage: final language = storage.getLanguage()
+  // Gets app language preference
+  // Usage: final language = storage.getLanguage()
   String getLanguage() {
     return readData<String>(_languageKey) ?? 'en';
   }
 
-  /// Saves user profile data
-  /// Usage: await storage.saveUserProfile(userProfileMap)
+  // Saves user profile data
+  // Usage: await storage.saveUserProfile(userProfileMap)
   Future<void> saveUserProfile(Map<String, dynamic> profileData) async {
     await saveData(_userProfileKey, jsonEncode(profileData));
   }
 
-  /// Gets user profile data
-  /// Usage: final userProfile = storage.getUserProfile()
+  // Gets user profile data
+  // Usage: final userProfile = storage.getUserProfile()
   Map<String, dynamic>? getUserProfile() {
     final profileJson = readData<String>(_userProfileKey);
     if (profileJson == null) return null;
     return jsonDecode(profileJson) as Map<String, dynamic>;
   }
 
-  /// Updates specific fields in user profile
-  /// Usage: await storage.updateUserProfile({'name': 'New Name'})
+  // Updates specific fields in user profile
+  // Usage: await storage.updateUserProfile({'name': 'New Name'})
   Future<void> updateUserProfile(Map<String, dynamic> updates) async {
     final currentProfile = getUserProfile() ?? {};
     currentProfile.addAll(updates);
     await saveUserProfile(currentProfile);
   }
 
-  /// Saves app settings
-  /// Usage: await storage.saveAppSettings({'notifications': true, 'darkMode': false})
+  // Saves app settings
+  // Usage: await storage.saveAppSettings({'notifications': true, 'darkMode': false})
   Future<void> saveAppSettings(Map<String, dynamic> settings) async {
     await saveData(_appSettingsKey, jsonEncode(settings));
   }
 
-  /// Gets app settings
-  /// Usage: final settings = storage.getAppSettings()
+  // Gets app settings
+  // Usage: final settings = storage.getAppSettings()
   Map<String, dynamic> getAppSettings() {
     final settingsJson = readData<String>(_appSettingsKey);
     if (settingsJson == null) return {};
     return jsonDecode(settingsJson) as Map<String, dynamic>;
   }
 
-  /// Updates specific app settings
-  /// Usage: await storage.updateAppSettings({'notifications': false})
+  // Updates specific app settings
+  // Usage: await storage.updateAppSettings({'notifications': false})
   Future<void> updateAppSettings(Map<String, dynamic> updates) async {
     final currentSettings = getAppSettings();
     currentSettings.addAll(updates);
     await saveAppSettings(currentSettings);
   }
 
-  /// Records last sync timestamp
-  /// Usage: await storage.updateLastSyncTime()
+  // Records last sync timestamp
+  // Usage: await storage.updateLastSyncTime()
   Future<void> updateLastSyncTime() async {
     await saveData(_lastSyncKey, DateTime.now().millisecondsSinceEpoch);
   }
 
-  /// Gets last sync timestamp
-  /// Usage: final lastSync = storage.getLastSyncTime()
+  // Gets last sync timestamp
+  // Usage: final lastSync = storage.getLastSyncTime()
   DateTime? getLastSyncTime() {
     final timestamp = readData<int>(_lastSyncKey);
     if (timestamp == null) return null;
     return DateTime.fromMillisecondsSinceEpoch(timestamp);
   }
 
-  /// Calculates cache size in MB
-  /// Usage: final cacheSize = await storage.getCacheSize()
+  // Calculates cache size in MB
+  // Usage: final cacheSize = await storage.getCacheSize()
   Future<double> getCacheSize() async {
     try {
       final directory = await _getCacheDirectory();
@@ -309,8 +309,8 @@ class TStorageUtility {
     }
   }
 
-  /// Clears the cache directory
-  /// Usage: await storage.clearCache()
+  // Clears the cache directory
+  // Usage: await storage.clearCache()
   Future<void> clearCache() async {
     await _clearCacheDirectory();
   }
@@ -371,8 +371,8 @@ class TStorageUtility {
     return digest.toString();
   }
 
-  /// Saves a document file and returns the file path
-  /// Usage: final docPath = await storage.saveDocument('syllabus', docBytes, 'pdf')
+  // Saves a document file and returns the file path
+  // Usage: final docPath = await storage.saveDocument('syllabus', docBytes, 'pdf')
   Future<String?> saveDocument(
       String docName, Uint8List docBytes, String extension) async {
     try {
@@ -396,8 +396,8 @@ class TStorageUtility {
     }
   }
 
-  /// Retrieves a document from local storage
-  /// Usage: final docFile = await storage.getDocument('syllabus')
+  // Retrieves a document from local storage
+  // Usage: final docFile = await storage.getDocument('syllabus')
   Future<File?> getDocument(String docName) async {
     try {
       final docPathsMap = readData<Map<dynamic, dynamic>>('document_paths');
@@ -417,8 +417,8 @@ class TStorageUtility {
     }
   }
 
-  /// Deletes a document from local storage
-  /// Usage: await storage.deleteDocument('syllabus')
+  // Deletes a document from local storage
+  // Usage: await storage.deleteDocument('syllabus')
   Future<bool> deleteDocument(String docName) async {
     try {
       final docPathsMap = readData<Map<dynamic, dynamic>>('document_paths');
@@ -443,8 +443,8 @@ class TStorageUtility {
     }
   }
 
-  /// Saves encrypted sensitive data
-  /// Usage: await storage.saveSecureData('api_key', 'secret_key_value')
+  // Saves encrypted sensitive data
+  // Usage: await storage.saveSecureData('api_key', 'secret_key_value')
   Future<void> saveSecureData(String key, String value) async {
     try {
       // Simple encryption - in a real app, use a proper encryption library
@@ -456,8 +456,8 @@ class TStorageUtility {
     }
   }
 
-  /// Retrieves and decrypts sensitive data
-  /// Usage: final apiKey = storage.getSecureData('api_key')
+  // Retrieves and decrypts sensitive data
+  // Usage: final apiKey = storage.getSecureData('api_key')
   String? getSecureData(String key) {
     try {
       final encrypted = readData<String>('secure_$key');
@@ -501,8 +501,8 @@ class TStorageUtility {
     return result.toString();
   }
 
-  /// Saves offline data for sync later
-  /// Usage: await storage.saveOfflineData('attendance_records', recordsList)
+  // Saves offline data for sync later
+  // Usage: await storage.saveOfflineData('attendance_records', recordsList)
   Future<void> saveOfflineData(
       String key, List<Map<String, dynamic>> data) async {
     try {
@@ -516,8 +516,8 @@ class TStorageUtility {
     }
   }
 
-  /// Gets offline data for syncing
-  /// Usage: final offlineRecords = storage.getOfflineData('attendance_records')
+  // Gets offline data for syncing
+  // Usage: final offlineRecords = storage.getOfflineData('attendance_records')
   List<Map<String, dynamic>>? getOfflineData(String key) {
     try {
       final jsonString = readData<String>('offline_$key');
@@ -531,14 +531,14 @@ class TStorageUtility {
     }
   }
 
-  /// Clears offline data after successful sync
-  /// Usage: await storage.clearOfflineData('attendance_records')
+  // Clears offline data after successful sync
+  // Usage: await storage.clearOfflineData('attendance_records')
   Future<void> clearOfflineData(String key) async {
     await removeData('offline_$key');
   }
 
-  /// Saves a teacher profile with all related data
-  /// Usage: await storage.saveTeacherProfile(teacherData, profileImageBytes)
+  // Saves a teacher profile with all related data
+  // Usage: await storage.saveTeacherProfile(teacherData, profileImageBytes)
   Future<void> saveTeacherProfile(
       Map<String, dynamic> teacherData, Uint8List? profileImageBytes) async {
     try {
@@ -561,8 +561,8 @@ class TStorageUtility {
     }
   }
 
-  /// Gets teacher profile data including image
-  /// Usage: final teacherProfile = await storage.getTeacherProfile()
+  // Gets teacher profile data including image
+  // Usage: final teacherProfile = await storage.getTeacherProfile()
   Future<Map<String, dynamic>?> getTeacherProfile() async {
     try {
       final profileJson = readData<String>('teacher_profile');
@@ -590,8 +590,8 @@ class TStorageUtility {
     }
   }
 
-  /// Gets teacher profile image as a File
-  /// Usage: final imageFile = await storage.getTeacherProfileImage()
+  // Gets teacher profile image as a File
+  // Usage: final imageFile = await storage.getTeacherProfileImage()
   Future<File?> getTeacherProfileImage() async {
     try {
       final profileData = await getTeacherProfile();
@@ -611,8 +611,8 @@ class TStorageUtility {
     }
   }
 
-  /// Updates teacher profile data
-  /// Usage: await storage.updateTeacherProfile(updatedData, newProfileImageBytes)
+  // Updates teacher profile data
+  // Usage: await storage.updateTeacherProfile(updatedData, newProfileImageBytes)
   Future<void> updateTeacherProfile(
       Map<String, dynamic> updates, Uint8List? newProfileImageBytes) async {
     try {
@@ -640,8 +640,8 @@ class TStorageUtility {
     }
   }
 
-  /// Saves attendance data for offline use
-  /// Usage: await storage.saveAttendanceData(classId, sessionId, attendanceList)
+  // Saves attendance data for offline use
+  // Usage: await storage.saveAttendanceData(classId, sessionId, attendanceList)
   Future<void> saveAttendanceData(String classId, String sessionId,
       List<Map<String, dynamic>> attendanceData) async {
     try {
@@ -663,8 +663,8 @@ class TStorageUtility {
     }
   }
 
-  /// Gets attendance data for a specific class and session
-  /// Usage: final attendanceData = storage.getAttendanceData(classId, sessionId)
+  // Gets attendance data for a specific class and session
+  // Usage: final attendanceData = storage.getAttendanceData(classId, sessionId)
   List<Map<String, dynamic>>? getAttendanceData(
       String classId, String sessionId) {
     try {
@@ -680,14 +680,14 @@ class TStorageUtility {
     }
   }
 
-  /// Gets all pending attendance data that needs to be synced
-  /// Usage: final pendingData = storage.getPendingAttendanceData()
+  // Gets all pending attendance data that needs to be synced
+  // Usage: final pendingData = storage.getPendingAttendanceData()
   List<Map<String, dynamic>>? getPendingAttendanceData() {
     return getOfflineData('pending_attendance');
   }
 
-  /// Marks attendance data as synced
-  /// Usage: await storage.markAttendanceAsSynced(classId, sessionId)
+  // Marks attendance data as synced
+  // Usage: await storage.markAttendanceAsSynced(classId, sessionId)
   Future<void> markAttendanceAsSynced(String classId, String sessionId) async {
     try {
       final pendingData = getPendingAttendanceData() ?? [];

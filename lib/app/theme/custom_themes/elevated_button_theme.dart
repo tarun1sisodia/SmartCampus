@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import '../../../common/utils/constants/colors.dart';
 import '../../../common/utils/constants/sized.dart';
 
-/// TElevatedButtonTheme implements:
-/// - Fitts's Law: Appropriate sizing for interactive elements
-/// - Aesthetic-Usability Effect: Clean, consistent button design
-/// - Law of Proximity: Consistent spacing
-/// - Doherty Threshold: Clear visual feedback on interaction
+//TElevatedButtonTheme implements:
+//- Fitts's Law: Appropriate sizing for interactive elements
+//- Aesthetic-Usability Effect: Clean, consistent button design
+//- Law of Proximity: Consistent spacing
+//- Doherty Threshold: Clear visual feedback on interaction
 class TElevatedButtonTheme {
   TElevatedButtonTheme._();
 

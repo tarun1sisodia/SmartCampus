@@ -20,10 +20,10 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../navigation_menu.dart';
 import '../../services/storage_service.dart';
 
-/// A class that manages all controller bindings for the app
-/// This centralizes dependency injection and improves performance
+// A class that manages all controller bindings for the app
+// This centralizes dependency injection and improves performance
 class AppBindings {
-  /// Initialize all bindings that should be available globally
+  // Initialize all bindings that should be available globally
   static void initGlobalBindings() {
     //print('Initializing global bindings by AppBindings');
     // Auth controllers with permanent: true will persist throughout the app lifecycle
@@ -33,31 +33,31 @@ class AppBindings {
     Get.lazyPut<AttendanceController>(() => AttendanceController());
   }
 
-  /// Onboarding bindings
+  // Onboarding bindings
   static void registerOnboardingBindings() {
     //print('Registering onboarding bindings');
     Get.lazyPut(() => OnboardingController(), fenix: true);
   }
 
-  /// Login bindings
+  // Login bindings
   static void registerLoginBindings() {
     //print('Registering login bindings');
     Get.lazyPut(() => LoginController(), fenix: true);
   }
 
-  /// Signup bindings
+  // Signup bindings
   static void registerSignupBindings() {
     //print('Registering signup bindings');
     Get.lazyPut(() => SignupController(), fenix: true);
   }
 
-  /// Forgot password bindings
+  // Forgot password bindings
   static void registerForgotPasswordBindings() {
     //print('Registering forgot password bindings');
     Get.lazyPut(() => ForgotPasswordController(), fenix: true);
   }
 
-  /// Home screen bindings (includes all controllers needed for the home screen)
+  // Home screen bindings (includes all controllers needed for the home screen)
   static void registerHomeBindings() {
     //print('Registering home bindings');
     Get.lazyPut(() => TeacherProfileController(), fenix: true);
@@ -90,7 +90,7 @@ class SplashBinding extends Bindings {
   }
 }
 
-/// Individual bindings classes for use with GetX routing
+// Individual bindings classes for use with GetX routing
 class OnboardingBinding extends Bindings {
   @override
   void dependencies() {
