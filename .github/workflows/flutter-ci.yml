@@ -77,6 +77,19 @@ jobs:
 
       - name: Build App Bundle (Android)
         run: flutter build appbundle --release
+      # 7. Build Commands
+
+      # Install Linux build dependencies
+      - name: Install Linux build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+          libgtk-3-dev \
+          clang \
+          cmake \
+          ninja-build \
+          pkg-config \
+          liblzma-dev
 
       - name: Build Linux Desktop
         run: flutter build linux --release
