@@ -19,7 +19,7 @@ We encourage responsible disclosure of security vulnerabilities. Please follow t
 
 ### How to Report
 
-- Send an email to our security team at: **cocoder999@gmail.com**
+- Send an message to me at: **https://www.linkedin.com/in/tarun1sisodia/**
 - Include the following details:
   - A detailed description of the vulnerability
   - Steps to reproduce the issue
