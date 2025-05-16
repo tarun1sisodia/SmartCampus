@@ -1,7 +1,3 @@
----
-marp: true
----
-
 # SmartCampus - An Attendance Management System
 
 ## Project Overview
