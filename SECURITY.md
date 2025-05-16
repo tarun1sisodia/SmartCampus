@@ -10,7 +10,7 @@ We take security seriously and provide updates and patches only for actively sup
 | 0.9.x   | :x:                |
 | < 0.9   | :x:                |
 
-*Replace with your actual version scheme.*
+**
 
 ---
 
@@ -20,7 +20,7 @@ We encourage responsible disclosure of security vulnerabilities. Please follow t
 
 ### How to Report
 
-- Send an email to our security team at: **security@yourdomain.com** (replace with your actual security email)
+- Send an email to our security team at: **cocoder999@gmail.com**
 - Include the following details:
   - A detailed description of the vulnerability
   - Steps to reproduce the issue
