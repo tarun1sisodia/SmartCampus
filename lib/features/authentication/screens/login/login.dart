@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../../../../common/utils/constants/image_strings.dart';
 import '../../../../common/utils/constants/sized.dart';
+import '../../../../common/utils/constants/text_strings.dart';
 import '../../../../common/utils/helpers/snackbar_helper.dart';
 import '../../../../services/google_sign_in_service.dart';
 import '../../controllers/login_controller.dart';
@@ -45,8 +46,8 @@ class Login extends StatelessWidget {
                 Expanded(child: Divider()),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: TSizes.sm),
-                  child:
-                      Text("OR", style: Theme.of(context).textTheme.bodySmall),
+                  child: Text(TTexts.oR,
+                      style: Theme.of(context).textTheme.bodySmall),
                 ),
                 Expanded(child: Divider()),
               ],
@@ -61,7 +62,7 @@ class Login extends StatelessWidget {
                   width: TSizes.iconMd,
                   image: AssetImage(TImageStrings.google),
                 ),
-                label: Text("Sign up with Google"),
+                label: Text(TTexts.orSignInWithGoogle),
                 onPressed: () async {
                   try {
                     final googleSignInService = Get.find<GoogleSignInService>();
@@ -71,14 +72,14 @@ class Login extends StatelessWidget {
                       Get.offAllNamed('/dashboard');
                     } else {
                       TSnackBar.showError(
-                        message: 'Google sign-up failed',
-                        title: 'Error',
+                        message: TTexts.googleError,
+                        title: TTexts.error,
                       );
                     }
                   } catch (e) {
                     TSnackBar.showError(
-                      message: 'An error occurred: ${e.toString()}',
-                      title: 'Error',
+                      message: TTexts.errorOccured + e.toString(),
+                      title: TTexts.error,
                     );
                   }
                 },

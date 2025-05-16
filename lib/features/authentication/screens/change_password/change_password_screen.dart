@@ -1,3 +1,4 @@
+import 'package:attedance__/common/utils/constants/text_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -18,7 +19,7 @@ class ChangePasswordScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Change Password',
+          TTexts.appBarchangePassword,
           style: Theme.of(context).textTheme.headlineSmall,
         ),
       ),
@@ -29,14 +30,14 @@ class ChangePasswordScreen extends StatelessWidget {
           children: [
             // Header
             Text(
-              'Update Your Password',
+              TTexts.updatePassword,
               style: Theme.of(
                 context,
               ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: TSizes.sm),
             Text(
-              'Enter your current password and a new password to update your credentials',
+              TTexts.updatePasswordtonew,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: TSizes.spaceBtwSections),
@@ -47,7 +48,7 @@ class ChangePasswordScreen extends StatelessWidget {
                 controller: controller.currentPasswordController,
                 obscureText: !controller.isCurrentPasswordVisible.value,
                 decoration: InputDecoration(
-                  labelText: 'Current Password',
+                  labelText: TTexts.currentPassword,
                   prefixIcon: const Icon(Iconsax.password_check),
                   suffixIcon: IconButton(
                     onPressed: controller.toggleCurrentPasswordVisibility,
@@ -73,7 +74,7 @@ class ChangePasswordScreen extends StatelessWidget {
                 controller: controller.newPasswordController,
                 obscureText: !controller.isNewPasswordVisible.value,
                 decoration: InputDecoration(
-                  labelText: 'New Password',
+                  labelText: TTexts.newPassword,
                   prefixIcon: const Icon(Iconsax.lock),
                   suffixIcon: IconButton(
                     onPressed: controller.toggleNewPasswordVisibility,
@@ -99,7 +100,7 @@ class ChangePasswordScreen extends StatelessWidget {
                 controller: controller.confirmPasswordController,
                 obscureText: !controller.isConfirmPasswordVisible.value,
                 decoration: InputDecoration(
-                  labelText: 'Confirm New Password',
+                  labelText: TTexts.confirmNewPassword,
                   prefixIcon: const Icon(Iconsax.lock),
                   suffixIcon: IconButton(
                     onPressed: controller.toggleConfirmPasswordVisibility,
@@ -131,7 +132,7 @@ class ChangePasswordScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Password Requirements:',
+                    TTexts.passwordRequirements,
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -139,25 +140,25 @@ class ChangePasswordScreen extends StatelessWidget {
                   const SizedBox(height: TSizes.sm),
                   _buildRequirementItem(
                     context,
-                    'At least 8 characters long',
+                    TTexts.at8lenght,
                     Iconsax.tick_circle,
                     dark ? TColors.yellow : TColors.primary,
                   ),
                   _buildRequirementItem(
                     context,
-                    'Contains uppercase and lowercase letters',
+                    TTexts.bothLowerUpper,
                     Iconsax.tick_circle,
                     dark ? TColors.yellow : TColors.primary,
                   ),
                   _buildRequirementItem(
                     context,
-                    'Contains at least one number',
+                    TTexts.at1lenght,
                     Iconsax.tick_circle,
                     dark ? TColors.yellow : TColors.primary,
                   ),
                   _buildRequirementItem(
                     context,
-                    'Contains at least one special character',
+                    TTexts.at1Speciallenght,
                     Iconsax.tick_circle,
                     dark ? TColors.yellow : TColors.primary,
                   ),
@@ -183,7 +184,7 @@ class ChangePasswordScreen extends StatelessWidget {
                   ),
                   child: controller.isLoading.value
                       ? const CircularProgressIndicator()
-                      : const Text('Change Password'),
+                      : const Text(TTexts.appBarchangePassword),
                 ),
               ),
             ),

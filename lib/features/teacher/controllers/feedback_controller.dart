@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../../common/utils/constants/text_strings.dart';
 import '../../../services/feedback_service.dart';
 import '../../../services/storage_service.dart';
 import '../screens/feedback_screen.dart';
@@ -153,7 +154,7 @@ class FeedbackController extends GetxController {
       }
 
       Get.snackbar(
-        'Error',
+        TTexts.error,
         'Failed to submit feedback. Please try again later.',
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red[100],

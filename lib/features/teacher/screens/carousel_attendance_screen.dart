@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import '../../../common/utils/constants/text_strings.dart';
 import '../../../common/utils/device/device_utility.dart';
 import '../controllers/carousel_attendance_controller.dart';
 import '../widgets/session_timer_widget.dart';
@@ -341,7 +342,7 @@ class CarouselAttendanceScreen extends StatelessWidget {
               onPressed: () {
                 Get.back();
               },
-              child: const Text('Cancel')),
+              child: const Text(TTexts.cancel)),
           ElevatedButton(
             onPressed: () {
               Get.back();

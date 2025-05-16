@@ -4,6 +4,7 @@ import 'package:lottie/lottie.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../common/utils/constants/colors.dart';
 import '../../../common/utils/constants/image_strings.dart';
+import '../../../common/utils/constants/text_strings.dart';
 import '../../../common/utils/helpers/helper_function.dart';
 import '../../../app/routes/app_routes.dart';
 import '../../../services/storage_service.dart';
@@ -118,7 +119,7 @@ class _SplashScreenState extends State<SplashScreen>
                 return Opacity(opacity: _fadeAnimation.value, child: child);
               },
               child: Text(
-                'Smart Campus',
+                TTexts.appName,
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: dark ? TColors.yellow : TColors.purple,
@@ -135,7 +136,7 @@ class _SplashScreenState extends State<SplashScreen>
                 return Opacity(opacity: _fadeAnimation.value, child: child);
               },
               child: Text(
-                'Track attendance with ease',
+                TTexts.attendanceSubtitle2,
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       color: dark ? Colors.white70 : TColors.dark54,
                     ),

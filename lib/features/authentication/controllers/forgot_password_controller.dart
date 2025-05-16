@@ -1,3 +1,4 @@
+import 'package:attedance__/common/utils/constants/text_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -16,7 +17,7 @@ class ForgotPasswordController extends GetxController {
 
   Future<void> resetPassword() async {
     if (!GetUtils.isEmail(emailController.text.trim())) {
-      errorMessage.value = 'Invalid email address';
+      errorMessage.value = TTexts.invalidEmail;
       return;
     }
     try {

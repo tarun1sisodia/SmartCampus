@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 import '../../../app/bindings/app_bindings.dart';
+import '../../../common/utils/constants/text_strings.dart';
 import '../../../common/utils/helpers/snackbar_helper.dart';
 import '../controllers/attendance_controller.dart';
 import '../../../models/class_model.dart';
@@ -402,7 +403,7 @@ class AttendanceScreen extends StatelessWidget {
               //print('Canceling session creation');
               Get.back();
             },
-            child: const Text('Cancel'),
+            child: const Text(TTexts.cancel),
           ),
           ElevatedButton(
             onPressed: () {

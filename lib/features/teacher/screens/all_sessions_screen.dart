@@ -4,6 +4,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../app/bindings/app_bindings.dart';
+import '../../../common/utils/constants/text_strings.dart';
 import '../../../common/utils/helpers/snackbar_helper.dart';
 import '../controllers/all_sessions_controller.dart';
 import '../controllers/attendance_controller.dart';
@@ -743,7 +744,7 @@ class AllSessionsScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: const Text('Cancel'),
+              child: const Text(TTexts.cancel),
             ),
             TextButton(
               onPressed: () {
@@ -778,7 +779,7 @@ class AllSessionsScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: const Text('Cancel'),
+              child: const Text(TTexts.cancel),
             ),
             TextButton(
               onPressed: () {

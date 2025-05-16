@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import '../../../common/utils/constants/colors.dart';
 import '../../../common/utils/constants/sized.dart';
+import '../../../common/utils/constants/text_strings.dart';
 import '../../../common/utils/helpers/helper_function.dart';
 import '../../../models/student_model.dart';
 import '../controllers/student_detail_controller.dart';
@@ -519,7 +520,7 @@ class StudentDetailScreen extends StatelessWidget {
                               foregroundColor:
                                   dark ? Colors.black : Colors.black,
                             ),
-                            child: const Text('Cancel'),
+                            child: const Text(TTexts.cancel),
                           ),
                           ElevatedButton(
                             onPressed: () {
@@ -548,7 +549,7 @@ class StudentDetailScreen extends StatelessWidget {
                         : TColors.uxGradient4.colors.first,
                     foregroundColor: dark ? Colors.white : Colors.black,
                   ),
-                  child: const Text('Cancel'),
+                  child: const Text(TTexts.cancel),
                 ),
               ),
             ],
@@ -710,7 +711,7 @@ class StudentDetailScreen extends StatelessWidget {
               backgroundColor: dark ? Colors.red : Colors.red,
               foregroundColor: dark ? Colors.white : TColors.dark,
             ),
-            child: const Text('Cancel'),
+            child: const Text(TTexts.cancel),
           ),
           ElevatedButton(
             onPressed: () {

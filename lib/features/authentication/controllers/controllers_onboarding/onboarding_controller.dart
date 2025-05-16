@@ -1,4 +1,5 @@
 import 'package:attedance__/app/routes/app_routes.dart';
+import 'package:attedance__/common/utils/constants/text_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../services/storage_service.dart';
@@ -28,9 +29,8 @@ class OnboardingController extends GetxController {
 
       // Show welcome message
       TSnackBar.showSuccess(
-        message:
-            'You\'re all set! Let\'s get started with your attendance tracking.',
-        title: 'Setup Complete',
+        message: TTexts.allset,
+        title: TTexts.setupComplete,
       );
 
       Get.offAllNamed(AppRoutes.login);
@@ -49,9 +49,7 @@ class OnboardingController extends GetxController {
 
     // Show welcome message
     TSnackBar.showInfo(
-      message: 'Welcome to the Attendance App! Please log in to continue.',
-      title: 'Welcome',
-    );
+        message: TTexts.welcomeSkipOnboarding, title: TTexts.welcome);
 
     Get.offAllNamed(AppRoutes.login);
   }

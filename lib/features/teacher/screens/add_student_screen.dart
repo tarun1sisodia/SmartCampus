@@ -1,3 +1,4 @@
+import 'package:attedance__/common/utils/constants/text_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -384,7 +385,7 @@ class AddStudentScreen extends StatelessWidget {
               //   width: 1,
               // ),
             ),
-            child: const Text('Cancel'),
+            child: const Text(TTexts.cancel),
           ),
           ElevatedButton(
             onPressed: () {
@@ -393,7 +394,7 @@ class AddStudentScreen extends StatelessWidget {
                   studentController.rollNumberController.text.trim().isEmpty) {
                 //print('Validation failed: Empty fields');
                 Get.snackbar(
-                  'Error',
+                  TTexts.error,
                   'Please fill in all fields',
                   snackPosition: SnackPosition.BOTTOM,
                   backgroundColor: Colors.red,
@@ -481,7 +482,7 @@ class AddStudentScreen extends StatelessWidget {
                     backgroundColor: dark ? Colors.grey[800] : Colors.grey[200],
                     foregroundColor: dark ? Colors.white : TColors.dark,
                   ),
-                  child: const Text('Cancel'),
+                  child: const Text(TTexts.cancel),
                 ),
               ),
             ],
@@ -807,7 +808,7 @@ class AddStudentScreen extends StatelessWidget {
               //   width: 1,
               // ),
             ),
-            child: const Text('Cancel'),
+            child: const Text(TTexts.cancel),
           ),
           Obx(() => ElevatedButton(
                 onPressed: studentController.selectedStudents.isEmpty
@@ -889,7 +890,7 @@ class AddStudentScreen extends StatelessWidget {
               //   width: 1,
               // ),
             ),
-            child: const Text('Cancel'),
+            child: const Text(TTexts.cancel),
           ),
           ElevatedButton(
             onPressed: () {
@@ -934,7 +935,7 @@ class AddStudentScreen extends StatelessWidget {
               //   width: 1,
               // ),
             ),
-            child: const Text('Cancel'),
+            child: const Text(TTexts.cancel),
           ),
           ElevatedButton(
             onPressed: () {

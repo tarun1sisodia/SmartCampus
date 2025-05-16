@@ -1,3 +1,4 @@
+import 'package:attedance__/common/utils/constants/text_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -48,8 +49,8 @@ class LoginController extends GetxController {
       //printnt('Credentials saved: email=${emailController.text}');
       // Show a confirmation message
       TSnackBar.showInfo(
-        message: 'Your credentials will be remembered for next login',
-        title: 'Remember Me',
+        message: TTexts.rememberMeMessage,
+        title: TTexts.rememberMe,
       );
     } else {
       // Clear saved credentials
@@ -57,8 +58,8 @@ class LoginController extends GetxController {
       //printnt('Credentials cleared');
       // Show a confirmation message
       TSnackBar.showInfo(
-        message: 'Your credentials will not be saved',
-        title: 'Remember Me',
+        message: TTexts.credentialsNOtSaved,
+        title: TTexts.rememberMe,
       );
     }
   }
@@ -85,8 +86,8 @@ class LoginController extends GetxController {
 
       // Show success message
       TSnackBar.showSuccess(
-        message: 'You have successfully logged in',
-        title: 'Welcome Back',
+        message: TTexts.loginSuccess,
+        title: TTexts.welcomeback,
       );
       //printnt('Login successful');
     } catch (e) {
@@ -98,7 +99,7 @@ class LoginController extends GetxController {
       } else if (e.toString().contains('auth') ||
           e.toString().contains('credentials')) {
         TSnackBar.showAuthError(
-          message: 'Invalid email or password. Please try again.',
+          message: TTexts.accountNotFound,
         );
       } else {
         TSnackBar.showServerError(message: e.toString());

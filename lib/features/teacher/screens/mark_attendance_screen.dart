@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../app/routes/app_routes.dart';
+import '../../../common/utils/constants/text_strings.dart';
 import '../../../common/utils/device/device_utility.dart';
 import '../../../common/widgets/student_avatar.dart';
 import '../controllers/attendance_controller.dart';
@@ -366,7 +367,7 @@ class MarkAttendanceScreen extends StatelessWidget {
               //print('Cancel button pressed in dialog');
               Get.back();
             },
-            child: const Text('Cancel'),
+            child: const Text(TTexts.cancel),
           ),
           ElevatedButton(
             onPressed: () {
