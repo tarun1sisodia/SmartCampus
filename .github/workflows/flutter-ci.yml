@@ -5,13 +5,14 @@ on:
     branches: [ clean-rebuild ]
   pull_request:
     branches: [ clean-rebuild ]
+
 permissions:
   contents: write
-  
+
 jobs:
   build:
-    name: Build Linux & Android
-    runs-on: ubuntu-latest
+    name: Build Linux, Android & iOS
+    runs-on: macos-latest
 
     steps:
       # 1. Checkout Source
@@ -45,8 +46,11 @@ jobs:
         with:
           flutter-version: '3.29.3'
 
-      - name: Enable Linux Desktop
-        run: flutter config --enable-linux-desktop
+      - name: Enable Desktop Platforms
+        run: |
+          flutter config --enable-linux-desktop
+          flutter config --enable-macos-desktop
+          flutter config --enable-ios
 
       # 4. Install Dependencies
       - name: Install Flutter dependencies
@@ -82,17 +86,13 @@ jobs:
 
       - name: Install Linux build dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            libgtk-3-dev \
-            clang \
-            cmake \
-            ninja-build \
-            pkg-config \
-            liblzma-dev
+          brew install gtk+3 cmake ninja pkg-config xz || true
 
       - name: Build Linux Desktop
         run: flutter build linux --release
+
+      - name: Build iOS (no code sign)
+        run: flutter build ios --release --no-codesign
 
       # 8. Verify Output
       - name: Check built artifacts
@@ -100,6 +100,7 @@ jobs:
           ls -lh build/app/outputs/flutter-apk/app-release.apk
           ls -lh build/app/outputs/bundle/release/app-release.aab
           ls -lh build/linux/x64/release/bundle/ || true
+          ls -lh build/ios/iphoneos/Runner.app || true
 
       # 9. Upload Artifacts
       - name: Upload all artifacts
@@ -110,6 +111,7 @@ jobs:
             build/app/outputs/flutter-apk/app-release.apk
             build/app/outputs/bundle/release/app-release.aab
             build/linux/x64/release/bundle/**
+            build/ios/iphoneos/Runner.app/**
 
       # 10. GitHub Release (Recommended: softprops)
       - name: Extract version from pubspec.yaml
@@ -126,4 +128,4 @@ jobs:
           files: |
             build/app/outputs/flutter-apk/app-release.apk
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
