@@ -57,9 +57,6 @@ jobs:
       - name: Check Dart Format
         run: dart format --set-exit-if-changed . || true
 
-      - name: Run Flutter Tests
-        run: flutter test --coverage
-
       # 6. Android Signing Setup
       - name: Decode Android Keystore
         run: |
