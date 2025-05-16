@@ -1,0 +1,13 @@
+version: 2
+updates:
+  - package-ecosystem: "pub"  # For Flutter/Dart projects
+    directory: "/"            # Root where pubspec.yaml lives
+    schedule:
+      interval: "weekly"       # Can be "daily", "weekly", or "monthly"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    open-pull-requests-limit: 5
+    allow:
+      - dependency-type: "direct"
+      - dependency-type: "indirect"
