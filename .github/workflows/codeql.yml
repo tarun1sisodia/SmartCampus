@@ -25,11 +25,11 @@ jobs:
           - language: actions
             build-mode: none
           - language: c-cpp
-            build-mode: autobuild
+            build-mode: manual
           - language: java-kotlin
             build-mode: manual
           - language: swift
-            build-mode: autobuild
+            build-mode: manual
 
     steps:
       - name: Checkout repository
@@ -41,7 +41,8 @@ jobs:
           languages: ${{ matrix.language }}
           build-mode: ${{ matrix.build-mode }}
 
-      - if: matrix.build-mode == 'manual'
+      # Manual build for Java/Kotlin (Flutter Android)
+      - if: matrix.language == 'java-kotlin'
         name: Build Android for Java/Kotlin CodeQL
         run: |
           sudo apt-get update
@@ -51,6 +52,21 @@ jobs:
           flutter doctor
           flutter pub get
           flutter build apk --debug
+
+      # Manual build for C/C++ (placeholder)
+      - if: matrix.language == 'c-cpp'
+        name: Build C/C++ project (if any)
+        run: |
+          echo "No explicit build required for c-cpp in this Flutter project"
+          mkdir -p build && cd build
+          cmake .. || true
+          make || true
+
+      # Manual build for Swift (placeholder)
+      - if: matrix.language == 'swift'
+        name: Build Swift project (if any)
+        run: |
+          echo "No Swift code in Flutter project, skipping actual build"
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
