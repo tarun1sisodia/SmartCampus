@@ -5,7 +5,9 @@ on:
     branches: [ clean-rebuild ]
   pull_request:
     branches: [ clean-rebuild ]
-
+permissions:
+  contents: write
+  
 jobs:
   build:
     name: Build Linux & Android
