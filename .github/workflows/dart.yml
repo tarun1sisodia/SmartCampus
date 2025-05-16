@@ -77,6 +77,12 @@ jobs:
       - name: Build Linux App
         run: flutter build linux --release
 
+      - name: Check artifacts exist
+        run: |
+          ls -lh build/app/outputs/flutter-apk/app-release.apk
+          ls -lh build/app/outputs/bundle/release/app-release.aab
+          ls -lh build/linux/x64/release/bundle/ || true
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
