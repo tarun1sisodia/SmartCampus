@@ -1,19 +1,8 @@
-name: Snyk Security Scan
-
-on:
-  push:
-    branches: [ clean-rebuild ]
-  pull_request:
-    branches: [ clean-rebuild ]
-
-permissions:
-  contents: read
-  security-events: write
-
 jobs:
   snyk:
     runs-on: ubuntu-latest
-
+    env:
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -22,8 +11,6 @@ jobs:
         uses: snyk/actions/setup@v1
         with:
           version: 'latest'
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
       - name: Install dependencies
         run: flutter pub get
