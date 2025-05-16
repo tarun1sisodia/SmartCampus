@@ -101,7 +101,7 @@ jobs:
             build/app/outputs/bundle/release/app-release.aab
             build/linux/x64/release/bundle/**
 
-      # 10. GitHub Release (Optional)
+      # 10. GitHub Release (Updated)
       - name: Extract version from pubspec.yaml
         id: get_version
         run: |
@@ -109,18 +109,22 @@ jobs:
           echo "VERSION=$v" >> $GITHUB_ENV
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
+        id: create_release
+        uses: actions/create-release@v1
         with:
           tag_name: v${{ env.VERSION }}
-          name: "Release v${{ env.VERSION }}"
+          release_name: "Release v${{ env.VERSION }}"
+          draft: false
+          prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
 
       - name: Upload APK to Release
-        uses: softprops/action-upload-release-asset@v1
+        uses: actions/upload-release-asset@v1
         with:
-          tag_name: v${{ env.VERSION }}
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: build/app/outputs/flutter-apk/app-release.apk
           asset_name: app-release.apk
+          asset_content_type: application/vnd.android.package-archive
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
