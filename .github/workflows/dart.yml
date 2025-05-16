@@ -93,7 +93,7 @@ jobs:
 
       # 9. Upload Artifacts
       - name: Upload all artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: app-artifacts
           path: |
