@@ -10,7 +10,6 @@ We take security seriously and provide updates and patches only for actively sup
 | 0.9.x   | :x:                |
 | < 0.9   | :x:                |
 
-**
 
 ---
 
