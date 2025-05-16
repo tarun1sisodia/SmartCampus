@@ -22,7 +22,7 @@ class ForgotPasswordScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Forgot Password',
+          TTexts.forgotPassword,
           style: Theme.of(context).textTheme.headlineSmall,
         ),
       ),
@@ -43,7 +43,7 @@ class ForgotPasswordScreen extends StatelessWidget {
 
               // Title
               Text(
-                'Forgot Password?',
+                TTexts.forgotPasswordTitle,
                 style: Theme.of(context).textTheme.headlineMedium,
                 textAlign: TextAlign.center,
               ),
@@ -51,7 +51,7 @@ class ForgotPasswordScreen extends StatelessWidget {
 
               // Subtitle
               Text(
-                'Enter your email and we\'ll send you a link to reset your password',
+                TTexts.forgetPasswordSubTitle,
                 style: Theme.of(context).textTheme.bodyMedium,
                 textAlign: TextAlign.center,
               ),
@@ -71,10 +71,10 @@ class ForgotPasswordScreen extends StatelessWidget {
                       keyboardType: TextInputType.emailAddress,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter your email';
+                          return TTexts.pleaseEnterEmail;
                         }
                         if (!GetUtils.isEmail(value)) {
-                          return 'Please enter a valid email';
+                          return TTexts.pleaseEnterValidEmail;
                         }
                         return null;
                       },
@@ -123,7 +123,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                                 },
                           child: controller.isLoading.value
                               ? const CircularProgressIndicator()
-                              : Text('Reset Password'),
+                              : Text(TTexts.resetPassword),
                         ),
                       ),
                     ),

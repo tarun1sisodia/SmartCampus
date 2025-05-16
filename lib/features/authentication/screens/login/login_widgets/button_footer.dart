@@ -1,6 +1,7 @@
 import '../../../../../common/utils/constants/colors.dart';
 import '../../../../../common/utils/constants/image_strings.dart';
 import '../../../../../common/utils/constants/sized.dart';
+import '../../../../../common/utils/constants/text_strings.dart';
 import '../../../../../common/utils/helpers/helper_function.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -40,8 +41,8 @@ class FooterButton extends StatelessWidget {
                   }
                 } catch (e) {
                   Get.snackbar(
-                    'Error',
-                    'An error occurred: ${e.toString()}',
+                    TTexts.error,
+                    TTexts.errorOccured + e.toString(),
                     snackPosition: SnackPosition.BOTTOM,
                   );
                 }

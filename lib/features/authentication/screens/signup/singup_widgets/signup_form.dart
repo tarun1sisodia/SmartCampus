@@ -41,7 +41,7 @@ class SignupForm extends StatelessWidget {
               labelText: TTexts.firstName,
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Please enter your name';
+                  return TTexts.pleaseEnterName;
                 }
                 return null;
               },
@@ -52,7 +52,7 @@ class SignupForm extends StatelessWidget {
             TextFormField(
               controller: controller.phoneController,
               decoration: InputDecoration(
-                labelText: 'Phone',
+                labelText: TTexts.phoneNumber,
                 prefixIcon: Icon(
                   Iconsax.call,
                   color: dark ? TColors.yellow : TColors.primary,
@@ -65,11 +65,11 @@ class SignupForm extends StatelessWidget {
               ],
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Please enter your phone number';
+                  return TTexts.pleaseEnterPhone;
                 } else if (value.length != 10) {
-                  return 'Phone number must be exactly 10 digits';
+                  return TTexts.phone10dgt;
                 } else if (!RegExp(r'^\d{10}$').hasMatch(value)) {
-                  return 'Phone number must contain only digits';
+                  return TTexts.phoneONLYdgt;
                 }
                 return null;
               },
@@ -85,10 +85,10 @@ class SignupForm extends StatelessWidget {
               keyboardType: TextInputType.emailAddress,
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Please enter your email';
+                  return TTexts.pleaseEnterEmail;
                 }
                 if (!GetUtils.isEmail(value)) {
-                  return 'Please enter a valid email';
+                  return TTexts.pleaseEnterValidEmail;
                 }
                 return null;
               },
@@ -113,10 +113,10 @@ class SignupForm extends StatelessWidget {
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter your password';
+                    return TTexts.pleaseEnterPassword;
                   }
                   if (value.length < 6) {
-                    return 'Password must be at least 6 characters';
+                    return TTexts.passwordLength;
                   }
                   return null;
                 },
@@ -171,9 +171,7 @@ class SignupForm extends StatelessWidget {
                           } else {
                             // Show validation error if form is not valid
                             TSnackBar.showValidationError(
-                              message:
-                                  'Please fill in all required fields correctly.',
-                            );
+                                message: TTexts.fillCorrect);
                           }
                         },
                   child: controller.isLoading.value
@@ -194,8 +192,8 @@ class SignupForm extends StatelessWidget {
                 Expanded(child: Divider()),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: TSizes.sm),
-                  child:
-                      Text("OR", style: Theme.of(context).textTheme.bodySmall),
+                  child: Text(TTexts.oR,
+                      style: Theme.of(context).textTheme.bodySmall),
                 ),
                 Expanded(child: Divider()),
               ],
@@ -210,7 +208,7 @@ class SignupForm extends StatelessWidget {
                   width: TSizes.iconMd,
                   image: AssetImage(TImageStrings.google),
                 ),
-                label: Text("Sign up with Google"),
+                label: Text(TTexts.orSignInWithGoogle),
                 onPressed: () async {
                   try {
                     final googleSignInService = Get.find<GoogleSignInService>();
@@ -220,14 +218,14 @@ class SignupForm extends StatelessWidget {
                       Get.offAllNamed('/dashboard');
                     } else {
                       TSnackBar.showError(
-                        message: 'Google sign-up failed',
-                        title: 'Error',
+                        message: TTexts.googleError,
+                        title: TTexts.error,
                       );
                     }
                   } catch (e) {
                     TSnackBar.showError(
-                      message: 'An error occurred: ${e.toString()}',
-                      title: 'Error',
+                      message: TTexts.errorOccured + e.toString(),
+                      title: TTexts.error,
                     );
                   }
                 },

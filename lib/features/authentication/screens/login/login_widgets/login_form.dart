@@ -1,13 +1,14 @@
-import 'package:attedance__/common/utils/constants/colors.dart';
-import 'package:attedance__/common/utils/constants/sized.dart';
-import 'package:attedance__/common/utils/constants/text_strings.dart';
-import 'package:attedance__/common/utils/helpers/helper_function.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
+import '../../../../../common/utils/constants/colors.dart';
+import '../../../../../common/utils/constants/sized.dart';
+import '../../../../../common/utils/constants/text_strings.dart';
+import '../../../../../common/utils/helpers/helper_function.dart';
 import '../../../controllers/signup_controller.dart';
 import '../../../controllers/supabase_auth_controller.dart';
+import '../../signup/signup.dart';
 import '../../signup/singup_widgets/textfields.dart';
 import 'remember_checkbox.dart';
 
@@ -40,10 +41,10 @@ class LoginForm extends StatelessWidget {
               keyboardType: TextInputType.emailAddress,
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Please enter your email';
+                  return TTexts.pleaseEnterEmail;
                 }
                 if (!GetUtils.isEmail(value)) {
-                  return 'Please enter a valid email';
+                  return TTexts.pleaseEnterValidEmail;
                 }
                 return null;
               },
@@ -67,10 +68,10 @@ class LoginForm extends StatelessWidget {
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter your password';
+                    return TTexts.pleaseEnterPassword;
                   }
                   if (value.length < 6) {
-                    return 'Password must be at least 6 characters';
+                    return TTexts.passwordLength;
                   }
                   return null;
                 },
@@ -110,7 +111,9 @@ class LoginForm extends StatelessWidget {
                           }
                         },
                   child: controller.isLoading.value
-                      ? const CircularProgressIndicator()
+                      ? const CircularProgressIndicator(
+                          color: TColors.coral,
+                        )
                       : Text(
                           TTexts.signIn,
                           style: TextStyle(
@@ -139,7 +142,7 @@ class LoginForm extends StatelessWidget {
                   if (Get.isRegistered<SignupController>()) {
                     Get.delete<SignupController>(force: true);
                   }
-                  Get.toNamed('/signup');
+                  Get.to(Signup());
                 },
                 child: Text(
                   TTexts.createAccount,

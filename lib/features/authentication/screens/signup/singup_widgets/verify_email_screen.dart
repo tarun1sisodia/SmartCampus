@@ -11,10 +11,9 @@ import '../../../controllers/supabase_auth_controller.dart';
 import '../../login/login.dart';
 import 'email_success.dart';
 
-
 class VerifyEmailScreen extends StatelessWidget {
   final String email;
-  
+
   const VerifyEmailScreen({
     super.key,
     required this.email,
@@ -23,7 +22,7 @@ class VerifyEmailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<SupabaseAuthController>();
-    
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -62,7 +61,7 @@ class VerifyEmailScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: TSizes.spaceBtwSections),
-              
+
               // Continue button
               SizedBox(
                 height: TSizes.appBarHeight,
@@ -72,7 +71,7 @@ class VerifyEmailScreen extends StatelessWidget {
                     try {
                       // Check if email is verified
                       final isVerified = await controller.checkEmailVerified();
-                      
+
                       if (isVerified) {
                         // Email is verified, now store the user data
                         await controller.storeUserData();
@@ -81,7 +80,7 @@ class VerifyEmailScreen extends StatelessWidget {
                         // Try to sign in to refresh the session
                         try {
                           await controller.signInWithEmail();
-                          
+
                           // If sign-in succeeds, email is verified
                           await controller.storeUserData();
                           Get.to(() => EmailSuccess());
@@ -95,7 +94,7 @@ class VerifyEmailScreen extends StatelessWidget {
                       }
                     } catch (e) {
                       Get.snackbar(
-                        'Error',
+                        TTexts.error,
                         'Could not verify email status',
                         snackPosition: SnackPosition.BOTTOM,
                       );
@@ -112,14 +111,14 @@ class VerifyEmailScreen extends StatelessWidget {
                           await launchUrl(emailLaunchUri);
                         } else {
                           Get.snackbar(
-                            'Error',
+                            TTexts.error,
                             'Could not launch email app',
                             snackPosition: SnackPosition.BOTTOM,
                           );
                         }
                       } catch (e) {
                         Get.snackbar(
-                          'Error',
+                          TTexts.error,
                           'Failed to open email app: ${e.toString()}',
                           snackPosition: SnackPosition.BOTTOM,
                         );
@@ -129,10 +128,11 @@ class VerifyEmailScreen extends StatelessWidget {
                       TTexts.continueText,
                       style: Theme.of(context).textTheme.headlineSmall,
                     ),
-                  ),                ),
+                  ),
+                ),
               ),
               const SizedBox(height: TSizes.spaceBtwItems),
-              
+
               // Resend email button
               SizedBox(
                 width: double.infinity,
@@ -148,7 +148,7 @@ class VerifyEmailScreen extends StatelessWidget {
                       );
                     } catch (e) {
                       Get.snackbar(
-                        'Error',
+                        TTexts.error,
                         'Failed to resend verification email',
                         snackPosition: SnackPosition.BOTTOM,
                       );

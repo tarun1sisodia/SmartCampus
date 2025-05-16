@@ -1,5 +1,6 @@
 import '../../../common/utils/constants/colors.dart';
 import '../../../common/utils/constants/sized.dart';
+import '../../../common/utils/constants/text_strings.dart';
 import '../../../common/utils/helpers/helper_function.dart';
 import '../../../common/utils/helpers/snackbar_helper.dart';
 import './../controllers/teacher_profile_controller.dart';
@@ -181,7 +182,7 @@ class TeacherSettingsScreen extends StatelessWidget {
                                       actions: [
                                         TextButton(
                                           onPressed: () => Get.back(),
-                                          child: const Text('Cancel'),
+                                          child: const Text(TTexts.cancel),
                                         ),
                                         ElevatedButton(
                                           onPressed: () async {
@@ -253,7 +254,7 @@ class TeacherSettingsScreen extends StatelessWidget {
                                     actions: [
                                       TextButton(
                                         onPressed: () => Get.back(),
-                                        child: const Text('Cancel'),
+                                        child: const Text(TTexts.cancel),
                                       ),
                                       ElevatedButton(
                                         style: ElevatedButton.styleFrom(

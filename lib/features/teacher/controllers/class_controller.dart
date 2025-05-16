@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../../common/utils/constants/text_strings.dart';
 import '../../../models/class_model.dart';
 import '../../../models/course_model.dart';
 import '../../../models/subject_model.dart';
@@ -266,7 +267,7 @@ class ClassController extends GetxController {
         selectedCourseId.value.isEmpty ||
         semesterController.text.isEmpty) {
       //printnt('Validation Failed');
-      Get.snackbar('Error', 'Please fill in all required fields.');
+      Get.snackbar(TTexts.error, TTexts.fillCorrect);
       return false;
     }
     //printnt('Validation Passed');

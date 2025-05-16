@@ -1,4 +1,3 @@
-import '../../features/splash/splash_screen.dart';
 import '../../features/teacher/controllers/calendar_controller.dart';
 
 import '../../app/bindings/app_bindings.dart';
@@ -18,6 +17,7 @@ import '../../features/teacher/screens/feedback_screen.dart';
 import '../../features/teacher/screens/help_screen.dart';
 import '../../features/teacher/screens/import_data_screen.dart';
 import '../../features/teacher/screens/reports_screen.dart';
+import '../../features/teacher/screens/splash_screen.dart';
 import '../../features/teacher/screens/student_detail_screen.dart';
 import '../../features/teacher/screens/teacher_messages_screen.dart';
 import '../../features/teacher/screens/teacher_settings_screen.dart';

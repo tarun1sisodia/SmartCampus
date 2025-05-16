@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
+import '../constants/text_strings.dart';
+
 enum MessageType { success, error, warning, info }
 
 //Enum defining different message sources
@@ -104,9 +106,8 @@ class TSnackBar {
   //Convenience method for showing error messages
   static void showError({
     required String message,
-    String title = 'Error',
-    MessageSource source =
-        MessageSource.app, 
+    String title = TTexts.error,
+    MessageSource source = MessageSource.app,
   }) {
     show(
       title: title,
@@ -114,12 +115,11 @@ class TSnackBar {
       type: MessageType.error,
       source: source,
     );
-    
   }
 
   //Convenience method to check if there is an error message
   static bool hasError(String message, {bool handle = false}) {
-    bool containsError = message.toLowerCase().contains('error') ||
+    bool containsError = message.toLowerCase().contains(TTexts.error) ||
         message.toLowerCase().contains('failed') ||
         message.toLowerCase().contains('exception');
     return handle ? containsError : false;

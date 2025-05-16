@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../app/routes/app_routes.dart';
+import '../../../common/utils/constants/text_strings.dart';
 import '../../../models/class_model.dart';
 import '../../../models/course_model.dart';
 import '../../../models/subject_model.dart';
@@ -600,7 +601,7 @@ class ClassListScreen extends StatelessWidget {
                     backgroundColor: dark ? TColors.indigo : TColors.coral,
                     foregroundColor: dark ? Colors.white : TColors.dark,
                   ),
-                  child: const Text('Cancel'),
+                  child: const Text(TTexts.cancel),
                 ),
               ),
             ],
@@ -621,7 +622,7 @@ class ClassListScreen extends StatelessWidget {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
+              child: const Text(TTexts.cancel),
             ),
             TextButton(
               onPressed: () {
@@ -654,7 +655,7 @@ class ClassListScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: const Text('Cancel'),
+              child: const Text(TTexts.cancel),
             ),
             TextButton(
               onPressed: () {
@@ -788,7 +789,7 @@ class ClassListScreen extends StatelessWidget {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text('Cancel'),
+              child: Text(TTexts.cancel),
             ),
             ElevatedButton(
               onPressed: () {

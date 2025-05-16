@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:attedance__/common/utils/constants/text_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -322,7 +323,7 @@ class TeacherProfileController extends GetxController {
                     backgroundColor: Colors.red,
                     foregroundColor: Colors.white,
                   ),
-                  child: const Text('Cancel'),
+                  child: const Text(TTexts.cancel),
                 ),
               ),
             ],

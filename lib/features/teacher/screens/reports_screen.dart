@@ -11,6 +11,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:universal_html/html.dart' as html;
 import '../../../common/utils/constants/colors.dart';
 import '../../../common/utils/constants/sized.dart';
+import '../../../common/utils/constants/text_strings.dart';
 import '../../../common/utils/helpers/helper_function.dart';
 import '../../../common/utils/helpers/snackbar_helper.dart';
 import '../controllers/attendance_reports_controller.dart';
@@ -242,7 +243,7 @@ class ReportsScreen extends StatelessWidget {
                   backgroundColor: dark ? Colors.grey[800] : Colors.grey[200],
                   foregroundColor: dark ? Colors.white : TColors.dark,
                 ),
-                child: const Text('Cancel'),
+                child: const Text(TTexts.cancel),
               ),
             ),
           ],
@@ -320,7 +321,7 @@ class ReportsScreen extends StatelessWidget {
                   backgroundColor: dark ? Colors.red : Colors.red,
                   foregroundColor: dark ? Colors.white : TColors.dark,
                 ),
-                child: const Text('Cancel'),
+                child: const Text(TTexts.cancel),
               ),
             ),
           ],

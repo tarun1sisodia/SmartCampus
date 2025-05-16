@@ -6,6 +6,7 @@ import 'package:iconsax/iconsax.dart';
 
 import '../../../app/routes/app_routes.dart';
 import '../../../common/utils/constants/image_strings.dart';
+import '../../../common/utils/constants/text_strings.dart';
 import '../controllers/teacher_profile_controller.dart';
 import '../../../common/utils/constants/colors.dart';
 import '../../../common/utils/constants/sized.dart';
@@ -139,7 +140,7 @@ class TeacherProfileScreen extends StatelessWidget {
                               title: 'Sign Out',
                               middleText: 'Are you sure you want to sign out?',
                               textConfirm: 'Sign Out',
-                              textCancel: 'Cancel',
+                              textCancel: TTexts.cancel,
                               confirmTextColor: Colors.white,
                               buttonColor: Colors.red,
                               cancelTextColor: Colors.grey,
@@ -193,7 +194,7 @@ class TeacherProfileScreen extends StatelessWidget {
                               middleText:
                                   'This action cannot be undone. All your data will be permanently deleted. Are you sure?',
                               textConfirm: 'Delete',
-                              textCancel: 'Cancel',
+                              textCancel: TTexts.cancel,
                               confirmTextColor: Colors.white,
                               buttonColor: Colors.red,
                               onConfirm: () {
