@@ -12,9 +12,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1. Checkout Source
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # 2. Cache Dependencies
       - name: Cache Flutter Pub
         uses: actions/cache@v3
         with:
@@ -29,6 +31,7 @@ jobs:
             ~/.gradle/wrapper/
           key: ${{ runner.os }}-gradle-${{ hashFiles('android/gradle.properties') }}
 
+      # 3. Environment Setup
       - name: Set up Java
         uses: actions/setup-java@v3
         with:
@@ -43,9 +46,11 @@ jobs:
       - name: Enable Linux Desktop
         run: flutter config --enable-linux-desktop
 
-      - name: Install dependencies
+      # 4. Install Dependencies
+      - name: Install Flutter dependencies
         run: flutter pub get
 
+      # 5. Static Analysis and Tests
       - name: Analyze Dart Code
         run: flutter analyze --no-fatal-infos
 
@@ -55,7 +60,8 @@ jobs:
       - name: Run Flutter Tests
         run: flutter test --coverage
 
-      - name: Decode Android keystore
+      # 6. Android Signing Setup
+      - name: Decode Android Keystore
         run: |
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/smartcampus.jks
 
@@ -68,22 +74,25 @@ jobs:
           storeFile=smartcampus.jks
           EOF
 
-      - name: Build APK
+      # 7. Build Commands
+      - name: Build APK (Android)
         run: flutter build apk --release
 
-      - name: Build App Bundle
+      - name: Build App Bundle (Android)
         run: flutter build appbundle --release
 
-      - name: Build Linux App
+      - name: Build Linux Desktop
         run: flutter build linux --release
 
-      - name: Check artifacts exist
+      # 8. Verify Output
+      - name: Check built artifacts
         run: |
           ls -lh build/app/outputs/flutter-apk/app-release.apk
           ls -lh build/app/outputs/bundle/release/app-release.aab
           ls -lh build/linux/x64/release/bundle/ || true
 
-      - name: Upload artifacts
+      # 9. Upload Artifacts
+      - name: Upload all artifacts
         uses: actions/upload-artifact@v3
         with:
           name: app-artifacts
@@ -92,7 +101,8 @@ jobs:
             build/app/outputs/bundle/release/app-release.aab
             build/linux/x64/release/bundle/**
 
-      - name: Extract version
+      # 10. GitHub Release (Optional)
+      - name: Extract version from pubspec.yaml
         id: get_version
         run: |
           v=$(grep '^version:' pubspec.yaml | cut -d ' ' -f2 | tr -d '\r')
