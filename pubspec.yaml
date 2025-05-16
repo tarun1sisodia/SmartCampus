@@ -52,7 +52,7 @@ dependencies:
   slideable: ^0.0.2
   page_indicator: ^0.4.1
   flutter_slidable: ^4.0.0
-  percent_indicator: ^4.2.4
+  percent_indicator: ^4.2.5
   csv: ^6.0.0
   table_calendar: ^3.2.0
   carousel_slider: ^5.0.0
