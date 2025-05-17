@@ -10,16 +10,56 @@ permissions:
   contents: write
 
 jobs:
-  build:
-    name: Build Linux, Android & iOS
-    runs-on: macos-latest
+  build-linux-windows:
+    name: Build Linux & Windows
+    runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout Source
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      # 2. Cache Dependencies
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.29.3'
+
+      - name: Enable desktop builds
+        run: |
+          flutter config --enable-linux-desktop
+          flutter config --enable-windows-desktop
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Install Linux build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libgtk-3-dev \
+            clang \
+            cmake \
+            ninja-build \
+            pkg-config \
+            liblzma-dev
+
+      - name: Build Linux Desktop
+        run: flutter build linux --release
+
+      - name: Upload Linux Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-app
+          path: build/linux/x64/release/bundle/**
+
+  build-android-ios-macos:
+    name: Build Android, iOS & macOS
+    runs-on: macos-latest
+    needs: build-linux-windows
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Cache Flutter Pub
         uses: actions/cache@v3
         with:
@@ -34,7 +74,6 @@ jobs:
             ~/.gradle/wrapper/
           key: ${{ runner.os }}-gradle-${{ hashFiles('android/gradle.properties') }}
 
-      # 3. Environment Setup
       - name: Set up Java
         uses: actions/setup-java@v3
         with:
@@ -46,24 +85,20 @@ jobs:
         with:
           flutter-version: '3.29.3'
 
-      - name: Enable Desktop Platforms
+      - name: Enable iOS & macOS desktop
         run: |
-          flutter config --enable-linux-desktop
           flutter config --enable-macos-desktop
           flutter config --enable-ios
 
-      # 4. Install Dependencies
-      - name: Install Flutter dependencies
+      - name: Install dependencies
         run: flutter pub get
 
-      # 5. Static Analysis (Non-fatal)
       - name: Analyze Dart Code
         run: flutter analyze --no-fatal-warnings --no-fatal-infos || true
 
       - name: Check Dart Format
         run: dart format --set-exit-if-changed . || true
 
-      # 6. Android Signing Setup
       - name: Decode Android Keystore
         run: |
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/smartcampus.jks
@@ -77,50 +112,35 @@ jobs:
           storeFile=smartcampus.jks
           EOF
 
-      # 7. Build Steps
-      - name: Build APK (Android)
+      - name: Build APK
         run: flutter build apk --release
 
-      - name: Build App Bundle (Android)
+      - name: Build App Bundle
         run: flutter build appbundle --release
 
-      - name: Install Linux build dependencies
-        run: |
-          brew install gtk+3 cmake ninja pkg-config xz || true
+      - name: Build macOS App
+        run: flutter build macos --release
 
-      - name: Build Linux Desktop
-        run: flutter build linux --release
-
-      - name: Build iOS (no code sign)
+      - name: Build iOS App (no code sign)
         run: flutter build ios --release --no-codesign
 
-      # 8. Verify Output
-      - name: Check built artifacts
-        run: |
-          ls -lh build/app/outputs/flutter-apk/app-release.apk
-          ls -lh build/app/outputs/bundle/release/app-release.aab
-          ls -lh build/linux/x64/release/bundle/ || true
-          ls -lh build/ios/iphoneos/Runner.app || true
-
-      # 9. Upload Artifacts
-      - name: Upload all artifacts
+      - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: app-artifacts
+          name: mobile-desktop-artifacts
           path: |
             build/app/outputs/flutter-apk/app-release.apk
             build/app/outputs/bundle/release/app-release.aab
-            build/linux/x64/release/bundle/**
+            build/macos/Build/Products/Release/Runner.app/**
             build/ios/iphoneos/Runner.app/**
 
-      # 10. GitHub Release (Recommended: softprops)
       - name: Extract version from pubspec.yaml
         id: get_version
         run: |
           version=$(grep '^version:' pubspec.yaml | cut -d ' ' -f 2 | tr -d '\r')
           echo "VERSION=$version" >> $GITHUB_ENV
 
-      - name: Create GitHub Release and Upload APK
+      - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ env.VERSION }}
