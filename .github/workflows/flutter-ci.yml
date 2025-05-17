@@ -10,52 +10,53 @@ permissions:
   contents: write
 
 jobs:
-  build-linux-windows:
-    name: Build Linux & Windows
-    runs-on: ubuntu-latest
-    if: false
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.29.3'
-
-      - name: Enable desktop builds
-        run: |
-          flutter config --enable-linux-desktop
-          flutter config --enable-windows-desktop
-
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Install Linux build dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            libgtk-3-dev \
-            clang \
-            cmake \
-            ninja-build \
-            pkg-config \
-            liblzma-dev
-
-      - name: Build Linux Desktop
-        run: flutter build linux --release
-
-      - name: Upload Linux Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: linux-app
-          path: build/linux/x64/release/bundle/**
+  # Commenting out the Linux & Windows build job
+  #build-linux-windows:
+  #  name: Build Linux & Windows
+  #  runs-on: ubuntu-latest
+  #  
+  #  steps:
+  #    - name: Checkout code
+  #      uses: actions/checkout@v4
+  #
+  #    - name: Set up Flutter
+  #      uses: subosito/flutter-action@v2
+  #      with:
+  #        flutter-version: '3.29.3'
+  #
+  #    - name: Enable desktop builds
+  #      run: |
+  #        flutter config --enable-linux-desktop
+  #        flutter config --enable-windows-desktop
+  #
+  #    - name: Install dependencies
+  #      run: flutter pub get
+  #
+  #    - name: Install Linux build dependencies
+  #      run: |
+  #        sudo apt-get update
+  #        sudo apt-get install -y \
+  #          libgtk-3-dev \
+  #          clang \
+  #          cmake \
+  #          ninja-build \
+  #          pkg-config \
+  #          liblzma-dev
+  #
+  #    - name: Build Linux Desktop
+  #      run: flutter build linux --release
+  #
+  #    - name: Upload Linux Artifacts
+  #      uses: actions/upload-artifact@v4
+  #      with:
+  #        name: linux-app
+  #        path: build/linux/x64/release/bundle/**
 
   build-android-ios-macos:
     name: Build Android, iOS & macOS
     runs-on: macos-latest
-    needs: build-linux-windows
+    # Remove the dependency on the first job
+    # needs: build-linux-windows
 
     steps:
       - name: Checkout code
