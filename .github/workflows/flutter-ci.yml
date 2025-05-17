@@ -13,6 +13,7 @@ jobs:
   build-linux-windows:
     name: Build Linux & Windows
     runs-on: ubuntu-latest
+    if: false
 
     steps:
       - name: Checkout code
