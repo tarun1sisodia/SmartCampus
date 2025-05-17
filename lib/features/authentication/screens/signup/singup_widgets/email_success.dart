@@ -34,8 +34,8 @@ class EmailSuccess extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image(
-                image: AssetImage(TImageStrings.successemail),
+              Image.network(
+                TImageStrings.successemail,
                 width: THelperFunction.screenWidth() * 0.8,
               ),
               const SizedBox(height: TSizes.spaceBtwSections),

@@ -636,21 +636,28 @@ class DashboardScreen extends StatelessWidget {
                                     radius: 80.0,
                                     lineWidth: 12.0,
                                     animation: true,
+                                    animationDuration: 2000,
                                     percent: dashboardController
                                             .averageAttendance.value /
                                         100,
-                                    center: Text(
-                                      '${dashboardController.averageAttendance.value.toStringAsFixed(1)}%',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleLarge
-                                          ?.copyWith(
-                                            fontWeight: FontWeight.normal,
-                                            fontFamily: 'Poppins',
-                                            color: dark
-                                                ? TColors.textWhite
-                                                : TColors.textPrimary,
-                                          ),
+                                    center: TweenAnimationBuilder<double>(
+                                      tween: Tween<double>(
+                                        begin: 0,
+                                        end: dashboardController
+                                            .averageAttendance.value,
+                                      ),
+                                      duration: const Duration(seconds: 2),
+                                      builder: (context, value, child) {
+                                        return Text(
+                                          '${value.toStringAsFixed(1)}%',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleMedium
+                                              ?.copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: TSizes.fontSizeXl),
+                                        );
+                                      },
                                     ),
                                     circularStrokeCap: CircularStrokeCap.round,
                                     progressColor: dark

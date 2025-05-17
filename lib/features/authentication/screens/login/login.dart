@@ -57,10 +57,12 @@ class Login extends StatelessWidget {
               width: double.infinity,
               height: TSizes.appBarHeight,
               child: OutlinedButton.icon(
-                icon: Image(
-                  height: TSizes.iconMd,
-                  width: TSizes.iconMd,
-                  image: AssetImage(TImageStrings.google),
+                icon: Image.network(
+                  TImageStrings.google,
+                  height: TSizes.iconLg,
+                  width: TSizes.iconLg,
+                  cacheWidth: TSizes.iconLg.toInt(),
+                  cacheHeight: TSizes.iconLg.toInt(),
                 ),
                 label: Text(TTexts.orSignInWithGoogle),
                 onPressed: () async {

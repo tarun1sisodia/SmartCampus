@@ -141,7 +141,7 @@ class DashboardController extends GetxController {
 
   Future<void> loadDashboardData() async {
     try {
-      THelperFunction.showAlert('Let me Check this','Alert is Running');
+      // THelperFunction.showAlert('Let me Check this','Alert is Running');
       //print('Loading dashboard data...');
       isLoading.value = true;
 

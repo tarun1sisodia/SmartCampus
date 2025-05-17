@@ -17,6 +17,11 @@ migrate_working_dir/
 *.iws
 .idea/
 node_modules/
+server/
+server/.env
+.github/workflows/snyk-security.yml
+.github/dependabot.yml
+
 
 # The .vscode folder contains launch configuration and tasks you configure in
 # VS Code which you may wish to be included in version control, so this line

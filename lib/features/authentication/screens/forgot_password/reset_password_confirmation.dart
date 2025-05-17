@@ -34,8 +34,8 @@ class ResetPasswordConfirmationScreen extends StatelessWidget {
           padding: EdgeInsets.all(TSizes.defaultSpace),
           child: Column(
             children: [
-              Image(
-                image: AssetImage(TImageStrings.verifyemail),
+              Image.network(
+                TImageStrings.verifyemail,
                 width: THelperFunction.screenWidth() * 0.6,
               ),
               const SizedBox(height: TSizes.spaceBtwSections),
