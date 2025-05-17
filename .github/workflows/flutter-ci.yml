@@ -10,53 +10,52 @@ permissions:
   contents: write
 
 jobs:
-  # Commenting out the Linux & Windows build job
-  #build-linux-windows:
-  #  name: Build Linux & Windows
-  #  runs-on: ubuntu-latest
-  #  
-  #  steps:
-  #    - name: Checkout code
-  #      uses: actions/checkout@v4
-  #
-  #    - name: Set up Flutter
-  #      uses: subosito/flutter-action@v2
-  #      with:
-  #        flutter-version: '3.29.3'
-  #
-  #    - name: Enable desktop builds
-  #      run: |
-  #        flutter config --enable-linux-desktop
-  #        flutter config --enable-windows-desktop
-  #
-  #    - name: Install dependencies
-  #      run: flutter pub get
-  #
-  #    - name: Install Linux build dependencies
-  #      run: |
-  #        sudo apt-get update
-  #        sudo apt-get install -y \
-  #          libgtk-3-dev \
-  #          clang \
-  #          cmake \
-  #          ninja-build \
-  #          pkg-config \
-  #          liblzma-dev
-  #
-  #    - name: Build Linux Desktop
-  #      run: flutter build linux --release
-  #
-  #    - name: Upload Linux Artifacts
-  #      uses: actions/upload-artifact@v4
-  #      with:
-  #        name: linux-app
-  #        path: build/linux/x64/release/bundle/**
+  build-linux-windows:
+    name: Build Linux & Windows
+    runs-on: ubuntu-latest
+    
 
-  build-android-ios-macos:
-    name: Build Android, iOS & macOS
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.29.3'
+
+      - name: Enable desktop builds
+        run: |
+          flutter config --enable-linux-desktop
+          flutter config --enable-windows-desktop
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Install Linux build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libgtk-3-dev \
+            clang \
+            cmake \
+            ninja-build \
+            pkg-config \
+            liblzma-dev
+
+      - name: Build Linux Desktop
+        run: flutter build linux --release
+
+      - name: Upload Linux Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-app
+          path: build/linux/x64/release/bundle/**
+
+  build-android-ios:
+    name: Build Android & iOS
     runs-on: macos-latest
-    # Remove the dependency on the first job
-    # needs: build-linux-windows
+    needs: build-linux-windows
 
     steps:
       - name: Checkout code
@@ -87,9 +86,8 @@ jobs:
         with:
           flutter-version: '3.29.3'
 
-      - name: Enable iOS & macOS desktop
+      - name: Enable iOS
         run: |
-          flutter config --enable-macos-desktop
           flutter config --enable-ios
 
       - name: Install dependencies
@@ -120,8 +118,12 @@ jobs:
       - name: Build App Bundle
         run: flutter build appbundle --release
 
-      - name: Build macOS App
-        run: flutter build macos --release
+      # Commenting out macOS build
+      # - name: Enable macOS desktop
+      #   run: flutter config --enable-macos-desktop
+      
+      # - name: Build macOS App
+      #   run: flutter build macos --release
 
       - name: Build iOS App (no code sign)
         run: flutter build ios --release --no-codesign
@@ -129,11 +131,11 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: mobile-desktop-artifacts
+          name: mobile-artifacts
           path: |
             build/app/outputs/flutter-apk/app-release.apk
             build/app/outputs/bundle/release/app-release.aab
-            build/macos/Build/Products/Release/Runner.app/**
+            # build/macos/Build/Products/Release/Runner.app/**
             build/ios/iphoneos/Runner.app/**
 
       - name: Extract version from pubspec.yaml
