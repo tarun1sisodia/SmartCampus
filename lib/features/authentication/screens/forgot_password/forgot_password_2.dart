@@ -34,9 +34,9 @@ class ForgotPasswordScreen extends StatelessWidget {
             children: [
               // Image
               Image(
-                image: AssetImage(
+                image: NetworkImage(
                   TImageStrings.verifyemail,
-                ), // Use an appropriate image
+                ),
                 width: THelperFunction.screenWidth() * 0.6,
               ),
               const SizedBox(height: TSizes.spaceBtwSections),
