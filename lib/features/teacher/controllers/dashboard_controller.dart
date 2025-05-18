@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../common/utils/helpers/helper_function.dart';
 import '../../../models/class_model.dart';
+import '../../../services/auth_service.dart';
 import '../../../services/class_service.dart';
 import '../../../services/attendance_service.dart';
 import '../../../services/course_service.dart';
@@ -16,12 +17,13 @@ class DashboardController extends GetxController {
   final subjectService = SubjectService();
   final classService = ClassService();
   final courseService = CourseService();
-
+  final biometricAuthService = Get.put(BiometricAuthService());
   final isLoading = false.obs;
   final classes = <ClassModel>[].obs;
   final totalClasses = 0.obs;
   final totalStudents = 0.obs;
   final averageAttendance = 0.0.obs;
+  final isAuthenticated = false.obs;
 
   final List<StreamSubscription> _subscriptions = [];
 
@@ -52,6 +54,35 @@ class DashboardController extends GetxController {
       subscription.cancel();
     }
     super.onClose();
+  }
+
+  Future<void> checkBiometricAuthentication() async {
+    await biometricAuthService.checkBiometricAvailability();
+
+    if (biometricAuthService.isBiometricEnabled.value &&
+        biometricAuthService.isAvailable.value) {
+      final authenticated =
+          await biometricAuthService.authenticateWithBiometrics(
+              customReason:
+                  'Please authenticate to access the Smart Campus app');
+
+      isAuthenticated.value = authenticated;
+
+      if (authenticated) {
+        loadDashboardData();
+      } else {
+        // If authentication fails, we could either:
+        // 1. Still load data but restrict certain actions
+        // 2. Show a limited view
+        // 3. Retry authentication
+        // For now, we'll still load data but could implement restrictions later
+        loadDashboardData();
+      }
+    } else {
+      // If biometrics not enabled or available, proceed normally
+      isAuthenticated.value = true;
+      loadDashboardData();
+    }
   }
 
   void _setupRealtimeSubscriptions() {

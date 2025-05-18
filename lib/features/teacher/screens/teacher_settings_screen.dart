@@ -7,6 +7,7 @@ import './../controllers/teacher_profile_controller.dart';
 import '../../../app/routes/app_routes.dart';
 import '/../services/language_service.dart';
 import '/../services/storage_service.dart';
+import '../../../services/auth_service.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -419,6 +420,7 @@ class TeacherSettingsScreen extends StatelessWidget {
                     Get.toNamed(AppRoutes.about);
                   },
                 ),
+                
               ],
             ),
 
