@@ -53,7 +53,7 @@ jobs:
           path: build/linux/x64/release/bundle/**
 
   build-android-ios:
-    name: Build Android & iOS
+    name: Build Android 
     runs-on: macos-latest
     needs: build-linux-windows
 
@@ -86,9 +86,9 @@ jobs:
         with:
           flutter-version: '3.29.3'
 
-      - name: Enable iOS
-        run: |
-          flutter config --enable-ios
+      # - name: Enable iOS
+      #   run: |
+      #     flutter config --enable-ios
 
       - name: Install dependencies
         run: flutter pub get
@@ -125,8 +125,8 @@ jobs:
       # - name: Build macOS App
       #   run: flutter build macos --release
 
-      - name: Build iOS App (no code sign)
-        run: flutter build ios --release --no-codesign
+      # - name: Build iOS App (no code sign)
+      #   run: flutter build ios --release --no-codesign
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
@@ -136,7 +136,7 @@ jobs:
             build/app/outputs/flutter-apk/app-release.apk
             build/app/outputs/bundle/release/app-release.aab
             # build/macos/Build/Products/Release/Runner.app/**
-            build/ios/iphoneos/Runner.app/**
+            # build/ios/iphoneos/Runner.app/**
 
       - name: Extract version from pubspec.yaml
         id: get_version
