@@ -4,6 +4,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../app/routes/app_routes.dart';
 import '../../../common/utils/helpers/snackbar_helper.dart';
+import '../../../services/auth_service.dart';
 import '../../../services/storage_service.dart';
 
 class SupabaseAuthController extends GetxController {
@@ -117,6 +118,7 @@ class SupabaseAuthController extends GetxController {
           }
         } catch (e) {
           //printrint('Error checking/creating user data: $e');
+          Get.snackbar('Contact Your DEv', 'Tarun');
         }
 
         TSnackBar.showSuccess(
@@ -346,16 +348,81 @@ class SupabaseAuthController extends GetxController {
     }
   }
 
+// method to check if the current session is valid
+  Future<bool> isSessionValid() async {
+    try {
+      final currentUser = supabase.auth.currentUser;
+      if (currentUser == null) {
+        return false;
+      }
+
+      // Check if token is expired
+      final session = supabase.auth.currentSession;
+      if (session == null) {
+        return false;
+      }
+
+      // If the token is about to expire in the next hour, refresh it
+      final expiresAt =
+          DateTime.fromMillisecondsSinceEpoch(session.expiresAt! * 1000);
+      final now = DateTime.now();
+      if (expiresAt.difference(now).inHours < 1) {
+        // Try to refresh the session
+        await supabase.auth.refreshSession();
+      }
+
+      return true;
+    } catch (e) {
+      errorMessage.value = e.toString();
+      return false;
+    }
+  }
+
+// Modify signOut to handle biometric settings
   Future<void> signOut() async {
-    //printrint('Signing out');
     try {
       isLoading.value = true;
+
+      // Get biometric service
+      final biometricAuthService = Get.find<BiometricAuthService>();
+
+      // If we're using biometrics, ask if the user wants to keep it enabled
+      if (biometricAuthService.isBiometricEnabled.value) {
+        final keepBiometrics = await Get.dialog<bool>(
+              AlertDialog(
+                title: Text('Biometric Authentication'),
+                content: Text(
+                    'Do you want to keep biometric authentication enabled for next login?'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Get.back(result: false),
+                    child: Text('No'),
+                  ),
+                  TextButton(
+                    onPressed: () => Get.back(result: true),
+                    child: Text('Yes'),
+                  ),
+                ],
+              ),
+            ) ??
+            false;
+
+        if (!keepBiometrics) {
+          try {
+            await biometricAuthService.disableBiometrics();
+          } catch (e) {
+            TSnackBar.showServerError(
+              message:
+                  'Failed to disable biometric authentication: ${e.toString()}',
+            );
+          }
+        }
+      }
 
       await supabase.auth.signOut();
 
       if (!rememberMe.value) {
         StorageService.instance.clearUserCredentials();
-        //printrint('Cleared saved credentials');
       }
 
       TSnackBar.showSuccess(
@@ -365,7 +432,6 @@ class SupabaseAuthController extends GetxController {
 
       Get.offAllNamed(AppRoutes.login);
     } catch (e) {
-      //printrint('Error signing out: $e');
       TSnackBar.showServerError(message: 'Failed to sign out: ${e.toString()}');
     } finally {
       isLoading.value = false;

@@ -24,6 +24,8 @@ import '../../features/teacher/screens/teacher_settings_screen.dart';
 import '../../navigation_menu.dart';
 import 'package:get/get.dart';
 
+import '../middleware/auth_middleware.dart';
+
 // A class that manages all routes for the app
 class AppRoutes {
   // Route names as constants to avoid typos
@@ -37,7 +39,6 @@ class AppRoutes {
   static const String home = '/home';
   static const String attendanceReports = '/attendance-reports';
   static const String studentDetail = '/student-detail';
-  // these new route constants
   static const String reports = '/reports';
   static const String settings = '/settings';
   static const String message = '/message';
@@ -141,6 +142,9 @@ class AppRoutes {
         return NavigationMenu();
       },
       binding: HomeBinding(),
+      middlewares: [
+        AuthMiddleware(),
+      ],
       transition: Transition.fadeIn,
     ),
     GetPage(

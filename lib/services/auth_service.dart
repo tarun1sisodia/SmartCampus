@@ -30,6 +30,12 @@ class BiometricAuthService extends GetxController {
     isBiometricEnabled.value = enabled;
   }
 
+  Future<void> disableBiometrics() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('biometric_enabled', false);
+    isBiometricEnabled.value = false;
+  }
+
   Future<void> checkBiometricAvailability() async {
     try {
       final bool canCheckBiometrics = await _auth.canCheckBiometrics;

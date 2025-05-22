@@ -69,6 +69,7 @@ dependencies:
   shimmer: ^3.0.0
   google_sign_in: ^6.3.0
   local_auth: ^2.3.0
+  shared_preferences: ^2.5.3
 
 dependency_overrides:
   image: ^4.2.0
