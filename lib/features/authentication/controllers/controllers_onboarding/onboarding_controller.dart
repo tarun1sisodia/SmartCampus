@@ -23,7 +23,6 @@ class OnboardingController extends GetxController {
 
   void nextPage() {
     if (currentPageIndex.value == 2) {
-      ///print('Onboarding completed, navigating to login page');
       // Mark onboarding as completed
       StorageService.instance.setOnboardingStatus(true);
 
@@ -33,17 +32,15 @@ class OnboardingController extends GetxController {
         title: TTexts.setupComplete,
       );
 
+      // Navigate to login
       Get.offAllNamed(AppRoutes.login);
     } else {
       int page = currentPageIndex.value + 1;
-
-      ///print('Navigating to next page: $page');
       pageController.jumpToPage(page);
     }
   }
 
   void skipPage() {
-    ///print('Skipping onboarding, navigating to login page');
     // Mark onboarding as completed
     StorageService.instance.setOnboardingStatus(true);
 
@@ -51,6 +48,7 @@ class OnboardingController extends GetxController {
     TSnackBar.showInfo(
         message: TTexts.welcomeSkipOnboarding, title: TTexts.welcome);
 
+    // Navigate to login, not directly to home
     Get.offAllNamed(AppRoutes.login);
   }
 

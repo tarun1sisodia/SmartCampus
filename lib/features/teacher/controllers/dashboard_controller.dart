@@ -1,16 +1,18 @@
 import 'dart:math';
 
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../../../common/utils/helpers/helper_function.dart';
 import '../../../models/class_model.dart';
-import '../../../services/auth_service.dart';
 import '../../../services/class_service.dart';
 import '../../../services/attendance_service.dart';
 import '../../../services/course_service.dart';
 import '../../../services/subject_service.dart';
 import '../../../common/utils/helpers/snackbar_helper.dart';
+import '../../../services/auth_service.dart';
 import 'dart:async';
+
+import '../../authentication/controllers/supabase_auth_controller.dart';
 
 class DashboardController extends GetxController {
   final attendanceService = AttendanceService();
@@ -18,6 +20,7 @@ class DashboardController extends GetxController {
   final classService = ClassService();
   final courseService = CourseService();
   final biometricAuthService = Get.put(BiometricAuthService());
+
   final isLoading = false.obs;
   final classes = <ClassModel>[].obs;
   final totalClasses = 0.obs;
@@ -42,7 +45,7 @@ class DashboardController extends GetxController {
   void onInit() {
     super.onInit();
     //print('DashboardController initialized');
-    loadDashboardData();
+    checkBiometricAuthentication();
     initializeGreeting();
     _setupRealtimeSubscriptions();
   }
@@ -71,12 +74,32 @@ class DashboardController extends GetxController {
       if (authenticated) {
         loadDashboardData();
       } else {
-        // If authentication fails, we could either:
-        // 1. Still load data but restrict certain actions
-        // 2. Show a limited view
-        // 3. Retry authentication
-        // For now, we'll still load data but could implement restrictions later
-        loadDashboardData();
+        // If authentication fails, check if we should retry or redirect
+        final shouldRetry = await Get.dialog<bool>(
+              AlertDialog(
+                title: Text('Authentication Failed'),
+                content: Text('Would you like to try again?'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Get.back(result: false),
+                    child: Text('No'),
+                  ),
+                  TextButton(
+                    onPressed: () => Get.back(result: true),
+                    child: Text('Yes'),
+                  ),
+                ],
+              ),
+            ) ??
+            false;
+
+        if (shouldRetry) {
+          checkBiometricAuthentication();
+        } else {
+          // Redirect to login
+          final authController = Get.find<SupabaseAuthController>();
+          authController.signOut();
+        }
       }
     } else {
       // If biometrics not enabled or available, proceed normally
@@ -333,5 +356,14 @@ class DashboardController extends GetxController {
     }
     update();
     // //print('Filtered classes: ${filteredClasses.length}');
+  }
+
+  // Add a method to manually trigger biometric authentication
+  Future<bool> authenticateWithBiometrics() async {
+    final authenticated = await biometricAuthService.authenticateWithBiometrics(
+        customReason: 'Please authenticate to access sensitive information');
+
+    isAuthenticated.value = authenticated;
+    return authenticated;
   }
 }

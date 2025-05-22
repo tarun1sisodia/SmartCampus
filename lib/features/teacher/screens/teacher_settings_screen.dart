@@ -139,6 +139,45 @@ class TeacherSettingsScreen extends StatelessWidget {
                   },
                 ),
                 _buildProfileMenuItem(
+                  title: 'Biometric Authentication',
+                  icon: Icons.fingerprint,
+                  dark: dark,
+                  trailing: Obx(() {
+                    final biometricService = Get.find<BiometricAuthService>();
+                    final biometricType = biometricService.getBiometricTypeString();
+                    if (!biometricService.isAvailable.value) {
+                      return const SizedBox.shrink();
+                    }
+                    return Switch(
+                      value: biometricService.isBiometricEnabled.value,
+                      onChanged: (value) async {
+                        if (value) {
+                          final authenticated = await biometricService.authenticateWithBiometrics(
+                            customReason: 'Authenticate to enable $biometricType security',
+                          );
+                          if (authenticated) {
+                            await biometricService.saveBiometricSettings(true);
+                            Get.snackbar(
+                              'Security Enabled',
+                              '$biometricType authentication has been enabled',
+                              snackPosition: SnackPosition.BOTTOM,
+                            );
+                          }
+                        } else {
+                          await biometricService.saveBiometricSettings(false);
+                          Get.snackbar(
+                            'Security Disabled',
+                            '$biometricType authentication has been disabled',
+                            snackPosition: SnackPosition.BOTTOM,
+                          );
+                        }
+                      },
+                      activeColor: dark ? TColors.yellow : TColors.primary,
+                    );
+                  }),
+                  onTap: null,
+                ),
+                _buildProfileMenuItem(
                   title: 'Storage & Data',
                   icon: Iconsax.cloud,
                   dark: dark,
@@ -420,7 +459,6 @@ class TeacherSettingsScreen extends StatelessWidget {
                     Get.toNamed(AppRoutes.about);
                   },
                 ),
-                
               ],
             ),
 
