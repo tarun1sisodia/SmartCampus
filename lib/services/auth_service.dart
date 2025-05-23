@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:local_auth/error_codes.dart' as auth_error;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:io' show Platform;
 
 class BiometricAuthService extends GetxController {
   final LocalAuthentication _auth = LocalAuthentication();
@@ -15,28 +16,37 @@ class BiometricAuthService extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _loadBiometricSettings();
-    checkBiometricAvailability();
+    if (!Platform.isLinux) {
+      _loadBiometricSettings();
+      checkBiometricAvailability();
+    }
   }
 
   Future<void> _loadBiometricSettings() async {
+    if (Platform.isLinux) return;
     final prefs = await SharedPreferences.getInstance();
     isBiometricEnabled.value = prefs.getBool('biometric_enabled') ?? false;
   }
 
   Future<void> saveBiometricSettings(bool enabled) async {
+    if (Platform.isLinux) return;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('biometric_enabled', enabled);
     isBiometricEnabled.value = enabled;
   }
 
   Future<void> disableBiometrics() async {
+    if (Platform.isLinux) return;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('biometric_enabled', false);
     isBiometricEnabled.value = false;
   }
 
   Future<void> checkBiometricAvailability() async {
+    if (Platform.isLinux) {
+      isAvailable.value = false;
+      return;
+    }
     try {
       final bool canCheckBiometrics = await _auth.canCheckBiometrics;
       final bool canAuthenticate =
@@ -55,6 +65,7 @@ class BiometricAuthService extends GetxController {
   }
 
   String getBiometricTypeString() {
+    if (Platform.isLinux) return 'Device Authentication';
     if (availableBiometrics.contains(BiometricType.face)) {
       return 'Face ID';
     } else if (availableBiometrics.contains(BiometricType.fingerprint)) {
@@ -67,6 +78,8 @@ class BiometricAuthService extends GetxController {
   }
 
   Future<bool> authenticateWithBiometrics({String? customReason}) async {
+    if (Platform.isLinux) return true;
+
     if (!isAvailable.value) {
       await checkBiometricAvailability();
       if (!isAvailable.value) {
@@ -122,6 +135,7 @@ class BiometricAuthService extends GetxController {
   }
 
   Future<void> cancelAuthentication() async {
+    if (Platform.isLinux) return;
     try {
       await _auth.stopAuthentication();
       isAuthenticating.value = false;

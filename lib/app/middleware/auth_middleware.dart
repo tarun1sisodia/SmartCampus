@@ -9,6 +9,11 @@ class AuthMiddleware extends GetMiddleware {
   @override
   RouteSettings? redirect(String? route) {
     try {
+      // Bypass authentication for Linux platform
+      if (Platform.isLinux) {
+        return null;
+      }
+
       final authController = Get.isRegistered<SupabaseAuthController>()
           ? Get.find<SupabaseAuthController>()
           : null;
@@ -23,7 +28,7 @@ class AuthMiddleware extends GetMiddleware {
         // Add web-specific checks here if needed
       } else if (Platform.isAndroid || Platform.isIOS) {
         // Add mobile-specific checks here if needed
-      } else if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      } else if (Platform.isWindows || Platform.isMacOS) {
         // Add desktop-specific checks here if needed
       }
 
