@@ -9,6 +9,7 @@ import '../../../app/routes/app_routes.dart';
 import '../../../services/auth_service.dart';
 import '../../../services/storage_service.dart';
 import '../../authentication/controllers/supabase_auth_controller.dart';
+import 'dart:io';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -74,27 +75,30 @@ class _SplashScreenState extends State<SplashScreen>
 
     if (isSessionValid) {
       // User is authenticated
-      await biometricAuthService.checkBiometricAvailability();
-      final bool biometricEnabled =
-          biometricAuthService.isBiometricEnabled.value;
-
-      if (biometricEnabled && biometricAuthService.isAvailable.value) {
-        // If biometric is enabled, require authentication before proceeding
-        final authenticated =
-            await biometricAuthService.authenticateWithBiometrics(
-                customReason:
-                    'Please authenticate to access the Smart Campus app');
-
-        if (authenticated) {
-          Get.offAllNamed(AppRoutes.home);
-        } else {
-          // If biometric auth fails, go to login screen but don't sign out
-          // This gives the user a chance to log in with credentials
-          Get.offAllNamed(AppRoutes.login);
-        }
-      } else {
-        // No biometric required, proceed to home
+      if (Platform.isLinux) {
+        // Bypass biometric authentication for Linux
         Get.offAllNamed(AppRoutes.home);
+      } else if (Platform.isAndroid || Platform.isIOS) {
+        // Check if biometric authentication is enabled
+        await biometricAuthService.checkBiometricAvailability();
+        final bool biometricEnabled = biometricAuthService.isBiometricEnabled.value;
+
+        if (biometricEnabled && biometricAuthService.isAvailable.value) {
+          // If biometric is enabled, require authentication before proceeding
+          final authenticated =
+              await biometricAuthService.authenticateWithBiometrics(
+                  customReason:'Please authenticate to access the Smart Campus app');
+          if (authenticated) {
+            Get.offAllNamed(AppRoutes.home);
+          } else {
+            // If biometric auth fails, go to login screen but don't sign out
+            // This gives the user a chance to log in with credentials
+            Get.offAllNamed(AppRoutes.login);
+          }
+        } else {
+          // No biometric required, proceed to home
+          Get.offAllNamed(AppRoutes.home);
+        }
       }
     } else {
       // Session invalid or expired, go to login
