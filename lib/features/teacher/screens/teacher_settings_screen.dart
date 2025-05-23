@@ -142,9 +142,10 @@ class TeacherSettingsScreen extends StatelessWidget {
                   title: 'Biometric Authentication',
                   icon: Icons.fingerprint,
                   dark: dark,
-                  trailing: Obx(() {
+                  /*   trailing: Obx(() {
                     final biometricService = Get.find<BiometricAuthService>();
-                    final biometricType = biometricService.getBiometricTypeString();
+                    final biometricType =
+                        biometricService.getBiometricTypeString();
                     if (!biometricService.isAvailable.value) {
                       return const SizedBox.shrink();
                     }
@@ -152,8 +153,10 @@ class TeacherSettingsScreen extends StatelessWidget {
                       value: biometricService.isBiometricEnabled.value,
                       onChanged: (value) async {
                         if (value) {
-                          final authenticated = await biometricService.authenticateWithBiometrics(
-                            customReason: 'Authenticate to enable $biometricType security',
+                          final authenticated =
+                              await biometricService.authenticateWithBiometrics(
+                            customReason:
+                                'Authenticate to enable $biometricType security',
                           );
                           if (authenticated) {
                             await biometricService.saveBiometricSettings(true);
@@ -175,7 +178,43 @@ class TeacherSettingsScreen extends StatelessWidget {
                       activeColor: dark ? TColors.yellow : TColors.primary,
                     );
                   }),
-                  onTap: null,
+                 */
+                  onTap: () async {
+                    final biometricService = Get.find<BiometricAuthService>();
+                    if (!biometricService.isAvailable.value) {
+                      Get.snackbar(
+                        'Not Available',
+                        'Biometric authentication is not available on this device',
+                        snackPosition: SnackPosition.BOTTOM,
+                      );
+                      return;
+                    }
+                    final newValue = !biometricService.isBiometricEnabled.value;
+                    final biometricType =
+                        biometricService.getBiometricTypeString();
+                    if (newValue) {
+                      final authenticated =
+                          await biometricService.authenticateWithBiometrics(
+                        customReason:
+                            'Authenticate to enable $biometricType security',
+                      );
+                      if (authenticated) {
+                        await biometricService.saveBiometricSettings(true);
+                        Get.snackbar(
+                          'Security Enabled',
+                          '$biometricType authentication has been enabled',
+                          snackPosition: SnackPosition.BOTTOM,
+                        );
+                      }
+                    } else {
+                      await biometricService.saveBiometricSettings(false);
+                      Get.snackbar(
+                        'Security Disabled',
+                        '$biometricType authentication has been disabled',
+                        snackPosition: SnackPosition.BOTTOM,
+                      );
+                    }
+                  },
                 ),
                 _buildProfileMenuItem(
                   title: 'Storage & Data',
