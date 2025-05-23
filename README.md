@@ -4,7 +4,7 @@
 
 ### Project Details
 - **Title**: SmartCampus - An Attendance Management System
-- **Student**: Tarun Sisodia (Roll No: 2200555011108)
+- **Student**: Tarun Sisodia (Roll No: 22005550***8)
 - **Degree**: Bachelor of Computer Applications (BCA)
 - **University**: Dr. Bhimrao Ambedkar University, Agra (University Computer Centre, IBS)
 - **Supervisors**: 

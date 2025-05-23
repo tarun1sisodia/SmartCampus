@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
+import '../../../app/bindings/app_bindings.dart';
 import '../../../common/utils/constants/colors.dart';
 import '../../../common/utils/constants/image_strings.dart';
 import '../../../common/utils/constants/text_strings.dart';
 import '../../../common/utils/helpers/helper_function.dart';
 import '../../../app/routes/app_routes.dart';
+import '../../../navigation_menu.dart';
 import '../../../services/auth_service.dart';
 import '../../../services/storage_service.dart';
 import '../../authentication/controllers/supabase_auth_controller.dart';
@@ -57,54 +59,64 @@ class _SplashScreenState extends State<SplashScreen>
     super.dispose();
   }
 
-  Future<void> _checkAuthAndNavigate() async {
-    // Check if user is logged in
-    final supabaseAuthController = Get.put(SupabaseAuthController());
-    final storageService = Get.find<StorageService>();
-    final biometricAuthService = Get.put(BiometricAuthService());
+ Future<void> _checkAuthAndNavigate() async {
+  // Check if user is logged in
+  final supabaseAuthController = Get.put(SupabaseAuthController());
+  final storageService = Get.find<StorageService>();
+  final biometricAuthService = Get.put(BiometricAuthService());
 
-    // Check onboarding status first
-    final bool onboardingCompleted = storageService.getOnboardingStatus();
-    if (!onboardingCompleted) {
-      Get.offAllNamed(AppRoutes.onboarding);
-      return;
-    }
-
-    // Check if session is valid
-    final bool isSessionValid = await supabaseAuthController.isSessionValid();
-
-    if (isSessionValid) {
-      // User is authenticated
-      if (Platform.isLinux) {
-        // Bypass biometric authentication for Linux
-        Get.offAllNamed(AppRoutes.home);
-      } else if (Platform.isAndroid || Platform.isIOS) {
-        // Check if biometric authentication is enabled
-        await biometricAuthService.checkBiometricAvailability();
-        final bool biometricEnabled = biometricAuthService.isBiometricEnabled.value;
-
-        if (biometricEnabled && biometricAuthService.isAvailable.value) {
-          // If biometric is enabled, require authentication before proceeding
-          final authenticated =
-              await biometricAuthService.authenticateWithBiometrics(
-                  customReason:'Please authenticate to access the Smart Campus app');
-          if (authenticated) {
-            Get.offAllNamed(AppRoutes.home);
-          } else {
-            // If biometric auth fails, go to login screen but don't sign out
-            // This gives the user a chance to log in with credentials
-            Get.offAllNamed(AppRoutes.login);
-          }
-        } else {
-          // No biometric required, proceed to home
-          Get.offAllNamed(AppRoutes.home);
-        }
-      }
-    } else {
-      // Session invalid or expired, go to login
-      Get.offAllNamed(AppRoutes.login);
-    }
+  // Check onboarding status first
+  final bool onboardingCompleted = storageService.getOnboardingStatus();
+  if (!onboardingCompleted) {
+    Get.offAllNamed(AppRoutes.onboarding);
+    return;
   }
+
+  // Check if session is valid
+  final bool isSessionValid = await supabaseAuthController.isSessionValid();
+
+  if (isSessionValid) {
+    // User is authenticated
+    if (Platform.isLinux) {
+      // Bypass biometric authentication for Linux
+      Get.offAllNamed(AppRoutes.home);
+    } else if (Platform.isAndroid || Platform.isIOS) {
+      // Check if biometric authentication is enabled
+      await biometricAuthService.checkBiometricAvailability();
+      final bool biometricEnabled = biometricAuthService.isBiometricEnabled.value;
+
+      if (biometricEnabled && biometricAuthService.isAvailable.value) {
+        // If biometric is enabled, require authentication before proceeding
+        final authenticated =
+            await biometricAuthService.authenticateWithBiometrics(
+                customReason:'Please authenticate to access the Smart Campus app');
+        if (authenticated) {
+          // Use Get.offAll instead of Get.offAllNamed to bypass middleware
+          Get.offAll(
+            () => NavigationMenu(),
+            binding: HomeBinding(),
+            transition: Transition.fadeIn,
+          );
+        } else {
+          // If biometric auth fails, go to login screen but don't sign out
+          // This gives the user a chance to log in with credentials
+          Get.offAllNamed(AppRoutes.login);
+        }
+      } else {
+        // No biometric required, proceed to home
+        // Use Get.offAll instead of Get.offAllNamed to bypass middleware
+        Get.offAll(
+          () => NavigationMenu(),
+          binding: HomeBinding(),
+          transition: Transition.fadeIn,
+        );
+      }
+    }
+  } else {
+    // Session invalid or expired, go to login
+    Get.offAllNamed(AppRoutes.login);
+  }
+}
 
   @override
   Widget build(BuildContext context) {

@@ -9,9 +9,17 @@ class AuthMiddleware extends GetMiddleware {
   @override
   RouteSettings? redirect(String? route) {
     try {
-      // Bypass authentication for Linux platform
-      if (Platform.isLinux) {
-        return null;
+      // Skip middleware for Linux platform
+      bool isLinux = false;
+      try {
+        isLinux = Platform.isLinux;
+      } catch (e) {
+        print("Error checking platform: $e");
+      }
+
+      if (isLinux) {
+        print("Linux platform detected, bypassing auth middleware");
+        return null; // Allow access on Linux without checks
       }
 
       final authController = Get.isRegistered<SupabaseAuthController>()
@@ -20,27 +28,22 @@ class AuthMiddleware extends GetMiddleware {
 
       // If controller is not found, redirect to login
       if (authController == null) {
+        print("Auth controller not found, redirecting to login");
         return RouteSettings(name: AppRoutes.login);
       }
 
-      // Platform-specific logic (example: block web or desktop if needed)
-      if (kIsWeb) {
-        // Add web-specific checks here if needed
-      } else if (Platform.isAndroid || Platform.isIOS) {
-        // Add mobile-specific checks here if needed
-      } else if (Platform.isWindows || Platform.isMacOS) {
-        // Add desktop-specific checks here if needed
-      }
-
-      // Check if the session is valid
-      if (authController.isSessionValid != true) {
-        // Optionally, you can clear user data or perform other actions here
+      // Check if the user is authenticated (synchronous check)
+      final currentUser = authController.supabase.auth.currentUser;
+      if (currentUser == null) {
+        print("No current user, redirecting to login");
         return RouteSettings(name: AppRoutes.login);
       }
 
-      // Allow access to the route
+      // User is authenticated, allow access
+      print("User authenticated, allowing access to route: $route");
       return null;
     } catch (e) {
+      print("Error in auth middleware: $e");
       // In case of any error, redirect to login
       return RouteSettings(name: AppRoutes.login);
     }

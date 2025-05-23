@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../../app/bindings/app_bindings.dart';
 import '../../../app/routes/app_routes.dart';
 import '../../../common/utils/helpers/snackbar_helper.dart';
+import '../../../navigation_menu.dart';
 import '../../../services/auth_service.dart';
 import '../../../services/storage_service.dart';
 
@@ -80,10 +84,11 @@ class SupabaseAuthController extends GetxController {
   }
 
   Future<void> signInWithEmail() async {
-    //printrint('Signing in with email');
     try {
       isLoading.value = true;
       errorMessage.value = '';
+
+      print('Attempting to sign in with email: ${emailController.text.trim()}');
 
       final response = await supabase.auth.signInWithPassword(
         email: emailController.text.trim(),
@@ -91,7 +96,7 @@ class SupabaseAuthController extends GetxController {
       );
 
       if (response.user != null) {
-        //printrint('Sign-in successful: user=${response.user}');
+        print('Sign-in successful: user=${response.user!.id}');
         if (rememberMe.value) {
           StorageService.instance.saveUserCredentials(
             emailController.text.trim(),
@@ -106,8 +111,10 @@ class SupabaseAuthController extends GetxController {
               .eq('id', response.user!.id)
               .maybeSingle();
 
+          print('User data retrieved: $userData');
+
           if (userData == null) {
-            //printrint('User not found in database, creating new entry');
+            print('User not found in database, creating new entry');
             await supabase.from('users').insert({
               'id': response.user!.id,
               'name': response.user!.userMetadata?['name'] ?? 'New User',
@@ -117,8 +124,7 @@ class SupabaseAuthController extends GetxController {
             });
           }
         } catch (e) {
-          //printrint('Error checking/creating user data: $e');
-          Get.snackbar('Contact Your DEv', 'Tarun');
+          print('Error checking/creating user data: $e');
         }
 
         TSnackBar.showSuccess(
@@ -126,17 +132,34 @@ class SupabaseAuthController extends GetxController {
           title: 'Welcome Back',
         );
 
-        Get.offAllNamed(AppRoutes.home);
+        // Check if we're on Linux
+        bool isLinux = false;
+        try {
+          isLinux = Platform.isLinux;
+          print('Platform is Linux: $isLinux');
+        } catch (e) {
+          print('Error checking platform: $e');
+        }
+
+        // Force navigation to home route
+        print('Navigating to home route: ${AppRoutes.home}');
+
+        // Use Get.offAll to bypass middleware
+        Get.offAll(
+          () => NavigationMenu(),
+          binding: HomeBinding(),
+          transition: Transition.fadeIn,
+        );
       } else {
         errorMessage.value = 'Authentication failed';
-        //printrint('Authentication failed');
+        print('Authentication failed');
         TSnackBar.showAuthError(
           message: 'Authentication failed. Please try again.',
         );
       }
     } catch (e) {
       errorMessage.value = e.toString();
-      //printrint('Error during sign-in: $e');
+      print('Error during sign-in: $e');
       if (e is AuthException) {
         if (e.message.contains('Invalid login credentials')) {
           TSnackBar.showAuthError(
