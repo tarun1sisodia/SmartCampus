@@ -1,12 +1,12 @@
+import './../controllers/teacher_profile_controller.dart';
+import '/../services/language_service.dart';
+import '/../services/storage_service.dart';
 import '../../../common/utils/constants/colors.dart';
 import '../../../common/utils/constants/sized.dart';
 import '../../../common/utils/constants/text_strings.dart';
 import '../../../common/utils/helpers/helper_function.dart';
 import '../../../common/utils/helpers/snackbar_helper.dart';
-import './../controllers/teacher_profile_controller.dart';
 import '../../../app/routes/app_routes.dart';
-import '/../services/language_service.dart';
-import '/../services/storage_service.dart';
 import '../../../services/auth_service.dart';
 
 import 'package:flutter/material.dart';

@@ -1,3 +1,4 @@
+import 'package:attedance__/features/teacher/screens/dashboard_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
@@ -48,7 +49,8 @@ class _SplashScreenState extends State<SplashScreen>
     // Navigate to appropriate screen after animation completes
     _animationController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        _checkAuthAndNavigate();
+        // _checkAuthAndNavigate();
+        Get.offAll(DashboardScreen());
       }
     });
   }
@@ -59,7 +61,7 @@ class _SplashScreenState extends State<SplashScreen>
     super.dispose();
   }
 
- Future<void> _checkAuthAndNavigate() async {
+/* Future<void> _checkAuthAndNavigate() async {
   // Check if user is logged in
   final supabaseAuthController = Get.put(SupabaseAuthController());
   final storageService = Get.find<StorageService>();
@@ -89,7 +91,7 @@ class _SplashScreenState extends State<SplashScreen>
         // If biometric is enabled, require authentication before proceeding
         final authenticated =
             await biometricAuthService.authenticateWithBiometrics(
-                customReason:'Please authenticate to access the Smart Campus app');
+                customReason:'To Access the Smart Campus app');
         if (authenticated) {
           // Use Get.offAll instead of Get.offAllNamed to bypass middleware
           Get.offAll(
@@ -98,6 +100,7 @@ class _SplashScreenState extends State<SplashScreen>
             transition: Transition.fadeIn,
           );
         } else {
+          Get.snackbar('Oops','better luck next time.');
           // If biometric auth fails, go to login screen but don't sign out
           // This gives the user a chance to log in with credentials
           Get.offAllNamed(AppRoutes.login);
@@ -117,7 +120,7 @@ class _SplashScreenState extends State<SplashScreen>
     Get.offAllNamed(AppRoutes.login);
   }
 }
-
+*/
   @override
   Widget build(BuildContext context) {
     final dark = THelperFunction.isDarkMode(context);
