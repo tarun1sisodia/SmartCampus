@@ -66,7 +66,7 @@ class DashboardScreen extends StatelessWidget {
                             dashboardController
                                     .biometricAuthService.availableBiometrics
                                     .contains(BiometricType.face)
-                                ? Icons.face_unlock_sharp
+                                ? Icons.fingerprint_outlined
                                 : Icons.fingerprint,
                             size: 64,
                             color: dark ? TColors.yellow : TColors.primary,
@@ -79,7 +79,7 @@ class DashboardScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: TSizes.spaceBtwItems / 2),
                           Text(
-                            'Please authenticate to access the Smart Campus app',
+                            'Authenticate to access',
                             style: Theme.of(context).textTheme.bodyMedium,
                             textAlign: TextAlign.center,
                           ),
@@ -93,7 +93,7 @@ class DashboardScreen extends StatelessWidget {
                               dashboardController
                                       .biometricAuthService.availableBiometrics
                                       .contains(BiometricType.face)
-                                  ? Icons.face_unlock_sharp
+                                  ? Icons.fingerprint_outlined
                                   : Icons.fingerprint,
                               color: dark ? TColors.dark : Colors.white,
                             ),
@@ -1001,7 +1001,7 @@ class DashboardScreen extends StatelessWidget {
                           dashboardController
                                   .biometricAuthService.availableBiometrics
                                   .contains(BiometricType.face)
-                              ? Icons.face_unlock_sharp
+                              ? Icons.fingerprint_outlined
                               : Icons.fingerprint,
                           color: dashboardController.isAuthenticated.value
                               ? (dark ? Colors.green : Colors.green.shade700)
@@ -1108,7 +1108,7 @@ class DashboardScreen extends StatelessWidget {
                   icon: Icon(
                     dashboardController.biometricAuthService.availableBiometrics
                             .contains(BiometricType.face)
-                        ? Icons.face_unlock_sharp
+                        ? Icons.fingerprint_outlined
                         : Icons.fingerprint,
                     color: dashboardController.isAuthenticated.value
                         ? (dark ? Colors.green : Colors.green.shade700)

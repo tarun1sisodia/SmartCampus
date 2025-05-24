@@ -17,7 +17,7 @@ class BiometricAuthService extends GetxController {
     try {
       return Platform.isLinux;
     } catch (e) {
-      print("Error checking platform: $e");
+      // print("Error checking platform: $e");
       return false;
     }
   }
