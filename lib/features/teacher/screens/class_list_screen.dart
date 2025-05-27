@@ -18,6 +18,8 @@ import 'create_class_screen.dart'; // Ensure this import points to the correct f
 
 class ClassListScreen extends StatelessWidget {
   final classController = Get.put(ClassController());
+  final searchController = TextEditingController();
+  final RxBool isSearching = RxBool(false);
 
   ClassListScreen({super.key});
 
@@ -100,72 +102,12 @@ class ClassListScreen extends StatelessWidget {
     });
   }
 
-  // Inside the _buildBody method, replace the existing loading UI with this enhanced version:
+  // Inside the _buildBody method:
 
   Widget _buildBody(BuildContext context, bool dark) {
     if (classController.isLoading.value) {
       return Column(
         children: [
-          // // AppBar shimmer
-          // Padding(
-          //   padding: const EdgeInsets.symmetric(
-          //     horizontal: TSizes.defaultSpace,
-          //     vertical: TSizes.sm,
-          //   ),
-          //   child: Shimmer.fromColors(
-          //     baseColor: dark ? TColors.darkerGrey : Colors.grey.shade300,
-          //     highlightColor: dark ? TColors.yellow : TColors.primary,
-          //     child: Row(
-          //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //       children: [
-          //         // Title shimmer
-          //         Container(
-          //           height: 24,
-          //           width: 120,
-          //           decoration: BoxDecoration(
-          //             color: Colors.white,
-          //             borderRadius: BorderRadius.circular(4),
-          //           ),
-          //         ),
-          //         // Action buttons shimmer
-          //         Row(
-          //           children: [
-          //             Container(
-          //               width: 40,
-          //               height: 40,
-          //               decoration: BoxDecoration(
-          //                 color: Colors.white,
-          //                 shape: BoxShape.circle,
-          //               ),
-          //             ),
-          //             const SizedBox(width: TSizes.sm),
-          //             Container(
-          //               width: 40,
-          //               height: 40,
-          //               decoration: BoxDecoration(
-          //                 color: Colors.white,
-          //                 shape: BoxShape.circle,
-          //               ),
-          //             ),
-          //           ],
-          //         ),
-          //       ],
-          //     ),
-          //   ),
-          // ),
-
-          // // Divider shimmer
-          // Shimmer.fromColors(
-          //   baseColor: dark ? TColors.darkerGrey : Colors.grey.shade300,
-          //   highlightColor: dark ? TColors.yellow : TColors.primary,
-          //   child: Container(
-          //     height: 1,
-          //     width: double.infinity,
-          //     color: Colors.white,
-          //   ),
-          // ),
-
-          // Class cards shimmer
           Expanded(
             child: ListView.builder(
               itemCount: 6, // Number of shimmer items to display
