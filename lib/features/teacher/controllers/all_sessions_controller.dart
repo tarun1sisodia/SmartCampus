@@ -6,14 +6,16 @@ import '../../../models/class_model.dart';
 import '../../../models/attendance_session_model.dart';
 import '../../../services/class_service.dart';
 import '../../../services/attendance_service.dart';
+import '../../../services/realtime_service.dart';
 import '../../../common/utils/helpers/snackbar_helper.dart';
 import 'attendance_controller.dart';
+import 'dart:async';
 
 class AllSessionsController extends GetxController {
   final attendanceService = AttendanceService();
   final classService = ClassService();
-  // final attendanceController = Get.put(AttendanceController());
   late final AttendanceController attendanceController;
+  late final RealtimeService realtimeService;
 
   final isLoading = false.obs;
   final allSessions = <AttendanceSessionWithClass>[].obs;
@@ -31,11 +33,17 @@ class AllSessionsController extends GetxController {
   final selectedSessionIds = <String>{}.obs;
   final isAllSelected = false.obs;
 
+  // Real-time connection status
+  final isRealtimeConnected = false.obs;
+  final lastUpdated = DateTime.now().obs;
+
+  // Stream subscriptions
+  final List<StreamSubscription> _subscriptions = [];
+
   @override
   void onInit() {
     super.onInit();
-
-    ///print('AllSessionsController initialized');
+    print('AllSessionsController initialized');
 
     // Initialize the attendanceController here
     if (Get.isRegistered<AttendanceController>()) {
@@ -44,30 +52,184 @@ class AllSessionsController extends GetxController {
       attendanceController = Get.put(AttendanceController());
     }
 
+    _initializeRealtimeService();
     loadAllSessions();
     loadClasses();
   }
 
   @override
   void onClose() {
-    ///print('AllSessionsController disposed');
+    print('AllSessionsController disposed');
     searchController.dispose();
+
+    // Cancel all stream subscriptions
+    for (var subscription in _subscriptions) {
+      subscription.cancel();
+    }
+    _subscriptions.clear();
+
     super.onClose();
+  }
+
+  // Initialize real-time service and set up subscriptions
+  void _initializeRealtimeService() {
+    try {
+      // Try to find existing service or create new one
+      if (Get.isRegistered<RealtimeService>()) {
+        realtimeService = Get.find<RealtimeService>();
+      } else {
+        realtimeService = Get.put(RealtimeService());
+      }
+
+      _setupRealtimeSubscriptions();
+      print('Real-time service initialized for AllSessionsController');
+    } catch (e) {
+      print('Error initializing real-time service: $e');
+    }
+  }
+
+  // Set up real-time subscriptions
+  void _setupRealtimeSubscriptions() {
+    try {
+      // Subscribe to attendance sessions stream
+      final attendanceSessionsSubscription =
+          realtimeService.attendanceStream.listen(
+        (sessions) {
+          print(
+              'Real-time attendance sessions update received: ${sessions.length} sessions');
+          _handleAttendanceSessionsUpdate(sessions);
+        },
+        onError: (error) {
+          print('Error in attendance sessions stream: $error');
+          isRealtimeConnected.value = false;
+        },
+      );
+
+      // Subscribe to classes stream
+      final classesSubscription = realtimeService.classesStream.listen(
+        (classesData) {
+          print(
+              'Real-time classes update received: ${classesData.length} classes');
+          _handleClassesUpdate(classesData);
+        },
+        onError: (error) {
+          print('Error in classes stream: $error');
+          isRealtimeConnected.value = false;
+        },
+      );
+
+      // Subscribe to connection status
+      final connectionSubscription = realtimeService.isConnected.listen(
+        (connected) {
+          print('Real-time connection status changed: $connected');
+          isRealtimeConnected.value = connected;
+
+          if (connected) {
+            lastUpdated.value = DateTime.now();
+            // Refresh data when reconnected
+            loadAllSessions();
+            loadClasses();
+          }
+        },
+      );
+
+      _subscriptions.addAll([
+        attendanceSessionsSubscription,
+        classesSubscription,
+        connectionSubscription,
+      ]);
+
+      isRealtimeConnected.value = realtimeService.isConnected.value;
+      print('Real-time subscriptions set up successfully');
+    } catch (e) {
+      print('Error setting up real-time subscriptions: $e');
+      isRealtimeConnected.value = false;
+    }
+  }
+
+  // Handle real-time attendance sessions updates
+  void _handleAttendanceSessionsUpdate(
+      List<Map<String, dynamic>> sessionsData) {
+    try {
+      print('Processing attendance sessions update...');
+
+      final currentUser = Supabase.instance.client.auth.currentUser;
+      if (currentUser == null) return;
+
+      // Convert the raw data to AttendanceSessionWithClass objects
+      // Note: This assumes the sessions data includes class information
+      // You might need to cross-reference with classes data
+
+      lastUpdated.value = DateTime.now();
+
+      // Trigger a refresh of sessions data
+      loadAllSessions();
+
+      print('Attendance sessions updated successfully');
+    } catch (e) {
+      print('Error handling attendance sessions update: $e');
+    }
+  }
+
+  // Handle real-time classes updates
+  void _handleClassesUpdate(List<Map<String, dynamic>> classesData) {
+    try {
+      print('Processing classes update...');
+
+      final currentUser = Supabase.instance.client.auth.currentUser;
+      if (currentUser == null) return;
+
+      // Filter classes for current teacher
+      final teacherClasses = classesData.where((classData) {
+        return classData['teacher_id'] == currentUser.id;
+      }).toList();
+
+      // Convert to ClassModel objects
+      final updatedClasses = teacherClasses.map((classData) {
+        final subjectData =
+            classData['subjects'] as Map<String, dynamic>? ?? {};
+        final courseData = classData['courses'] as Map<String, dynamic>? ?? {};
+
+        return ClassModel(
+          id: classData['id'],
+          teacherId: classData['teacher_id'],
+          subjectId: classData['subject_id'],
+          courseId: classData['course_id'],
+          semester: classData['semester'],
+          section: classData['section'],
+          subjectName: subjectData['name'],
+          courseName: courseData['name'],
+          createdAt: classData['created_at'] != null
+              ? DateTime.parse(classData['created_at'])
+              : null,
+          updatedAt: classData['updated_at'] != null
+              ? DateTime.parse(classData['updated_at'])
+              : null,
+        );
+      }).toList();
+
+      classes.assignAll(updatedClasses);
+      lastUpdated.value = DateTime.now();
+
+      print('Classes updated successfully: ${updatedClasses.length} classes');
+    } catch (e) {
+      print('Error handling classes update: $e');
+    }
   }
 
   Future<void> loadAllSessions() async {
     try {
-      ///print('Loading all sessions...');
+      print('Loading all sessions...');
       isLoading.value = true;
 
       final currentUser = Supabase.instance.client.auth.currentUser;
       if (currentUser == null) {
-        ///print('No user logged in');
+        print('No user logged in');
         TSnackBar.showError(message: 'You must be logged in to view sessions');
         return;
       }
 
-      ///print('Fetching classes for teacher: ${currentUser.id}');
+      print('Fetching classes for teacher: ${currentUser.id}');
       final teacherClasses = await classService.getTeacherClasses(
         currentUser.id,
       );
@@ -75,13 +237,13 @@ class AllSessionsController extends GetxController {
       List<AttendanceSessionWithClass> allTeacherSessions = [];
 
       for (var classModel in teacherClasses) {
-        ///print('Fetching sessions for class: ${classModel.id}');
+        print('Fetching sessions for class: ${classModel.id}');
         final sessions = await attendanceService.getAttendanceSessions(
           classModel.id,
         );
 
         final sessionsWithClass = sessions.map((session) {
-          ///print('Processing session: ${session.id}');
+          print('Processing session: ${session.id}');
           return AttendanceSessionWithClass(
             id: session.id,
             classId: session.classId,
@@ -101,25 +263,26 @@ class AllSessionsController extends GetxController {
 
       allTeacherSessions.sort((a, b) => b.date.compareTo(a.date));
 
-      ///print('All sessions loaded: ${allTeacherSessions.length}');
+      print('All sessions loaded: ${allTeacherSessions.length}');
       allSessions.assignAll(allTeacherSessions);
       filteredSessions.assignAll(allTeacherSessions);
+
+      lastUpdated.value = DateTime.now();
     } catch (e) {
-      ///print('Error loading sessions: $e');
+      print('Error loading sessions: $e');
       TSnackBar.showError(message: 'Failed to load sessions: ${e.toString()}');
     } finally {
       isLoading.value = false;
-
-      ///print('Finished loading sessions');
+      print('Finished loading sessions');
     }
   }
 
   Future<void> loadClasses() async {
     try {
-      ///print('Loading classes...');
+      print('Loading classes...');
       final currentUser = Supabase.instance.client.auth.currentUser;
       if (currentUser == null) {
-        ///print('No user logged in');
+        print('No user logged in');
         return;
       }
 
@@ -127,15 +290,16 @@ class AllSessionsController extends GetxController {
         currentUser.id,
       );
 
-      ///print('Classes loaded: ${teacherClasses.length}');
+      print('Classes loaded: ${teacherClasses.length}');
       classes.assignAll(teacherClasses);
+      lastUpdated.value = DateTime.now();
     } catch (e) {
-      ///print('Error loading classes: $e');
+      print('Error loading classes: $e');
     }
   }
 
   void filterSessions() {
-    ///print('Filtering sessions...');
+    print('Filtering sessions...');
     final searchTerm = searchController.text.toLowerCase();
 
     filteredSessions.value = allSessions.where((session) {
@@ -154,81 +318,69 @@ class AllSessionsController extends GetxController {
       return isInDateRange && isClassSelected && matchesSearch;
     }).toList();
 
-    ///print('Filtered sessions count: ${filteredSessions.length}');
+    print('Filtered sessions count: ${filteredSessions.length}');
   }
 
   void resetFilters() {
-    ///print('Resetting filters...');
+    print('Resetting filters...');
     searchController.clear();
     startDate.value = DateTime.now().subtract(const Duration(days: 30));
     endDate.value = DateTime.now();
     selectedClassIds.clear();
     filteredSessions.assignAll(allSessions);
-
-    ///print('Filters reset');
+    print('Filters reset');
   }
 
   Future<void> deleteSession(String sessionId) async {
     try {
-      ///print('Deleting session: $sessionId');
+      print('Deleting session: $sessionId');
       isLoading.value = true;
 
       await attendanceService.deleteSession(sessionId);
 
-      allSessions.removeWhere((session) => session.id == sessionId);
-      filteredSessions.removeWhere((session) => session.id == sessionId);
+      // Note: Real-time subscription will handle UI updates automatically
+      // No need to manually remove from lists here
 
-      ///print('Session deleted: $sessionId');
+      print('Session deleted: $sessionId');
       TSnackBar.showSuccess(
         message: 'Session deleted successfully',
         title: 'Success',
       );
     } catch (e) {
-      ///print('Error deleting session: $e');
+      print('Error deleting session: $e');
       TSnackBar.showError(message: 'Failed to delete session: ${e.toString()}');
     } finally {
       isLoading.value = false;
-
-      ///print('Finished deleting session');
+      print('Finished deleting session');
     }
   }
 
-// this method to check if a session is closed
+  // Check if a session is closed
   bool isSessionClosed(AttendanceSessionWithClass session) {
-    // Consider a session closed if its status is explicitly 'closed'
     if (session.status == 'closed') return true;
-
-    // Also check if closedAt timestamp exists
     if (session.closedAt != null) return true;
-
     return false;
   }
 
-// Modify the isSessionRunning method to also check if the session is closed
+  // Check if session is running
   bool isSessionRunning(AttendanceSessionWithClass session) {
     try {
-      // First check if the session is closed
       if (isSessionClosed(session)) return false;
 
       final now = DateTime.now();
       final sessionDate = session.date;
 
-      // Check if the session is today
       if (sessionDate.year == now.year &&
           sessionDate.month == now.month &&
           sessionDate.day == now.day) {
-        // If there's no specific time, consider it running all day
         if (session.startTime == null || session.endTime == null) {
           return true;
         }
 
-        // Parse the time strings with AM/PM format
         DateTime? sessionStart;
         DateTime? sessionEnd;
 
-        // Try to parse different time formats
         try {
-          // First try format like "10:00 AM"
           final startDateTime = DateFormat("h:mm a").parse(session.startTime!);
           final endDateTime = DateFormat("h:mm a").parse(session.endTime!);
 
@@ -238,7 +390,6 @@ class AllSessionsController extends GetxController {
           sessionEnd = DateTime(now.year, now.month, now.day, endDateTime.hour,
               endDateTime.minute);
         } catch (e) {
-          // If that fails, try 24-hour format like "14:30"
           try {
             final startTimeParts = session.startTime!.split(':');
             final endTimeParts = session.endTime!.split(':');
@@ -254,84 +405,44 @@ class AllSessionsController extends GetxController {
             sessionEnd =
                 DateTime(now.year, now.month, now.day, endHour, endMinute);
           } catch (e) {
-            ///print('Error parsing session time: $e');
+            print('Error parsing session time: $e');
             return false;
           }
         }
 
-        // Check if current time is between start and end
         return now.isAfter(sessionStart) && now.isBefore(sessionEnd);
       }
 
       return false;
     } catch (e) {
-      ///print('Error in isSessionRunning: $e');
+      print('Error in isSessionRunning: $e');
       return false;
     }
   }
 
-// a method to close a session after attendance submission
+  // Close a session after attendance submission
   Future<void> closeSession(String sessionId) async {
     try {
       isLoading.value = true;
 
-      // Call the service method to close the session
       await attendanceService.closeAttendanceSession(sessionId);
 
-      // the local session data
-      final sessionIndex = allSessions.indexWhere((s) => s.id == sessionId);
-      if (sessionIndex >= 0) {
-        final updatedSession = allSessions[sessionIndex];
-        allSessions[sessionIndex] = AttendanceSessionWithClass(
-          id: updatedSession.id,
-          classId: updatedSession.classId,
-          date: updatedSession.date,
-          startTime: updatedSession.startTime,
-          endTime: updatedSession.endTime,
-          createdBy: updatedSession.createdBy,
-          createdAt: updatedSession.createdAt,
-          className: updatedSession.className,
-          subjectName: updatedSession.subjectName,
-          classModel: updatedSession.classModel,
-          status: 'closed',
-          closedAt: DateTime.now(),
-        );
-      }
-
-      // Also update in filtered sessions
-      final filteredIndex =
-          filteredSessions.indexWhere((s) => s.id == sessionId);
-      if (filteredIndex >= 0) {
-        final updatedSession = filteredSessions[filteredIndex];
-        filteredSessions[filteredIndex] = AttendanceSessionWithClass(
-          id: updatedSession.id,
-          classId: updatedSession.classId,
-          date: updatedSession.date,
-          startTime: updatedSession.startTime,
-          endTime: updatedSession.endTime,
-          createdBy: updatedSession.createdBy,
-          createdAt: updatedSession.createdAt,
-          className: updatedSession.className,
-          subjectName: updatedSession.subjectName,
-          classModel: updatedSession.classModel,
-          status: 'closed',
-          closedAt: DateTime.now(),
-        );
-      }
+      // Note: Real-time subscription will handle UI updates automatically
+      // No need to manually update local session data here
 
       TSnackBar.showSuccess(
         message: 'Session closed successfully',
         title: 'Success',
       );
     } catch (e) {
-      ///print('Error closing session: $e');
+      print('Error closing session: $e');
       TSnackBar.showError(message: 'Failed to close session: ${e.toString()}');
     } finally {
       isLoading.value = false;
     }
   }
-  // New methods for multi-select functionality
 
+  // Multi-select functionality methods
   void toggleSelectionMode(String? initialSessionId) {
     isSelectionMode.value = !isSelectionMode.value;
 
@@ -355,7 +466,7 @@ class AllSessionsController extends GetxController {
       selectedSessionIds.add(sessionId);
     }
 
-    // "all selected" state
+    // Update "all selected" state
     isAllSelected.value = selectedSessionIds.length == filteredSessions.length;
   }
 
@@ -378,7 +489,7 @@ class AllSessionsController extends GetxController {
     selectedSessionIds.clear();
     isAllSelected.value = false;
   }
-//function to delete the sessions..
+
   Future<void> deleteSelectedSessions() async {
     try {
       isLoading.value = true;
@@ -387,14 +498,8 @@ class AllSessionsController extends GetxController {
       final sessionsToDelete = Set<String>.from(selectedSessionIds);
 
       for (var sessionId in sessionsToDelete) {
-        await attendanceService.deleteSession(sessionId);
+        await deleteSession(sessionId);
       }
-
-      // Remove deleted sessions from lists
-      allSessions
-          .removeWhere((session) => sessionsToDelete.contains(session.id));
-      filteredSessions
-          .removeWhere((session) => sessionsToDelete.contains(session.id));
 
       // Exit selection mode
       isSelectionMode.value = false;
@@ -408,33 +513,90 @@ class AllSessionsController extends GetxController {
         title: 'Success',
       );
     } catch (e) {
-      ///print('Error deleting selected sessions: $e');
+      print('Error deleting selected sessions: $e');
       TSnackBar.showError(
           message: 'Failed to delete sessions: ${e.toString()}');
     } finally {
       isLoading.value = false;
     }
   }
+
+  // Manual refresh method
+  Future<void> refreshData() async {
+    print('Manual refresh triggered');
+    await Future.wait([
+      loadAllSessions(),
+      loadClasses(),
+    ]);
+  }
+
+  // Get real-time connection status
+  bool get isConnected => isRealtimeConnected.value;
+
+  // Get last updated time formatted
+  String get lastUpdatedFormatted {
+    final now = DateTime.now();
+    final difference = now.difference(lastUpdated.value);
+
+    if (difference.inMinutes < 1) {
+      return 'Just now';
+    } else if (difference.inMinutes < 60) {
+      return '${difference.inMinutes}m ago';
+    } else if (difference.inHours < 24) {
+      return '${difference.inHours}h ago';
+    } else {
+      return DateFormat('MMM dd, HH:mm').format(lastUpdated.value);
+    }
+  }
 }
 
-class AttendanceSessionWithClass extends AttendanceSessionModel {
+// Model class for sessions with class information
+class AttendanceSessionWithClass {
+  final String id;
+  final String classId;
+  final DateTime date;
+  final String? startTime;
+  final String? endTime;
+  final String? createdBy;
+  final DateTime? createdAt;
   final String? className;
-  @override
   final String? subjectName;
-  final ClassModel? classModel;
+  final ClassModel classModel;
+  final String? status;
+  final DateTime? closedAt;
 
   AttendanceSessionWithClass({
-    required super.id,
-    required super.classId,
-    required super.date,
-    super.startTime,
-    super.endTime,
-    required super.createdBy,
-    super.createdAt,
+    required this.id,
+    required this.classId,
+    required this.date,
+    this.startTime,
+    this.endTime,
+    required this.createdBy,
+    this.createdAt,
     this.className,
     this.subjectName,
-    this.classModel,
-    super.status,
-    super.closedAt,
+    required this.classModel,
+    this.status,
+    this.closedAt,
   });
+
+  factory AttendanceSessionWithClass.fromAttendanceSession(
+    AttendanceSessionModel session,
+    ClassModel classModel,
+  ) {
+    return AttendanceSessionWithClass(
+      id: session.id,
+      classId: session.classId,
+      date: session.date,
+      startTime: session.startTime,
+      endTime: session.endTime,
+      createdBy: session.createdBy,
+      createdAt: session.createdAt,
+      className: classModel.courseName,
+      subjectName: classModel.subjectName,
+      classModel: classModel,
+      status: session.status,
+      closedAt: session.closedAt,
+    );
+  }
 }

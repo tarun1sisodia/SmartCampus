@@ -1,3 +1,4 @@
+import 'package:attedance__/features/teacher/screens/attendance_reports_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -621,72 +622,76 @@ class DashboardScreen extends StatelessWidget {
                               ),
                             ],
                           ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min, // Minimize height
-                            children: [
-                              Text(
-                                'Average Attendance',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleMedium
-                                    ?.copyWith(
-                                      fontWeight: FontWeight.normal,
-                                      fontFamily: 'Poppins',
-                                      color: dark
-                                          ? TColors.textWhite
-                                          : TColors.textPrimary,
-                                    ),
-                              ),
-                              const SizedBox(height: TSizes.spaceBtwItems),
-                              CircularPercentIndicator(
-                                radius: 80.0,
-                                lineWidth: 12.0,
-                                animation: true,
-                                animationDuration: 2000,
-                                percent: dashboardController
-                                        .averageAttendance.value /
-                                    100,
-                                center: TweenAnimationBuilder<double>(
-                                  tween: Tween<double>(
-                                    begin: 0,
-                                    end: dashboardController
-                                        .averageAttendance.value,
-                                  ),
-                                  duration: const Duration(seconds: 2),
-                                  builder: (context, value, child) {
-                                    return Text(
-                                      '${value.toStringAsFixed(1)}%',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleMedium
-                                          ?.copyWith(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: TSizes.fontSizeXl),
-                                    );
-                                  },
+                          child: GestureDetector(
+                            onTap: () => Get.to(AttendanceReportsScreen()),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min, // Minimize height
+                              children: [
+                                Text(
+                                  'Average Attendance',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleMedium
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.normal,
+                                        fontFamily: 'Poppins',
+                                        color: dark
+                                            ? TColors.textWhite
+                                            : TColors.textPrimary,
+                                      ),
                                 ),
-                                circularStrokeCap: CircularStrokeCap.round,
-                                progressColor: dark
-                                    ? TColors.cardGradient4.colors.first
-                                    : TColors.cardGradient4.colors.last,
-                                backgroundColor:
-                                    dark ? TColors.black : TColors.white,
-                              ),
-                              const SizedBox(height: TSizes.spaceBtwItems),
-                              Text(
-                                'Overall attendance across all classes',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall
-                                    ?.copyWith(
-                                      fontWeight: FontWeight.normal,
-                                      fontFamily: 'Poppins',
-                                      color:
-                                          dark ? TColors.black : TColors.black,
+                                const SizedBox(height: TSizes.spaceBtwItems),
+                                CircularPercentIndicator(
+                                  radius: 80.0,
+                                  lineWidth: 12.0,
+                                  animation: true,
+                                  animationDuration: 2000,
+                                  percent: dashboardController
+                                          .averageAttendance.value /
+                                      100,
+                                  center: TweenAnimationBuilder<double>(
+                                    tween: Tween<double>(
+                                      begin: 0,
+                                      end: dashboardController
+                                          .averageAttendance.value,
                                     ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
+                                    duration: const Duration(seconds: 2),
+                                    builder: (context, value, child) {
+                                      return Text(
+                                        '${value.toStringAsFixed(1)}%',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleMedium
+                                            ?.copyWith(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: TSizes.fontSizeXl),
+                                      );
+                                    },
+                                  ),
+                                  circularStrokeCap: CircularStrokeCap.round,
+                                  progressColor: dark
+                                      ? TColors.cardGradient4.colors.first
+                                      : TColors.cardGradient4.colors.last,
+                                  backgroundColor:
+                                      dark ? TColors.black : TColors.white,
+                                ),
+                                const SizedBox(height: TSizes.spaceBtwItems),
+                                Text(
+                                  'Overall attendance across all classes',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.normal,
+                                        fontFamily: 'Poppins',
+                                        color: dark
+                                            ? TColors.black
+                                            : TColors.black,
+                                      ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),

@@ -8,17 +8,26 @@ import '../../../models/subject_model.dart';
 import '../../../services/class_service.dart';
 import '../../../services/course_service.dart';
 import '../../../services/subject_service.dart';
+import '../../../services/realtime_service.dart';
 import '../../../common/utils/helpers/snackbar_helper.dart';
+import 'dart:async';
 
 class ClassController extends GetxController {
   final classService = ClassService();
   final courseService = CourseService();
   final subjectService = SubjectService();
+  
+  // Get RealtimeService instance
+  late final RealtimeService realtimeService;
 
   final isLoading = false.obs;
   final classes = <ClassModel>[].obs;
   final courses = <CourseModel>[].obs;
   final subjects = <SubjectModel>[].obs;
+
+  // Real-time connection status
+  final isRealtimeConnected = true.obs;
+  final lastUpdated = DateTime.now().obs;
 
   // Form controllers
   final selectedSubjectId = ''.obs;
@@ -28,36 +37,263 @@ class ClassController extends GetxController {
   var selectedCourse = Rxn<CourseModel>();
   var selectedSubject = Rxn<dynamic>();
 
-  // New properties for multi-select
+  // Multi-select properties
   final isSelectionMode = false.obs;
   final selectedClassIds = <String>{}.obs;
   final isAllSelected = false.obs;
 
+  // Search functionality
+  final searchQuery = ''.obs;
+  final filteredClasses = <ClassModel>[].obs;
+
+  final List<StreamSubscription> _subscriptions = [];
+
   @override
   void onInit() {
     super.onInit();
-    //printnt('ClassController initialized');
+    print('ClassController initialized');
+    _initializeRealtimeService();
     loadClasses();
     loadCoursesAndSubjects();
   }
 
   @override
   void onClose() {
-    //printnt('ClassController disposed');
+    print('ClassController disposed');
     semesterController.dispose();
     sectionController.dispose();
+    
+    // Clean up subscriptions
+    for (var subscription in _subscriptions) {
+      subscription.cancel();
+    }
     super.onClose();
   }
 
-  // Load all classes for the current teacher
+  // Initialize the realtime service
+  void _initializeRealtimeService() {
+    try {
+      realtimeService = Get.find<RealtimeService>();
+      print('Found existing RealtimeService instance in ClassController');
+    } catch (e) {
+      print('RealtimeService not found, creating new instance in ClassController');
+      realtimeService = Get.put(RealtimeService());
+    }
+    
+    _setupRealtimeSubscriptions();
+  }
+
+  // Set up real-time subscriptions for UI updates
+  void _setupRealtimeSubscriptions() {
+    // Subscribe to classes stream for real-time updates
+    final classesSubscription = realtimeService.classesStream.listen(
+      (data) {
+        print('Real-time classes update in ClassController: ${data.length} classes');
+        _handleClassesUpdate(data);
+        lastUpdated.value = DateTime.now();
+      },
+      onError: (error) {
+        print('Error in classes stream (ClassController): $error');
+        isRealtimeConnected.value = false;
+      },
+    );
+
+    // Subscribe to subjects stream for dropdown updates
+    final subjectsSubscription = realtimeService.subjectsStream.listen(
+      (data) {
+        print('Real-time subjects update in ClassController: ${data.length} subjects');
+        _handleSubjectsUpdate(data);
+        lastUpdated.value = DateTime.now();
+      },
+      onError: (error) {
+        print('Error in subjects stream (ClassController): $error');
+      },
+    );
+
+    // Subscribe to courses stream for dropdown updates
+    final coursesSubscription = realtimeService.coursesStream.listen(
+      (data) {
+        print('Real-time courses update in ClassController: ${data.length} courses');
+        _handleCoursesUpdate(data);
+        lastUpdated.value = DateTime.now();
+      },
+      onError: (error) {
+        print('Error in courses stream (ClassController): $error');
+      },
+    );
+
+    // Monitor RealtimeService connection status
+    final connectionSubscription = realtimeService.isConnected.listen(
+      (isConnected) {
+        isRealtimeConnected.value = isConnected;
+        if (isConnected) {
+          print('Real-time connection restored in ClassController');
+          // Refresh data when connection is restored
+          loadClasses();
+          loadCoursesAndSubjects();
+        } else {
+          print('Real-time connection lost in ClassController');
+        }
+      },
+    );
+
+    _subscriptions.addAll([
+      classesSubscription,
+      subjectsSubscription,
+      coursesSubscription,
+      connectionSubscription,
+    ]);
+
+    isRealtimeConnected.value = realtimeService.isConnected.value;
+  }
+
+  // Handle real-time classes updates to update UI
+  void _handleClassesUpdate(List<Map<String, dynamic>> data) async {
+    try {
+      final currentUser = Supabase.instance.client.auth.currentUser;
+      if (currentUser == null) return;
+
+      // Filter classes for current teacher and convert to ClassModel
+      final teacherClasses = <ClassModel>[];
+      
+      for (var classData in data) {
+        if (classData['teacher_id'] == currentUser.id) {
+          try {
+            // Fetch related subject and course data
+            final subjectData = await Supabase.instance.client
+                .from('subjects')
+                .select()
+                .eq('id', classData['subject_id'])
+                .single();
+            
+            final courseData = await Supabase.instance.client
+                .from('courses')
+                .select()
+                .eq('id', classData['course_id'])
+                .single();
+
+            final classModel = ClassModel(
+              id: classData['id'],
+              teacherId: classData['teacher_id'],
+              subjectId: classData['subject_id'],
+              courseId: classData['course_id'],
+              semester: classData['semester'],
+              section: classData['section'],
+              subjectName: subjectData['name'],
+              courseName: courseData['name'],
+              createdAt: classData['created_at'] != null
+                  ? DateTime.parse(classData['created_at'])
+                  : null,
+              updatedAt: classData['updated_at'] != null
+                  ? DateTime.parse(classData['updated_at'])
+                  : null,
+            );
+            
+            teacherClasses.add(classModel);
+          } catch (e) {
+            print('Error fetching related data for class ${classData['id']}: $e');
+          }
+        }
+      }
+
+      // Update classes list - this will automatically update the UI
+      classes.assignAll(teacherClasses);
+      
+      // Update filtered classes based on current search
+      if (searchQuery.value.isNotEmpty) {
+        _filterClasses(searchQuery.value);
+      } else {
+        filteredClasses.assignAll(teacherClasses);
+      }
+
+      print('ClassController classes updated via real-time: ${teacherClasses.length} classes');
+      
+    } catch (e) {
+      print('Error handling classes update in ClassController: $e');
+    }
+  }
+
+  // Handle real-time subjects updates to update dropdown UI
+  void _handleSubjectsUpdate(List<Map<String, dynamic>> data) {
+    try {
+      final subjectsList = data.map((json) => SubjectModel.fromJson(json)).toList();
+      subjects.assignAll(subjectsList); // This will update the UI automatically
+      
+      // Update selected subject if it still exists
+      if (selectedSubject.value != null) {
+        final currentSubjectId = selectedSubject.value.id;
+        final updatedSubject = subjectsList.firstWhereOrNull(
+          (subject) => subject.id == currentSubjectId,
+        );
+        if (updatedSubject != null) {
+          selectedSubject.value = updatedSubject;
+        }
+      }
+
+      print('ClassController subjects updated via real-time: ${subjectsList.length} subjects');
+    } catch (e) {
+      print('Error handling subjects update in ClassController: $e');
+    }
+  }
+
+  // Handle real-time courses updates to update dropdown UI
+  void _handleCoursesUpdate(List<Map<String, dynamic>> data) {
+    try {
+      final coursesList = data.map((json) => CourseModel.fromJson(json)).toList();
+      courses.assignAll(coursesList); // This will update the UI automatically
+      
+      // Update selected course if it still exists
+      if (selectedCourse.value != null) {
+        final currentCourseId = selectedCourse.value!.id;
+        final updatedCourse = coursesList.firstWhereOrNull(
+          (course) => course.id == currentCourseId,
+        );
+        if (updatedCourse != null) {
+          selectedCourse.value = updatedCourse;
+        }
+      }
+
+      print('ClassController courses updated via real-time: ${coursesList.length} courses');
+    } catch (e) {
+      print('Error handling courses update in ClassController: $e');
+    }
+  }
+
+  // Filter classes based on search query
+  void _filterClasses(String query) {
+    searchQuery.value = query.toLowerCase();
+    if (query.isEmpty) {
+      filteredClasses.assignAll(classes);
+    } else {
+      filteredClasses.assignAll(
+        classes.where((classModel) {
+          final matchesSubject =
+              classModel.subjectName?.toLowerCase().contains(query) ?? false;
+          final matchesCourse =
+              classModel.courseName?.toLowerCase().contains(query) ?? false;
+          final matchesSection =
+              classModel.section?.toLowerCase().contains(query) ?? false;
+
+          return matchesSubject || matchesCourse || matchesSection;
+        }).toList(),
+      );
+    }
+  }
+
+  // Search classes method
+  void searchClasses(String query) {
+    _filterClasses(query);
+  }
+
+  // Load all classes for the current teacher (initial load)
   Future<void> loadClasses() async {
     try {
-      //printnt('Loading classes...');
+      print('Loading classes...');
       isLoading.value = true;
 
       final currentUser = Supabase.instance.client.auth.currentUser;
       if (currentUser == null) {
-        //printnt('No user logged in');
+        print('No user logged in');
         TSnackBar.showError(message: 'You must be logged in to view classes');
         return;
       }
@@ -66,73 +302,73 @@ class ClassController extends GetxController {
         currentUser.id,
       );
 
-      //printnt('Classes loaded: $teacherClasses');
+      print('Classes loaded: ${teacherClasses.length}');
       classes.assignAll(teacherClasses);
+      filteredClasses.assignAll(teacherClasses);
     } catch (e) {
-      //printnt('Error loading classes: $e');
+      print('Error loading classes: $e');
       TSnackBar.showError(message: 'Failed to load classes: ${e.toString()}');
     } finally {
       isLoading.value = false;
     }
   }
 
-  // Load courses and subjects for dropdowns
+  // Load courses and subjects for dropdowns (initial load)
   Future<void> loadCoursesAndSubjects() async {
     try {
-      //printnt('Loading courses and subjects...');
-      isLoading.value = true;
-
+      print('Loading courses and subjects...');
+      
       final allCourses = await courseService.getAllCourses();
       final allSubjects = await subjectService.getAllSubjects();
 
-      //printnt('Courses loaded: $allCourses');
-      //printnt('Subjects loaded: $allSubjects');
+      print('Courses loaded: ${allCourses.length}');
+      print('Subjects loaded: ${allSubjects.length}');
 
       courses.assignAll(allCourses);
       subjects.assignAll(allSubjects);
 
       // Set default selections if available
-      if (courses.isNotEmpty) {
+      if (courses.isNotEmpty && selectedCourse.value == null) {
         selectedCourseId.value = courses[0].id;
-        //printnt('Default course selected: ${courses[0]}');
+        selectedCourse.value = courses[0];
+        print('Default course selected: ${courses[0].name}');
       }
 
-      if (subjects.isNotEmpty) {
+      if (subjects.isNotEmpty && selectedSubject.value == null) {
         selectedSubjectId.value = subjects[0].id;
-        //printnt('Default subject selected: ${subjects[0]}');
+        selectedSubject.value = subjects[0];
+        print('Default subject selected: ${subjects[0].name}');
       }
     } catch (e) {
-      //printnt('Error loading courses and subjects: $e');
+      print('Error loading courses and subjects: $e');
       TSnackBar.showError(
         message: 'Failed to load courses and subjects: ${e.toString()}',
       );
-    } finally {
-      isLoading.value = false;
     }
   }
 
   // Create a new class
   Future<void> createClass() async {
     try {
-      //printnt('Creating class...');
+      print('Creating class...');
       if (selectedSubject.value == null ||
           selectedCourse.value == null ||
           semesterController.text.trim().isEmpty) {
-        //printnt('Validation Failed');
+        print('Validation Failed');
         TSnackBar.showError(message: 'Please fill in all required fields');
         return;
       }
-      //printnt('Validation Passed');
+      print('Validation Passed');
       isLoading.value = true;
 
       final currentUser = Supabase.instance.client.auth.currentUser;
       if (currentUser == null) {
-        //printnt('User not logged in');
+        print('User not logged in');
         TSnackBar.showError(message: 'You must be logged in to create a class');
         return;
       }
 
-      // Check for existing class with same parameters (case-insensitive for section)
+      // Check for existing class with same parameters
       final semester = int.parse(semesterController.text.trim());
       final section = sectionController.text.trim().isNotEmpty
           ? sectionController.text.trim()
@@ -164,7 +400,7 @@ class ClassController extends GetxController {
         return;
       }
 
-      //printnt('Creating Class ...');
+      print('Creating Class ...');
 
       final newClass = await classService.createClass(
         teacherId: currentUser.id,
@@ -173,31 +409,33 @@ class ClassController extends GetxController {
         semester: semester,
         section: section,
       );
-      //printnt('Class created: $newClass');
-      // to the list
-      classes.insert(0, newClass);
-
+      
+      print('Class created: ${newClass.subjectName}');
+      
+      // Note: The real-time subscription will automatically update the UI
+      // No need to manually add to the list here - the stream will handle it
+      
       // Reset form
       semesterController.clear();
       sectionController.clear();
 
       TSnackBar.showSuccess(message: 'Class created successfully');
     } catch (e) {
-      //printnt('Failed to create class: $e');
+      print('Failed to create class: $e');
       TSnackBar.showError(message: 'Failed to create class: ${e.toString()}');
     } finally {
       isLoading.value = false;
     }
   }
 
-  // an existing class
+  // Update an existing class
   Future<void> updateClass(String classId) async {
     try {
-      //printnt('Updating class with ID: $classId');
+           print('Updating class with ID: $classId');
       if (selectedSubjectId.value.isEmpty ||
           selectedCourseId.value.isEmpty ||
           semesterController.text.trim().isEmpty) {
-        //printnt('Validation Failed');
+        print('Validation Failed');
         TSnackBar.showError(message: 'Please fill in all required fields');
         return;
       }
@@ -214,18 +452,14 @@ class ClassController extends GetxController {
             : null,
       );
 
-      //printnt('Class updated: $updatedClass');
-
-      // in the list
-      final index = classes.indexWhere((c) => c.id == classId);
-      if (index != -1) {
-        classes[index] = updatedClass;
-        classes.refresh();
-      }
+      print('Class updated: ${updatedClass.subjectName}');
+      
+      // Note: The real-time subscription will automatically update the UI
+      // No need to manually update the list here - the stream will handle it
 
       TSnackBar.showSuccess(message: 'Class updated successfully');
     } catch (e) {
-      //printnt('Failed to update class: $e');
+      print('Failed to update class: $e');
       TSnackBar.showError(message: 'Failed to update class: ${e.toString()}');
     } finally {
       isLoading.value = false;
@@ -235,26 +469,54 @@ class ClassController extends GetxController {
   // Delete a class
   Future<void> deleteClass(String classId) async {
     try {
-      //printnt('Deleting class with ID: $classId');
+      print('Deleting class with ID: $classId');
       isLoading.value = true;
 
-      // First delete related records (like students, attendance, etc.)
-      await Supabase.instance.client
-          .from('class_students')
-          .delete()
-          .eq('class_id', classId);
+      await classService.deleteClass(classId);
 
-      // Then delete the class itself
-      await Supabase.instance.client.from('classes').delete().eq('id', classId);
-
-      // Remove the class from the local list
-      classes.removeWhere((c) => c.id == classId);
-
-      //printnt('Class deleted successfully');
+      print('Class deleted successfully');
+      
+      // Note: The real-time subscription will automatically update the UI
+      // No need to manually remove from the list here - the stream will handle it
+      
       TSnackBar.showSuccess(message: 'Class deleted successfully');
     } catch (e) {
-      //printnt('Failed to delete class: $e');
+      print('Failed to delete class: $e');
       TSnackBar.showError(message: 'Failed to delete class: ${e.toString()}');
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  // Delete selected classes
+  Future<void> deleteSelectedClasses() async {
+    try {
+      isLoading.value = true;
+
+      // Create a copy to avoid modification during iteration
+      final classesToDelete = Set<String>.from(selectedClassIds);
+
+      for (var classId in classesToDelete) {
+        await classService.deleteClass(classId);
+      }
+
+      // Exit selection mode
+      isSelectionMode.value = false;
+      clearSelections();
+
+      // Show success message
+      final count = classesToDelete.length;
+      TSnackBar.showSuccess(
+        message:
+            '$count ${count == 1 ? 'class' : 'classes'} deleted successfully',
+        title: 'Success',
+      );
+      
+      // Note: The real-time subscription will automatically update the UI
+      // No need to manually remove from the list here - the stream will handle it
+    } catch (e) {
+      print('Error deleting selected classes: $e');
+      TSnackBar.showError(message: 'Failed to delete classes: ${e.toString()}');
     } finally {
       isLoading.value = false;
     }
@@ -262,29 +524,36 @@ class ClassController extends GetxController {
 
   // Method to validate the class form
   bool validateClassForm() {
-    //printnt('Validating class form...');
+    print('Validating class form...');
     if (selectedSubjectId.value.isEmpty ||
         selectedCourseId.value.isEmpty ||
         semesterController.text.isEmpty) {
-      //printnt('Validation Failed');
+      print('Validation Failed');
       Get.snackbar(TTexts.error, TTexts.fillCorrect);
       return false;
     }
-    //printnt('Validation Passed');
+    print('Validation Passed');
     return true;
   }
 
   // Load a class for editing
   void loadClassForEditing(ClassModel classModel) {
-    //printnt('Loading class for editing: $classModel');
+    print('Loading class for editing: ${classModel.subjectName}');
     selectedSubjectId.value = classModel.subjectId;
     selectedCourseId.value = classModel.courseId;
     semesterController.text = classModel.semester.toString();
     sectionController.text = classModel.section ?? '';
+    
+    // Set selected objects
+    selectedSubject.value = subjects.firstWhereOrNull(
+      (subject) => subject.id == classModel.subjectId,
+    );
+    selectedCourse.value = courses.firstWhereOrNull(
+      (course) => course.id == classModel.courseId,
+    );
   }
 
-  // New methods for multi-select functionality
-
+  // Multi-select functionality methods
   void toggleSelectionMode(String? initialClassId) {
     isSelectionMode.value = !isSelectionMode.value;
 
@@ -308,7 +577,7 @@ class ClassController extends GetxController {
       selectedClassIds.add(classId);
     }
 
-    // "all selected" state
+    // Update "all selected" state
     isAllSelected.value = selectedClassIds.length == classes.length;
   }
 
@@ -332,33 +601,34 @@ class ClassController extends GetxController {
     isAllSelected.value = false;
   }
 
-  Future<void> deleteSelectedClasses() async {
+  // Get connection status string for UI display
+  String getConnectionStatus() {
+    if (!isRealtimeConnected.value) {
+      return 'Disconnected';
+    }
+    
+    final now = DateTime.now();
+    final difference = now.difference(lastUpdated.value);
+    
+    if (difference.inSeconds < 30) {
+      return 'Live';
+    } else if (difference.inSeconds < 60) {
+      return 'Updated ${difference.inSeconds}s ago';
+    } else if (difference.inMinutes < 60) {
+      return 'Updated ${difference.inMinutes}m ago';
+    } else {
+      return 'Updated ${difference.inHours}h ago';
+    }
+  }
+
+  // Reconnect to real-time service
+  Future<void> reconnectRealtime() async {
     try {
-      isLoading.value = true;
-
-      // Create a copy to avoid modification during iteration
-      final classesToDelete = Set<String>.from(selectedClassIds);
-
-      for (var classId in classesToDelete) {
-        await deleteClass(classId);
-      }
-
-      // Exit selection mode
-      isSelectionMode.value = false;
-      clearSelections();
-
-      // Show success message
-      final count = classesToDelete.length;
-      TSnackBar.showSuccess(
-        message:
-            '$count ${count == 1 ? 'class' : 'classes'} deleted successfully',
-        title: 'Success',
-      );
+      print('Attempting to reconnect to real-time service from ClassController...');
+      await realtimeService.forceReconnect();
+      print('Successfully reconnected to real-time service');
     } catch (e) {
-      //printnt('Error deleting selected classes: $e');
-      TSnackBar.showError(message: 'Failed to delete classes: ${e.toString()}');
-    } finally {
-      isLoading.value = false;
+      print('Failed to reconnect to real-time service: $e');
     }
   }
 }

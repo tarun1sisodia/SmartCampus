@@ -7,6 +7,7 @@ import '../../../models/class_model.dart';
 import '../../../services/class_service.dart';
 import '../../../services/attendance_service.dart';
 import '../../../services/course_service.dart';
+import '../../../services/realtime_service.dart';
 import '../../../services/subject_service.dart';
 import '../../../common/utils/helpers/snackbar_helper.dart';
 import '../../../services/auth_service.dart';
@@ -20,6 +21,8 @@ class DashboardController extends GetxController {
   final classService = ClassService();
   final courseService = CourseService();
   final biometricAuthService = Get.put(BiometricAuthService());
+  // Get RealtimeService instance
+  late final RealtimeService realtimeService;
 
   final isLoading = false.obs;
   final classes = <ClassModel>[].obs;
@@ -27,6 +30,10 @@ class DashboardController extends GetxController {
   final totalStudents = 0.obs;
   final averageAttendance = 0.0.obs;
   final isAuthenticated = false.obs;
+
+  // Real-time connection status
+  final isRealtimeConnected = true.obs;
+  final lastUpdated = DateTime.now().obs;
 
   final List<StreamSubscription> _subscriptions = [];
 
@@ -45,9 +52,9 @@ class DashboardController extends GetxController {
   void onInit() {
     super.onInit();
     //print('DashboardController initialized');
+    _initializeRealtimeService();
     checkBiometricAuthentication();
     initializeGreeting();
-    _setupRealtimeSubscriptions();
   }
 
   @override
@@ -57,6 +64,232 @@ class DashboardController extends GetxController {
       subscription.cancel();
     }
     super.onClose();
+  }
+
+  // Initialize the realtime service
+  void _initializeRealtimeService() {
+    try {
+      realtimeService = Get.find<RealtimeService>();
+      print('Found existing RealtimeService instance');
+    } catch (e) {
+      print('RealtimeService not found, creating new instance');
+      realtimeService = Get.put(RealtimeService());
+    }
+
+    _setupRealtimeSubscriptions();
+  }
+
+  // Set up real-time subscriptions
+  void _setupRealtimeSubscriptions() {
+    // Subscribe to classes stream
+    final classesSubscription = realtimeService.classesStream.listen(
+      (data) {
+        print('Real-time classes update in Dashboard: ${data.length} classes');
+        _handleClassesUpdate(data);
+        lastUpdated.value = DateTime.now();
+      },
+      onError: (error) {
+        print('Error in classes stream (Dashboard): $error');
+        isRealtimeConnected.value = false;
+      },
+    );
+
+    // Subscribe to students stream for total count updates
+    final studentsSubscription = realtimeService.studentsStream.listen(
+      (data) {
+        print(
+            'Real-time students update in Dashboard: ${data.length} students');
+        _updateTotalStudents();
+        lastUpdated.value = DateTime.now();
+      },
+      onError: (error) {
+        print('Error in students stream (Dashboard): $error');
+      },
+    );
+
+    // Subscribe to attendance stream for stats updates
+    final attendanceSubscription = realtimeService.attendanceStream.listen(
+      (data) {
+        print(
+            'Real-time attendance update in Dashboard: ${data.length} records');
+        _updateAttendanceStats();
+        lastUpdated.value = DateTime.now();
+      },
+      onError: (error) {
+        print('Error in attendance stream (Dashboard): $error');
+      },
+    );
+
+    // Monitor RealtimeService connection status
+    final connectionSubscription = realtimeService.isConnected.listen(
+      (isConnected) {
+        isRealtimeConnected.value = isConnected;
+        if (isConnected) {
+          print('Real-time connection restored in Dashboard');
+          // Refresh data when connection is restored
+          loadDashboardData();
+        } else {
+          print('Real-time connection lost in Dashboard');
+        }
+      },
+    );
+
+    _subscriptions.addAll([
+      classesSubscription,
+      studentsSubscription,
+      attendanceSubscription,
+      connectionSubscription,
+    ]);
+
+    isRealtimeConnected.value = realtimeService.isConnected.value;
+  }
+
+  // Handle real-time classes updates
+  void _handleClassesUpdate(List<Map<String, dynamic>> data) async {
+    try {
+      final currentUser = Supabase.instance.client.auth.currentUser;
+      if (currentUser == null) return;
+
+      // Filter classes for current teacher and convert to ClassModel
+      final teacherClasses = <ClassModel>[];
+
+      for (var classData in data) {
+        if (classData['teacher_id'] == currentUser.id) {
+          try {
+            // Fetch related subject and course data
+            final subjectData = await Supabase.instance.client
+                .from('subjects')
+                .select()
+                .eq('id', classData['subject_id'])
+                .single();
+
+            final courseData = await Supabase.instance.client
+                .from('courses')
+                .select()
+                .eq('id', classData['course_id'])
+                .single();
+
+            final classModel = ClassModel(
+              id: classData['id'],
+              teacherId: classData['teacher_id'],
+              subjectId: classData['subject_id'],
+              courseId: classData['course_id'],
+              semester: classData['semester'],
+              section: classData['section'],
+              subjectName: subjectData['name'],
+              courseName: courseData['name'],
+              createdAt: classData['created_at'] != null
+                  ? DateTime.parse(classData['created_at'])
+                  : null,
+              updatedAt: classData['updated_at'] != null
+                  ? DateTime.parse(classData['updated_at'])
+                  : null,
+            );
+
+            teacherClasses.add(classModel);
+          } catch (e) {
+            print(
+                'Error fetching related data for class ${classData['id']}: $e');
+          }
+        }
+      }
+
+      // Update classes list
+      classes.assignAll(teacherClasses);
+      totalClasses.value = teacherClasses.length;
+
+      // Update filtered classes based on current search
+      if (searchQuery.value.isNotEmpty) {
+        searchClasses(searchQuery.value);
+      } else {
+        filteredClasses.assignAll(teacherClasses);
+      }
+
+      // Update attendance stats for all classes
+      _updateAttendanceStats();
+
+      print(
+          'Dashboard classes updated via real-time: ${teacherClasses.length} classes');
+    } catch (e) {
+      print('Error handling classes update in Dashboard: $e');
+    }
+  }
+
+  // Update total students count
+  void _updateTotalStudents() async {
+    try {
+      int totalStudentsCount = 0;
+
+      for (var classModel in classes) {
+        final studentsCount = await _getStudentCountForClass(classModel.id);
+        totalStudentsCount += studentsCount;
+      }
+
+      totalStudents.value = totalStudentsCount;
+      print('Total students updated: $totalStudentsCount');
+    } catch (e) {
+      print('Error updating total students: $e');
+    }
+  }
+
+  // Update attendance statistics
+  void _updateAttendanceStats() async {
+    try {
+      classStats.clear();
+      double totalAttendancePercentage = 0.0;
+
+      for (var classModel in classes) {
+        final stats = await attendanceService.getAttendanceStatsForClass(
+          classModel.id,
+        );
+        classStats[classModel.id] = stats;
+
+        if (stats['totalSessions'] > 0) {
+          totalAttendancePercentage += stats['averageAttendance'] as double;
+        }
+      }
+
+      if (classes.isNotEmpty) {
+        averageAttendance.value = totalAttendancePercentage / classes.length;
+      } else {
+        averageAttendance.value = 0.0;
+      }
+
+      print('Attendance stats updated: ${averageAttendance.value}%');
+    } catch (e) {
+      print('Error updating attendance stats: $e');
+    }
+  }
+
+  // Get connection status string
+  String getConnectionStatus() {
+    if (!isRealtimeConnected.value) {
+      return 'Disconnected';
+    }
+
+    final now = DateTime.now();
+    final difference = now.difference(lastUpdated.value);
+
+    if (difference.inSeconds < 30) {
+      return 'Live';
+    } else if (difference.inSeconds < 60) {
+      return 'Updated ${difference.inSeconds}s ago';
+    } else if (difference.inMinutes < 60) {
+      return 'Updated ${difference.inMinutes}m ago';
+    } else {
+      return 'Updated ${difference.inHours}h ago';
+    }
+  }
+
+  // Reconnect to real-time service
+  Future<void> reconnectRealtime() async {
+    try {
+      print('Attempting to reconnect to real-time service from Dashboard...');
+      await realtimeService.forceReconnect();
+      print('Successfully reconnected to real-time service');
+    } catch (e) {
+      print('Failed to reconnect to real-time service: $e');
+    }
   }
 
   Future<void> checkBiometricAuthentication() async {
@@ -106,31 +339,6 @@ class DashboardController extends GetxController {
       isAuthenticated.value = true;
       loadDashboardData();
     }
-  }
-
-  void _setupRealtimeSubscriptions() {
-    final classesSubscription = Supabase.instance.client
-        .from('classes')
-        .stream(primaryKey: ['id']).listen((List<Map<String, dynamic>> data) {
-      loadDashboardData();
-    });
-    final recordsSubscription = Supabase.instance.client
-        .from('attendance_records')
-        .stream(primaryKey: ['id']).listen((List<Map<String, dynamic>> data) {
-      loadDashboardData();
-    });
-    final studentSubscription = Supabase.instance.client
-        .from('class_students')
-        .stream(primaryKey: ['id']).listen((List<Map<String, dynamic>> data) {
-      loadDashboardData();
-    });
-    final subjectSubscription = Supabase.instance.client
-        .from('subjects')
-        .stream(primaryKey: ['id']).listen((List<Map<String, dynamic>> data) {
-      // _getStudentCountForClass();
-    });
-    _subscriptions.addAll(
-        [classesSubscription, recordsSubscription, studentSubscription]);
   }
 
   // initialize greeting
