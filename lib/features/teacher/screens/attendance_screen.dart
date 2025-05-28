@@ -403,7 +403,10 @@ class AttendanceScreen extends StatelessWidget {
               //print('Canceling session creation');
               Get.back();
             },
-            child: const Text(TTexts.cancel),
+            child: const Text(TTexts.cancel,
+                style: TextStyle(
+                  color: TColors.red,
+                )),
           ),
           ElevatedButton(
             onPressed: () {

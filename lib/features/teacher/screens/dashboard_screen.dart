@@ -1,4 +1,5 @@
 import 'package:attedance__/features/teacher/screens/attendance_reports_screen.dart';
+import 'package:attedance__/features/teacher/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -42,7 +43,8 @@ class DashboardScreen extends StatelessWidget {
           if (!dashboardController.isAuthenticated.value &&
               dashboardController.biometricAuthService.isAvailable.value &&
               dashboardController
-                  .biometricAuthService.isBiometricEnabled.value) {
+                  .biometricAuthService.isBiometricEnabled.value &&
+              !dashboardController.splashAuthenticationCompleted.value) {
             // Return a stacked layout with a blurred background and auth prompt
             return Stack(
               children: [

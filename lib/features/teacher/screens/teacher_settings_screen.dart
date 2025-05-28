@@ -142,79 +142,19 @@ class TeacherSettingsScreen extends StatelessWidget {
                   title: 'Biometric Authentication',
                   icon: Icons.fingerprint,
                   dark: dark,
-                  /*   trailing: Obx(() {
+                  trailing: Obx(() {
                     final biometricService = Get.find<BiometricAuthService>();
-                    final biometricType =
-                        biometricService.getBiometricTypeString();
+
                     if (!biometricService.isAvailable.value) {
                       return const SizedBox.shrink();
                     }
+
                     return Switch(
                       value: biometricService.isBiometricEnabled.value,
-                      onChanged: (value) async {
-                        if (value) {
-                          final authenticated =
-                              await biometricService.authenticateWithBiometrics(
-                            customReason:
-                                'Authenticate to enable $biometricType security',
-                          );
-                          if (authenticated) {
-                            await biometricService.saveBiometricSettings(true);
-                            Get.snackbar(
-                              'Security Enabled',
-                              '$biometricType authentication has been enabled',
-                              snackPosition: SnackPosition.BOTTOM,
-                            );
-                          }
-                        } else {
-                          await biometricService.saveBiometricSettings(false);
-                          Get.snackbar(
-                            'Security Disabled',
-                            '$biometricType authentication has been disabled',
-                            snackPosition: SnackPosition.BOTTOM,
-                          );
-                        }
-                      },
+                      onChanged: (value) => controller.toggleBiometric(value),
                       activeColor: dark ? TColors.yellow : TColors.primary,
                     );
                   }),
-                 */
-                  onTap: () async {
-                    final biometricService = Get.find<BiometricAuthService>();
-                    if (!biometricService.isAvailable.value) {
-                      Get.snackbar(
-                        'Not Available',
-                        'Biometric authentication is not available on this device',
-                        snackPosition: SnackPosition.BOTTOM,
-                      );
-                      return;
-                    }
-                    final newValue = !biometricService.isBiometricEnabled.value;
-                    final biometricType =
-                        biometricService.getBiometricTypeString();
-                    if (newValue) {
-                      final authenticated =
-                          await biometricService.authenticateWithBiometrics(
-                        customReason:
-                            'Authenticate to enable $biometricType security',
-                      );
-                      if (authenticated) {
-                        await biometricService.saveBiometricSettings(true);
-                        Get.snackbar(
-                          'Security Enabled',
-                          '$biometricType authentication has been enabled',
-                          snackPosition: SnackPosition.BOTTOM,
-                        );
-                      }
-                    } else {
-                      await biometricService.saveBiometricSettings(false);
-                      Get.snackbar(
-                        'Security Disabled',
-                        '$biometricType authentication has been disabled',
-                        snackPosition: SnackPosition.BOTTOM,
-                      );
-                    }
-                  },
                 ),
                 _buildProfileMenuItem(
                   title: 'Storage & Data',
@@ -486,7 +426,7 @@ class TeacherSettingsScreen extends StatelessWidget {
                   dark: dark,
                   onTap: () {
                     //print('Navigating to Privacy Policy');
-                    // Implement privacy policy
+                    Get.toNamed(AppRoutes.privacyPolicy);
                   },
                 ),
                 _buildProfileMenuItem(

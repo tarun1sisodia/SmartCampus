@@ -30,6 +30,8 @@ class DashboardController extends GetxController {
   final totalStudents = 0.obs;
   final averageAttendance = 0.0.obs;
   final isAuthenticated = false.obs;
+  //property to track if splash authentication was completed
+  final RxBool splashAuthenticationCompleted = RxBool(false);
 
   // Real-time connection status
   final isRealtimeConnected = true.obs;

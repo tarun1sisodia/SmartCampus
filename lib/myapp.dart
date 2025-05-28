@@ -1,5 +1,6 @@
 import 'package:attedance__/app/theme/custom_themes/checkbox_theme.dart';
 import 'package:attedance__/app/theme/custom_themes/elevated_button_theme.dart';
+import 'package:attedance__/app/theme/theme.dart';
 
 import '../../services/language_service.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
       locale: languageService.currentLocale.value,
       fallbackLocale: const Locale('en', 'US'),
       // Theme Data is for the UI in Light theme
-      theme: ThemeData(
+      /*theme: ThemeData(
         primarySwatch: Colors.blue,
         brightness: Brightness.light,
         scaffoldBackgroundColor:
@@ -59,7 +60,12 @@ class MyApp extends StatelessWidget {
           thickness: 1.0,
         ),
       ),
+      */
+      theme: TAppTheme.lightTheme,
+      darkTheme: TAppTheme.darkTheme,
       themeMode: ThemeMode.system, // Respects system theme setting
+
+
       debugShowCheckedModeBanner: false, // Remove debug banner from UI
       // Set the splash screen as the initial route
       initialRoute: AppRoutes.splash,

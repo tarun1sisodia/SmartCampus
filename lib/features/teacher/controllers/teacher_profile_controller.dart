@@ -12,6 +12,7 @@ import '../../../app/routes/app_routes.dart';
 import '../../../common/utils/helpers/snackbar_helper.dart';
 import '../../../models/user_model.dart';
 import '../../../services/attendance_service.dart';
+import '../../../services/auth_service.dart';
 import '../../../services/class_service.dart';
 import '../screens/profile_image_view_screen.dart';
 
@@ -225,6 +226,45 @@ class TeacherProfileController extends GetxController {
     if (isEditMode.value) {
       nameController.text = user.value?.name ?? '';
       phoneController.text = user.value?.phone ?? '';
+    }
+  }
+
+// this function to your TeacherProfileController class
+  Future<void> toggleBiometric(bool value) async {
+    try {
+      final biometricService = Get.find<BiometricAuthService>();
+      final biometricType = biometricService.getBiometricTypeString();
+
+      if (!biometricService.isAvailable.value) {
+        TSnackBar.showError(
+          message: 'Biometric authentication is not available on this device',
+        );
+        return;
+      }
+
+      if (value) {
+        // Enable biometric authentication
+        final authenticated = await biometricService.authenticateWithBiometrics(
+          customReason: 'Authenticate to enable $biometricType security',
+        );
+
+        if (authenticated) {
+          await biometricService.saveBiometricSettings(true);
+          TSnackBar.showSuccess(
+            message: '$biometricType authentication has been enabled',
+          );
+        }
+      } else {
+        // Disable biometric authentication
+        await biometricService.saveBiometricSettings(false);
+        TSnackBar.showSuccess(
+          message: '$biometricType authentication has been disabled',
+        );
+      }
+    } catch (e) {
+      TSnackBar.showError(
+        message: 'Failed to update biometric settings: ${e.toString()}',
+      );
     }
   }
 
