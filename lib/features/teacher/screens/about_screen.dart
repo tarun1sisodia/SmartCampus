@@ -301,74 +301,9 @@ class AboutScreen extends StatelessWidget {
             ),
             const SizedBox(height: TSizes.spaceBtwSections),
 
-            // Legal info
-            Text(
-              'Legal',
-              style: Theme.of(
-                context,
-              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: TSizes.spaceBtwItems),
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const LegalScreen(
-                      initialSection: 'privacy_policy',
-                    ),
-                  ),
-                );
-              },
-              child: Text(
-                'Privacy Policy',
-                style: TextStyle(
-                  color: dark ? TColors.yellow : TColors.primary,
-                ),
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const LegalScreen(
-                      initialSection: 'terms_of_service',
-                    ),
-                  ),
-                );
-              },
-              child: Text(
-                'Terms of Service',
-                style: TextStyle(
-                  color: dark ? TColors.yellow : TColors.primary,
-                ),
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const LegalScreen(
-                      initialSection: 'open_source_licenses',
-                    ),
-                  ),
-                );
-              },
-              child: Text(
-                'Open Source Licenses',
-                style: TextStyle(
-                  color: dark ? TColors.yellow : TColors.primary,
-                ),
-              ),
-            ),
-            const SizedBox(height: TSizes.spaceBtwSections),
-
             // Copyright
             Text(
-              '© 2025 Attendance App. All rights reserved.',
+              '© 2025 SmartCampus. All rights reserved.',
               style: Theme.of(context).textTheme.bodySmall,
               textAlign: TextAlign.center,
             ),

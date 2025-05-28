@@ -58,14 +58,14 @@ final ThemeData appTheme = ThemeData(
   scaffoldBackgroundColor: TColors.backgroundLight,
 
   // Card theme (Law of Common Region)
-  cardTheme: CardTheme(
-    color: Colors.white,
-    elevation: AppDimensions.cardElevation,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(AppDimensions.cardRadius),
-    ),
-    margin: EdgeInsets.all(AppDimensions.spacingSmall),
-  ),
+  // cardTheme: CardTheme(
+  //   color: Colors.white,
+  //   elevation: AppDimensions.cardElevation,
+  //   shape: RoundedRectangleBorder(
+  //     borderRadius: BorderRadius.circular(AppDimensions.cardRadius),
+  //   ),
+  //   margin: EdgeInsets.all(AppDimensions.spacingSmall),
+  // ),
 
   // AppBar theme (Jakob's Law)
   appBarTheme: AppBarTheme(

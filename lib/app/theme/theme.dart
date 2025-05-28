@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import '../../common/utils/constants/colors.dart';
 import 'custom_themes/appbar_theme.dart';
 import 'custom_themes/bottom_sheet_theme.dart';
+import 'custom_themes/card_theme.dart';
 import 'custom_themes/checkbox_theme.dart';
 import 'custom_themes/chip_theme.dart';
 import 'custom_themes/elevated_button_theme.dart';
 import 'custom_themes/searchbar_theme.dart';
 import 'custom_themes/text_field_theme.dart';
 import 'custom_themes/text_theme.dart';
-import 'custom_themes/card_theme.dart'; // New file to create
 
 // TAppTheme implements several UX laws:
 // - Aesthetic-Usability Effect: Consistent, pleasing visual design
@@ -40,7 +40,7 @@ class TAppTheme {
     chipTheme: TChipTheme.lightChipThemeData,
     elevatedButtonTheme: TElevatedButtonTheme.lightElevatedButton,
     searchBarTheme: TSearchbarTheme.lightSearchBar,
-    cardTheme: TCardTheme.lightCardTheme, // New theme to add
+    // cardTheme: TCardTheme.lightCardTheme,
     iconTheme: IconThemeData(color: TColors.dark),
 
     // Implementing Fitts's Law with appropriate sizing
@@ -60,7 +60,7 @@ class TAppTheme {
     fontFamily: 'Poppins',
     brightness: Brightness.dark,
     primaryColor: Colors.blue,
-    scaffoldBackgroundColor: TColors.dark,
+    scaffoldBackgroundColor: TColors.backgroundDark,
 
     visualDensity: VisualDensity.adaptivePlatformDensity,
 
@@ -73,7 +73,7 @@ class TAppTheme {
     chipTheme: TChipTheme.darkChipThemeData,
     elevatedButtonTheme: TElevatedButtonTheme.darkElevatedButton,
     searchBarTheme: TSearchbarTheme.darkSearchBar,
-    cardTheme: TCardTheme.darkCardTheme, // New theme to add
+    // cardTheme: TCardTheme.darkCardTheme, // New theme to add
     iconTheme: IconThemeData(color: Colors.white),
 
     materialTapTargetSize: MaterialTapTargetSize.padded,

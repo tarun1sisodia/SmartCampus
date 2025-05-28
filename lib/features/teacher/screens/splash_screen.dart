@@ -13,6 +13,8 @@ import '../../../services/storage_service.dart';
 import '../../authentication/controllers/supabase_auth_controller.dart';
 import 'dart:io';
 
+import '../controllers/dashboard_controller.dart';
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -66,6 +68,9 @@ class _SplashScreenState extends State<SplashScreen>
     final storageService = Get.find<StorageService>();
     final biometricAuthService = Get.put(BiometricAuthService());
 
+    // Get dashboard controller and mark that splash authentication is being handled
+    final dashboardController = Get.put(DashboardController());
+
     // Check onboarding status first
     final bool onboardingCompleted = storageService.getOnboardingStatus();
     if (!onboardingCompleted) {
@@ -80,6 +85,7 @@ class _SplashScreenState extends State<SplashScreen>
       // User is authenticated
       if (Platform.isLinux) {
         // Bypass biometric authentication for Linux
+        dashboardController.splashAuthenticationCompleted.value = true;
         Get.offAllNamed(AppRoutes.home);
       } else if (Platform.isAndroid || Platform.isIOS) {
         // Check if biometric authentication is enabled
@@ -93,6 +99,10 @@ class _SplashScreenState extends State<SplashScreen>
               await biometricAuthService.authenticateWithBiometrics(
                   customReason: 'To Access the Smart Campus app');
           if (authenticated) {
+            // Mark authentication as completed in splash
+            dashboardController.isAuthenticated.value = true;
+            dashboardController.splashAuthenticationCompleted.value = true;
+
             // Use Get.offAll instead of Get.offAllNamed to bypass middleware
             Get.offAll(
               () => NavigationMenu(),
@@ -107,6 +117,8 @@ class _SplashScreenState extends State<SplashScreen>
           }
         } else {
           // No biometric required, proceed to home
+          dashboardController.splashAuthenticationCompleted.value = true;
+
           // Use Get.offAll instead of Get.offAllNamed to bypass middleware
           Get.offAll(
             () => NavigationMenu(),

@@ -16,6 +16,7 @@ import '../../features/teacher/screens/carousel_attendance_screen.dart';
 import '../../features/teacher/screens/feedback_screen.dart';
 import '../../features/teacher/screens/help_screen.dart';
 import '../../features/teacher/screens/import_data_screen.dart';
+import '../../features/teacher/screens/legal_screen.dart';
 import '../../features/teacher/screens/reports_screen.dart';
 import '../../features/teacher/screens/splash_screen.dart';
 import '../../features/teacher/screens/student_detail_screen.dart';
@@ -54,6 +55,7 @@ class AppRoutes {
   static const String allSessions = '/all-sessions';
   static const String biometricVerification = '/biometric-verification';
   static const String createClass = '/create-class';
+  static const String privacyPolicy = '/privacy-policy';
 
   // Get all application routes
   static List<GetPage> routes = [
@@ -176,6 +178,11 @@ class AppRoutes {
       transition: Transition.rightToLeft,
     ),
     GetPage(
+        name: privacyPolicy,
+        page: () {
+          return const LegalScreen(initialSection: 'privacy_policy');
+        }),
+    GetPage(
       name: settings,
       page: () {
         //print('Navigating to Settings Screen');
@@ -200,7 +207,7 @@ class AppRoutes {
         //print('Navigating to Feedback Screen');
         return FeedbackScreen();
       },
-      binding: HomeBinding(),
+      binding: SettingsBinding(),
       transition: Transition.rightToLeft,
     ),
     GetPage(
