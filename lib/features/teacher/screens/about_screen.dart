@@ -6,7 +6,6 @@ import '../../../common/utils/constants/sized.dart';
 import '../../../common/utils/helpers/helper_function.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'legal_screen.dart';
 
 class _AnimatedBorderPainter extends CustomPainter {
   final double progress;
