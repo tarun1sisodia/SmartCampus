@@ -8,8 +8,10 @@ import 'app/bindings/app_bindings.dart';
 import 'common/utils/constants/colors.dart';
 import 'common/utils/local_storage/storage_utility.dart';
 import 'myapp.dart';
+import 'services/database_helper.dart';
 import 'services/google_sign_in_service.dart';
 import 'services/language_service.dart';
+import 'services/local_storage_service.dart';
 
 // The main entry point of the app.
 //
@@ -30,6 +32,13 @@ import 'services/language_service.dart';
 // Handles auto-login gracefully, continuing app startup even if login fails.
 Future<void> main() async {
   try {
+    // Initialize database factory for SQLite
+    if (DatabaseHelper.isSupported) {
+      DatabaseHelper.initializeDatabaseFactory();
+      print('Database factory initialized successfully');
+    } else {
+      print('SQLite not supported on this platform');
+    }
     //print('Starting app initialization...');
     // Intializing the binding for the app.
     WidgetsFlutterBinding.ensureInitialized();
@@ -48,18 +57,10 @@ Future<void> main() async {
     //print('Supabase initialized.');
 
     // Initialize services
-    //print('Initializing services...');
-    await Get.putAsync(() => StorageService().init());
-    //print('StorageService initialized.');
-    await Get.putAsync(() => FeedbackService().init());
-    //print('FeedbackService initialized.');
-    await Get.putAsync(() => LanguageService().init());
-    //print('LanguageService initialized.');
-    await Get.putAsync(() => GoogleSignInService().init());
-
+    await _initializeServices();
     // Initialize global bindings
     //print('calling the file to initialize global bindings...');
-    AppBindings.initGlobalBindings();
+
     //print('Global bindings initialized.');
 
     // Load saved theme preference
@@ -78,6 +79,27 @@ Future<void> main() async {
     //print('Stack trace: $stackTrace');
     // Still try to run the app with minimal functionality
     runApp(FallbackErrorApp(error: e.toString()));
+  }
+}
+
+Future<void> _initializeServices() async {
+  try {
+    //print('Initializing services...');
+    await Get.putAsync(() => StorageService().init());
+    //print('StorageService initialized.');
+    await Get.putAsync(() => FeedbackService().init());
+    //print('FeedbackService initialized.');
+    await Get.putAsync(() => LanguageService().init());
+    //print('LanguageService initialized.');
+    await Get.putAsync(() => GoogleSignInService().init());
+    await Get.putAsync(() => LocalStorageService().init(), permanent: true);
+
+    // Initialize app bindings
+    AppBindings.initGlobalBindings();
+    print('App bindings initialized');
+  } catch (e) {
+    print('Error initializing services: $e');
+    rethrow;
   }
 }
 
