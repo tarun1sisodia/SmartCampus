@@ -1,5 +1,4 @@
 import 'package:attedance__/features/teacher/screens/attendance_reports_screen.dart';
-import 'package:attedance__/features/teacher/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -7,6 +6,7 @@ import 'package:local_auth/local_auth.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../common/utils/constants/image_strings.dart';
+import '../../../common/widgets/connection_status_widget.dart';
 import '../controllers/dashboard_controller.dart';
 import '../../../common/utils/constants/colors.dart';
 import '../../../common/utils/constants/sized.dart';
@@ -430,6 +430,7 @@ class DashboardScreen extends StatelessWidget {
               sliver: SliverList(
                 delegate: SliverChildListDelegate(
                   [
+                    const ConnectionStatusWidget(),
                     // Add biometric status indicator if available
                     if (dashboardController
                         .biometricAuthService.isAvailable.value)

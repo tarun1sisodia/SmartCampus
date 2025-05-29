@@ -2,7 +2,7 @@ name: attedance__
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -39,7 +39,7 @@ dependencies:
   get: ^4.7.2
   iconsax: ^0.0.8
   smooth_page_indicator: ^1.2.1
-  provider: ^6.1.5
+  # provider: ^6.1.5
   logger: ^2.5.0
   intl: ^0.20.2
   get_storage: ^2.1.1
@@ -70,6 +70,8 @@ dependencies:
   google_sign_in: ^6.3.0
   local_auth: ^2.3.0
   shared_preferences: ^2.5.3
+  sqflite: ^2.4.2
+  sqflite_common_ffi: ^2.3.5
 
 dependency_overrides:
   image: ^4.2.0
@@ -89,7 +91,6 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
