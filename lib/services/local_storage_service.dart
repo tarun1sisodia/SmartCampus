@@ -96,6 +96,7 @@ class LocalStorageService extends GetxService {
       );
     } catch (e) {
       debugPrint('Error getting unsynced records from $tableName: $e');
+      Get.snackbar('Error getting unsynced records from ', '$tableName: $e');
       return [];
     }
   }
@@ -115,6 +116,7 @@ class LocalStorageService extends GetxService {
       return result > 0;
     } catch (e) {
       debugPrint('Error marking record as synced in $tableName: $e');
+      Get.snackbar('Error marking record as synced in', '$tableName: $e');
       return false;
     }
   }
@@ -139,6 +141,8 @@ class LocalStorageService extends GetxService {
       return true;
     } catch (e) {
       debugPrint('Error marking multiple records as synced in $tableName: $e');
+      Get.snackbar(
+          'Error marking multiple records as synced in', '$tableName: $e');
       return false;
     }
   }
@@ -157,6 +161,7 @@ class LocalStorageService extends GetxService {
       );
     } catch (e) {
       debugPrint('Error getting conflicted records from $tableName: $e');
+      Get.snackbar('Error getting conflicted records from', '$tableName: $e');
       return [];
     }
   }
@@ -181,6 +186,7 @@ class LocalStorageService extends GetxService {
       return true;
     } catch (e) {
       debugPrint('Error clearing unsynced data: $e');
+      Get.snackbar('Error clearing unsynced data', '$e');
       return false;
     }
   }
