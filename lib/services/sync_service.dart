@@ -76,22 +76,22 @@ class SyncService extends GetxService {
       }
 
       // Step 1: Download fresh data from server (20%)
-      syncStatus.value = 'Downloading data...';
+      syncStatus.value = 'Downloading data..20%.';
       await _downloadDataFromServer();
       syncProgress.value = 0.2;
 
       // Step 2: Upload pending local changes (40%)
-      syncStatus.value = 'Uploading local changes...';
+      syncStatus.value = 'Uploading local changes...40%';
       await _uploadPendingChanges();
       syncProgress.value = 0.6;
 
       // Step 3: Resolve conflicts (20%)
-      syncStatus.value = 'Resolving conflicts...';
+      syncStatus.value = 'Resolving conflicts...20%';
       await _resolveConflicts();
       syncProgress.value = 0.8;
 
       // Step 4: Clean up and finalize (20%)
-      syncStatus.value = 'Finalizing...';
+      syncStatus.value = 'Finalizing...20%';
       await _cleanupSyncData();
       syncProgress.value = 1.0;
 
