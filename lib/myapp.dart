@@ -1,5 +1,3 @@
-import 'package:attedance__/app/theme/custom_themes/checkbox_theme.dart';
-import 'package:attedance__/app/theme/custom_themes/elevated_button_theme.dart';
 import 'package:attedance__/app/theme/theme.dart';
 
 import '../../services/language_service.dart';
@@ -7,12 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'app/routes/app_routes.dart';
-import 'app/theme/custom_themes/bottom_sheet_theme.dart';
-import 'app/theme/custom_themes/card_theme.dart';
-import 'app/theme/custom_themes/searchbar_theme.dart';
-import 'app/theme/custom_themes/text_field_theme.dart';
 import 'common/translations/app_translations.dart';
-import 'common/utils/constants/colors.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
