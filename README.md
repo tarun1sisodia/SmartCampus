@@ -1,6 +1,6 @@
 # SmartCampus - An Attendance Management System
 
-## Project Overview
+## Project Overview-https://www.canva.com/design/DAGojAnLx0M/dpjM3UDwcl3N6ZpdzAaeYg/view?utm_content=DAGojAnLx0M&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h3436bd7f63
 
 ### Project Details
 
