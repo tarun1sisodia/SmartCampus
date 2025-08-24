@@ -5,13 +5,7 @@
 ### Project Details
 
 - **Title**: SmartCampus - An Attendance Management System
-- **Student**: Tarun Sisodia (Roll No: 22005550\*\*\*8)
-- **Degree**: Bachelor of Computer Applications (BCA)
-- **University**: Dr. Bhimrao Ambedkar University, Agra (University Computer Centre, IBS)
-- **Supervisors**:
-  - Er. Sonal Pandey (Internal Supervisor)
-  - Prof. A.K. Gupta (Head of the Department)
-
+  
 ### Abstract
 
 SmartCampus is a cross-platform web and mobile application designed to streamline attendance tracking in educational institutions. It features two main interfaces:
