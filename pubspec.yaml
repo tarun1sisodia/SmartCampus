@@ -65,7 +65,7 @@ dependencies:
   lottie: 3.3.1
   crypto: ^3.0.6
   cached_network_image: ^3.4.1
-  url_launcher: ^6.3.1
+  url_launcher: ^6.3.2
   shimmer: ^3.0.0
   google_sign_in: ^6.3.0
   local_auth: ^2.3.0
