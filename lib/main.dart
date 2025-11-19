@@ -1,6 +1,7 @@
 import '../../services/feedback_service.dart';
 import '../../services/storage_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:get_storage/get_storage.dart';
@@ -47,12 +48,14 @@ Future<void> main() async {
     await GetStorage.init();
     //print('GetStorage initialized.');
 
-    // Initialize Supabase by directly providing the url and key.
+    // Load environment variables from .env file
+    await dotenv.load(fileName: ".env");
+
+    // Initialize Supabase with credentials from environment variables.
     //print('Initializing Supabase...');
     await Supabase.initialize(
-      url: 'https://aytvjwwnuyebddcwleut.supabase.co',
-      anonKey:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF5dHZqd3dudXllYmRkY3dsZXV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDUxNDI3MTIsImV4cCI6MjA2MDcxODcxMn0.rMubCVjGFTLo7JA_zm2FA62jK5Bzu__xw9QDqWVEYf8',
+      url: dotenv.env['SUPABASE_URL']!,
+      anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
     );
     //print('Supabase initialized.');
 
