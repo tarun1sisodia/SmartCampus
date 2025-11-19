@@ -19,7 +19,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.17.0 <4.0.0"
+  sdk: ">=3.0.0 <4.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -30,24 +30,24 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  supabase_flutter: ^2.10.0
+  supabase_flutter: ^2.10.3
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
-  flutter_dotenv: ^5.2.1
+  flutter_dotenv: ^6.0.0
   get: ^4.7.2
   iconsax: ^0.0.8
   smooth_page_indicator: ^1.2.1
   # provider: ^6.1.5
-  logger: ^2.5.0
+  logger: ^2.6.2
   intl: ^0.20.2
   get_storage: ^2.1.1
   supabase: ^2.10.0
-  build_runner: ^2.9.0
-  image_picker: ^1.1.2
+  build_runner: ^2.10.4
+  image_picker: ^1.2.1
   path: ^1.9.1
-  share_plus: ^12.0.0
+  share_plus: ^12.0.1
   path_provider: ^2.1.5
   slideable: ^0.0.2
   page_indicator: ^0.4.1
@@ -56,22 +56,22 @@ dependencies:
   csv: ^6.0.0
   table_calendar: ^3.2.0
   carousel_slider: ^5.1.1
-  flutter_launcher_icons: ^0.14.3
-  shorebird_code_push: ^2.0.4
+  flutter_launcher_icons: ^0.14.4
+  shorebird_code_push: ^2.0.5
   pdf: ^3.7.0
-  file_picker: ^10.3.3
-  universal_html: ^2.2.4
-  permission_handler: ^12.0.0+1
-  lottie: 3.3.1
-  crypto: ^3.0.6
+  file_picker: ^10.3.6
+  universal_html: ^2.3.0
+  permission_handler: ^12.0.1
+  lottie: ^3.3.2
+  crypto: ^3.0.7
   cached_network_image: ^3.4.1
   url_launcher: ^6.3.2
   shimmer: ^3.0.0
-  google_sign_in: ^6.3.0
-  local_auth: ^2.3.0
+  google_sign_in: ^7.2.0
+  local_auth: ^3.0.0
   shared_preferences: ^2.5.3
   sqflite: ^2.4.2
-  sqflite_common_ffi: ^2.3.5
+  sqflite_common_ffi: ^2.4.0
 
 dependency_overrides:
   image: ^4.2.0

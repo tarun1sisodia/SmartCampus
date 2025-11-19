@@ -3,10 +3,13 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class GoogleSignInService extends GetxService {
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
   final supabase = Supabase.instance.client;
 
   Future<GoogleSignInService> init() async {
+    await _googleSignIn.initialize(
+      hostedDomain: '',
+    );
     return this;
   }
 
@@ -17,14 +20,12 @@ class GoogleSignInService extends GetxService {
       if (googleUser == null) return null;
 
       // Obtain auth details from the request
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth = googleUser.authentication;
 
       // Create a new credential for Supabase
       final AuthResponse res = await supabase.auth.signInWithIdToken(
         provider: OAuthProvider.google,
         idToken: googleAuth.idToken!,
-        accessToken: googleAuth.accessToken,
       );
 
       return res.user;

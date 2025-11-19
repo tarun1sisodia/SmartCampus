@@ -99,7 +99,7 @@ class CreateClassScreen extends StatelessWidget {
                           onChanged: (value) {
                             //print('Selected course: $value');
                             classController.selectedCourse.value =
-                                value as CourseModel?;
+                                value;
                           },
                         ),
                         const SizedBox(height: TSizes.spaceBtwInputFields),
