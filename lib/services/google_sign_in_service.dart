@@ -16,8 +16,7 @@ class GoogleSignInService extends GetxService {
   Future<User?> signInWithGoogle() async {
     try {
       // Trigger the Google Sign-In flow
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-      if (googleUser == null) return null;
+      final GoogleSignInAccount googleUser = await _googleSignIn.authenticate();
 
       // Obtain auth details from the request
       final GoogleSignInAuthentication googleAuth = googleUser.authentication;
