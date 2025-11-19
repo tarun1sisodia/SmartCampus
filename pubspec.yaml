@@ -43,7 +43,7 @@ dependencies:
   logger: ^2.5.0
   intl: ^0.20.2
   get_storage: ^2.1.1
-  supabase: ^2.7.0
+  supabase: ^2.10.0
   build_runner: ^2.9.0
   image_picker: ^1.1.2
   path: ^1.9.1
