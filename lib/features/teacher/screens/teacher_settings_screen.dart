@@ -71,7 +71,7 @@ class TeacherSettingsScreen extends StatelessWidget {
                     return Switch(
                       value: controller.emailNotifications.value,
                       onChanged: controller.toggleEmailNotifications,
-                      activeColor: dark ? TColors.yellow : TColors.primary,
+                      activeThumbColor: dark ? TColors.yellow : TColors.primary,
                     );
                   }),
                 ),
@@ -95,7 +95,7 @@ class TeacherSettingsScreen extends StatelessWidget {
                       //print('Dark Mode toggled');
                       controller.toggleTheme();
                     },
-                    activeColor: dark ? TColors.yellow : TColors.primary,
+                    activeThumbColor: dark ? TColors.yellow : TColors.primary,
                   ),
                 ),
                 _buildProfileMenuItem(
@@ -152,7 +152,7 @@ class TeacherSettingsScreen extends StatelessWidget {
                     return Switch(
                       value: biometricService.isBiometricEnabled.value,
                       onChanged: (value) => controller.toggleBiometric(value),
-                      activeColor: dark ? TColors.yellow : TColors.primary,
+                      activeThumbColor: dark ? TColors.yellow : TColors.primary,
                     );
                   }),
                 ),

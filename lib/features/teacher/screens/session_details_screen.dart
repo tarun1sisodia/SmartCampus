@@ -532,7 +532,7 @@ class SessionDetailsScreen extends StatelessWidget {
                             onChanged: (value) {
                               controller.toggleAttendance(record.id, value);
                             },
-                            activeColor: Colors.green,
+                            activeThumbColor: Colors.green,
                           )
                         : null,
                   );

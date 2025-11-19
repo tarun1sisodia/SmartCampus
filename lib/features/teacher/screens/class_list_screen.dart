@@ -641,7 +641,7 @@ class ClassListScreen extends StatelessWidget {
                       ),
                     ),
                     isExpanded: true,
-                    value: classController.selectedSubject.value,
+                    initialValue: classController.selectedSubject.value,
                     items: classController.subjects.map((subject) {
                       return DropdownMenuItem(
                         value: subject,
@@ -672,7 +672,7 @@ class ClassListScreen extends StatelessWidget {
                       ),
                     ),
                     isExpanded: true,
-                    value: classController.selectedCourse.value,
+                    initialValue: classController.selectedCourse.value,
                     items: classController.courses.map((course) {
                       return DropdownMenuItem(
                         value: course,
@@ -685,7 +685,7 @@ class ClassListScreen extends StatelessWidget {
                     }).toList(),
                     onChanged: (value) {
                       classController.selectedCourse.value =
-                          value as CourseModel?;
+                          value;
                       if (value != null) {
                         classController.selectedCourseId.value = value.id;
                       }
