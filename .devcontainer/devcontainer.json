@@ -1,0 +1,24 @@
+{
+	"name": "SmartCampus Flutter Dev",
+	"build": {
+		"dockerfile": "../Dockerfile",
+		"context": ".."
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"Dart-Code.flutter",
+				"Dart-Code.dart-code",
+				"Nash.awesome-flutter-snippets",
+				"esbenp.prettier-vscode"
+			]
+		}
+	},
+	"remoteUser": "root",
+	"features": {
+		"ghcr.io/devcontainers/features/git:1": {}
+	},
+	"forwardPorts": [
+		3000
+	]
+}
