@@ -63,34 +63,84 @@
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Installation & Setup
 
-### 1. Clone the Repository
-```bash
-git clone https://github.com/tarun1sisodia/smartcampus.git
-cd smartcampus
-````
+### 🎯 Choose Your Setup Method
 
-### 2. Install Dependencies
+| Method | Time | Difficulty | Best For |
+|--------|------|------------|----------|
+| 🐳 **Docker** | 5 min | ⭐ Easy | Quick testing, deployment |
+| 🤖 **Automated** | 10 min | ⭐⭐ Medium | Local development |
+| 🔧 **Manual** | 15 min | ⭐⭐⭐ Advanced | Custom configurations |
 
-```bash
-flutter pub get
+📘 **New to Docker?** Check our [Quick Start Guide](./QUICKSTART.md)
+
+---
+
+### 🐳 Docker Setup (Recommended for quick start)
+
+Deploy SmartCampus quickly using Docker - no manual Flutter installation needed!
+
+1. **Setup environment file**
+   ```bash
+   cp .env.example .env
+   # Edit .env with your Supabase credentials
+   ```
+
+2. **Run with Docker Compose**
+   ```bash
+   docker-compose up -d smartcampus-web
+   ```
+
+3. **Access the application**
+   
+   Open browser at `http://localhost:8080`
+
+📘 **For detailed Docker instructions, deployment options, and troubleshooting, see [DOCKER.md](./DOCKER.md)**
+
+### 💻 Local Environment Setup
+
+#### Automated Setup
+
+**Windows**
+Run the batch script to set up your environment automatically:
+```cmd
+setup_env.bat
 ```
 
-### 3. Configure Supabase
-
-Create a file `lib/config.dart` and add your credentials:
-
-```dart
-const String supabaseUrl = "YOUR_SUPABASE_URL";
-const String supabaseKey = "YOUR_SUPABASE_KEY";
-```
-
-### 4. Run the App
-
+**Linux / macOS**
+Run the shell script to install dependencies and Flutter:
 ```bash
-flutter run
+chmod +x setup_env.sh
+./setup_env.sh
 ```
+
+#### Manual Setup
+
+If you prefer to set up manually or the scripts don't work for your OS:
+
+1. **Clone the Repository**
+   ```bash
+   git clone https://github.com/tarun1sisodia/smartcampus.git
+   cd smartcampus
+   ```
+
+2. **Install Dependencies**
+   ```bash
+   flutter pub get
+   ```
+
+3. **Configure Supabase**
+   Create a file `lib/config.dart` and add your credentials:
+   ```dart
+   const String supabaseUrl = "YOUR_SUPABASE_URL";
+   const String supabaseKey = "YOUR_SUPABASE_KEY";
+   ```
+
+4. **Run the App**
+   ```bash
+   flutter run
+   ```
 
 ---
 
