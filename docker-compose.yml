@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  smartcampus-web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    ports:
+      - "8080:8080"
+    environment:
+      - FLUTTER_WEB_PORT=8080
+    volumes:
+      - ./.env:/app/.env:ro
+    restart: unless-stopped
+    container_name: smartcampus-web
+
+  smartcampus-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/workspace
+      - flutter-pub-cache:/root/.pub-cache
+    environment:
+      - DISPLAY=${DISPLAY}
+    network_mode: host
+    stdin_open: true
+    tty: true
+    container_name: smartcampus-dev
+    profiles:
+      - dev
+
+volumes:
+  flutter-pub-cache:

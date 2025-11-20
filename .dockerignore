@@ -7,7 +7,7 @@
 .pub/
 build/
 
-# Android
+# Platform specific (keep for dev, ignore for web build)
 android/
 ios/
 linux/
@@ -17,16 +17,41 @@ windows/
 # Version control
 .git/
 .gitignore
+.github/
 
-# Environment variables
+# Environment variables (keep .env.example, ignore .env)
 .env
-.env.example
 
 # IDEs
 .idea/
 .vscode/
 *.iml
+.metadata
+.swift-version
 
-# Other
+# Documentation
 README.md
 LICENSE
+SECURITY.md
+DOCKER.md
+flutter_build_guide.md
+
+# Scripts
+setup_env.bat
+setup_env.sh
+docker-start.sh
+docker-start.bat
+
+# Test files
+test/
+
+# DevContainer
+.devcontainer/
+.dcignore
+
+# Other
+bundletool.jar
+bfg.jar
+imp_app.txt
+shorebird.yaml
+devtools_options.yaml
