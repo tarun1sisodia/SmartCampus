@@ -29,7 +29,9 @@ import '../middleware/auth_middleware.dart';
 
 // A class that manages all routes for the app
 class AppRoutes {
-  // Route names as constants to avoid typos
+  // Route names as constants to avoid typos 
+  // THis will be used throughout the app for navigation 
+  // To Create Api Endpoints 
   static const String splash = '/';
   static const String onboarding = '/onboarding';
   static const String login = '/login';
