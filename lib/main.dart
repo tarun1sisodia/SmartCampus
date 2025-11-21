@@ -54,8 +54,11 @@ Future<void> main() async {
     // Initialize Supabase with credentials from environment variables.
     //print('Initializing Supabase...');
     await Supabase.initialize(
-      url: dotenv.env['SUPABASE_URL']!,
-      anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
+      // url: dotenv.env['SUPABASE_URL']!,
+      // anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
+
+      url:"https://aytvjwwnuyebddcwleut.supabase.co",
+      anonKey:"REVOKED-BY-DEVELOPER"
     );
     //print('Supabase initialized.');
 

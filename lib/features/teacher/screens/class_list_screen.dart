@@ -6,7 +6,6 @@ import 'package:shimmer/shimmer.dart';
 import '../../../app/routes/app_routes.dart';
 import '../../../common/utils/constants/text_strings.dart';
 import '../../../models/class_model.dart';
-import '../../../models/course_model.dart';
 import '../../../models/subject_model.dart';
 import '../controllers/class_controller.dart';
 import '../../../common/utils/constants/colors.dart';
