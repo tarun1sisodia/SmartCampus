@@ -37,14 +37,16 @@ android {
     }
 
     signingConfigs {
-        create("release") {
-            try {
+        if (keystorePropertiesFile.exists() && 
+            keystoreProperties["keyAlias"] != null &&
+            keystoreProperties["keyPassword"] != null &&
+            keystoreProperties["storeFile"] != null &&
+            keystoreProperties["storePassword"] != null) {
+            create("release") {
                 keyAlias = keystoreProperties["keyAlias"] as String
                 keyPassword = keystoreProperties["keyPassword"] as String
                 storeFile = file(keystoreProperties["storeFile"] as String)
                 storePassword = keystoreProperties["storePassword"] as String
-            } catch (e: Exception) {
-                println("Signing config failed: ${e.message}")
             }
         }
     }
@@ -57,7 +59,13 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("release")
+            if (keystorePropertiesFile.exists() && 
+                keystoreProperties["keyAlias"] != null &&
+                keystoreProperties["keyPassword"] != null &&
+                keystoreProperties["storeFile"] != null &&
+                keystoreProperties["storePassword"] != null) {
+                signingConfig = signingConfigs.getByName("release")
+            }
         }
     }
 }
