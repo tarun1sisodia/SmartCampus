@@ -1,7 +1,6 @@
 import '../../services/feedback_service.dart';
 import '../../services/storage_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:get_storage/get_storage.dart';
@@ -48,17 +47,11 @@ Future<void> main() async {
     await GetStorage.init();
     //print('GetStorage initialized.');
 
-    // Load environment variables from .env file
-    await dotenv.load(fileName: ".env");
-
-    // Initialize Supabase with credentials from environment variables.
+    // Initialize Supabase
     //print('Initializing Supabase...');
     await Supabase.initialize(
-      // url: dotenv.env['SUPABASE_URL']!,
-      // anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
-
-      url:"https://aytvjwwnuyebddcwleut.supabase.co",
-      anonKey:"sb_publishable_NCx_2E5NbrhWZldHl4C6tw_a0yp-eyJ"
+      url: "https://aytvjwwnuyebddcwleut.supabase.co",
+      anonKey: "sb_publishable_NCx_2E5NbrhWZldHl4C6tw_a0yp-eyJ",
     );
     //print('Supabase initialized.');
 
@@ -133,7 +126,7 @@ class FallbackErrorApp extends StatelessWidget {
                 const SizedBox(height: 10),
                 Text(error, textAlign: TextAlign.center),
                 const SizedBox(height: 20),
-                const Text('Please contact support with this information.',
+                const Text('Please contact via github.com/tarunsisodia.',
                     textAlign: TextAlign.center),
               ],
             ),
