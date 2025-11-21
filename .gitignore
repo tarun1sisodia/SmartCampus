@@ -54,6 +54,11 @@ app.*.map.json
 # Environment variables
 .env
 
+# Signing
+android/key.properties
+**/*.jks
+**/*.keystore
+
 # AI Assistant Rules
 .clinerules/byterover-rules.md
 .kilocode/rules/byterover-rules.md
