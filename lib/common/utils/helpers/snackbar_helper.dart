@@ -69,6 +69,13 @@ class TSnackBar {
         break;
     }
 
+    // Check if Overlay is available
+    if (Get.overlayContext == null) {
+      debugPrint(
+          'Skipping snackbar: No Overlay widget found. Title: $title, Message: $message');
+      return;
+    }
+
     // Show the snackbar
     Get.snackbar(
       sourcePrefix + title,

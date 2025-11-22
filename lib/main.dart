@@ -83,15 +83,21 @@ Future<void> main() async {
 
 Future<void> _initializeServices() async {
   try {
-    //print('Initializing services...');
+    print('Initializing services...');
     await Get.putAsync(() => StorageService().init());
-    //print('StorageService initialized.');
+    print('StorageService initialized.');
     await Get.putAsync(() => FeedbackService().init());
-    //print('FeedbackService initialized.');
+    print('FeedbackService initialized.');
     await Get.putAsync(() => LanguageService().init());
-    //print('LanguageService initialized.');
-    await Get.putAsync(() => GoogleSignInService().init());
+    print('LanguageService initialized.');
+    try {
+      await Get.putAsync(() => GoogleSignInService().init());
+      print('GoogleSignInService initialized.');
+    } catch (e) {
+      print('GoogleSignInService not supported on this platform: $e');
+    }
     await Get.putAsync(() => LocalStorageService().init(), permanent: true);
+    print('LocalStorageService initialized.');
 
     // Initialize app bindings
     AppBindings.initGlobalBindings();
