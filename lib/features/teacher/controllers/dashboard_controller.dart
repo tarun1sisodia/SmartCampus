@@ -310,6 +310,13 @@ class DashboardController extends GetxController {
         loadDashboardData();
       } else {
         // If authentication fails, check if we should retry or redirect
+        if (Get.overlayContext == null) {
+          // If no overlay, just redirect to login or do nothing
+          final authController = Get.find<SupabaseAuthController>();
+          authController.signOut();
+          return;
+        }
+
         final shouldRetry = await Get.dialog<bool>(
               AlertDialog(
                 title: Text('Authentication Failed'),
