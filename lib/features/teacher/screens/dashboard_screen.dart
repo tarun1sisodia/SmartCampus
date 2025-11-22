@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-import 'package:shimmer/shimmer.dart';
+
 import '../../../common/utils/constants/image_strings.dart';
 import '../../../common/widgets/connection_status_widget.dart';
 import '../controllers/dashboard_controller.dart';
@@ -15,6 +15,10 @@ import '../controllers/teacher_profile_controller.dart';
 import 'class_list_screen.dart';
 import 'teacher_profile_screen.dart';
 import 'teacher_settings_screen.dart';
+
+import 'widgets/biometric_overlay.dart';
+import 'widgets/dashboard_shimmer.dart';
+import 'widgets/stat_card.dart';
 
 class DashboardScreen extends StatelessWidget {
   DashboardScreen({super.key}) {
@@ -54,85 +58,8 @@ class DashboardScreen extends StatelessWidget {
                   child: _buildDashboardContent(context, dark),
                 ),
                 // Authentication overlay
-                Center(
-                  child: Card(
-                    elevation: 8,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(TSizes.cardRadiusLg),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(TSizes.defaultSpace),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            dashboardController
-                                    .biometricAuthService.availableBiometrics
-                                    .contains(BiometricType.face)
-                                ? Icons.fingerprint_outlined
-                                : Icons.fingerprint,
-                            size: 64,
-                            color: dark ? TColors.yellow : TColors.primary,
-                          ),
-                          const SizedBox(height: TSizes.spaceBtwItems),
-                          Text(
-                            'Authentication Required',
-                            style: Theme.of(context).textTheme.titleLarge,
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: TSizes.spaceBtwItems / 2),
-                          Text(
-                            'Authenticate to access',
-                            style: Theme.of(context).textTheme.bodyMedium,
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: TSizes.spaceBtwItems),
-                          ElevatedButton.icon(
-                            onPressed: () async {
-                              await dashboardController
-                                  .authenticateWithBiometrics();
-                            },
-                            icon: Icon(
-                              dashboardController
-                                      .biometricAuthService.availableBiometrics
-                                      .contains(BiometricType.face)
-                                  ? Icons.fingerprint_outlined
-                                  : Icons.fingerprint,
-                              color: dark ? TColors.dark : Colors.white,
-                            ),
-                            label: Text(
-                              'Authenticate with ${dashboardController.biometricAuthService.getBiometricTypeString()}',
-                              style: TextStyle(
-                                color: dark ? TColors.dark : Colors.white,
-                              ),
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  dark ? TColors.yellow : TColors.primary,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: TSizes.defaultSpace,
-                                vertical: TSizes.md,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: TSizes.spaceBtwItems / 2),
-                          TextButton(
-                            onPressed: () {
-                              // Skip authentication for this session
-                              dashboardController.isAuthenticated.value = true;
-                            },
-                            child: Text(
-                              'Skip for now',
-                              style: TextStyle(
-                                color: dark ? TColors.yellow : TColors.primary,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+                BiometricOverlay(
+                    dashboardController: dashboardController, dark: dark),
               ],
             );
           }
@@ -148,224 +75,7 @@ class DashboardScreen extends StatelessWidget {
       //print('Dashboard state updated');
 
       if (dashboardController.isLoading.value) {
-        if (dashboardController.isLoading.value) {
-          return SafeArea(
-            child: SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              child: Padding(
-                padding: const EdgeInsets.all(TSizes.defaultSpace),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // App Bar shimmer
-                    Shimmer.fromColors(
-                      baseColor:
-                          dark ? TColors.darkerGrey : Colors.grey.shade300,
-                      highlightColor: dark
-                          ? TColors.yellow.withAlpha(128)
-                          : TColors.primary.withAlpha(128),
-                      child: Row(
-                        children: [
-                          // Profile image shimmer
-                          Container(
-                            width: 40,
-                            height: 40,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          // Title shimmer
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  height: 16,
-                                  width: 150,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                Container(
-                                  height: 12,
-                                  width: 100,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          // Action buttons shimmer
-                          Container(
-                            width: 40,
-                            height: 40,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Container(
-                            width: 40,
-                            height: 40,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    const SizedBox(height: TSizes.spaceBtwSections),
-
-                    // Search bar shimmer
-                    Shimmer.fromColors(
-                      baseColor:
-                          dark ? TColors.darkerGrey : Colors.grey.shade300,
-                      highlightColor: dark
-                          ? TColors.yellow.withAlpha(128)
-                          : TColors.primary.withAlpha(128),
-                      child: Container(
-                        height: 50,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius:
-                              BorderRadius.circular(TSizes.cardRadiusMd),
-                        ),
-                      ),
-                    ),
-
-                    const SizedBox(height: TSizes.spaceBtwSections),
-
-                    // Stats cards shimmer
-                    Shimmer.fromColors(
-                      baseColor:
-                          dark ? TColors.darkerGrey : Colors.grey.shade300,
-                      highlightColor: dark
-                          ? TColors.yellow.withAlpha(128)
-                          : TColors.primary.withAlpha(128),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Container(
-                              height: 120,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius:
-                                    BorderRadius.circular(TSizes.cardRadiusMd),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: TSizes.spaceBtwItems),
-                          Expanded(
-                            child: Container(
-                              height: 120,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius:
-                                    BorderRadius.circular(TSizes.cardRadiusMd),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    const SizedBox(height: TSizes.spaceBtwItems),
-
-                    // Attendance chart shimmer
-                    Shimmer.fromColors(
-                      baseColor:
-                          dark ? TColors.darkerGrey : Colors.grey.shade300,
-                      highlightColor: dark
-                          ? TColors.yellow.withAlpha(128)
-                          : TColors.primary.withAlpha(128),
-                      child: Container(
-                        height: 270,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius:
-                              BorderRadius.circular(TSizes.cardRadiusMd),
-                        ),
-                      ),
-                    ),
-
-                    const SizedBox(height: TSizes.spaceBtwSections),
-
-                    // Recent classes header shimmer
-                    Shimmer.fromColors(
-                      baseColor:
-                          dark ? TColors.darkerGrey : Colors.grey.shade300,
-                      highlightColor: dark
-                          ? TColors.yellow.withAlpha(128)
-                          : TColors.primary.withAlpha(128),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            height: 20,
-                            width: 120,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                          ),
-                          Container(
-                            height: 36,
-                            width: 80,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius:
-                                  BorderRadius.circular(TSizes.buttonRadius),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    const SizedBox(height: TSizes.spaceBtwItems),
-
-                    // Recent classes list shimmer
-                    Shimmer.fromColors(
-                      baseColor:
-                          dark ? TColors.darkerGrey : Colors.grey.shade300,
-                      highlightColor: dark
-                          ? TColors.yellow.withAlpha(128)
-                          : TColors.primary.withAlpha(128),
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: 3,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            height: 100,
-                            margin: const EdgeInsets.only(
-                              bottom: TSizes.spaceBtwItems,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius:
-                                  BorderRadius.circular(TSizes.cardRadiusMd),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        }
+        return DashboardShimmer(dark: dark);
       }
 
       if (dashboardController.classes.isEmpty) {
@@ -573,9 +283,8 @@ class DashboardScreen extends StatelessWidget {
                       () => SizedBox(
                         child: Row(
                           children: [
-                            _buildStatCard(
-                              context,
-                              dark,
+                            StatCard(
+                              dark: dark,
                               title: 'Classes',
                               value: dashboardController.totalClasses.value
                                   .toString(),
@@ -585,9 +294,8 @@ class DashboardScreen extends StatelessWidget {
                                   : TColors.cardGradient1.colors.first,
                             ),
                             const SizedBox(width: TSizes.spaceBtwItems),
-                            _buildStatCard(
-                              context,
-                              dark,
+                            StatCard(
+                              dark: dark,
                               title: 'Students',
                               value: dashboardController.totalStudents.value
                                   .toString(),
@@ -1126,59 +834,6 @@ class DashboardScreen extends StatelessWidget {
                 ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildStatCard(
-    BuildContext context,
-    bool dark, {
-    required String title,
-    required String value,
-    required IconData icon,
-    required Color color,
-  }) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.all(TSizes.md),
-        decoration: BoxDecoration(
-          gradient: dark ? TColors.cardGradient5 : TColors.cardGradient1,
-          borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withAlpha(26),
-              spreadRadius: 1,
-              blurRadius: 5,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, color: Colors.white, size: 32),
-            const SizedBox(height: TSizes.spaceBtwItems),
-            FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
-                value,
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Poppins',
-                      color: Colors.white,
-                    ),
-              ),
-            ),
-            const SizedBox(height: TSizes.spaceBtwItems / 2),
-            Text(
-              title,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.white,
-                  ),
-            ),
-          ],
         ),
       ),
     );

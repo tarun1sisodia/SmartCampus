@@ -63,6 +63,9 @@ class Login extends StatelessWidget {
                   width: TSizes.iconLg,
                   cacheWidth: TSizes.iconLg.toInt(),
                   cacheHeight: TSizes.iconLg.toInt(),
+                  errorBuilder: (context, error, stackTrace) {
+                    return const Icon(Icons.g_mobiledata, size: TSizes.iconLg);
+                  },
                 ),
                 label: Text(TTexts.orSignInWithGoogle),
                 onPressed: () async {

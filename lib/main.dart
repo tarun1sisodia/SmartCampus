@@ -1,7 +1,6 @@
 import '../../services/feedback_service.dart';
 import '../../services/storage_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:get_storage/get_storage.dart';
@@ -48,17 +47,11 @@ Future<void> main() async {
     await GetStorage.init();
     //print('GetStorage initialized.');
 
-    // Load environment variables from .env file
-    await dotenv.load(fileName: ".env");
-
-    // Initialize Supabase with credentials from environment variables.
+    // Initialize Supabase
     //print('Initializing Supabase...');
     await Supabase.initialize(
-      // url: dotenv.env['SUPABASE_URL']!,
-      // anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
-
-      url:"https://aytvjwwnuyebddcwleut.supabase.co",
-      anonKey:"sb_publishable_NCx_2E5NbrhWZldHl4C6tw_a0yp-eyJ"
+      url: "https://aytvjwwnuyebddcwleut.supabase.co",
+      anonKey: "sb_publishable_NCx_2E5NbrhWZldHl4C6tw_a0yp-eyJ",
     );
     //print('Supabase initialized.');
 
@@ -90,15 +83,21 @@ Future<void> main() async {
 
 Future<void> _initializeServices() async {
   try {
-    //print('Initializing services...');
+    print('Initializing services...');
     await Get.putAsync(() => StorageService().init());
-    //print('StorageService initialized.');
+    print('StorageService initialized.');
     await Get.putAsync(() => FeedbackService().init());
-    //print('FeedbackService initialized.');
+    print('FeedbackService initialized.');
     await Get.putAsync(() => LanguageService().init());
-    //print('LanguageService initialized.');
-    await Get.putAsync(() => GoogleSignInService().init());
+    print('LanguageService initialized.');
+    try {
+      await Get.putAsync(() => GoogleSignInService().init());
+      print('GoogleSignInService initialized.');
+    } catch (e) {
+      print('GoogleSignInService not supported on this platform: $e');
+    }
     await Get.putAsync(() => LocalStorageService().init(), permanent: true);
+    print('LocalStorageService initialized.');
 
     // Initialize app bindings
     AppBindings.initGlobalBindings();
@@ -133,7 +132,7 @@ class FallbackErrorApp extends StatelessWidget {
                 const SizedBox(height: 10),
                 Text(error, textAlign: TextAlign.center),
                 const SizedBox(height: 20),
-                const Text('Please contact support with this information.',
+                const Text('Please contact via github.com/tarunsisodia.',
                     textAlign: TextAlign.center),
               ],
             ),
