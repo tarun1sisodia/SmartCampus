@@ -251,15 +251,16 @@ class AttendanceScreen extends StatelessWidget {
                                       //print(
                                       // 'Navigating to carousel attendance screen');
                                       // Check if session is running before allowing access
-                                      if (!attendanceController
-                                          .isSessionRunning(session.id)) {
-                                        // Show a message that the session is closed
+                                      // Check session status with detailed feedback
+                                      final sessionStatus = attendanceController
+                                          .checkSessionStatus(session.id);
+
+                                      if (sessionStatus['isValid'] == false) {
                                         TSnackBar.showInfo(
-                                          message:
-                                              'This session is currently closed',
-                                          title: 'Session Closed',
+                                          message: sessionStatus['message'],
+                                          title: 'Cannot Start Attendance',
                                         );
-                                        return; // Don't proceed further
+                                        return;
                                       }
                                       // Set current session and navigate to carousel attendance
                                       attendanceController
