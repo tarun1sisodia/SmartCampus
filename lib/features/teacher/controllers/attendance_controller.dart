@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../models/class_model.dart';
 import '../../../models/student_model.dart';
@@ -326,122 +327,113 @@ class AttendanceController extends GetxController {
   // this method to check if a session is currently running
   // the isSessionRunning method to check the status column
 
-  bool isSessionRunning(String sessionId) {
+  // Check if a session is currently running with detailed feedback
+  Map<String, dynamic> checkSessionStatus(String sessionId) {
     try {
       // Find the session in the list
       final session =
           attendanceSessions.firstWhereOrNull((s) => s.id == sessionId);
-      if (session == null) return false;
+      if (session == null) {
+        return {'isValid': false, 'message': 'Session not found'};
+      }
 
-      // If the session is explicitly marked as closed, return false
-      if (session.status == 'closed') return false;
+      // If the session is explicitly marked as closed
+      if (session.status == 'closed') {
+        return {'isValid': false, 'message': 'Session is manually closed'};
+      }
 
       final now = DateTime.now();
       final sessionDate = session.date;
 
-      // Debug information
-      // print('Checking if session is running:');
-      // print('Session ID: $sessionId');
-      // print('Session date: $sessionDate');
-      // print('Current date: $now');
-      // print('Session start time: ${session.startTime}');
-      // print('Session end time: ${session.endTime}');
-
-      // Check if the session is today
-      if (sessionDate.year == now.year &&
+      // Check if the session is today (ignoring time)
+      final isToday = sessionDate.year == now.year &&
           sessionDate.month == now.month &&
-          sessionDate.day == now.day) {
-        // If there's no specific time, consider it running all day
-        if (session.startTime == null || session.endTime == null) {
-          Get.snackbar(
-              'No specific time set', 'considering session running all day');
-          // print('No specific time set, considering session running all day');
-          return true;
-        }
+          sessionDate.day == now.day;
 
-        // Parse the time strings with AM/PM format
-        DateTime? sessionStart;
-        DateTime? sessionEnd;
-
-        // Try to parse different time formats
-        try {
-          // First try format like "10:00 AM"
-          if (session.startTime!.toLowerCase().contains('am') ||
-              session.startTime!.toLowerCase().contains('pm')) {
-            final startTimeParts = session.startTime!.split(':');
-            final hour = int.parse(startTimeParts[0]);
-            final minutePart = startTimeParts[1].split(' ');
-            final minute = int.parse(minutePart[0]);
-            final ampm = minutePart[1].toLowerCase();
-
-            int adjustedHour = hour;
-            if (ampm == 'pm' && hour < 12) {
-              adjustedHour += 12;
-            } else if (ampm == 'am' && hour == 12) {
-              adjustedHour = 0;
-            }
-
-            sessionStart =
-                DateTime(now.year, now.month, now.day, adjustedHour, minute);
-          } else {
-            // Try 24-hour format
-            final startTimeParts = session.startTime!.split(':');
-            final hour = int.parse(startTimeParts[0]);
-            final minute = int.parse(startTimeParts[1]);
-            sessionStart = DateTime(now.year, now.month, now.day, hour, minute);
-          }
-
-          // Parse end time similarly
-          if (session.endTime!.toLowerCase().contains('am') ||
-              session.endTime!.toLowerCase().contains('pm')) {
-            final endTimeParts = session.endTime!.split(':');
-            final hour = int.parse(endTimeParts[0]);
-            final minutePart = endTimeParts[1].split(' ');
-            final minute = int.parse(minutePart[0]);
-            final ampm = minutePart[1].toLowerCase();
-
-            int adjustedHour = hour;
-            if (ampm == 'pm' && hour < 12) {
-              adjustedHour += 12;
-            } else if (ampm == 'am' && hour == 12) {
-              adjustedHour = 0;
-            }
-
-            sessionEnd =
-                DateTime(now.year, now.month, now.day, adjustedHour, minute);
-          } else {
-            // Try 24-hour format
-            final endTimeParts = session.endTime!.split(':');
-            final hour = int.parse(endTimeParts[0]);
-            final minute = int.parse(endTimeParts[1]);
-            sessionEnd = DateTime(now.year, now.month, now.day, hour, minute);
-          }
-
-          // print('Parsed start time: $sessionStart');
-          // print('Parsed end time: $sessionEnd');
-          // print('Current time: $now');
-
-          // Check if current time is between start and end
-          bool isAfterStart = now.isAfter(sessionStart);
-          bool isBeforeEnd = now.isBefore(sessionEnd);
-          // print('Is after start: $isAfterStart');
-          // print('Is before end: $isBeforeEnd');
-
-          return isAfterStart && isBeforeEnd;
-        } catch (e) {
-          Get.snackbar(
-              'Check the code at Attendance Controller', 'Open The Code ');
-          // print('Error parsing session time: $e');
-          // If parsing fails, default to running
-          return true;
-        }
+      if (!isToday) {
+        return {
+          'isValid': false,
+          'message':
+              'Session is for ${DateFormat('MMM d, yyyy').format(sessionDate)}. You can only mark attendance for today\'s sessions.'
+        };
       }
 
-      return false;
+      // If there's no specific time, consider it running all day
+      if (session.startTime == null ||
+          session.startTime!.isEmpty ||
+          session.endTime == null ||
+          session.endTime!.isEmpty) {
+        return {'isValid': true, 'message': 'Session Active'};
+      }
+
+      // Parse times
+      try {
+        final startDateTime = _parseTime(session.startTime!, sessionDate);
+        final endDateTime = _parseTime(session.endTime!, sessionDate);
+
+        // Debug logging
+        // print('Session Window: $startDateTime to $endDateTime');
+        // print('Current Time: $now');
+
+        if (now.isBefore(startDateTime)) {
+          return {
+            'isValid': false,
+            'message':
+                'Session has not started yet. Starts at ${session.startTime}'
+          };
+        }
+
+        if (now.isAfter(endDateTime)) {
+          return {
+            'isValid': false,
+            'message': 'Session has ended. Ended at ${session.endTime}'
+          };
+        }
+
+        return {'isValid': true, 'message': 'Session Active'};
+      } catch (e) {
+        // print('Time parsing error: $e');
+        // If parsing fails, allow access but log warning
+        return {
+          'isValid': true,
+          'message': 'Session Active (Time format warning)'
+        };
+      }
     } catch (e) {
-      // print('Error in isSessionRunning: $e');
-      return false;
+      // print('Error in checkSessionStatus: $e');
+      return {'isValid': false, 'message': 'Error checking session status: $e'};
     }
+  }
+
+  // Helper to parse time strings like "10:00 AM" or "14:30"
+  DateTime _parseTime(String timeStr, DateTime date) {
+    final lowerTime = timeStr.trim().toLowerCase();
+    int hour = 0;
+    int minute = 0;
+
+    if (lowerTime.contains('am') || lowerTime.contains('pm')) {
+      // 12-hour format
+      final parts = lowerTime.split(':');
+      hour = int.parse(parts[0]);
+      final minuteParts = parts[1].split(' ');
+      minute = int.parse(minuteParts[0]);
+      final ampm = minuteParts[1]; // 'am' or 'pm' because of toLowerCase()
+
+      if (ampm == 'pm' && hour < 12) hour += 12;
+      if (ampm == 'am' && hour == 12) hour = 0;
+    } else {
+      // 24-hour format
+      final parts = lowerTime.split(':');
+      hour = int.parse(parts[0]);
+      minute = int.parse(parts[1]);
+    }
+
+    return DateTime(date.year, date.month, date.day, hour, minute);
+  }
+
+  // Wrapper for backward compatibility (returns simple boolean)
+  bool isSessionRunning(String sessionId) {
+    return checkSessionStatus(sessionId)['isValid'] as bool;
   }
 
   @override
