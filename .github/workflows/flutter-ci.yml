@@ -21,7 +21,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.29.3'
+          channel: 'stable'
 
       - name: Enable desktop builds
         run: flutter config --enable-linux-desktop
@@ -60,7 +60,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.29.3'
+          channel: 'stable'
 
       - name: Enable desktop builds
         run: flutter config --enable-windows-desktop
@@ -108,7 +108,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.29.3'
+          channel: 'stable'
 
       - name: Install dependencies
         run: flutter pub get
