@@ -6,6 +6,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:get_storage/get_storage.dart';
 import 'app/bindings/app_bindings.dart';
 import 'common/utils/constants/colors.dart';
+import 'common/utils/constants/api_constants.dart';
 import 'common/utils/local_storage/storage_utility.dart';
 import 'myapp.dart';
 import 'services/database_helper.dart';
@@ -50,8 +51,8 @@ Future<void> main() async {
     // Initialize Supabase
     //print('Initializing Supabase...');
     await Supabase.initialize(
-      url: "https://aytvjwwnuyebddcwleut.supabase.co",
-      anonKey: "sb_publishable_NCx_2E5NbrhWZldHl4C6tw_a0yp-eyJ",
+      url: ApiConstants.url,
+      anonKey: ApiConstants.anonKey,
     );
     //print('Supabase initialized.');
 

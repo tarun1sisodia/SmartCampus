@@ -203,49 +203,35 @@ class AttendanceService {
   ) async {
     try {
       //print('Fetching attendance statistics for class: $classId');
-      // Get total sessions
-      final sessions = await getAttendanceSessions(classId);
-      final totalSessions = sessions.length;
 
-      if (totalSessions == 0) {
-        return {'totalSessions': 0, 'averageAttendance': 0.0};
+      // Use the server-side function (RPC) for better performance
+      final response = await supabase.rpc(
+        'get_class_attendance_stats',
+        params: {'p_class_id': classId},
+      );
+
+      // The RPC returns a list with a single object directly mapping to our keys
+      // or similar keys. We need to map them to the keys expected by the app.
+      // properties: total_sessions, present_count, absent_count, late_count, excused_count, average_attendance
+
+      if (response == null || (response is List && response.isEmpty)) {
+        return {
+          'totalSessions': 0,
+          'presentCount': 0,
+          'absentCount': 0,
+          'lateCount': 0,
+          'averageAttendance': 0.0,
+        };
       }
 
-      // Get all attendance records for all sessions
-      final sessionIds = sessions.map((s) => s.id).toList();
-      final response = await supabase
-          .from('attendance_records')
-          .select('status')
-          .inFilter('session_id', sessionIds);
-
-      // Count statuses
-      int presentCount = 0;
-      int absentCount = 0;
-      int lateCount = 0;
-
-      for (var record in response) {
-        final status = record['status'] as String;
-        if (status == 'present') {
-          presentCount++;
-        } else if (status == 'absent') {
-          absentCount++;
-        } else if (status == 'late') {
-          lateCount++;
-        }
-      }
-
-      // Calculate average attendance
-      final totalRecords = response.length;
-      final double averageAttendance = totalRecords > 0
-          ? ((presentCount + (lateCount * 0.5)) / totalRecords) * 100
-          : 0.0;
+      final data = response is List ? response.first : response;
 
       return {
-        'totalSessions': totalSessions,
-        'presentCount': presentCount,
-        'absentCount': absentCount,
-        'lateCount': lateCount,
-        'averageAttendance': averageAttendance,
+        'totalSessions': data['total_sessions'] ?? 0,
+        'presentCount': data['present_count'] ?? 0,
+        'absentCount': data['absent_count'] ?? 0,
+        'lateCount': data['late_count'] ?? 0,
+        'averageAttendance': (data['average_attendance'] ?? 0.0).toDouble(),
       };
     } catch (e) {
       //print('Error getting attendance statistics: $e');

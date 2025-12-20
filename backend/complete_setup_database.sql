@@ -1369,3 +1369,23 @@ $$ LANGUAGE plpgsql;
 -- STEP 12: Commit all changes
 -- =============================================
 COMMIT;
+
+-- =============================================
+-- STEP 6: Performance Optimization (Indexes)
+-- =============================================
+
+-- Indexes for Foreign Keys to improve JOIN performance
+CREATE INDEX IF NOT EXISTS idx_classes_teacher_id ON classes(teacher_id);
+CREATE INDEX IF NOT EXISTS idx_classes_subject_id ON classes(subject_id);
+CREATE INDEX IF NOT EXISTS idx_classes_course_id ON classes(course_id);
+
+CREATE INDEX IF NOT EXISTS idx_class_students_class_id ON class_students(class_id);
+CREATE INDEX IF NOT EXISTS idx_class_students_student_id ON class_students(student_id);
+
+CREATE INDEX IF NOT EXISTS idx_attendance_sessions_class_id ON attendance_sessions(class_id);
+CREATE INDEX IF NOT EXISTS idx_attendance_sessions_created_by ON attendance_sessions(created_by);
+CREATE INDEX IF NOT EXISTS idx_attendance_sessions_date ON attendance_sessions(date);
+
+CREATE INDEX IF NOT EXISTS idx_attendance_records_session_id ON attendance_records(session_id);
+CREATE INDEX IF NOT EXISTS idx_attendance_records_student_id ON attendance_records(student_id);
+CREATE INDEX IF NOT EXISTS idx_attendance_records_status ON attendance_records(status);
