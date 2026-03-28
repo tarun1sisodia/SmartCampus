@@ -88,7 +88,7 @@ class SupabaseAuthController extends GetxController {
       isLoading.value = true;
       errorMessage.value = '';
 
-      print('Attempting to sign in with email: ${emailController.text.trim()}');
+       // print('Attempting to sign in with email: ${emailController.text.trim()}');
 
       final response = await supabase.auth.signInWithPassword(
         email: emailController.text.trim(),
@@ -96,7 +96,7 @@ class SupabaseAuthController extends GetxController {
       );
 
       if (response.user != null) {
-        print('Sign-in successful: user=${response.user!.id}');
+         // print('Sign-in successful: user=${response.user!.id}');
         if (rememberMe.value) {
           StorageService.instance.saveUserCredentials(
             emailController.text.trim(),
@@ -111,10 +111,10 @@ class SupabaseAuthController extends GetxController {
               .eq('id', response.user!.id)
               .maybeSingle();
 
-          print('User data retrieved: $userData');
+           // print('User data retrieved: $userData');
 
           if (userData == null) {
-            print('User not found in database, creating new entry');
+             // print('User not found in database, creating new entry');
             await supabase.from('users').insert({
               'id': response.user!.id,
               'name': response.user!.userMetadata?['name'] ?? 'New User',
@@ -124,7 +124,7 @@ class SupabaseAuthController extends GetxController {
             });
           }
         } catch (e) {
-          print('Error checking/creating user data: $e');
+           // print('Error checking/creating user data: $e');
         }
 
         TSnackBar.showSuccess(
@@ -136,13 +136,13 @@ class SupabaseAuthController extends GetxController {
         bool isLinux = false;
         try {
           isLinux = Platform.isLinux;
-          print('Platform is Linux: $isLinux');
+           // print('Platform is Linux: $isLinux');
         } catch (e) {
-          print('Error checking platform: $e');
+           // print('Error checking platform: $e');
         }
 
         // Force navigation to home route
-        print('Navigating to home route: ${AppRoutes.home}');
+         // print('Navigating to home route: ${AppRoutes.home}');
 
         // Use Get.offAll to bypass middleware
         Get.offAll(
@@ -152,14 +152,14 @@ class SupabaseAuthController extends GetxController {
         );
       } else {
         errorMessage.value = 'Authentication failed';
-        print('Authentication failed');
+         // print('Authentication failed');
         TSnackBar.showAuthError(
           message: 'Authentication failed. Please try again.',
         );
       }
     } catch (e) {
       errorMessage.value = e.toString();
-      print('Error during sign-in: $e');
+       // print('Error during sign-in: $e');
       if (e is AuthException) {
         if (e.message.contains('Invalid login credentials')) {
           TSnackBar.showAuthError(

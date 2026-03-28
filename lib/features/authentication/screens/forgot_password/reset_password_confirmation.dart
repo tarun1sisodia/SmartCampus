@@ -1,9 +1,9 @@
 import '../../../../common/utils/constants/text_strings.dart';
-import '/../features/authentication/controllers/forgot_password_controller.dart';
-import 'package:attedance__/app/routes/app_routes.dart'; // Import the routes
-import 'package:attedance__/common/utils/constants/image_strings.dart';
-import 'package:attedance__/common/utils/constants/sized.dart';
-import 'package:attedance__/common/utils/helpers/helper_function.dart';
+import '../../controllers/forgot_password_controller.dart';
+import 'package:smart_campus/app/routes/app_routes.dart'; // Import the routes
+import 'package:smart_campus/common/utils/constants/image_strings.dart';
+import 'package:smart_campus/common/utils/constants/sized.dart';
+import 'package:smart_campus/common/utils/helpers/helper_function.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';

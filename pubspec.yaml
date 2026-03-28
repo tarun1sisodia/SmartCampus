@@ -1,5 +1,5 @@
-name: attedance__
-description: "A new Flutter project."
+name: smart_campus
+description: "SmartCampus - Attendance Management System"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
@@ -44,7 +44,7 @@ dependencies:
   intl: ^0.20.2
   get_storage: ^2.1.1
   supabase: ^2.10.0
-  build_runner: ^2.10.4
+
   image_picker: ^1.2.1
   path: ^1.9.1
   share_plus: ^12.0.1
@@ -56,7 +56,7 @@ dependencies:
   csv: ^6.0.0
   table_calendar: ^3.2.0
   carousel_slider: ^5.1.1
-  flutter_launcher_icons: ^0.14.4
+
   shorebird_code_push: ^2.0.5
   pdf: ^3.7.0
   file_picker: ^10.3.6
@@ -79,6 +79,8 @@ dependency_overrides:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  build_runner: ^2.10.4
+  flutter_launcher_icons: ^0.14.4
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
