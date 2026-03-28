@@ -1,4 +1,4 @@
-import 'package:attedance__/common/utils/helpers/helper_function.dart';
+import 'package:smart_campus/common/utils/helpers/helper_function.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';

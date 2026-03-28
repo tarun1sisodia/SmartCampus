@@ -1,4 +1,4 @@
-package com.example.attedance__
+package com.example.smart_campus
 
 import io.flutter.embedding.android.FlutterFragmentActivity
 

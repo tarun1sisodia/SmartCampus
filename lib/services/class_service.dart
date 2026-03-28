@@ -1,4 +1,4 @@
-import 'package:attedance__/common/utils/helpers/snackbar_helper.dart';
+import 'package:smart_campus/common/utils/helpers/snackbar_helper.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../models/class_model.dart';

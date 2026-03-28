@@ -1,4 +1,4 @@
-import 'package:attedance__/common/utils/constants/image_strings.dart';
+import 'package:smart_campus/common/utils/constants/image_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../../common/utils/constants/colors.dart';

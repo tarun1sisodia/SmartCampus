@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:attedance__/common/utils/constants/text_strings.dart';
+import 'package:smart_campus/common/utils/constants/text_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';

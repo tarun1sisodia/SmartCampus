@@ -1,6 +1,6 @@
-import 'package:attedance__/app/theme/theme.dart';
+import 'package:smart_campus/app/theme/theme.dart';
 
-import '../../services/language_service.dart';
+import 'services/language_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
