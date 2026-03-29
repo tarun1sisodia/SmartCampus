@@ -4,6 +4,7 @@ import { Colors } from '../../theme/theme';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SplashScreen = () => {
   const navigation = useNavigation<any>();
@@ -17,12 +18,19 @@ const SplashScreen = () => {
       useNativeDriver: true,
     }).start();
 
-    const timer = setTimeout(() => {
+    const checkOnboarding = async () => {
+      const hasSeenOnboarding = await AsyncStorage.getItem('has_seen_onboarding');
       if (user) {
-        navigation.replace('Dashboard');
-      } else {
+        navigation.replace('HomeTabs');
+      } else if (hasSeenOnboarding) {
         navigation.replace('Login');
+      } else {
+        navigation.replace('Onboarding');
       }
+    };
+
+    const timer = setTimeout(() => {
+      checkOnboarding();
     }, 2500);
 
     return () => clearTimeout(timer);

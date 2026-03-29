@@ -12,9 +12,9 @@ import {
 import { Colors, AppTheme } from '../../theme/theme';
 import CustomInput from '../../components/common/CustomInput';
 import CustomButton from '../../components/common/CustomButton';
-import { Mail, Lock, CheckCircle2 } from 'lucide-react-native';
+import { Mail, Lock, CheckCircle2, Fingerprint } from 'lucide-react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { signIn, setRememberMe } from '../../store/slices/authSlice';
+import { signIn, loginWithBiometrics, setRememberMe } from '../../store/slices/authSlice';
 import { AppDispatch, RootState } from '../../store/store';
 
 const LoginScreen = () => {
@@ -88,6 +88,11 @@ const LoginScreen = () => {
             isLoading={isLoading}
             style={styles.loginButton}
           />
+
+          <TouchableOpacity style={styles.biometricButton} onPress={() => dispatch(loginWithBiometrics())}>
+            <Fingerprint size={24} color={Colors.primary} />
+            <Text style={styles.biometricText}>Login with Biometrics</Text>
+          </TouchableOpacity>
 
           <View style={styles.footer}>
             <Text style={styles.footerText}>Don't have an account? </Text>
@@ -167,6 +172,21 @@ const styles = StyleSheet.create({
     fontSize: 13,
     textAlign: 'center',
     marginBottom: 16,
+  },
+  biometricButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 24,
+    padding: 12,
+    borderRadius: 12,
+    backgroundColor: Colors.surface,
+  },
+  biometricText: {
+    marginLeft: 12,
+    fontSize: 15,
+    fontWeight: '600',
+    color: Colors.primary,
   },
   footer: {
     flexDirection: 'row',
