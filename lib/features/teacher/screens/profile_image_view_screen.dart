@@ -60,6 +60,8 @@ class ProfileImageViewScreen extends StatelessWidget {
                     height: imageSize.toInt() * 2,
                   ),
                   fit: BoxFit.cover,
+                  memCacheWidth: imageSize.toInt() * 2,
+                  memCacheHeight: imageSize.toInt() * 2,
                   filterQuality: FilterQuality.medium,
                   placeholder: (context, url) => const Center(
                     child: CircularProgressIndicator(strokeWidth: 2),

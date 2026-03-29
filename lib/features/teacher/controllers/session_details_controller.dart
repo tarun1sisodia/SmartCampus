@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import '../../../models/attendance_session_model.dart';
 import '../../../services/attendance_service.dart';
 import '../../../common/utils/helpers/snackbar_helper.dart';
@@ -44,7 +44,8 @@ class SessionDetailsController extends GetxController {
 
       // Calculate attendance stats
       _calculateAttendanceStats();
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       ///print('Error loading session details: $e');
       TSnackBar.showError(
           message: 'Failed to load session details: ${e.toString()}');
@@ -66,7 +67,8 @@ class SessionDetailsController extends GetxController {
             studentName: record['studentName'],
             isPresent: record['isPresent'],
           )));
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       ///print('Error loading attendance records: $e');
       TSnackBar.showError(message: 'Failed to load attendance records');
     }
@@ -84,7 +86,8 @@ class SessionDetailsController extends GetxController {
         present: stats['present'],
         absent: stats['absent'],
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       ///print('Error calculating attendance stats: $e');
       // Use local calculation as fallback
       final total = attendanceRecords.length;
@@ -123,7 +126,8 @@ class SessionDetailsController extends GetxController {
           message: 'Attendance updated for ${record.studentName}',
         );
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       ///print('Error updating attendance: $e');
       TSnackBar.showError(message: 'Failed to update attendance');
     }
@@ -175,7 +179,8 @@ class SessionDetailsController extends GetxController {
       TSnackBar.showSuccess(
         message: 'Attendance data exported successfully',
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       ///print('Error exporting attendance data: $e');
       TSnackBar.showError(message: 'Failed to export attendance data');
     }

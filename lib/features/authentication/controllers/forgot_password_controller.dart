@@ -1,6 +1,7 @@
 import 'package:smart_campus/common/utils/constants/text_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ForgotPasswordController extends GetxController {
@@ -28,7 +29,8 @@ class ForgotPasswordController extends GetxController {
       await supabase.auth.resetPasswordForEmail(emailController.text.trim());
 
       // Success - no need to set a message as we'll navigate to confirmation screen
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       errorMessage.value = e.toString();
       rethrow; // Rethrow to handle in the UI
     } finally {

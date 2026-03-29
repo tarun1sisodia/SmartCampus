@@ -3,14 +3,14 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import '../../../models/class_model.dart';
 import '../../../services/class_service.dart';
 import '../../../services/attendance_service.dart';
 import '../../../services/course_service.dart';
 import '../../../services/realtime_service.dart';
-import '../../../services/subject_service.dart';
-import '../../../common/utils/helpers/snackbar_helper.dart';
 import '../../../services/auth_service.dart';
+import '../../../services/biometric_auth_service.dart';
 import 'dart:async';
 
 import '../../authentication/controllers/supabase_auth_controller.dart';
@@ -71,12 +71,12 @@ class DashboardController extends GetxController {
 
   // Initialize the realtime service
   void _initializeRealtimeService() {
-    try {
       realtimeService = Get.find<RealtimeService>();
       debugPrint('Found existing RealtimeService instance');
-    } catch (e) {
+    } catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('RealtimeService not found, creating new instance');
-    realtimeService = Get.put(RealtimeService());
+      realtimeService = Get.put(RealtimeService());
     }
     
     _setupRealtimeSubscriptions();
@@ -214,9 +214,10 @@ class DashboardController extends GetxController {
 
     debugPrint(
         'Dashboard classes updated via real-time: ${teacherClasses.length} classes');
-  } catch (e) {
-    debugPrint('Error handling classes update in Dashboard: $e');
-  }
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
+      debugPrint('Error handling classes update in Dashboard: $e');
+    }
 }
 
   // Update total students count
@@ -231,7 +232,8 @@ class DashboardController extends GetxController {
 
       totalStudents.value = totalStudentsCount;
       debugPrint('Total students updated: $totalStudentsCount');
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error updating total students: $e');
     }
   }
@@ -260,7 +262,8 @@ class DashboardController extends GetxController {
       }
 
       debugPrint('Attendance stats updated: ${averageAttendance.value}%');
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error updating attendance stats: $e');
     }
   }
@@ -291,7 +294,8 @@ class DashboardController extends GetxController {
       debugPrint('Attempting to reconnect to real-time service from Dashboard...');
       await realtimeService.forceReconnect();
       debugPrint('Successfully reconnected to real-time service');
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Failed to reconnect to real-time service: $e');
     }
   }
@@ -467,7 +471,8 @@ class DashboardController extends GetxController {
       update();
       //debugPrint('Total students: $totalStudentsCount');
       //debugPrint('Average attendance: ${averageAttendance.value}');
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //debugPrint('Error loading dashboard data: $e');
       TSnackBar.showError(
         message: 'Failed to load dashboard data: ${e.toString()}',
@@ -495,7 +500,8 @@ class DashboardController extends GetxController {
 
       //debugPrint('Student count response for class $classId: $response');
       return response.length;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //debugPrint('Error getting student count for class $classId: $e');
       return 0;
     }
@@ -551,7 +557,8 @@ class DashboardController extends GetxController {
         // Reload dashboard data
         await loadDashboardData();
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //debugPrint('Error creating initial data: $e');
       TSnackBar.showError(
         message: 'Failed to create initial data: ${e.toString()}',

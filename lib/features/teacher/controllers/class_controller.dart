@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../common/utils/constants/text_strings.dart';
 import '../../../models/class_model.dart';
@@ -235,7 +236,8 @@ class ClassController extends GetxController {
 
       debugPrint('ClassController classes updated via real-time: ${teacherClasses.length} classes');
       
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error handling classes update in ClassController: $e');
     }
   }
@@ -258,7 +260,8 @@ class ClassController extends GetxController {
       }
 
       debugPrint('ClassController subjects updated via real-time: ${subjectsList.length} subjects');
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error handling subjects update in ClassController: $e');
     }
   }
@@ -281,7 +284,8 @@ class ClassController extends GetxController {
       }
 
       debugPrint('ClassController courses updated via real-time: ${coursesList.length} courses');
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error handling courses update in ClassController: $e');
     }
   }
@@ -353,7 +357,8 @@ class ClassController extends GetxController {
       _classesOffset = classes.length;
       hasMoreClasses.value = teacherClasses.length == _teacherClassFetchLimit;
       _filterClasses(searchQuery.value);
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error loading classes: $e');
       TSnackBar.showError(message: 'Failed to load classes: ${e.toString()}');
     } finally {
@@ -395,7 +400,8 @@ class ClassController extends GetxController {
         selectedSubject.value = subjects[0];
         debugPrint('Default subject selected: ${subjects[0].name}');
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error loading courses and subjects: $e');
       TSnackBar.showError(
         message: 'Failed to load courses and subjects: ${e.toString()}',
@@ -476,7 +482,8 @@ class ClassController extends GetxController {
       sectionController.clear();
 
       TSnackBar.showSuccess(message: 'Class created successfully');
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Failed to create class: $e');
       TSnackBar.showError(message: 'Failed to create class: ${e.toString()}');
     } finally {
@@ -514,7 +521,8 @@ class ClassController extends GetxController {
       // No need to manually update the list here - the stream will handle it
 
       TSnackBar.showSuccess(message: 'Class updated successfully');
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Failed to update class: $e');
       TSnackBar.showError(message: 'Failed to update class: ${e.toString()}');
     } finally {
@@ -536,7 +544,8 @@ class ClassController extends GetxController {
       // No need to manually remove from the list here - the stream will handle it
       
       TSnackBar.showSuccess(message: 'Class deleted successfully');
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Failed to delete class: $e');
       TSnackBar.showError(message: 'Failed to delete class: ${e.toString()}');
     } finally {
@@ -570,7 +579,8 @@ class ClassController extends GetxController {
       
       // Note: The real-time subscription will automatically update the UI
       // No need to manually remove from the list here - the stream will handle it
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error deleting selected classes: $e');
       TSnackBar.showError(message: 'Failed to delete classes: ${e.toString()}');
     } finally {
@@ -683,7 +693,8 @@ class ClassController extends GetxController {
       debugPrint('Attempting to reconnect to real-time service from ClassController...');
       await realtimeService.forceReconnect();
       debugPrint('Successfully reconnected to real-time service');
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Failed to reconnect to real-time service: $e');
     }
   }

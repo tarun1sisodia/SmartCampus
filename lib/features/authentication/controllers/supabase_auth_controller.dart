@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '../../../app/bindings/app_bindings.dart';
 import '../../../app/routes/app_routes.dart';
@@ -10,6 +11,7 @@ import '../../../common/utils/helpers/snackbar_helper.dart';
 import '../../../navigation_menu.dart';
 import '../../../services/auth_service.dart';
 import '../../../services/storage_service.dart';
+import '../../../services/biometric_auth_service.dart';
 
 class SupabaseAuthController extends GetxController {
   static SupabaseAuthController get instance => Get.find();
@@ -116,7 +118,8 @@ class SupabaseAuthController extends GetxController {
               'created_at': DateTime.now().toIso8601String(),
             });
           }
-        } catch (e) {
+        } catch (e, stackTrace) {
+          await Sentry.captureException(e, stackTrace: stackTrace);
            // print('Error checking/creating user data: $e');
         }
 
@@ -142,7 +145,8 @@ class SupabaseAuthController extends GetxController {
           message: 'Authentication failed. Please try again.',
         );
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       errorMessage.value = e.toString();
        // print('Error during sign-in: $e');
       if (e is AuthException) {
@@ -197,7 +201,8 @@ class SupabaseAuthController extends GetxController {
           title: 'Account Created',
         );
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       errorMessage.value = e.toString();
       //printrint('Error during sign-up: $e');
       if (e is AuthException) {
@@ -247,8 +252,13 @@ class SupabaseAuthController extends GetxController {
           message: 'Your account has been fully set up!',
           title: 'Setup Complete',
         );
+      } else {
+        TSnackBar.showServerError(
+          message: 'Failed to store your information. Please try again later.',
+        );
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //printrint('Error storing user data: $e');
       errorMessage.value = 'Failed to store user data';
 
@@ -281,7 +291,8 @@ class SupabaseAuthController extends GetxController {
         message: 'Verification email has been resent to $email',
         title: 'Email Sent',
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       errorMessage.value = e.toString();
       //printrint('Error resending verification email: $e');
       if (e.toString().contains('network') ||
@@ -312,7 +323,8 @@ class SupabaseAuthController extends GetxController {
       final isVerified = response.user?.emailConfirmedAt != null;
       //printrint('Email verification status: $isVerified');
       return isVerified;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //printrint('Error checking email verification: $e');
       TSnackBar.showServerError(
         message: 'Failed to check email verification status: ${e.toString()}',
@@ -333,7 +345,8 @@ class SupabaseAuthController extends GetxController {
         message: 'Password reset instructions have been sent to your email',
         title: 'Reset Email Sent',
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       errorMessage.value = e.toString();
       //printrint('Error resetting password: $e');
       if (e.toString().contains('network') ||
@@ -380,7 +393,8 @@ class SupabaseAuthController extends GetxController {
       }
 
       return true;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       errorMessage.value = e.toString();
       return false;
     }
@@ -415,10 +429,10 @@ class SupabaseAuthController extends GetxController {
             ) ??
             false;
 
-        if (!keepBiometrics) {
           try {
             await biometricAuthService.disableBiometrics();
-          } catch (e) {
+          } catch (e, stackTrace) {
+            await Sentry.captureException(e, stackTrace: stackTrace);
             TSnackBar.showServerError(
               message:
                   'Failed to disable biometric authentication: ${e.toString()}',
@@ -439,7 +453,8 @@ class SupabaseAuthController extends GetxController {
       );
 
       Get.offAllNamed(AppRoutes.login);
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       TSnackBar.showServerError(message: 'Failed to sign out: ${e.toString()}');
     } finally {
       isLoading.value = false;

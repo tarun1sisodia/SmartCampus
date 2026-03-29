@@ -103,10 +103,14 @@ class SwipeableStudentCard extends StatelessWidget {
                       : CachedNetworkImage(
                           imageUrl: ApiConstants.optimizeImageUrl(
                             student.imageUrl!,
-                            width: 900,
-                            height: 900,
+                            width: 600,
+                            height: 600,
                           ),
                           fit: BoxFit.contain,
+                          memCacheWidth: 600,
+                          memCacheHeight: 600,
+                          maxWidthDiskCache: 600,
+                          maxHeightDiskCache: 600,
                           filterQuality: FilterQuality.low,
                           placeholder: (context, url) => const Center(
                             child: CircularProgressIndicator(strokeWidth: 2),

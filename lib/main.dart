@@ -33,7 +33,7 @@ Future<void> main() async {
 
     // Initialize database factory for SQLite
     if (DatabaseHelper.isSupported) {
-      DatabaseHelper.initializeDatabaseFactory();
+      await DatabaseHelper.initializeDatabaseFactory();
     } else {
       debugPrint('SQLite not supported on this platform');
     }
@@ -67,7 +67,8 @@ Future<void> main() async {
 
     //print('Launching MyApp...');
     await _runAppWithMonitoring();
-  } catch (e) {
+  } catch (e, stackTrace) {
+    await Sentry.captureException(e, stackTrace: stackTrace);
     //print('ERROR DURING APP INITIALIZATION: $e');
     //print('Stack trace: $stackTrace');
     // Still try to run the app with minimal functionality
@@ -105,7 +106,8 @@ Future<void> _initializeServices() async {
 
     // Initialize app bindings
     AppBindings.initGlobalBindings();
-  } catch (e) {
+  } catch (e, stackTrace) {
+    await Sentry.captureException(e, stackTrace: stackTrace);
     debugPrint('Error initializing services: $e');
     rethrow;
   }

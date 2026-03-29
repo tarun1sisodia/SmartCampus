@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '../models/attendance_record_model.dart';
 import '../models/attendance_session_model.dart';
@@ -33,7 +34,8 @@ class AttendanceService {
       return response.map<AttendanceSessionModel>((json) {
         return AttendanceSessionModel.fromJson(json);
       }).toList();
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Error getting attendance sessions: $e');
       throw 'Failed to get attendance sessions: $e';
     }
@@ -58,7 +60,8 @@ class AttendanceService {
       return response.map<AttendanceSessionModel>((json) {
         return AttendanceSessionModel.fromJson(json);
       }).toList();
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Error getting attendance sessions for date range: $e');
       throw 'Failed to get attendance sessions: $e';
     }
@@ -96,7 +99,8 @@ class AttendanceService {
           .single();
 
       return AttendanceSessionModel.fromJson(response);
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Error creating attendance session: $e');
       Get.snackbar('Failed to Create Attendance Session', '');
       throw 'Failed to create attendance session: $e';
@@ -119,7 +123,8 @@ class AttendanceService {
 
       // Then delete the session
       await supabase.from('attendance_sessions').delete().eq('id', sessionId);
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Error deleting session: $e');
       throw 'Failed to delete session: $e';
     }
@@ -139,7 +144,8 @@ class AttendanceService {
       return response.map<AttendanceRecordModel>((json) {
         return AttendanceRecordModel.fromJson(json);
       }).toList();
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Error getting attendance records: $e');
       throw 'Failed to get attendance records: $e';
     }
@@ -182,7 +188,8 @@ class AttendanceService {
         data['created_at'] = DateTime.now().toIso8601String();
         await supabase.from('attendance_records').insert(data);
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Error submitting attendance: $e');
       throw 'Failed to submit attendance: $e';
     }
@@ -201,7 +208,8 @@ class AttendanceService {
       }).eq('id', sessionId);
 
       //print('Session closed successfully');
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Error closing attendance session: $e');
       throw 'Failed to close attendance session: $e';
     }
@@ -243,7 +251,8 @@ class AttendanceService {
         'lateCount': data['late_count'] ?? 0,
         'averageAttendance': (data['average_attendance'] ?? 0.0).toDouble(),
       };
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Error getting attendance statistics: $e');
       throw 'Failed to get attendance statistics: $e';
     }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../common/utils/helpers/snackbar_helper.dart';
@@ -87,12 +88,12 @@ class SignupController extends GetxController {
         return;
       }
 
-      // Success message
       TSnackBar.showSuccess(
         message: 'Account created successfully! Please verify your email.',
         title: 'Registration Complete',
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       errorMessage.value = e.toString();
 
       // Log error for debugging
@@ -144,7 +145,8 @@ class SignupController extends GetxController {
 
       // Navigate to appropriate screen
       Get.offAllNamed('/dashboard');
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       errorMessage.value = e.toString();
 
       if (e.toString().contains('network') ||
@@ -168,8 +170,14 @@ class SignupController extends GetxController {
         type: OtpType.signup,
         email: emailController.text.trim(),
       );
-    } catch (e) {
+      TSnackBar.showSuccess(
+        message: 'Verification email resent successfully!',
+        title: 'Email Sent',
+      );
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       errorMessage.value = e.toString();
+      TSnackBar.showServerError(message: e.toString());
       rethrow;
     } finally {
       isLoading.value = false;
