@@ -55,8 +55,16 @@ class DashboardController extends GetxController {
     super.onInit();
     //print('DashboardController initialized');
     _initializeRealtimeService();
-    checkBiometricAuthentication();
     initializeGreeting();
+
+    // Wait until the Splash screen has completed authentication before loading
+    // data. This avoids calling loadDashboardData() (and its snackbars) while
+    // there is no Overlay widget in the widget tree.
+    ever(splashAuthenticationCompleted, (bool completed) {
+      if (completed) {
+        loadDashboardData();
+      }
+    });
   }
 
   @override
@@ -419,9 +427,11 @@ class DashboardController extends GetxController {
       final currentUser = Supabase.instance.client.auth.currentUser;
       if (currentUser == null) {
         //print('No user is logged in');
-        TSnackBar.showError(
-          message: 'You must be logged in to view the dashboard',
-        );
+        if (Get.overlayContext != null) {
+          TSnackBar.showError(
+            message: 'You must be logged in to view the dashboard',
+          );
+        }
         return;
       }
 
@@ -467,9 +477,11 @@ class DashboardController extends GetxController {
       //print('Average attendance: ${averageAttendance.value}');
     } catch (e) {
       //print('Error loading dashboard data: $e');
-      TSnackBar.showError(
-        message: 'Failed to load dashboard data: ${e.toString()}',
-      );
+      if (Get.overlayContext != null) {
+        TSnackBar.showError(
+          message: 'Failed to load dashboard data: ${e.toString()}',
+        );
+      }
     } finally {
       isLoading.value = false;
       //print('Dashboard data loading complete');

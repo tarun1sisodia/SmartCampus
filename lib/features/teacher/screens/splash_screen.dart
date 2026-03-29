@@ -13,7 +13,7 @@ import '../../../services/storage_service.dart';
 import '../../authentication/controllers/supabase_auth_controller.dart';
 import 'dart:io';
 
-import '../controllers/dashboard_controller.dart';
+import '../controllers/dashboard_controller.dart'; // needed for Get.find<DashboardController>()
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -68,9 +68,6 @@ class _SplashScreenState extends State<SplashScreen>
     final storageService = Get.find<StorageService>();
     final biometricAuthService = Get.put(BiometricAuthService());
 
-    // Get dashboard controller and mark that splash authentication is being handled
-    final dashboardController = Get.put(DashboardController());
-
     // Check onboarding status first
     final bool onboardingCompleted = storageService.getOnboardingStatus();
     if (!onboardingCompleted) {
@@ -85,8 +82,15 @@ class _SplashScreenState extends State<SplashScreen>
       // User is authenticated
       if (Platform.isLinux) {
         // Bypass biometric authentication for Linux
+        // Navigate first so HomeBinding registers DashboardController with an Overlay present
+        Get.offAll(
+          () => NavigationMenu(),
+          binding: HomeBinding(),
+          transition: Transition.fadeIn,
+        );
+        // Now it is safe to access DashboardController registered by HomeBinding
+        final dashboardController = Get.find<DashboardController>();
         dashboardController.splashAuthenticationCompleted.value = true;
-        Get.offAllNamed(AppRoutes.home);
       } else if (Platform.isAndroid || Platform.isIOS) {
         // Check if biometric authentication is enabled
         await biometricAuthService.checkBiometricAvailability();
@@ -99,16 +103,16 @@ class _SplashScreenState extends State<SplashScreen>
               await biometricAuthService.authenticateWithBiometrics(
                   customReason: 'To Access the Smart Campus app');
           if (authenticated) {
-            // Mark authentication as completed in splash
-            dashboardController.isAuthenticated.value = true;
-            dashboardController.splashAuthenticationCompleted.value = true;
-
-            // Use Get.offAll instead of Get.offAllNamed to bypass middleware
+            // Navigate first so HomeBinding registers DashboardController with an Overlay present
             Get.offAll(
               () => NavigationMenu(),
               binding: HomeBinding(),
               transition: Transition.fadeIn,
             );
+            // Mark authentication as completed after navigation
+            final dashboardController = Get.find<DashboardController>();
+            dashboardController.isAuthenticated.value = true;
+            dashboardController.splashAuthenticationCompleted.value = true;
           } else {
             Get.snackbar('Oops', 'better luck next time.');
             // If biometric auth fails, go to login screen but don't sign out
@@ -116,15 +120,15 @@ class _SplashScreenState extends State<SplashScreen>
             Get.offAllNamed(AppRoutes.login);
           }
         } else {
-          // No biometric required, proceed to home
-          dashboardController.splashAuthenticationCompleted.value = true;
-
-          // Use Get.offAll instead of Get.offAllNamed to bypass middleware
+          // No biometric required, navigate first so HomeBinding registers
+          // DashboardController with an Overlay present
           Get.offAll(
             () => NavigationMenu(),
             binding: HomeBinding(),
             transition: Transition.fadeIn,
           );
+          final dashboardController = Get.find<DashboardController>();
+          dashboardController.splashAuthenticationCompleted.value = true;
         }
       }
     } else {
