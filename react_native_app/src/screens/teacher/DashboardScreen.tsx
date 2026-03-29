@@ -16,6 +16,8 @@ import { Users, BookOpen, BarChart3, Search, Settings, MessageSquare, LogOut } f
 import CustomInput from '../../components/common/CustomInput';
 import { logout } from '../../store/slices/authSlice';
 
+import { useNavigation } from '@react-navigation/native';
+
 const StatCard = ({ title, value, icon: Icon, color }: any) => (
   <View style={[styles.statCard]}>
     <View style={[styles.iconContainer, { backgroundColor: color + '20' }]}>
@@ -33,6 +35,8 @@ const DashboardScreen = () => {
   const dispatch = useDispatch();
   const [refreshing, setRefreshing] = useState(false);
   const [search, setSearch] = useState('');
+
+  const navigation = useNavigation<any>();
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -106,7 +110,11 @@ const DashboardScreen = () => {
 
         {/* Simplified Class List (to be replaced with actual card component) */}
         {[1, 2, 3].map((item) => (
-          <TouchableOpacity key={item} style={styles.classItem}>
+          <TouchableOpacity 
+            key={item} 
+            style={styles.classItem}
+            onPress={() => navigation.navigate('MarkAttendance')}
+          >
             <View style={styles.classInfo}>
               <Text style={styles.className}>Operating Systems</Text>
               <Text style={styles.classDetails}>BCA - Section A - Semester 1</Text>

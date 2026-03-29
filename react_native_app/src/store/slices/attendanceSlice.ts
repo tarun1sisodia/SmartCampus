@@ -18,28 +18,86 @@ const initialState: AttendanceState = {
   error: null,
 };
 
+import { database } from '../../services/db/database';
+import { Student } from '../../services/db/models';
+import { Q } from '@nozbe/watermelondb';
+
 export const fetchStudentsForClass = createAsyncThunk(
   'attendance/fetchStudents',
   async (classId: string, { rejectWithValue }) => {
     try {
+      // 1. Fetch from Supabase (Online Sync)
       const { data, error } = await supabase
         .from('students')
         .select('*')
         .eq('class_id', classId);
 
-      if (error) throw error;
+      // 2. Offline Sync: Upsert to WatermelonDB if online was successful
+      if (!error && data) {
+        await database.write(async () => {
+          const studentCollection = database.get<Student>('students');
+          
+          for (const s of data) {
+            // Find if exists
+            const existing = await studentCollection.query(Q.where('id', s.id)).fetch();
+            if (existing.length > 0) {
+              await existing[0].update((record) => {
+                record.name = s.name;
+                record.rollNumber = s.roll_number;
+                record.imageUrl = s.image_url;
+              });
+            } else {
+              await studentCollection.create((record) => {
+                // @ts-ignore - id is managed by Watermelon but we override for sync map
+                record._raw.id = s.id; 
+                record.name = s.name;
+                record.rollNumber = s.roll_number;
+                record.classId = s.class_id;
+                record.imageUrl = s.image_url;
+              });
+            }
+          }
+        });
+      }
 
-      return data.map((s: any) => ({
-        ...s,
-        attendanceStatus: 'absent', // Default status as per original Flutter logic
+      // 3. Always return from local database as Source of Truth
+      const localStudents = await database.get<Student>('students')
+        .query(Q.where('class_id', classId))
+        .fetch();
+
+      return localStudents.map((s: any) => ({
+        id: s.id,
+        name: s.name,
+        rollNumber: s.rollNumber,
+        classId: s.classId,
+        imageUrl: s.imageUrl,
+        attendanceStatus: 'absent', // Default
       })) as StudentModel[];
     } catch (err: any) {
-      return rejectWithValue(err.message);
+      // Offline mode fallback: just fetch local
+      try {
+        const localStudents = await database.get<Student>('students')
+          .query(Q.where('class_id', classId))
+          .fetch();
+        
+        return localStudents.map((s: any) => ({
+          id: s.id,
+          name: s.name,
+          rollNumber: s.rollNumber,
+          classId: s.classId,
+          imageUrl: s.imageUrl,
+          attendanceStatus: 'absent',
+        })) as StudentModel[];
+      } catch (offlineErr) {
+        return rejectWithValue(err.message);
+      }
     }
   }
 );
 
 export const fetchSessions = createAsyncThunk(
+  // ... existing code unchanged for fetchSessions (will be overwritten if we don't include it verbatim) ...
+// Wait, I should not use ... replace it properly.
   'attendance/fetchSessions',
   async (classId: string, { rejectWithValue }) => {
     try {
@@ -61,6 +119,20 @@ export const submitAttendance = createAsyncThunk(
   'attendance/submit',
   async ({ sessionId, records }: any, { rejectWithValue }) => {
     try {
+      // Offline-First approach: Write to WatermelonDB
+      await database.write(async () => {
+        const recordCollection = database.get('attendance_records');
+        for (const r of records) {
+          await recordCollection.create((record: any) => {
+            record.sessionId = sessionId;
+            record.studentId = r.studentId;
+            record.status = r.status;
+            record.remarks = r.remarks || '';
+          });
+        }
+      });
+
+      // Try Sync to Supabase
       const { data, error } = await supabase
         .from('attendance_records')
         .upsert(records.map((r: any) => ({
@@ -71,15 +143,16 @@ export const submitAttendance = createAsyncThunk(
           created_at: new Date().toISOString(),
         })));
 
-      if (error) throw error;
-      
-      // Close the session as per original Flutter logic
-      await supabase
-        .from('attendance_sessions')
-        .update({ status: 'closed' })
-        .eq('id', sessionId);
+      if (!error) {
+        await supabase
+          .from('attendance_sessions')
+          .update({ status: 'closed' })
+          .eq('id', sessionId);
+      } else {
+        console.warn('Network error: Records saved offline, will sync later.');
+      }
 
-      return data;
+      return records;
     } catch (err: any) {
       return rejectWithValue(err.message);
     }

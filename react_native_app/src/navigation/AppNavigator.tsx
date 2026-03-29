@@ -8,6 +8,9 @@ import { RootState } from '../store/store';
 import LoginScreen from '../screens/auth/LoginScreen';
 import SplashScreen from '../screens/common/SplashScreen';
 import DashboardScreen from '../screens/teacher/DashboardScreen';
+import MarkAttendanceScreen from '../screens/teacher/MarkAttendanceScreen';
+import HomeTabs from './HomeTabs';
+import StudentDetailScreen from '../screens/teacher/StudentDetailScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -21,10 +24,15 @@ const AppNavigator = () => {
         {!user ? (
           <>
             <Stack.Screen name="Splash" component={SplashScreen} />
+            <Stack.Screen name="Onboarding" component={require('../screens/common/OnboardingScreen').default} />
             <Stack.Screen name="Login" component={LoginScreen} />
           </>
         ) : (
-          <Stack.Screen name="Dashboard" component={DashboardScreen} />
+          <>
+            <Stack.Screen name="HomeTabs" component={HomeTabs} />
+            <Stack.Screen name="MarkAttendance" component={MarkAttendanceScreen} />
+            <Stack.Screen name="StudentDetail" component={StudentDetailScreen} />
+          </>
         )}
       </Stack.Navigator>
     </NavigationContainer>
