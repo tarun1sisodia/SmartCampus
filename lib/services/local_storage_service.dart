@@ -1,11 +1,6 @@
-import 'dart:convert';
-import 'dart:io';
-import 'package:flutter/foundation.dart';
-import 'package:get/get.dart';
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import '../models/student_model.dart';
 import '../models/attendance_record_model.dart';
 import '../models/attendance_session_model.dart';
@@ -69,7 +64,8 @@ class LocalStorageService extends GetxService {
 
       _isInitialized = true;
       debugPrint('Local Storage Service initialized successfully');
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error initializing Local Storage Service: $e');
       // Don't rethrow - allow app to continue with limited functionality
       _isInitialized = true; // Mark as initialized to prevent retry loops
@@ -100,7 +96,8 @@ class LocalStorageService extends GetxService {
         whereArgs: [0],
         orderBy: 'created_at ASC',
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error getting unsynced records from $tableName: $e');
       Get.snackbar('Error getting unsynced records from ', '$tableName: $e');
       return [];
@@ -120,7 +117,8 @@ class LocalStorageService extends GetxService {
         [recordId],
       );
       return result > 0;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error marking record as synced in $tableName: $e');
       Get.snackbar('Error marking record as synced in', '$tableName: $e');
       return false;
@@ -145,7 +143,8 @@ class LocalStorageService extends GetxService {
       }
       await batch.commit();
       return true;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error marking multiple records as synced in $tableName: $e');
       Get.snackbar(
           'Error marking multiple records as synced in', '$tableName: $e');
@@ -165,7 +164,8 @@ class LocalStorageService extends GetxService {
           DateTime.now().subtract(const Duration(hours: 1)).toIso8601String()
         ],
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error getting conflicted records from $tableName: $e');
       Get.snackbar('Error getting conflicted records from', '$tableName: $e');
       return [];
@@ -190,7 +190,8 @@ class LocalStorageService extends GetxService {
       await _database.delete('sync_queue');
 
       return true;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error clearing unsynced data: $e');
       Get.snackbar('Error clearing unsynced data', '$e');
       return false;
@@ -222,7 +223,8 @@ class LocalStorageService extends GetxService {
       stats['queue_items'] = queueItems.length;
 
       return stats;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error getting sync stats: $e');
       return {};
     }
@@ -248,7 +250,8 @@ class LocalStorageService extends GetxService {
       }
 
       return true;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error cleaning up old synced records: $e');
       return false;
     }
@@ -267,7 +270,8 @@ class LocalStorageService extends GetxService {
         [recordId],
       );
       return result > 0;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error marking record as unsynced in $tableName: $e');
       return false;
     }
@@ -283,7 +287,8 @@ class LocalStorageService extends GetxService {
         limit: 1,
       );
       return records.isNotEmpty;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error checking if record exists in $tableName: $e');
       return false;
     }
@@ -300,7 +305,8 @@ class LocalStorageService extends GetxService {
         limit: 1,
       );
       return records.isNotEmpty ? records.first : null;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error getting record by ID from $tableName: $e');
       return null;
     }
@@ -322,7 +328,8 @@ class LocalStorageService extends GetxService {
         final result = await insertRecord(tableName, data);
         return result > 0;
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error upserting record in $tableName: $e');
       return false;
     }

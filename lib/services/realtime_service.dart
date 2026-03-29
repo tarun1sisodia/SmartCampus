@@ -1,7 +1,6 @@
-import 'dart:async';
-import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 class RealtimeService extends GetxService {
   final supabase = Supabase.instance.client;
@@ -204,7 +203,8 @@ class RealtimeService extends GetxService {
       lastError.value = null;
 
       debugPrint('Real-time subscriptions initialized successfully');
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error initializing real-time subscriptions: $e');
       _updateConnectionStatus(false);
       lastError.value = e.toString();
@@ -303,7 +303,8 @@ class RealtimeService extends GetxService {
       _coursesController.add(coursesData);
 
       debugPrint('All data refreshed successfully');
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error refreshing data: $e');
       lastError.value = 'Failed to refresh data: $e';
     }
@@ -405,7 +406,8 @@ class RealtimeService extends GetxService {
         onData,
         onError: onError ?? (error) => _handleStreamError(tableName, error),
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error subscribing to table $tableName: $e');
       return null;
     }
@@ -466,7 +468,8 @@ class RealtimeService extends GetxService {
           final sessionDate = DateTime.parse(session['date']);
           return sessionDate.isAfter(startDate.subtract(const Duration(days: 1))) &&
                  sessionDate.isBefore(endDate.add(const Duration(days: 1)));
-        } catch (e) {
+        } catch (e, stackTrace) {
+          await Sentry.captureException(e, stackTrace: stackTrace);
           debugPrint('Error parsing session date: $e');
           return false;
         }
@@ -629,7 +632,8 @@ class RealtimeService extends GetxService {
       results['no_recent_errors'] = lastError.value == null;
       
       return results;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error validating data integrity: $e');
       return {'validation_failed': false};
     }
@@ -673,7 +677,8 @@ class RealtimeService extends GetxService {
       }
       
       debugPrint('Cleaned up subscriptions for table: $tableName');
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error cleaning up subscriptions for $tableName: $e');
     }
   }

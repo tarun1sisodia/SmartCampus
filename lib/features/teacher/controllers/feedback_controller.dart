@@ -1,7 +1,6 @@
-import 'dart:async';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '../../../common/utils/constants/text_strings.dart';
 import '../../../services/feedback_service.dart';
@@ -115,13 +114,11 @@ class FeedbackController extends GetxController {
       Get.back(); // Close dialog
 
       Get.snackbar(
-        'Thank You!',
-        'Your feedback has been submitted successfully.',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green[100],
-        colorText: Colors.green[800],
+      TSnackBar.showSuccess(
+        message: 'Your feedback has been submitted successfully.',
+        title: 'Thank You!',
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
       //printnt('Error submitting feedback: $e');
 
       // Try a fallback approach without user_email if that was the issue
@@ -140,25 +137,21 @@ class FeedbackController extends GetxController {
           _feedbackService.markFeedbackAsSubmitted();
           Get.back(); // Close dialog
 
-          Get.snackbar(
-            'Thank You!',
-            'Your feedback has been submitted successfully.',
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.green[100],
-            colorText: Colors.green[800],
+          TSnackBar.showSuccess(
+            message: 'Your feedback has been submitted successfully.',
+            title: 'Thank You!',
           );
           return;
-        } catch (fallbackError) {
+        } catch (fallbackError, fallbackStackTrace) {
+          await Sentry.captureException(fallbackError,
+              stackTrace: fallbackStackTrace);
           //printnt('Fallback approach also failed: $fallbackError');
         }
       }
 
-      Get.snackbar(
-        TTexts.error,
-        'Failed to submit feedback. Please try again later.',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red[100],
-        colorText: Colors.red[800],
+      await Sentry.captureException(e, stackTrace: stackTrace);
+      TSnackBar.showError(
+        message: 'Failed to submit feedback. Please try again later.',
       );
     } finally {
       isSubmitting.value = false;

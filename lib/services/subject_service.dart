@@ -1,5 +1,6 @@
 import '../models/subject_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 class SubjectService {
   final supabase = Supabase.instance.client;
@@ -15,7 +16,8 @@ class SubjectService {
       return response.map<SubjectModel>((json) {
         return SubjectModel.fromJson(json);
       }).toList();
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       throw 'Failed to get subjects: $e';
     }
   }
@@ -36,7 +38,8 @@ class SubjectService {
           .single();
       
       return SubjectModel.fromJson(response);
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       throw 'Failed to create subject: $e';
     }
   }
@@ -51,7 +54,8 @@ class SubjectService {
           .single();
       
       return SubjectModel.fromJson(response);
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       throw 'Failed to get subject: $e';
     }
   }

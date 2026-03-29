@@ -1,5 +1,6 @@
 import 'package:smart_campus/common/utils/helpers/snackbar_helper.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '../models/class_model.dart';
 
@@ -46,7 +47,8 @@ class ClassService {
               : null,
         );
       }).toList();
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Error fetching classes: $e');
       throw 'Failed to get teacher classes: $e';
     }
@@ -97,7 +99,8 @@ class ClassService {
             ? DateTime.parse(response['updated_at'])
             : null,
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Error creating class: $e');
       throw 'Failed to create class: $e';
     }
@@ -148,7 +151,8 @@ class ClassService {
             ? DateTime.parse(response['updated_at'])
             : null,
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Error updating class: $e');
       throw 'Failed to update class: $e';
     }
@@ -179,7 +183,8 @@ class ClassService {
       // Finally delete the class
       await supabase.from('classes').delete().eq('id', classId);
       //print('Class deleted successfully');
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Error deleting class: $e');
       TSnackBar.showError(message: 'Oops Failed to Delete Class');
       throw 'Failed to delete class: $e';
@@ -216,7 +221,8 @@ class ClassService {
             ? DateTime.parse(response['updated_at'])
             : null,
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Error fetching class: $e');
       throw 'Failed to get class: $e';
     }

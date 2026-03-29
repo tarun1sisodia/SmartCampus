@@ -105,8 +105,14 @@ class StudentDetailScreen extends StatelessWidget {
                                       child: hasImage
                                           ? CachedNetworkImage(
                                               imageUrl:
-                                                  currentStudent.imageUrl!,
+                                                  ApiConstants.optimizeImageUrl(
+                                                currentStudent!.imageUrl!,
+                                                width: 160,
+                                                height: 160,
+                                              ),
                                               fit: BoxFit.cover,
+                                              memCacheWidth: 160,
+                                              memCacheHeight: 160,
                                               placeholder: (context, url) =>
                                                   const Center(
                                                       child:

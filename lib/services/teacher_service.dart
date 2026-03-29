@@ -1,5 +1,5 @@
-import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import '../models/user_model.dart';
 
 class TeacherService extends GetxService {
@@ -47,7 +47,8 @@ class TeacherService extends GetxService {
       _teacherNameCache[teacherId] = teacherName;
 
       return teacherName;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       return 'Unknown Teacher';
     }
   }
@@ -59,7 +60,8 @@ class TeacherService extends GetxService {
           await supabase.from('profiles').select().eq('id', teacherId).single();
 
       return UserModel.fromJson(response);
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       return null;
     }
   }
@@ -77,7 +79,8 @@ class TeacherService extends GetxService {
       return response
           .map<UserModel>((json) => UserModel.fromJson(json))
           .toList();
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       return [];
     }
   }
@@ -92,7 +95,8 @@ class TeacherService extends GetxService {
           .order('created_at', ascending: false);
 
       return response;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       return [];
     }
   }
@@ -115,7 +119,8 @@ class TeacherService extends GetxService {
           .single();
 
       return response;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       // Return default values if no stats found
       return {
         'total_days': 0,

@@ -1,4 +1,5 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '../models/course_model.dart';
 
@@ -15,7 +16,8 @@ class CourseService {
       return response.map<CourseModel>((json) {
         return CourseModel.fromJson(json);
       }).toList();
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Error while fetching courses: $e');
       throw 'Failed to get courses: $e';
     }
@@ -36,7 +38,8 @@ class CourseService {
       //print('Successfully created course: $response');
 
       return CourseModel.fromJson(response);
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Error while creating course: $e');
       throw 'Failed to create course: $e';
     }
@@ -51,7 +54,8 @@ class CourseService {
       //print('Successfully fetched course: $response');
 
       return CourseModel.fromJson(response);
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Error while fetching course: $e');
       throw 'Failed to get course: $e';
     }

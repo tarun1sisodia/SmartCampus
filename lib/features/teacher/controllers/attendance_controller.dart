@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../models/class_model.dart';
@@ -89,7 +90,8 @@ class AttendanceController extends GetxController {
       if (reset) {
         await loadStudentsForClass();
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //printnt('Error loading attendance sessions: $e');
       TSnackBar.showError(
         message: 'Failed to load attendance sessions: ${e.toString()}',
@@ -142,7 +144,8 @@ class AttendanceController extends GetxController {
 
       students.assignAll(classStudents);
       isStudentsLoaded.value = true;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //printnt('Error loading students: $e');
       TSnackBar.showError(message: 'Failed to load students: ${e.toString()}');
     } finally {
@@ -198,7 +201,8 @@ class AttendanceController extends GetxController {
 
       students.assignAll(classStudents);
       isStudentsLoaded.value = true;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //printnt('Error loading students for session: $e');
       TSnackBar.showError(message: 'Failed to load students: ${e.toString()}');
     } finally {
@@ -288,7 +292,8 @@ class AttendanceController extends GetxController {
 
       // Navigate back to attendance screen
       Get.back();
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //printnt('Error submitting attendance: $e');
       TSnackBar.showError(
         message: 'Failed to submit attendance: ${e.toString()}',
@@ -360,7 +365,8 @@ class AttendanceController extends GetxController {
         message: 'Attendance session created successfully',
         title: 'Success',
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //printnt('Error creating attendance session: $e');
       TSnackBar.showError(message: 'Failed to create session: ${e.toString()}');
     } finally {
@@ -435,7 +441,8 @@ class AttendanceController extends GetxController {
         }
 
         return {'isValid': true, 'message': 'Session Active'};
-      } catch (e) {
+      } catch (e, stackTrace) {
+        await Sentry.captureException(e, stackTrace: stackTrace);
         // print('Time parsing error: $e');
         // If parsing fails, allow access but log warning
         return {
@@ -443,7 +450,8 @@ class AttendanceController extends GetxController {
           'message': 'Session Active (Time format warning)'
         };
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       // print('Error in checkSessionStatus: $e');
       return {'isValid': false, 'message': 'Error checking session status: $e'};
     }
@@ -478,13 +486,5 @@ class AttendanceController extends GetxController {
   // Wrapper for backward compatibility (returns simple boolean)
   bool isSessionRunning(String sessionId) {
     return checkSessionStatus(sessionId)['isValid'] as bool;
-  }
-
-  @override
-  void onClose() {
-    //printnt('Disposing controllers');
-    startTimeController.dispose();
-    endTimeController.dispose();
-    super.onClose();
   }
 }

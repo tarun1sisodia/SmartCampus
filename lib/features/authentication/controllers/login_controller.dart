@@ -1,6 +1,6 @@
-import 'package:smart_campus/common/utils/constants/text_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '../../../common/utils/helpers/snackbar_helper.dart';
 import '../../../services/google_sign_in_service.dart';
@@ -80,7 +80,8 @@ class LoginController extends GetxController {
         message: TTexts.googleError,
         title: TTexts.error,
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       TSnackBar.showError(
         message: TTexts.errorOccured + e.toString(),
         title: TTexts.error,
@@ -112,7 +113,8 @@ class LoginController extends GetxController {
         title: TTexts.welcomeback,
       );
       //printnt('Login successful');
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //printnt('Login failed: $e');
       // Determine if it's a server error or client error
       if (e.toString().contains('network') ||

@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:share_plus/share_plus.dart';
 import 'package:intl/intl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'dart:async';
 
 import '../../../common/utils/helpers/snackbar_helper.dart';
@@ -243,7 +244,8 @@ class AttendanceReportsController extends GetxController {
 
       debugPrint(
           'AttendanceReportsController classes updated via real-time: ${teacherClasses.length} classes');
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error handling classes update in AttendanceReportsController: $e');
     }
   }
@@ -278,7 +280,8 @@ class AttendanceReportsController extends GetxController {
 
       debugPrint(
           'AttendanceReportsController sessions updated via real-time: ${classSessions.length} sessions');
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint(
           'Error handling attendance sessions update in AttendanceReportsController: $e');
     }
@@ -307,7 +310,8 @@ class AttendanceReportsController extends GetxController {
 
       debugPrint(
           'AttendanceReportsController attendance records updated via real-time: ${relevantRecords.length} relevant records');
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint(
           'Error handling attendance records update in AttendanceReportsController: $e');
     }
@@ -323,7 +327,8 @@ class AttendanceReportsController extends GetxController {
       _loadStudentsForClass();
 
       debugPrint('AttendanceReportsController students updated via real-time');
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint(
           'Error handling students update in AttendanceReportsController: $e');
     }
@@ -340,7 +345,8 @@ class AttendanceReportsController extends GetxController {
       students.assignAll(classStudents);
       _filterStudents();
       _updateStudentStats();
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error loading students for class: $e');
     }
   }
@@ -363,7 +369,8 @@ class AttendanceReportsController extends GetxController {
       absentCount.value = stats['absentCount'] ?? 0;
       lateCount.value = stats['lateCount'] ?? 0;
       averageAttendance.value = stats['averageAttendance'] ?? 0.0;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error recalculating statistics: $e');
       _resetStatistics();
     }
@@ -389,7 +396,8 @@ class AttendanceReportsController extends GetxController {
       }
 
       studentStats.assignAll(newStudentStats);
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error updating student stats: $e');
     }
   }
@@ -449,7 +457,8 @@ class AttendanceReportsController extends GetxController {
         debugPrint('Selected class ID: ${selectedClassId.value}');
         await loadAttendanceData();
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error loading classes: $e');
       TSnackBar.showError(message: 'Failed to load classes: ${e.toString()}');
     } finally {
@@ -526,7 +535,8 @@ class AttendanceReportsController extends GetxController {
         studentStats[student.id] = studentStat;
         debugPrint('Stats for student ${student.name}: $studentStat');
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error loading attendance data: $e');
       TSnackBar.showError(
         message: 'Failed to load attendance data: ${e.toString()}',
@@ -662,7 +672,8 @@ class AttendanceReportsController extends GetxController {
       );
 
       TSnackBar.showSuccess(message: 'Report exported successfully');
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error exporting report: $e');
       TSnackBar.showError(message: 'Failed to export report: ${e.toString()}');
     } finally {
@@ -697,7 +708,8 @@ class AttendanceReportsController extends GetxController {
           'Attempting to reconnect to real-time service from AttendanceReportsController...');
       await realtimeService.forceReconnect();
       debugPrint('Successfully reconnected to real-time service');
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Failed to reconnect to real-time service: $e');
     }
   }
@@ -711,7 +723,8 @@ class AttendanceReportsController extends GetxController {
         await loadAttendanceData();
       }
       TSnackBar.showSuccess(message: 'Data refreshed successfully');
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error refreshing data: $e');
       TSnackBar.showError(message: 'Failed to refresh data: ${e.toString()}');
     }

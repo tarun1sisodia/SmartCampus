@@ -4,6 +4,7 @@ import '../../../models/class_model.dart';
 import '../../../services/attendance_service.dart';
 import '../../../common/utils/helpers/snackbar_helper.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 class CalendarController extends GetxController {
   final AttendanceService attendanceService = AttendanceService();
@@ -155,7 +156,8 @@ class CalendarController extends GetxController {
             DateTime(today.year, today.month, today.day, endHour, endMinute);
 
         return now.isAfter(sessionStart) && now.isBefore(sessionEnd);
-      } catch (e) {
+      } catch (e, stackTrace) {
+        await Sentry.captureException(e, stackTrace: stackTrace);
         //printnt('Error parsing session times: $e');
         return false;
       }
@@ -278,7 +280,8 @@ class CalendarController extends GetxController {
           DateTime(today.year, today.month, today.day, endHour, endMinute);
 
       return now.isAfter(sessionStart) && now.isBefore(sessionEnd);
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //printnt('Error parsing session times: $e');
       return false;
     }
@@ -334,13 +337,15 @@ class CalendarController extends GetxController {
             final teacherName =
                 await attendanceService.getTeacherName(teacherId);
             teacherNames[teacherId] = teacherName;
-          } catch (e) {
+          } catch (e, stackTrace) {
+            await Sentry.captureException(e, stackTrace: stackTrace);
             //printnt('Error fetching teacher name for ID $teacherId: $e');
             teacherNames[teacherId] = 'Unknown Teacher';
           }
         }
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //printnt('Error fetching teacher names: $e');
     }
   }

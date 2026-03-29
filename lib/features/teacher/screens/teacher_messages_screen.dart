@@ -351,47 +351,59 @@ class _MessageDetailScreen extends StatelessWidget {
         children: [
           // Message history
           Expanded(
-            child: ListView(
+            child: ListView.builder(
               padding: const EdgeInsets.all(TSizes.defaultSpace),
               reverse: true, // Start from bottom
-              children: [
-                _buildReceivedMessage(
-                  context,
-                  'Hello, I have a question about the homework.',
-                  '10:30 AM',
-                  dark,
-                ),
-                _buildSentMessage(
-                  context,
-                  'Sure, what\'s your question?',
-                  '10:32 AM',
-                  dark,
-                ),
-                _buildReceivedMessage(
-                  context,
-                  'For problem #3, I\'m not sure how to approach it. Could you provide a hint?',
-                  '10:35 AM',
-                  dark,
-                ),
-                _buildSentMessage(
-                  context,
-                  'Try using the formula we discussed in class yesterday. Remember to consider the boundary conditions.',
-                  '10:40 AM',
-                  dark,
-                ),
-                _buildReceivedMessage(
-                  context,
-                  'That makes sense! Thank you for the help.',
-                  '10:42 AM',
-                  dark,
-                ),
-                _buildSentMessage(
-                  context,
-                  'You\'re welcome! Let me know if you have any other questions.',
-                  '10:45 AM',
-                  dark,
-                ),
-              ],
+              itemCount: 6, // Hardcoded for now based on static UI
+              itemBuilder: (context, index) {
+                // Return static messages in reverse order (0 is the newest at bottom)
+                switch (index) {
+                  case 0:
+                    return _buildSentMessage(
+                      context,
+                      'You\'re welcome! Let me know if you have any other questions.',
+                      '10:45 AM',
+                      dark,
+                    );
+                  case 1:
+                    return _buildReceivedMessage(
+                      context,
+                      'That makes sense! Thank you for the help.',
+                      '10:42 AM',
+                      dark,
+                    );
+                  case 2:
+                    return _buildSentMessage(
+                      context,
+                      'Try using the formula we discussed in class yesterday. Remember to consider the boundary conditions.',
+                      '10:40 AM',
+                      dark,
+                    );
+                  case 3:
+                    return _buildReceivedMessage(
+                      context,
+                      'For problem #3, I\'m not sure how to approach it. Could you provide a hint?',
+                      '10:35 AM',
+                      dark,
+                    );
+                  case 4:
+                    return _buildSentMessage(
+                      context,
+                      'Sure, what\'s your question?',
+                      '10:32 AM',
+                      dark,
+                    );
+                  case 5:
+                    return _buildReceivedMessage(
+                      context,
+                      'Hello, I have a question about the homework.',
+                      '10:30 AM',
+                      dark,
+                    );
+                  default:
+                    return const SizedBox.shrink();
+                }
+              },
             ),
           ),
 

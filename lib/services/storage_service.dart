@@ -1,9 +1,6 @@
-import 'dart:io';
-import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'dart:convert';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 class StorageService extends GetxService {
   static StorageService get instance => Get.find();
@@ -88,7 +85,8 @@ class StorageService extends GetxService {
         //print('Returning default cache size for non-mobile platform.');
         return 15.0;
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Error calculating cache size: $e');
       return 0.0;
     }
@@ -116,7 +114,8 @@ class StorageService extends GetxService {
       }
       //print('Total size for directory ${dir.path}: $totalSize bytes');
       return totalSize;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Error calculating directory size: $e');
       return totalSize;
     }
@@ -163,7 +162,8 @@ class StorageService extends GetxService {
         }
       }
       //print('Cache cleared.');
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Error clearing cache: $e');
     }
   }
@@ -191,7 +191,8 @@ class StorageService extends GetxService {
         }
       }
       //print('All data cleared.');
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Error clearing all data: $e');
       rethrow;
     }
@@ -225,7 +226,8 @@ class StorageService extends GetxService {
       );
 
       //print('User data exported successfully.');
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Error exporting data: $e');
       rethrow;
     }
