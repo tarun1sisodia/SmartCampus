@@ -54,7 +54,7 @@ elif [ "$OS" = "Linux" ]; then
         
         # Download Flutter (stable)
         echo "Downloading Flutter SDK..."
-        curl -L https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.19.3-stable.tar.xz -o flutter.tar.xz
+        curl -L https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.41.3-stable.tar.xz -o flutter.tar.xz
         
         # Extract
         echo "Extracting Flutter..."
