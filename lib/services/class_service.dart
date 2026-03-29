@@ -5,15 +5,23 @@ import '../models/class_model.dart';
 
 class ClassService {
   final supabase = Supabase.instance.client;
+  static const int defaultClassFetchLimit = 100;
+  static const String _classSelectFields =
+      'id, teacher_id, subject_id, course_id, semester, section, created_at, updated_at, subjects(name), courses(name)';
 
   // Get all classes for a teacher
-  Future<List<ClassModel>> getTeacherClasses(String teacherId) async {
+  Future<List<ClassModel>> getTeacherClasses(
+    String teacherId, {
+    int limit = defaultClassFetchLimit,
+    int offset = 0,
+  }) async {
     try {
       //print('Fetching classes for teacher with ID: $teacherId');
       final response = await supabase
           .from('classes')
-          .select('*, subjects(*), courses(*)')
+          .select(_classSelectFields)
           .eq('teacher_id', teacherId)
+          .range(offset, offset + limit - 1)
           .order('created_at', ascending: false);
 
       //print('Classes fetched successfully: $response');
@@ -66,7 +74,7 @@ class ClassService {
       final response = await supabase
           .from('classes')
           .insert(data)
-          .select('*, subjects(*), courses(*)')
+          .select(_classSelectFields)
           .single();
 
       //print('Class created successfully: $response');
@@ -117,7 +125,7 @@ class ClassService {
           .from('classes')
           .update(data)
           .eq('id', classId)
-          .select('*, subjects(*), courses(*)')
+          .select(_classSelectFields)
           .single();
 
       //print('Class updated successfully: $response');
@@ -184,7 +192,7 @@ class ClassService {
       //print('Fetching class with ID: $classId');
       final response = await supabase
           .from('classes')
-          .select('*, subjects(*), courses(*)')
+          .select(_classSelectFields)
           .eq('id', classId)
           .single();
 

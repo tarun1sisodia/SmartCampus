@@ -6,28 +6,15 @@ import 'package:get/get.dart';
 
 import '../../forgot_password/forgot_password_2.dart';
 
-class RememberAndForget extends StatefulWidget {
-  final Function(bool) onRememberChanged;
-  final bool initialValue;
+class RememberAndForget extends StatelessWidget {
+  final ValueChanged<bool> onRememberChanged;
+  final bool value;
 
   const RememberAndForget({
     super.key,
     required this.onRememberChanged,
-    required this.initialValue,
+    required this.value,
   });
-
-  @override
-  State<RememberAndForget> createState() => _RememberAndForgetState();
-}
-
-class _RememberAndForgetState extends State<RememberAndForget> {
-  late bool _isChecked;
-
-  @override
-  void initState() {
-    super.initState();
-    _isChecked = widget.initialValue;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,17 +27,12 @@ class _RememberAndForgetState extends State<RememberAndForget> {
         Row(
           children: [
             Checkbox(
-              value: _isChecked,
+              value: value,
               activeColor: dark ? TColors.buttonPrimary : TColors.primary,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(4),
               ),
-              onChanged: (value) {
-                setState(() {
-                  _isChecked = value ?? false;
-                });
-                widget.onRememberChanged(_isChecked);
-              },
+              onChanged: (value) => onRememberChanged(value ?? false),
             ),
             Text(
               TTexts.rememberMe,

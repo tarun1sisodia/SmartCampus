@@ -7,6 +7,7 @@ import '../../../services/google_sign_in_service.dart';
 
 class SignupController extends GetxController {
   // Text controllers for form fields
+  final formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final nameController = TextEditingController();

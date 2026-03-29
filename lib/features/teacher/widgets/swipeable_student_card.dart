@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import '../../../models/student_model.dart';
+import '../../../common/utils/constants/api_constants.dart';
 import '../../../common/utils/constants/colors.dart';
 import '../../../common/utils/constants/sized.dart';
 import '../../../common/utils/device/device_utility.dart';
@@ -83,19 +85,7 @@ class SwipeableStudentCard extends StatelessWidget {
               // Student image - takes most of the card space
               Expanded(
                 child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    image:
-                        student.imageUrl != null && student.imageUrl!.isNotEmpty
-                            ? DecorationImage(
-                                image: NetworkImage(student.imageUrl!),
-                                fit: BoxFit.contain,
-                                onError: (exception, stackTrace) {
-                                  //print('Error loading student image: $exception');
-                                },
-                              )
-                            : null,
-                  ),
+                  color: Colors.grey[200],
                   child: student.imageUrl == null || student.imageUrl!.isEmpty
                       ? Center(
                           child: Text(
@@ -110,7 +100,31 @@ class SwipeableStudentCard extends StatelessWidget {
                             ),
                           ),
                         )
-                      : null,
+                      : CachedNetworkImage(
+                          imageUrl: ApiConstants.optimizeImageUrl(
+                            student.imageUrl!,
+                            width: 900,
+                            height: 900,
+                          ),
+                          fit: BoxFit.contain,
+                          filterQuality: FilterQuality.low,
+                          placeholder: (context, url) => const Center(
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          ),
+                          errorWidget: (context, url, error) => Center(
+                            child: Text(
+                              student.name.isNotEmpty
+                                  ? student.name.substring(0, 1).toUpperCase()
+                                  : "?",
+                              style: TextStyle(
+                                fontSize: 60,
+                                fontWeight: FontWeight.bold,
+                                color: _getStatusColor(
+                                    student.attendanceStatus, dark),
+                              ),
+                            ),
+                          ),
+                        ),
                 ),
               ),
 

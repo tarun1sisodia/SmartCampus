@@ -6,15 +6,23 @@ import '../models/student_model.dart';
 
 class StudentService {
   final supabase = Supabase.instance.client;
+  static const int defaultStudentsPerClassLimit = 200;
 
   // Get all students for a class
-  Future<List<StudentModel>> getStudentsForClass(String classId) async {
+  Future<List<StudentModel>> getStudentsForClass(
+    String classId, {
+    int limit = defaultStudentsPerClassLimit,
+    int offset = 0,
+  }) async {
     try {
       //print('Fetching students for class: $classId');
       final response = await supabase
           .from('class_students')
-          .select('*, students(*)')
+          .select(
+            'class_id, created_at, students(id, name, roll_number, image_url, created_at, updated_at)',
+          )
           .eq('class_id', classId)
+          .range(offset, offset + limit - 1)
           .order('created_at');
 
       //print('Fetched students successfully: $response');

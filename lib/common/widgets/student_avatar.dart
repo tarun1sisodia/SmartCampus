@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:shimmer/shimmer.dart';
+import '../utils/constants/api_constants.dart';
 import '../utils/constants/colors.dart';
 
 class StudentAvatar extends StatelessWidget {
@@ -29,6 +30,13 @@ class StudentAvatar extends StatelessWidget {
   Widget build(BuildContext context) {
     final dark = THelperFunction.isDarkMode(context);
     final hasImage = imageUrl != null && imageUrl!.isNotEmpty;
+    final optimizedImageUrl = hasImage
+        ? ApiConstants.optimizeImageUrl(
+            imageUrl!,
+            width: size.toInt() * 2,
+            height: size.toInt() * 2,
+          )
+        : null;
 
     return GestureDetector(
       onTap: onTap,
@@ -48,8 +56,13 @@ class StudentAvatar extends StatelessWidget {
             child: ClipOval(
               child: hasImage
                   ? CachedNetworkImage(
-                      imageUrl: imageUrl!,
+                      imageUrl: optimizedImageUrl!,
                       fit: BoxFit.cover,
+                      memCacheWidth: size.toInt() * 2,
+                      memCacheHeight: size.toInt() * 2,
+                      maxWidthDiskCache: size.toInt() * 2,
+                      maxHeightDiskCache: size.toInt() * 2,
+                      filterQuality: FilterQuality.low,
                       placeholder: (context, url) => Shimmer.fromColors(
                         baseColor:
                             dark ? TColors.darkerGrey : Colors.grey.shade300,

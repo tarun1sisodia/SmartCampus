@@ -30,6 +30,10 @@ class StudentController extends GetxController {
   final isSelectionMode = false.obs;
   final selectedStudentIds = <String>{}.obs;
   final isAllSelected = false.obs;
+  final hasMoreStudents = true.obs;
+  final isLoadingMoreStudents = false.obs;
+  static const int _studentsPageSize = 25;
+  int _studentsOffset = 0;
 
   @override
   void onClose() {
@@ -45,19 +49,50 @@ class StudentController extends GetxController {
     loadStudentsForClass(classModel.id);
   }
 
-  Future<void> loadStudentsForClass(String classId) async {
+  Future<void> loadStudentsForClass(
+    String classId, {
+    bool reset = true,
+  }) async {
     //printnt('Loading students for class: $classId');
     try {
-      isLoading.value = true;
-      final classStudents = await studentService.getStudentsForClass(classId);
+      if (reset) {
+        isLoading.value = true;
+        _studentsOffset = 0;
+        hasMoreStudents.value = true;
+      } else {
+        if (isLoading.value || isLoadingMoreStudents.value || !hasMoreStudents.value) {
+          return;
+        }
+        isLoadingMoreStudents.value = true;
+      }
+      final classStudents = await studentService.getStudentsForClass(
+        classId,
+        limit: _studentsPageSize,
+        offset: _studentsOffset,
+      );
       //printnt('Loaded students: $classStudents');
-      students.assignAll(classStudents);
+      if (reset) {
+        students.assignAll(classStudents);
+      } else {
+        students.addAll(classStudents);
+      }
+      _studentsOffset = students.length;
+      hasMoreStudents.value = classStudents.length == _studentsPageSize;
     } catch (e) {
       //printnt('Error loading students: $e');
       TSnackBar.showError(message: 'Failed to load students: ${e.toString()}');
     } finally {
-      isLoading.value = false;
+      if (reset) {
+        isLoading.value = false;
+      } else {
+        isLoadingMoreStudents.value = false;
+      }
     }
+  }
+
+  Future<void> loadMoreStudents() async {
+    if (selectedClass.value == null) return;
+    await loadStudentsForClass(selectedClass.value!.id, reset: false);
   }
 
   // Method to pick image from gallery or camera

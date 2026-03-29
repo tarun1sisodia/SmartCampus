@@ -2,12 +2,15 @@ name: Flutter CI
 
 on:
   push:
-    branches: [ clean-rebuild ]
+    branches: [ ai/restoration ]
   pull_request:
-    branches: [ clean-rebuild ]
+    branches: [ ai/restoration ]
 
 permissions:
   contents: write
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   build-linux:

@@ -67,9 +67,7 @@ class AttendanceScreen extends StatelessWidget {
 
         return RefreshIndicator(
           onRefresh: () async {
-            //print('Refreshing attendance sessions');
-            // Show loading indicator while refreshing
-            attendanceController.attendanceSessions();
+            await attendanceController.loadAttendanceSessions(classModel.id);
           },
           color: dark ? TColors.yellow : TColors.primary,
           backgroundColor: dark ? TColors.darkerGrey : Colors.white,
@@ -174,8 +172,40 @@ class AttendanceScreen extends StatelessWidget {
                           horizontal: TSizes.defaultSpace,
                         ),
                         itemCount:
-                            attendanceController.attendanceSessions.length,
+                            attendanceController.attendanceSessions.length +
+                                ((attendanceController.hasMoreSessions.value ||
+                                        attendanceController
+                                            .isLoadingMoreSessions.value)
+                                    ? 1
+                                    : 0),
                         itemBuilder: (context, index) {
+                          if (index >=
+                              attendanceController.attendanceSessions.length) {
+                            if (attendanceController
+                                .isLoadingMoreSessions.value) {
+                              return const Padding(
+                                padding: EdgeInsets.only(
+                                  bottom: TSizes.spaceBtwItems,
+                                ),
+                                child: Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              );
+                            }
+
+                            return Padding(
+                              padding: const EdgeInsets.only(
+                                bottom: TSizes.spaceBtwItems,
+                              ),
+                              child: Center(
+                                child: OutlinedButton(
+                                  onPressed: attendanceController
+                                      .loadMoreAttendanceSessions,
+                                  child: const Text('Load More'),
+                                ),
+                              ),
+                            );
+                          }
                           //print('Building session item at index: $index');
                           final session =
                               attendanceController.attendanceSessions[index];

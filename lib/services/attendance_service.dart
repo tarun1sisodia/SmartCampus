@@ -7,17 +7,27 @@ import '../models/class_model.dart';
 
 class AttendanceService {
   final supabase = Supabase.instance.client;
+  static const int defaultSessionFetchLimit = 60;
+  static const String _sessionSelectFields =
+      'id, class_id, date, start_time, end_time, created_by, created_at, updated_at, status, closed_at';
+  static const String _attendanceRecordSelectFields =
+      'id, session_id, student_id, status, remarks, created_at, updated_at';
 
   // Get attendance sessions for a class
   Future<List<AttendanceSessionModel>> getAttendanceSessions(
     String classId,
+    {
+    int limit = defaultSessionFetchLimit,
+    int offset = 0,
+  }
   ) async {
     try {
       //print('Fetching attendance sessions for class: $classId');
       final response = await supabase
           .from('attendance_sessions')
-          .select()
+          .select(_sessionSelectFields)
           .eq('class_id', classId)
+          .range(offset, offset + limit - 1)
           .order('date', ascending: false);
 
       return response.map<AttendanceSessionModel>((json) {
@@ -39,7 +49,7 @@ class AttendanceService {
       //print('Fetching attendance sessions for date range: $startDate to $endDate');
       final response = await supabase
           .from('attendance_sessions')
-          .select()
+          .select(_sessionSelectFields)
           .eq('class_id', classId)
           .gte('date', startDate.toIso8601String().split('T')[0])
           .lte('date', endDate.toIso8601String().split('T')[0])
@@ -82,7 +92,7 @@ class AttendanceService {
       final response = await supabase
           .from('attendance_sessions')
           .insert(data)
-          .select()
+          .select(_sessionSelectFields)
           .single();
 
       return AttendanceSessionModel.fromJson(response);
@@ -123,7 +133,7 @@ class AttendanceService {
       //print('Fetching attendance records for session: $sessionId');
       final response = await supabase
           .from('attendance_records')
-          .select()
+          .select(_attendanceRecordSelectFields)
           .eq('session_id', sessionId);
 
       return response.map<AttendanceRecordModel>((json) {

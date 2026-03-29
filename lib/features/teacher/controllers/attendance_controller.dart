@@ -14,6 +14,7 @@ class AttendanceController extends GetxController {
   final attendanceService = AttendanceService();
   final studentService = StudentService();
   final classService = ClassService();
+  static const int _sessionPageSize = 20;
   // final allSessionsController = Get.put(AllSessionsController());
 
   final isLoading = false.obs;
@@ -22,6 +23,9 @@ class AttendanceController extends GetxController {
   final currentSessionId = ''.obs;
   final selectedClass = Rx<ClassModel?>(null);
   final attendanceSessions = <AttendanceSessionModel>[].obs;
+  final hasMoreSessions = true.obs;
+  final isLoadingMoreSessions = false.obs;
+  int _sessionOffset = 0;
 
   // For creating new sessions
   final sessionDate = DateTime.now().obs;
@@ -46,24 +50,62 @@ class AttendanceController extends GetxController {
   // load attendance sessions
 
   Future<void> loadAttendanceSessions(String classId) async {
+    await loadAttendanceSessionsPage(classId, reset: true);
+  }
+
+  Future<void> loadAttendanceSessionsPage(
+    String classId, {
+    bool reset = false,
+  }) async {
     try {
       //printnt('Loading attendance sessions for class: $classId');
-      isLoading.value = true;
+      if (reset) {
+        isLoading.value = true;
+        _sessionOffset = 0;
+        hasMoreSessions.value = true;
+      } else {
+        if (isLoading.value ||
+            isLoadingMoreSessions.value ||
+            !hasMoreSessions.value) {
+          return;
+        }
+        isLoadingMoreSessions.value = true;
+      }
 
-      final sessions = await attendanceService.getAttendanceSessions(classId);
+      final sessions = await attendanceService.getAttendanceSessions(
+        classId,
+        limit: _sessionPageSize,
+        offset: _sessionOffset,
+      );
       //printnt('Loaded ${sessions.length} attendance sessions');
-      attendanceSessions.assignAll(sessions);
+      if (reset) {
+        attendanceSessions.assignAll(sessions);
+      } else {
+        attendanceSessions.addAll(sessions);
+      }
+      _sessionOffset = attendanceSessions.length;
+      hasMoreSessions.value = sessions.length == _sessionPageSize;
 
-      // Load students for the class
-      await loadStudentsForClass();
+      if (reset) {
+        await loadStudentsForClass();
+      }
     } catch (e) {
       //printnt('Error loading attendance sessions: $e');
       TSnackBar.showError(
         message: 'Failed to load attendance sessions: ${e.toString()}',
       );
     } finally {
-      isLoading.value = false;
+      if (reset) {
+        isLoading.value = false;
+      } else {
+        isLoadingMoreSessions.value = false;
+      }
     }
+  }
+
+  Future<void> loadMoreAttendanceSessions() async {
+    if (selectedClass.value == null) return;
+    await loadAttendanceSessionsPage(selectedClass.value!.id);
   }
 
   // load students for the class
@@ -88,6 +130,7 @@ class AttendanceController extends GetxController {
       // Load students for the class
       final classStudents = await studentService.getStudentsForClass(
         selectedClass.value!.id,
+        limit: 1000,
       );
 
       //printnt('Loaded ${classStudents.length} students');
@@ -133,6 +176,7 @@ class AttendanceController extends GetxController {
       // Load students for the class
       final classStudents = await studentService.getStudentsForClass(
         selectedClass.value!.id,
+        limit: 1000,
       );
 
       //printnt('Loaded ${classStudents.length} students');

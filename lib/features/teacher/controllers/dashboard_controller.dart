@@ -49,6 +49,7 @@ class DashboardController extends GetxController {
   // these for greeting animation
   final greeting = ''.obs;
   final showGreetingAnimation = true.obs;
+  bool _hasInitialized = false;
 
   @override
   void onInit() {
@@ -75,9 +76,9 @@ class DashboardController extends GetxController {
       debugPrint('Found existing RealtimeService instance');
     } catch (e) {
       debugPrint('RealtimeService not found, creating new instance');
-      realtimeService = Get.put(RealtimeService());
+    realtimeService = Get.put(RealtimeService());
     }
-
+    
     _setupRealtimeSubscriptions();
   }
 
@@ -128,8 +129,9 @@ class DashboardController extends GetxController {
         isRealtimeConnected.value = isConnected;
         if (isConnected) {
           debugPrint('Real-time connection restored in Dashboard');
-          // Refresh data when connection is restored
-          loadDashboardData();
+          if (splashAuthenticationCompleted.value) {
+            loadDashboardData();
+          }
         } else {
           debugPrint('Real-time connection lost in Dashboard');
         }
@@ -210,12 +212,12 @@ class DashboardController extends GetxController {
       // Update attendance stats for all classes
       _updateAttendanceStats();
 
-      debugPrint(
-          'Dashboard classes updated via real-time: ${teacherClasses.length} classes');
-    } catch (e) {
-      debugPrint('Error handling classes update in Dashboard: $e');
-    }
+    debugPrint(
+        'Dashboard classes updated via real-time: ${teacherClasses.length} classes');
+  } catch (e) {
+    debugPrint('Error handling classes update in Dashboard: $e');
   }
+}
 
   // Update total students count
   void _updateTotalStudents() async {
@@ -474,6 +476,13 @@ class DashboardController extends GetxController {
       isLoading.value = false;
       //debugPrint('Dashboard data loading complete');
     }
+  }
+
+  Future<void> initializeAfterSplash() async {
+    if (_hasInitialized) return;
+    _hasInitialized = true;
+    splashAuthenticationCompleted.value = true;
+    await loadDashboardData();
   }
 
   Future<int> _getStudentCountForClass(String classId) async {

@@ -3,14 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../common/utils/helpers/snackbar_helper.dart';
+import '../../../services/google_sign_in_service.dart';
 import '../../../services/storage_service.dart';
 
 class LoginController extends GetxController {
   static LoginController get instance => Get.find();
 
+  final formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final rememberMe = false.obs;
+  final passwordVisible = false.obs;
+  final isGoogleLoading = false.obs;
 
   @override
   void onInit() {
@@ -55,6 +59,34 @@ class LoginController extends GetxController {
         message: TTexts.credentialsNOtSaved,
         title: TTexts.rememberMe,
       );
+    }
+  }
+
+  void togglePasswordVisibility() {
+    passwordVisible.value = !passwordVisible.value;
+  }
+
+  Future<void> signInWithGoogle() async {
+    try {
+      isGoogleLoading.value = true;
+      final googleSignInService = Get.find<GoogleSignInService>();
+      final user = await googleSignInService.signInWithGoogle();
+      if (user != null) {
+        Get.offAllNamed('/dashboard');
+        return;
+      }
+
+      TSnackBar.showError(
+        message: TTexts.googleError,
+        title: TTexts.error,
+      );
+    } catch (e) {
+      TSnackBar.showError(
+        message: TTexts.errorOccured + e.toString(),
+        title: TTexts.error,
+      );
+    } finally {
+      isGoogleLoading.value = false;
     }
   }
 
