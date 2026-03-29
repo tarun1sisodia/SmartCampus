@@ -35,12 +35,20 @@ class StudentController extends GetxController {
   final isLoadingMoreStudents = false.obs;
   static const int _studentsPageSize = 25;
   int _studentsOffset = 0;
+  final scrollController = ScrollController();
+
+  @override
+  void onInit() {
+    super.onInit();
+    scrollController.addListener(_onScroll);
+  }
 
   @override
   void onClose() {
     //printnt('Disposing controllers');
     nameController.dispose();
     rollNumberController.dispose();
+    scrollController.dispose();
     super.onClose();
   }
 
@@ -95,6 +103,12 @@ class StudentController extends GetxController {
   Future<void> loadMoreStudents() async {
     if (selectedClass.value == null) return;
     await loadStudentsForClass(selectedClass.value!.id, reset: false);
+  }
+
+  void _onScroll() {
+    if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 200) {
+      loadMoreStudents();
+    }
   }
 
   // Method to pick image from gallery or camera

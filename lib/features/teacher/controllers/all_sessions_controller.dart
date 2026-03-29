@@ -27,10 +27,16 @@ class AllSessionsController extends GetxController {
   final endDate = DateTime.now().obs;
   final selectedClassIds = <String>[].obs;
 
-  // New properties for multi-select
   final isSelectionMode = false.obs;
   final selectedSessionIds = <String>{}.obs;
   final isAllSelected = false.obs;
+
+  // Pagination
+  final hasMoreSessions = true.obs;
+  final isLoadingMore = false.obs;
+  static const int _pageSize = 20;
+  int _offset = 0;
+  final scrollController = ScrollController();
 
   // Real-time connection status
   final isRealtimeConnected = false.obs;
@@ -60,6 +66,7 @@ class AllSessionsController extends GetxController {
   void onClose() {
     debugPrint('AllSessionsController disposed');
     searchController.dispose();
+    scrollController.dispose();
 
     // Cancel all stream subscriptions
     for (var subscription in _subscriptions) {
@@ -220,10 +227,19 @@ class AllSessionsController extends GetxController {
     }
   }
 
-  Future<void> loadAllSessions() async {
+  Future<void> loadAllSessions({bool reset = true}) async {
     try {
-      debugPrint('Loading all sessions...');
-      isLoading.value = true;
+      if (reset) {
+        debugPrint('Loading all sessions (Reset)...');
+        isLoading.value = true;
+        _offset = 0;
+        hasMoreSessions.value = true;
+        allSessions.clear();
+      } else {
+        if (isLoading.value || isLoadingMore.value || !hasMoreSessions.value) return;
+        debugPrint('Loading more sessions (Offset: $_offset)...');
+        isLoadingMore.value = true;
+      }
 
       final currentUser = Supabase.instance.client.auth.currentUser;
       if (currentUser == null) {
@@ -232,52 +248,78 @@ class AllSessionsController extends GetxController {
         return;
       }
 
-      debugPrint('Fetching classes for teacher: ${currentUser.id}');
-      final teacherClasses = await classService.getTeacherClasses(
-        currentUser.id,
-      );
-
-      List<AttendanceSessionWithClass> allTeacherSessions = [];
-
-      for (var classModel in teacherClasses) {
-        debugPrint('Fetching sessions for class: ${classModel.id}');
-        final sessions = await attendanceService.getAttendanceSessions(
-          classModel.id,
-        );
-
-        final sessionsWithClass = sessions.map((session) {
-          debugPrint('Processing session: ${session.id}');
-          return AttendanceSessionWithClass(
-            id: session.id,
-            classId: session.classId,
-            date: session.date,
-            startTime: session.startTime,
-            endTime: session.endTime,
-            createdBy: session.createdBy,
-            createdAt: session.createdAt,
-            className: classModel.courseName,
-            subjectName: classModel.subjectName,
-            classModel: classModel,
-          );
-        }).toList();
-
-        allTeacherSessions.addAll(sessionsWithClass);
+      // Ensure classes are loaded first for mapping
+      if (classes.isEmpty) {
+        await loadClasses();
       }
 
-      allTeacherSessions.sort((a, b) => b.date.compareTo(a.date));
+      // Create a map for quick class lookup
+      final classMap = {for (var c in classes) c.id: c};
 
-      debugPrint('All sessions loaded: ${allTeacherSessions.length}');
-      allSessions.assignAll(allTeacherSessions);
-      filteredSessions.assignAll(allTeacherSessions);
+      final sessions = await attendanceService.getSessionsForTeacher(
+        teacherId: currentUser.id,
+        limit: _pageSize,
+        offset: _offset,
+      );
 
+      final List<AttendanceSessionWithClass> mappedSessions = sessions.map((session) {
+        final classModel = classMap[session.classId];
+        
+        return AttendanceSessionWithClass(
+          id: session.id,
+          classId: session.classId,
+          date: session.date,
+          startTime: session.startTime,
+          endTime: session.endTime,
+          createdBy: session.createdBy,
+          createdAt: session.createdAt,
+          // Fallback to session fields if classModel is not found
+          className: classModel?.courseName ?? session.courseName,
+          subjectName: classModel?.subjectName ?? session.subjectName,
+          classModel: classModel ?? ClassModel(
+            id: session.classId,
+            teacherId: currentUser.id,
+            subjectId: '',
+            courseId: '',
+            semester: session.semester ?? 0,
+            section: session.section,
+          ),
+          status: session.status,
+          closedAt: session.closedAt,
+        );
+      }).toList();
+
+      if (reset) {
+        allSessions.assignAll(mappedSessions);
+      } else {
+        allSessions.addAll(mappedSessions);
+      }
+
+      _offset = allSessions.length;
+      hasMoreSessions.value = sessions.length == _pageSize;
+      
+      // Initial filter apply
+      filterSessions();
       lastUpdated.value = DateTime.now();
+      
     } catch (e, stackTrace) {
       await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error loading sessions: $e');
       TSnackBar.showError(message: 'Failed to load sessions: ${e.toString()}');
     } finally {
       isLoading.value = false;
+      isLoadingMore.value = false;
       debugPrint('Finished loading sessions');
+    }
+  }
+
+  Future<void> loadMoreSessions() async {
+    await loadAllSessions(reset: false);
+  }
+
+  void _onScroll() {
+    if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 200) {
+      loadMoreSessions();
     }
   }
 

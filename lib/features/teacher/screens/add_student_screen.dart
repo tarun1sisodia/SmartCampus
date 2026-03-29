@@ -193,29 +193,15 @@ class AddStudentScreen extends StatelessWidget {
         }
 
         return ListView.builder(
+          controller: studentController.scrollController,
           padding: const EdgeInsets.all(TSizes.defaultSpace),
           itemCount: studentController.students.length +
-              ((studentController.hasMoreStudents.value ||
-                      studentController.isLoadingMoreStudents.value)
-                  ? 1
-                  : 0),
+              (studentController.isLoadingMoreStudents.value ? 1 : 0),
           itemBuilder: (context, index) {
-            if (index >= studentController.students.length) {
-              if (studentController.isLoadingMoreStudents.value) {
-                return const Padding(
-                  padding: EdgeInsets.only(bottom: TSizes.spaceBtwItems),
-                  child: Center(child: CircularProgressIndicator()),
-                );
-              }
-
-              return Padding(
-                padding: const EdgeInsets.only(bottom: TSizes.spaceBtwItems),
-                child: Center(
-                  child: OutlinedButton(
-                    onPressed: studentController.loadMoreStudents,
-                    child: const Text('Load More'),
-                  ),
-                ),
+            if (index == studentController.students.length) {
+              return const Padding(
+                padding: EdgeInsets.symmetric(vertical: TSizes.spaceBtwItems),
+                child: Center(child: CircularProgressIndicator()),
               );
             }
             final student = studentController.students[index];
