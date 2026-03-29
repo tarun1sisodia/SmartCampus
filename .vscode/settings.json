@@ -2,5 +2,6 @@
     "cmake.sourceDirectory": "D:/StudioPro/smart_campus/windows",
     "cmake.generator": "Visual Studio 17 2022",
     "cmake.buildDirectory": "${workspaceFolder}/build",
-    "cmake.configureOnOpen": true
+    "cmake.configureOnOpen": true,
+    "java.configuration.updateBuildConfiguration": "automatic"
 }

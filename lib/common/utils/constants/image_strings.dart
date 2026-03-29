@@ -39,6 +39,5 @@ class TImageStrings {
   static const String darkEmailSuccess = "assets/images/darkemailsuccess.json";
   static const String lightEmailSuccess = "assets/images/emailsuccess.json";
   static const String searching = "assets/images/searchi.json";
-  static const String delivery = "assets/animations/delivery.json";
   static const String hellorobo = "assets/animations/hello_robo.json";
 }

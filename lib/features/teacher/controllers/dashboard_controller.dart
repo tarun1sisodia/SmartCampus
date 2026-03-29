@@ -53,7 +53,7 @@ class DashboardController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    //print('DashboardController initialized');
+    //debugPrint('DashboardController initialized');
     _initializeRealtimeService();
     checkBiometricAuthentication();
     initializeGreeting();
@@ -72,9 +72,9 @@ class DashboardController extends GetxController {
   void _initializeRealtimeService() {
     try {
       realtimeService = Get.find<RealtimeService>();
-      print('Found existing RealtimeService instance');
+      debugPrint('Found existing RealtimeService instance');
     } catch (e) {
-      print('RealtimeService not found, creating new instance');
+      debugPrint('RealtimeService not found, creating new instance');
       realtimeService = Get.put(RealtimeService());
     }
 
@@ -86,12 +86,12 @@ class DashboardController extends GetxController {
     // Subscribe to classes stream
     final classesSubscription = realtimeService.classesStream.listen(
       (data) {
-        print('Real-time classes update in Dashboard: ${data.length} classes');
+        debugPrint('Real-time classes update in Dashboard: ${data.length} classes');
         _handleClassesUpdate(data);
         lastUpdated.value = DateTime.now();
       },
       onError: (error) {
-        print('Error in classes stream (Dashboard): $error');
+        debugPrint('Error in classes stream (Dashboard): $error');
         isRealtimeConnected.value = false;
       },
     );
@@ -99,26 +99,26 @@ class DashboardController extends GetxController {
     // Subscribe to students stream for total count updates
     final studentsSubscription = realtimeService.studentsStream.listen(
       (data) {
-        print(
+        debugPrint(
             'Real-time students update in Dashboard: ${data.length} students');
         _updateTotalStudents();
         lastUpdated.value = DateTime.now();
       },
       onError: (error) {
-        print('Error in students stream (Dashboard): $error');
+        debugPrint('Error in students stream (Dashboard): $error');
       },
     );
 
     // Subscribe to attendance stream for stats updates
     final attendanceSubscription = realtimeService.attendanceStream.listen(
       (data) {
-        print(
+        debugPrint(
             'Real-time attendance update in Dashboard: ${data.length} records');
         _updateAttendanceStats();
         lastUpdated.value = DateTime.now();
       },
       onError: (error) {
-        print('Error in attendance stream (Dashboard): $error');
+        debugPrint('Error in attendance stream (Dashboard): $error');
       },
     );
 
@@ -127,11 +127,11 @@ class DashboardController extends GetxController {
       (isConnected) {
         isRealtimeConnected.value = isConnected;
         if (isConnected) {
-          print('Real-time connection restored in Dashboard');
+          debugPrint('Real-time connection restored in Dashboard');
           // Refresh data when connection is restored
           loadDashboardData();
         } else {
-          print('Real-time connection lost in Dashboard');
+          debugPrint('Real-time connection lost in Dashboard');
         }
       },
     );
@@ -190,7 +190,7 @@ class DashboardController extends GetxController {
 
             teacherClasses.add(classModel);
           } catch (e) {
-            print(
+            debugPrint(
                 'Error fetching related data for class ${classData['id']}: $e');
           }
         }
@@ -210,10 +210,10 @@ class DashboardController extends GetxController {
       // Update attendance stats for all classes
       _updateAttendanceStats();
 
-      print(
+      debugPrint(
           'Dashboard classes updated via real-time: ${teacherClasses.length} classes');
     } catch (e) {
-      print('Error handling classes update in Dashboard: $e');
+      debugPrint('Error handling classes update in Dashboard: $e');
     }
   }
 
@@ -228,9 +228,9 @@ class DashboardController extends GetxController {
       }
 
       totalStudents.value = totalStudentsCount;
-      print('Total students updated: $totalStudentsCount');
+      debugPrint('Total students updated: $totalStudentsCount');
     } catch (e) {
-      print('Error updating total students: $e');
+      debugPrint('Error updating total students: $e');
     }
   }
 
@@ -257,9 +257,9 @@ class DashboardController extends GetxController {
         averageAttendance.value = 0.0;
       }
 
-      print('Attendance stats updated: ${averageAttendance.value}%');
+      debugPrint('Attendance stats updated: ${averageAttendance.value}%');
     } catch (e) {
-      print('Error updating attendance stats: $e');
+      debugPrint('Error updating attendance stats: $e');
     }
   }
 
@@ -286,11 +286,11 @@ class DashboardController extends GetxController {
   // Reconnect to real-time service
   Future<void> reconnectRealtime() async {
     try {
-      print('Attempting to reconnect to real-time service from Dashboard...');
+      debugPrint('Attempting to reconnect to real-time service from Dashboard...');
       await realtimeService.forceReconnect();
-      print('Successfully reconnected to real-time service');
+      debugPrint('Successfully reconnected to real-time service');
     } catch (e) {
-      print('Failed to reconnect to real-time service: $e');
+      debugPrint('Failed to reconnect to real-time service: $e');
     }
   }
 
@@ -413,23 +413,23 @@ class DashboardController extends GetxController {
   Future<void> loadDashboardData() async {
     try {
       // THelperFunction.showAlert('Let me Check this','Alert is Running');
-      //print('Loading dashboard data...');
+      //debugPrint('Loading dashboard data...');
       isLoading.value = true;
 
       final currentUser = Supabase.instance.client.auth.currentUser;
       if (currentUser == null) {
-        //print('No user is logged in');
+        //debugPrint('No user is logged in');
         TSnackBar.showError(
           message: 'You must be logged in to view the dashboard',
         );
         return;
       }
 
-      //print('Fetching classes for teacher: ${currentUser.id}');
+      //debugPrint('Fetching classes for teacher: ${currentUser.id}');
       final teacherClasses = await classService.getTeacherClasses(
         currentUser.id,
       );
-      //print('Classes fetched: ${teacherClasses.length}');
+      //debugPrint('Classes fetched: ${teacherClasses.length}');
       classes.assignAll(teacherClasses);
       filteredClasses.assignAll(teacherClasses);
       totalClasses.value = teacherClasses.length;
@@ -439,15 +439,15 @@ class DashboardController extends GetxController {
       double totalAttendancePercentage = 0.0;
 
       for (var classModel in teacherClasses) {
-        //print('Fetching stats for class: ${classModel.id}');
+        //debugPrint('Fetching stats for class: ${classModel.id}');
         final stats = await attendanceService.getAttendanceStatsForClass(
           classModel.id,
         );
-        //print('Stats for class ${classModel.id}: $stats');
+        //debugPrint('Stats for class ${classModel.id}: $stats');
         classStats[classModel.id] = stats;
 
         final studentsCount = await _getStudentCountForClass(classModel.id);
-        //print('Student count for class ${classModel.id}: $studentsCount');
+        //debugPrint('Student count for class ${classModel.id}: $studentsCount');
         totalStudentsCount += studentsCount;
 
         if (stats['totalSessions'] > 0) {
@@ -463,57 +463,57 @@ class DashboardController extends GetxController {
         averageAttendance.value = 0.0;
       }
       update();
-      //print('Total students: $totalStudentsCount');
-      //print('Average attendance: ${averageAttendance.value}');
+      //debugPrint('Total students: $totalStudentsCount');
+      //debugPrint('Average attendance: ${averageAttendance.value}');
     } catch (e) {
-      //print('Error loading dashboard data: $e');
+      //debugPrint('Error loading dashboard data: $e');
       TSnackBar.showError(
         message: 'Failed to load dashboard data: ${e.toString()}',
       );
     } finally {
       isLoading.value = false;
-      //print('Dashboard data loading complete');
+      //debugPrint('Dashboard data loading complete');
     }
   }
 
   Future<int> _getStudentCountForClass(String classId) async {
     try {
-      //print('Getting student count for class: $classId');
+      //debugPrint('Getting student count for class: $classId');
       final response = await Supabase.instance.client
           .from('class_students')
           .select('id')
           .eq('class_id', classId);
 
-      //print('Student count response for class $classId: $response');
+      //debugPrint('Student count response for class $classId: $response');
       return response.length;
     } catch (e) {
-      //print('Error getting student count for class $classId: $e');
+      //debugPrint('Error getting student count for class $classId: $e');
       return 0;
     }
   }
 
   Future<void> createInitialData() async {
     try {
-      //print('Creating initial data...');
+      //debugPrint('Creating initial data...');
       final currentUser = Supabase.instance.client.auth.currentUser;
       if (currentUser == null) {
-        //print('No user is logged in');
+        //debugPrint('No user is logged in');
         TSnackBar.showError(message: 'You must be logged in to create data.');
         return;
       }
 
       final classes = await classService.getTeacherClasses(currentUser.id);
-      //print('Existing classes: ${classes.length}');
+      //debugPrint('Existing classes: ${classes.length}');
 
       if (classes.isEmpty) {
-        //print('No classes found, creating sample data...');
+        //debugPrint('No classes found, creating sample data...');
 
         // Create a sample subject
         final subject = await subjectService.createSubject(
           'Operating Systems',
           'BCA301',
         );
-        //print('Sample subject created: $subject');
+        //debugPrint('Sample subject created: $subject');
 
         // Create a sample course
         try {
@@ -521,7 +521,7 @@ class DashboardController extends GetxController {
             'Bachelors of Computer Application',
             'BCA',
           );
-          //print('Sample course created: $course');
+          //debugPrint('Sample course created: $course');
 
           // Create a sample class
           await classService.createClass(
@@ -531,9 +531,9 @@ class DashboardController extends GetxController {
             semester: 1,
             section: 'A',
           );
-          //print('Sample class created');
+          //debugPrint('Sample class created');
         } catch (e) {
-          //print('Error while creating course: $e');
+          //debugPrint('Error while creating course: $e');
           TSnackBar.showError(
             message: 'Failed to create course: ${e.toString()}',
           );
@@ -543,7 +543,7 @@ class DashboardController extends GetxController {
         await loadDashboardData();
       }
     } catch (e) {
-      //print('Error creating initial data: $e');
+      //debugPrint('Error creating initial data: $e');
       TSnackBar.showError(
         message: 'Failed to create initial data: ${e.toString()}',
       );
@@ -551,7 +551,7 @@ class DashboardController extends GetxController {
   }
 
   void searchClasses(String query) {
-    //print('Searching classes with query: $query');
+    //debugPrint('Searching classes with query: $query');
     searchQuery.value = query.toLowerCase();
     if (query.isEmpty) {
       filteredClasses.assignAll(classes);
@@ -565,14 +565,14 @@ class DashboardController extends GetxController {
           final matchesSection =
               classModel.section?.toLowerCase().contains(query) ?? false;
 
-          //print(
+          //debugPrint(
           // 'Class ${classModel.id}: matchesSubject=$matchesSubject, matchesCourse=$matchesCourse, matchesSection=$matchesSection');
           return matchesSubject || matchesCourse || matchesSection;
         }).toList(),
       );
     }
     update();
-    // //print('Filtered classes: ${filteredClasses.length}');
+    // //debugPrint('Filtered classes: ${filteredClasses.length}');
   }
 
   // Add a method to manually trigger biometric authentication

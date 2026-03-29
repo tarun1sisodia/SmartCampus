@@ -17,28 +17,19 @@ import 'services/local_storage_service.dart';
 // The main entry point of the app.
 //
 // Initializes the app's bindings, services, and global state.
-// Checks if the user is already logged in and tries to log in
-// automatically if credentials are saved.
-// Starts the app normally even if auto-login fails.
-//
-// Main entry point of the application.
 //
 // Performs the following startup tasks:
 // - Initializes Flutter bindings
 // - Configures Supabase authentication
 // - Initializes storage and global app services
-// - Attempts automatic user login if credentials are saved
 // - Launches the main application widget
-//
-// Handles auto-login gracefully, continuing app startup even if login fails.
 Future<void> main() async {
   try {
     // Initialize database factory for SQLite
     if (DatabaseHelper.isSupported) {
       DatabaseHelper.initializeDatabaseFactory();
-      print('Database factory initialized successfully');
     } else {
-      print('SQLite not supported on this platform');
+      debugPrint('SQLite not supported on this platform');
     }
     //print('Starting app initialization...');
     // Intializing the binding for the app.
@@ -84,27 +75,20 @@ Future<void> main() async {
 
 Future<void> _initializeServices() async {
   try {
-    print('Initializing services...');
     await Get.putAsync(() => StorageService().init());
-    print('StorageService initialized.');
     await Get.putAsync(() => FeedbackService().init());
-    print('FeedbackService initialized.');
     await Get.putAsync(() => LanguageService().init());
-    print('LanguageService initialized.');
     try {
       await Get.putAsync(() => GoogleSignInService().init());
-      print('GoogleSignInService initialized.');
     } catch (e) {
-      print('GoogleSignInService not supported on this platform: $e');
+      debugPrint('GoogleSignInService not supported on this platform: $e');
     }
     await Get.putAsync(() => LocalStorageService().init(), permanent: true);
-    print('LocalStorageService initialized.');
 
     // Initialize app bindings
     AppBindings.initGlobalBindings();
-    print('App bindings initialized');
   } catch (e) {
-    print('Error initializing services: $e');
+    debugPrint('Error initializing services: $e');
     rethrow;
   }
 }

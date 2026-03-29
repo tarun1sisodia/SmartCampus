@@ -24,11 +24,9 @@ class LoginController extends GetxController {
     final remember = StorageService.instance.getRememberUserStatus();
     if (remember) {
       final email = StorageService.instance.getUserEmail();
-      final password = StorageService.instance.getUserPassword();
 
-      if (email != null && password != null) {
+      if (email != null) {
         emailController.text = email;
-        passwordController.text = password;
         rememberMe.value = true;
         //printnt('Credentials loaded: email=$email');
       }
@@ -41,11 +39,7 @@ class LoginController extends GetxController {
     StorageService.instance.setRememberUserStatus(value);
 
     if (value) {
-      // Save current credentials
-      StorageService.instance.saveUserCredentials(
-        emailController.text,
-        passwordController.text,
-      );
+      StorageService.instance.saveUserCredentials(emailController.text.trim());
       //printnt('Credentials saved: email=${emailController.text}');
       // Show a confirmation message
       TSnackBar.showInfo(
@@ -66,8 +60,7 @@ class LoginController extends GetxController {
 
   bool isUserLoggedIn() {
     final email = StorageService.instance.getUserEmail();
-    final password = StorageService.instance.getUserPassword();
-    final loggedIn = email != null && password != null;
+    final loggedIn = email != null;
     //printnt('Is user logged in? $loggedIn');
     return loggedIn;
   }
@@ -77,10 +70,7 @@ class LoginController extends GetxController {
     try {
       // Your login logic here
       if (rememberMe.value) {
-        StorageService.instance.saveUserCredentials(
-          emailController.text,
-          passwordController.text,
-        );
+        StorageService.instance.saveUserCredentials(emailController.text.trim());
         //printnt('Credentials saved during login: email=${emailController.text}');
       }
 

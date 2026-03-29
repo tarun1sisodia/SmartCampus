@@ -354,6 +354,7 @@ class AttendanceScreen extends StatelessWidget {
                         initialTime: TimeOfDay.now(),
                       );
 
+                      if (!context.mounted) return;
                       if (pickedTime != null) {
                         //print('Selected start time: $pickedTime');
                         attendanceController.startTimeController.text =
@@ -386,6 +387,7 @@ class AttendanceScreen extends StatelessWidget {
                         initialTime: TimeOfDay.now(),
                       );
 
+                      if (!context.mounted) return;
                       if (pickedTime != null) {
                         //print('Selected end time: $pickedTime');
                         attendanceController.endTimeController.text =

@@ -43,7 +43,7 @@ class AllSessionsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    print('AllSessionsController initialized');
+    debugPrint('AllSessionsController initialized');
 
     // Initialize the attendanceController here
     if (Get.isRegistered<AttendanceController>()) {
@@ -59,7 +59,7 @@ class AllSessionsController extends GetxController {
 
   @override
   void onClose() {
-    print('AllSessionsController disposed');
+    debugPrint('AllSessionsController disposed');
     searchController.dispose();
 
     // Cancel all stream subscriptions
@@ -82,9 +82,9 @@ class AllSessionsController extends GetxController {
       }
 
       _setupRealtimeSubscriptions();
-      print('Real-time service initialized for AllSessionsController');
+      debugPrint('Real-time service initialized for AllSessionsController');
     } catch (e) {
-      print('Error initializing real-time service: $e');
+      debugPrint('Error initializing real-time service: $e');
     }
   }
 
@@ -95,12 +95,12 @@ class AllSessionsController extends GetxController {
       final attendanceSessionsSubscription =
           realtimeService.attendanceStream.listen(
         (sessions) {
-          print(
+          debugPrint(
               'Real-time attendance sessions update received: ${sessions.length} sessions');
           _handleAttendanceSessionsUpdate(sessions);
         },
         onError: (error) {
-          print('Error in attendance sessions stream: $error');
+          debugPrint('Error in attendance sessions stream: $error');
           isRealtimeConnected.value = false;
         },
       );
@@ -108,12 +108,12 @@ class AllSessionsController extends GetxController {
       // Subscribe to classes stream
       final classesSubscription = realtimeService.classesStream.listen(
         (classesData) {
-          print(
+          debugPrint(
               'Real-time classes update received: ${classesData.length} classes');
           _handleClassesUpdate(classesData);
         },
         onError: (error) {
-          print('Error in classes stream: $error');
+          debugPrint('Error in classes stream: $error');
           isRealtimeConnected.value = false;
         },
       );
@@ -121,7 +121,7 @@ class AllSessionsController extends GetxController {
       // Subscribe to connection status
       final connectionSubscription = realtimeService.isConnected.listen(
         (connected) {
-          print('Real-time connection status changed: $connected');
+          debugPrint('Real-time connection status changed: $connected');
           isRealtimeConnected.value = connected;
 
           if (connected) {
@@ -140,9 +140,9 @@ class AllSessionsController extends GetxController {
       ]);
 
       isRealtimeConnected.value = realtimeService.isConnected.value;
-      print('Real-time subscriptions set up successfully');
+      debugPrint('Real-time subscriptions set up successfully');
     } catch (e) {
-      print('Error setting up real-time subscriptions: $e');
+      debugPrint('Error setting up real-time subscriptions: $e');
       isRealtimeConnected.value = false;
     }
   }
@@ -151,7 +151,7 @@ class AllSessionsController extends GetxController {
   void _handleAttendanceSessionsUpdate(
       List<Map<String, dynamic>> sessionsData) {
     try {
-      print('Processing attendance sessions update...');
+      debugPrint('Processing attendance sessions update...');
 
       final currentUser = Supabase.instance.client.auth.currentUser;
       if (currentUser == null) return;
@@ -165,16 +165,16 @@ class AllSessionsController extends GetxController {
       // Trigger a refresh of sessions data
       loadAllSessions();
 
-      print('Attendance sessions updated successfully');
+      debugPrint('Attendance sessions updated successfully');
     } catch (e) {
-      print('Error handling attendance sessions update: $e');
+      debugPrint('Error handling attendance sessions update: $e');
     }
   }
 
   // Handle real-time classes updates
   void _handleClassesUpdate(List<Map<String, dynamic>> classesData) {
     try {
-      print('Processing classes update...');
+      debugPrint('Processing classes update...');
 
       final currentUser = Supabase.instance.client.auth.currentUser;
       if (currentUser == null) return;
@@ -211,25 +211,25 @@ class AllSessionsController extends GetxController {
       classes.assignAll(updatedClasses);
       lastUpdated.value = DateTime.now();
 
-      print('Classes updated successfully: ${updatedClasses.length} classes');
+      debugPrint('Classes updated successfully: ${updatedClasses.length} classes');
     } catch (e) {
-      print('Error handling classes update: $e');
+      debugPrint('Error handling classes update: $e');
     }
   }
 
   Future<void> loadAllSessions() async {
     try {
-      print('Loading all sessions...');
+      debugPrint('Loading all sessions...');
       isLoading.value = true;
 
       final currentUser = Supabase.instance.client.auth.currentUser;
       if (currentUser == null) {
-        print('No user logged in');
+        debugPrint('No user logged in');
         TSnackBar.showError(message: 'You must be logged in to view sessions');
         return;
       }
 
-      print('Fetching classes for teacher: ${currentUser.id}');
+      debugPrint('Fetching classes for teacher: ${currentUser.id}');
       final teacherClasses = await classService.getTeacherClasses(
         currentUser.id,
       );
@@ -237,13 +237,13 @@ class AllSessionsController extends GetxController {
       List<AttendanceSessionWithClass> allTeacherSessions = [];
 
       for (var classModel in teacherClasses) {
-        print('Fetching sessions for class: ${classModel.id}');
+        debugPrint('Fetching sessions for class: ${classModel.id}');
         final sessions = await attendanceService.getAttendanceSessions(
           classModel.id,
         );
 
         final sessionsWithClass = sessions.map((session) {
-          print('Processing session: ${session.id}');
+          debugPrint('Processing session: ${session.id}');
           return AttendanceSessionWithClass(
             id: session.id,
             classId: session.classId,
@@ -263,26 +263,26 @@ class AllSessionsController extends GetxController {
 
       allTeacherSessions.sort((a, b) => b.date.compareTo(a.date));
 
-      print('All sessions loaded: ${allTeacherSessions.length}');
+      debugPrint('All sessions loaded: ${allTeacherSessions.length}');
       allSessions.assignAll(allTeacherSessions);
       filteredSessions.assignAll(allTeacherSessions);
 
       lastUpdated.value = DateTime.now();
     } catch (e) {
-      print('Error loading sessions: $e');
+      debugPrint('Error loading sessions: $e');
       TSnackBar.showError(message: 'Failed to load sessions: ${e.toString()}');
     } finally {
       isLoading.value = false;
-      print('Finished loading sessions');
+      debugPrint('Finished loading sessions');
     }
   }
 
   Future<void> loadClasses() async {
     try {
-      print('Loading classes...');
+      debugPrint('Loading classes...');
       final currentUser = Supabase.instance.client.auth.currentUser;
       if (currentUser == null) {
-        print('No user logged in');
+        debugPrint('No user logged in');
         return;
       }
 
@@ -290,16 +290,16 @@ class AllSessionsController extends GetxController {
         currentUser.id,
       );
 
-      print('Classes loaded: ${teacherClasses.length}');
+      debugPrint('Classes loaded: ${teacherClasses.length}');
       classes.assignAll(teacherClasses);
       lastUpdated.value = DateTime.now();
     } catch (e) {
-      print('Error loading classes: $e');
+      debugPrint('Error loading classes: $e');
     }
   }
 
   void filterSessions() {
-    print('Filtering sessions...');
+    debugPrint('Filtering sessions...');
     final searchTerm = searchController.text.toLowerCase();
 
     filteredSessions.value = allSessions.where((session) {
@@ -318,22 +318,22 @@ class AllSessionsController extends GetxController {
       return isInDateRange && isClassSelected && matchesSearch;
     }).toList();
 
-    print('Filtered sessions count: ${filteredSessions.length}');
+    debugPrint('Filtered sessions count: ${filteredSessions.length}');
   }
 
   void resetFilters() {
-    print('Resetting filters...');
+    debugPrint('Resetting filters...');
     searchController.clear();
     startDate.value = DateTime.now().subtract(const Duration(days: 30));
     endDate.value = DateTime.now();
     selectedClassIds.clear();
     filteredSessions.assignAll(allSessions);
-    print('Filters reset');
+    debugPrint('Filters reset');
   }
 
   Future<void> deleteSession(String sessionId) async {
     try {
-      print('Deleting session: $sessionId');
+      debugPrint('Deleting session: $sessionId');
       isLoading.value = true;
 
       await attendanceService.deleteSession(sessionId);
@@ -341,17 +341,17 @@ class AllSessionsController extends GetxController {
       // Note: Real-time subscription will handle UI updates automatically
       // No need to manually remove from lists here
 
-      print('Session deleted: $sessionId');
+      debugPrint('Session deleted: $sessionId');
       TSnackBar.showSuccess(
         message: 'Session deleted successfully',
         title: 'Success',
       );
     } catch (e) {
-      print('Error deleting session: $e');
+      debugPrint('Error deleting session: $e');
       TSnackBar.showError(message: 'Failed to delete session: ${e.toString()}');
     } finally {
       isLoading.value = false;
-      print('Finished deleting session');
+      debugPrint('Finished deleting session');
     }
   }
 
@@ -405,7 +405,7 @@ class AllSessionsController extends GetxController {
             sessionEnd =
                 DateTime(now.year, now.month, now.day, endHour, endMinute);
           } catch (e) {
-            print('Error parsing session time: $e');
+            debugPrint('Error parsing session time: $e');
             return false;
           }
         }
@@ -415,7 +415,7 @@ class AllSessionsController extends GetxController {
 
       return false;
     } catch (e) {
-      print('Error in isSessionRunning: $e');
+      debugPrint('Error in isSessionRunning: $e');
       return false;
     }
   }
@@ -435,7 +435,7 @@ class AllSessionsController extends GetxController {
         title: 'Success',
       );
     } catch (e) {
-      print('Error closing session: $e');
+      debugPrint('Error closing session: $e');
       TSnackBar.showError(message: 'Failed to close session: ${e.toString()}');
     } finally {
       isLoading.value = false;
@@ -513,7 +513,7 @@ class AllSessionsController extends GetxController {
         title: 'Success',
       );
     } catch (e) {
-      print('Error deleting selected sessions: $e');
+      debugPrint('Error deleting selected sessions: $e');
       TSnackBar.showError(
           message: 'Failed to delete sessions: ${e.toString()}');
     } finally {
@@ -523,7 +523,7 @@ class AllSessionsController extends GetxController {
 
   // Manual refresh method
   Future<void> refreshData() async {
-    print('Manual refresh triggered');
+    debugPrint('Manual refresh triggered');
     await Future.wait([
       loadAllSessions(),
       loadClasses(),

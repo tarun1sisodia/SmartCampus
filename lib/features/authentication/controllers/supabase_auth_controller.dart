@@ -47,11 +47,9 @@ class SupabaseAuthController extends GetxController {
     final remember = StorageService.instance.getRememberUserStatus();
     if (remember) {
       final email = StorageService.instance.getUserEmail();
-      final password = StorageService.instance.getUserPassword();
 
-      if (email != null && password != null) {
+      if (email != null) {
         emailController.text = email;
-        passwordController.text = password;
         rememberMe.value = true;
         //printrint('Loaded saved credentials: email=$email');
       }
@@ -64,10 +62,7 @@ class SupabaseAuthController extends GetxController {
     StorageService.instance.setRememberUserStatus(value);
 
     if (value) {
-      StorageService.instance.saveUserCredentials(
-        emailController.text,
-        passwordController.text,
-      );
+      StorageService.instance.saveUserCredentials(emailController.text.trim());
       //printrint('Credentials saved');
       TSnackBar.showInfo(
         message: 'Your credentials will be remembered for next login',
@@ -98,10 +93,8 @@ class SupabaseAuthController extends GetxController {
       if (response.user != null) {
          // print('Sign-in successful: user=${response.user!.id}');
         if (rememberMe.value) {
-          StorageService.instance.saveUserCredentials(
-            emailController.text.trim(),
-            passwordController.text,
-          );
+          StorageService.instance
+              .saveUserCredentials(emailController.text.trim());
         }
 
         try {
@@ -132,17 +125,9 @@ class SupabaseAuthController extends GetxController {
           title: 'Welcome Back',
         );
 
-        // Check if we're on Linux
-        bool isLinux = false;
         try {
-          isLinux = Platform.isLinux;
-           // print('Platform is Linux: $isLinux');
-        } catch (e) {
-           // print('Error checking platform: $e');
-        }
-
-        // Force navigation to home route
-         // print('Navigating to home route: ${AppRoutes.home}');
+          Platform.isLinux;
+        } catch (_) {}
 
         // Use Get.offAll to bypass middleware
         Get.offAll(

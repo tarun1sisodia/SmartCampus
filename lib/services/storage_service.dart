@@ -13,14 +13,19 @@ class StorageService extends GetxService {
   static const String onboardingCompletedKey = 'onboardingCompleted';
   static const String rememberUserKey = 'rememberUser';
   static const String userEmailKey = 'userEmail';
-  static const String userPasswordKey = 'userPassword';
+  static const String legacyUserPasswordKey = 'userPassword';
 
   // Initialize storage service
   Future<StorageService> init() async {
-    //print('Initializing StorageService...');
     await GetStorage.init();
-    //print('StorageService initialized.');
+    await _clearLegacyCredentialData();
     return this;
+  }
+
+  Future<void> _clearLegacyCredentialData() async {
+    if (_storage.hasData(legacyUserPasswordKey)) {
+      await _storage.remove(legacyUserPasswordKey);
+    }
   }
 
   // Onboarding
@@ -52,11 +57,8 @@ class StorageService extends GetxService {
   }
 
   // User Credentials
-  Future<void> saveUserCredentials(String email, String password) async {
-    //print('Saving user credentials...');
+  Future<void> saveUserCredentials(String email) async {
     await _storage.write(userEmailKey, email);
-    await _storage.write(userPasswordKey, password);
-    //print('User credentials saved.');
   }
 
   String? getUserEmail() {
@@ -66,18 +68,8 @@ class StorageService extends GetxService {
     return email;
   }
 
-  String? getUserPassword() {
-    //print('Getting user password...');
-    final password = _storage.read(userPasswordKey);
-    //print('User password: $password');
-    return password;
-  }
-
   Future<void> clearUserCredentials() async {
-    //print('Clearing user credentials...');
     await _storage.remove(userEmailKey);
-    await _storage.remove(userPasswordKey);
-    //print('User credentials cleared.');
   }
 
   // Get cache size in MB - optimized for mobile platforms
@@ -213,7 +205,6 @@ class StorageService extends GetxService {
       final keys = _storage.getKeys();
 
       for (final key in keys) {
-        if (key == userPasswordKey) continue;
         allData[key] = _storage.read(key);
       }
 
@@ -226,9 +217,12 @@ class StorageService extends GetxService {
       final file = File('${tempDir.path}/attendance_app_data_export.json');
       await file.writeAsString(jsonData);
 
-      await Share.shareXFiles([
-        XFile(file.path),
-      ], text: 'Attendance App Data Export');
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [XFile(file.path)],
+          text: 'Attendance App Data Export',
+        ),
+      );
 
       //print('User data exported successfully.');
     } catch (e) {
