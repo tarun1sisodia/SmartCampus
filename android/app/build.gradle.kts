@@ -16,8 +16,8 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace = "com.smartcampus.attendance"
-    compileSdk = flutter.compileSdkVersion
-    ndkVersion = "27.0.12077973"  // Use Flutter's default NDK version
+    compileSdk = 36
+    ndkVersion = "30.0.14904198"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -31,7 +31,7 @@ android {
     defaultConfig {
         applicationId = "com.smartcampus.attendance"
         minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
+        targetSdk = 36
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }

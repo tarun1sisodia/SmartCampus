@@ -37,8 +37,8 @@ class LocalStorageService extends GetxService {
   static const String _keyOnboarding = 'onboarding_completed';
   static const String _keyRememberUser = 'remember_user';
   static const String _keyUserEmail = 'user_email';
-  static const String _keyUserPassword = 'user_password';
-  static const String _keyOfflineData = 'offline_data';
+  static const String _legacyKeyUserPassword = 'user_password';
+  static const String _legacyKeyOfflineData = 'offline_data';
   static const String _keyLastSync = 'last_sync';
 
   // Database info
@@ -55,6 +55,7 @@ class LocalStorageService extends GetxService {
     try {
       // Initialize SharedPreferences
       _prefs = await SharedPreferences.getInstance();
+      await _clearLegacyPreferenceData();
       debugPrint('SharedPreferences initialized successfully');
 
       // Initialize SQLite Database only if supported
@@ -82,6 +83,11 @@ class LocalStorageService extends GetxService {
       await _initializeStorage();
     }
     return this;
+  }
+
+  Future<void> _clearLegacyPreferenceData() async {
+    await _prefs.remove(_legacyKeyUserPassword);
+    await _prefs.remove(_legacyKeyOfflineData);
   }
 
 // Get unsynced records
@@ -347,7 +353,7 @@ class LocalStorageService extends GetxService {
   }
 
   // Check if database is available
-  bool get isDatabaseAvailable => _database != null;
+  bool get isDatabaseAvailable => _isInitialized && DatabaseHelper.isSupported;
 
   /* Future<void> _createDatabase(Database db, int version) async {
     // Create tables for offline data storage
@@ -524,10 +530,9 @@ class LocalStorageService extends GetxService {
   }
 
   // User Credentials (for remember me functionality)
-  Future<bool> saveUserCredentials(String email, String password) async {
+  Future<bool> saveUserCredentials(String email) async {
     try {
       await _prefs.setString(_keyUserEmail, email);
-      await _prefs.setString(_keyUserPassword, password);
       return true;
     } catch (e) {
       debugPrint('Error saving user credentials: $e');
@@ -538,14 +543,12 @@ class LocalStorageService extends GetxService {
   Map<String, String?> getUserCredentials() {
     return {
       'email': _prefs.getString(_keyUserEmail),
-      'password': _prefs.getString(_keyUserPassword),
     };
   }
 
   Future<bool> clearUserCredentials() async {
     try {
       await _prefs.remove(_keyUserEmail);
-      await _prefs.remove(_keyUserPassword);
       return true;
     } catch (e) {
       debugPrint('Error clearing user credentials: $e');

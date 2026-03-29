@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:csv/csv.dart';
 import 'dart:io';
@@ -56,14 +57,14 @@ class AttendanceReportsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    print('AttendanceReportsController initialized');
+    debugPrint('AttendanceReportsController initialized');
     _initializeRealtimeService();
     loadClasses();
   }
 
   @override
   void onClose() {
-    print('AttendanceReportsController disposed');
+    debugPrint('AttendanceReportsController disposed');
 
     // Clean up subscriptions
     for (var subscription in _subscriptions) {
@@ -76,10 +77,10 @@ class AttendanceReportsController extends GetxController {
   void _initializeRealtimeService() {
     try {
       realtimeService = Get.find<RealtimeService>();
-      print(
+      debugPrint(
           'Found existing RealtimeService instance in AttendanceReportsController');
     } catch (e) {
-      print(
+      debugPrint(
           'RealtimeService not found, creating new instance in AttendanceReportsController');
       realtimeService = Get.put(RealtimeService());
     }
@@ -92,13 +93,13 @@ class AttendanceReportsController extends GetxController {
     // Subscribe to classes stream for real-time updates
     final classesSubscription = realtimeService.classesStream.listen(
       (data) {
-        print(
+        debugPrint(
             'Real-time classes update in AttendanceReportsController: ${data.length} classes');
         _handleClassesUpdate(data);
         lastUpdated.value = DateTime.now();
       },
       onError: (error) {
-        print('Error in classes stream (AttendanceReportsController): $error');
+        debugPrint('Error in classes stream (AttendanceReportsController): $error');
         isRealtimeConnected.value = false;
       },
     );
@@ -107,13 +108,13 @@ class AttendanceReportsController extends GetxController {
     final attendanceSessionsSubscription =
         realtimeService.attendanceSessionsStream.listen(
       (data) {
-        print(
+        debugPrint(
             'Real-time attendance sessions update in AttendanceReportsController: ${data.length} sessions');
         _handleAttendanceSessionsUpdate(data);
         lastUpdated.value = DateTime.now();
       },
       onError: (error) {
-        print(
+        debugPrint(
             'Error in attendance sessions stream (AttendanceReportsController): $error');
       },
     );
@@ -122,13 +123,13 @@ class AttendanceReportsController extends GetxController {
     final attendanceRecordsSubscription =
         realtimeService.attendanceRecordsStream.listen(
       (data) {
-        print(
+        debugPrint(
             'Real-time attendance records update in AttendanceReportsController: ${data.length} records');
         _handleAttendanceRecordsUpdate(data);
         lastUpdated.value = DateTime.now();
       },
       onError: (error) {
-        print(
+        debugPrint(
             'Error in attendance records stream (AttendanceReportsController): $error');
       },
     );
@@ -136,13 +137,13 @@ class AttendanceReportsController extends GetxController {
     // Subscribe to students stream
     final studentsSubscription = realtimeService.studentsStream.listen(
       (data) {
-        print(
+        debugPrint(
             'Real-time students update in AttendanceReportsController: ${data.length} students');
         _handleStudentsUpdate(data);
         lastUpdated.value = DateTime.now();
       },
       onError: (error) {
-        print('Error in students stream (AttendanceReportsController): $error');
+        debugPrint('Error in students stream (AttendanceReportsController): $error');
       },
     );
 
@@ -151,14 +152,14 @@ class AttendanceReportsController extends GetxController {
       (isConnected) {
         isRealtimeConnected.value = isConnected;
         if (isConnected) {
-          print('Real-time connection restored in AttendanceReportsController');
+          debugPrint('Real-time connection restored in AttendanceReportsController');
           // Refresh data when connection is restored
           loadClasses();
           if (selectedClassId.value.isNotEmpty) {
             loadAttendanceData();
           }
         } else {
-          print('Real-time connection lost in AttendanceReportsController');
+          debugPrint('Real-time connection lost in AttendanceReportsController');
         }
       },
     );
@@ -218,7 +219,7 @@ class AttendanceReportsController extends GetxController {
 
             teacherClasses.add(classModel);
           } catch (e) {
-            print(
+            debugPrint(
                 'Error fetching related data for class ${classData['id']}: $e');
           }
         }
@@ -240,10 +241,10 @@ class AttendanceReportsController extends GetxController {
         }
       }
 
-      print(
+      debugPrint(
           'AttendanceReportsController classes updated via real-time: ${teacherClasses.length} classes');
     } catch (e) {
-      print('Error handling classes update in AttendanceReportsController: $e');
+      debugPrint('Error handling classes update in AttendanceReportsController: $e');
     }
   }
 
@@ -275,10 +276,10 @@ class AttendanceReportsController extends GetxController {
       // Recalculate statistics
       _recalculateStatistics();
 
-      print(
+      debugPrint(
           'AttendanceReportsController sessions updated via real-time: ${classSessions.length} sessions');
     } catch (e) {
-      print(
+      debugPrint(
           'Error handling attendance sessions update in AttendanceReportsController: $e');
     }
   }
@@ -304,10 +305,10 @@ class AttendanceReportsController extends GetxController {
         _updateStudentStats();
       }
 
-      print(
+      debugPrint(
           'AttendanceReportsController attendance records updated via real-time: ${relevantRecords.length} relevant records');
     } catch (e) {
-      print(
+      debugPrint(
           'Error handling attendance records update in AttendanceReportsController: $e');
     }
   }
@@ -321,9 +322,9 @@ class AttendanceReportsController extends GetxController {
       // For now, we'll reload students data when there are changes
       _loadStudentsForClass();
 
-      print('AttendanceReportsController students updated via real-time');
+      debugPrint('AttendanceReportsController students updated via real-time');
     } catch (e) {
-      print(
+      debugPrint(
           'Error handling students update in AttendanceReportsController: $e');
     }
   }
@@ -340,7 +341,7 @@ class AttendanceReportsController extends GetxController {
       _filterStudents();
       _updateStudentStats();
     } catch (e) {
-      print('Error loading students for class: $e');
+      debugPrint('Error loading students for class: $e');
     }
   }
 
@@ -363,7 +364,7 @@ class AttendanceReportsController extends GetxController {
       lateCount.value = stats['lateCount'] ?? 0;
       averageAttendance.value = stats['averageAttendance'] ?? 0.0;
     } catch (e) {
-      print('Error recalculating statistics: $e');
+      debugPrint('Error recalculating statistics: $e');
       _resetStatistics();
     }
   }
@@ -389,7 +390,7 @@ class AttendanceReportsController extends GetxController {
 
       studentStats.assignAll(newStudentStats);
     } catch (e) {
-      print('Error updating student stats: $e');
+      debugPrint('Error updating student stats: $e');
     }
   }
 
@@ -427,12 +428,12 @@ class AttendanceReportsController extends GetxController {
   // Load all classes for the current teacher (initial load)
   Future<void> loadClasses() async {
     try {
-      print('Loading classes...');
+      debugPrint('Loading classes...');
       isLoading.value = true;
 
       final currentUser = Supabase.instance.client.auth.currentUser;
       if (currentUser == null) {
-        print('User not authenticated');
+        debugPrint('User not authenticated');
         TSnackBar.showError(message: 'You must be logged in to view reports');
         return;
       }
@@ -440,16 +441,16 @@ class AttendanceReportsController extends GetxController {
       final teacherClasses = await classService.getTeacherClasses(
         currentUser.id,
       );
-      print('Classes fetched: ${teacherClasses.length}');
+      debugPrint('Classes fetched: ${teacherClasses.length}');
       classes.assignAll(teacherClasses);
 
       if (classes.isNotEmpty && selectedClassId.isEmpty) {
         selectedClassId.value = classes[0].id;
-        print('Selected class ID: ${selectedClassId.value}');
+        debugPrint('Selected class ID: ${selectedClassId.value}');
         await loadAttendanceData();
       }
     } catch (e) {
-      print('Error loading classes: $e');
+      debugPrint('Error loading classes: $e');
       TSnackBar.showError(message: 'Failed to load classes: ${e.toString()}');
     } finally {
       isLoading.value = false;
@@ -460,11 +461,11 @@ class AttendanceReportsController extends GetxController {
   Future<void> loadAttendanceData() async {
     try {
       if (selectedClassId.isEmpty) {
-        print('No class selected');
+        debugPrint('No class selected');
         return;
       }
 
-      print('Loading attendance data for class: ${selectedClassId.value}');
+      debugPrint('Loading attendance data for class: ${selectedClassId.value}');
       isLoading.value = true;
 
       // Load sessions for the date range
@@ -474,14 +475,14 @@ class AttendanceReportsController extends GetxController {
         startDate: startDate.value,
         endDate: endDate.value,
       );
-      print('Sessions fetched: ${classSessions.length}');
+      debugPrint('Sessions fetched: ${classSessions.length}');
       sessions.assignAll(classSessions);
 
       // Load students for the class
       final classStudents = await studentService.getStudentsForClass(
         selectedClassId.value,
       );
-      print('Students fetched: ${classStudents.length}');
+      debugPrint('Students fetched: ${classStudents.length}');
       students.assignAll(classStudents);
       _filterStudents();
 
@@ -492,7 +493,7 @@ class AttendanceReportsController extends GetxController {
       studentStats.clear();
 
       if (sessions.isEmpty) {
-        print('No sessions found');
+        debugPrint('No sessions found');
         averageAttendance.value = 0.0;
         return;
       }
@@ -509,7 +510,7 @@ class AttendanceReportsController extends GetxController {
       lateCount.value = stats['lateCount'] ?? 0;
       averageAttendance.value = stats['averageAttendance'] ?? 0.0;
 
-      print(
+      debugPrint(
           'Overall stats - Present: ${presentCount.value}, Absent: ${absentCount.value}, Late: ${lateCount.value}, Average: ${averageAttendance.value}');
 
       // Load individual student statistics
@@ -523,10 +524,10 @@ class AttendanceReportsController extends GetxController {
         );
 
         studentStats[student.id] = studentStat;
-        print('Stats for student ${student.name}: $studentStat');
+        debugPrint('Stats for student ${student.name}: $studentStat');
       }
     } catch (e) {
-      print('Error loading attendance data: $e');
+      debugPrint('Error loading attendance data: $e');
       TSnackBar.showError(
         message: 'Failed to load attendance data: ${e.toString()}',
       );
@@ -556,7 +557,7 @@ class AttendanceReportsController extends GetxController {
 
   // Navigate to student detail screen
   void navigateToStudentDetail(StudentModel student) {
-    print('Navigating to student detail for: ${student.name}');
+    debugPrint('Navigating to student detail for: ${student.name}');
     Get.to(
       () =>
           StudentDetailScreen(student: student, classId: selectedClassId.value),
@@ -567,12 +568,12 @@ class AttendanceReportsController extends GetxController {
   Future<void> exportAttendanceReport() async {
     try {
       if (selectedClassId.isEmpty || students.isEmpty || sessions.isEmpty) {
-        print('No data available to export');
+        debugPrint('No data available to export');
         TSnackBar.showInfo(message: 'No data available to export');
         return;
       }
 
-      print('Exporting attendance report...');
+      debugPrint('Exporting attendance report...');
       isLoading.value = true;
 
       final classModel = classes.firstWhere(
@@ -651,15 +652,18 @@ class AttendanceReportsController extends GetxController {
       final file = File(filePath);
       await file.writeAsString(csv);
 
-      print('CSV file saved at: $filePath');
+      debugPrint('CSV file saved at: $filePath');
 
-      await Share.shareXFiles([
-        XFile(filePath),
-      ], text: 'Attendance Report for $className');
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [XFile(filePath)],
+          text: 'Attendance Report for $className',
+        ),
+      );
 
       TSnackBar.showSuccess(message: 'Report exported successfully');
     } catch (e) {
-      print('Error exporting report: $e');
+      debugPrint('Error exporting report: $e');
       TSnackBar.showError(message: 'Failed to export report: ${e.toString()}');
     } finally {
       isLoading.value = false;
@@ -689,26 +693,26 @@ class AttendanceReportsController extends GetxController {
   // Reconnect to real-time service
   Future<void> reconnectRealtime() async {
     try {
-      print(
+      debugPrint(
           'Attempting to reconnect to real-time service from AttendanceReportsController...');
       await realtimeService.forceReconnect();
-      print('Successfully reconnected to real-time service');
+      debugPrint('Successfully reconnected to real-time service');
     } catch (e) {
-      print('Failed to reconnect to real-time service: $e');
+      debugPrint('Failed to reconnect to real-time service: $e');
     }
   }
 
   // Refresh all data manually
   Future<void> refreshData() async {
     try {
-      print('Manually refreshing attendance reports data...');
+      debugPrint('Manually refreshing attendance reports data...');
       await loadClasses();
       if (selectedClassId.value.isNotEmpty) {
         await loadAttendanceData();
       }
       TSnackBar.showSuccess(message: 'Data refreshed successfully');
     } catch (e) {
-      print('Error refreshing data: $e');
+      debugPrint('Error refreshing data: $e');
       TSnackBar.showError(message: 'Failed to refresh data: ${e.toString()}');
     }
   }

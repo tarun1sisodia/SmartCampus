@@ -40,7 +40,7 @@ class BiometricAuthService extends GetxController {
       final prefs = await SharedPreferences.getInstance();
       isBiometricEnabled.value = prefs.getBool('biometric_enabled') ?? false;
     } catch (e) {
-      print("Error loading biometric settings: $e");
+      debugPrint('Error loading biometric settings: $e');
       isBiometricEnabled.value = false;
     }
   }
@@ -53,7 +53,7 @@ class BiometricAuthService extends GetxController {
       await prefs.setBool('biometric_enabled', enabled);
       isBiometricEnabled.value = enabled;
     } catch (e) {
-      print("Error saving biometric settings: $e");
+      debugPrint('Error saving biometric settings: $e');
     }
   }
 
@@ -65,7 +65,7 @@ class BiometricAuthService extends GetxController {
       await prefs.setBool('biometric_enabled', false);
       isBiometricEnabled.value = false;
     } catch (e) {
-      print("Error disabling biometrics: $e");
+      debugPrint('Error disabling biometrics: $e');
     }
   }
 
@@ -117,7 +117,7 @@ class BiometricAuthService extends GetxController {
           'Biometric authentication is not available on this device',
           snackPosition: SnackPosition.BOTTOM,
         );
-        return true; // Return true to allow access even if biometrics aren't available
+        return false;
       }
     }
 
@@ -155,8 +155,7 @@ class BiometricAuthService extends GetxController {
         snackPosition: SnackPosition.BOTTOM,
       );
 
-      // Return true on error to allow access rather than blocking
-      return true;
+      return false;
     } finally {
       isAuthenticating.value = false;
     }

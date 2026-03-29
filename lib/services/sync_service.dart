@@ -11,7 +11,6 @@ import 'class_service.dart';
 import 'subject_service.dart';
 import 'course_service.dart';
 import 'student_service.dart';
-import 'teacher_service.dart';
 import 'attendance_service.dart';
 
 class SyncService extends GetxService {
@@ -25,7 +24,6 @@ class SyncService extends GetxService {
   final _subjectService = SubjectService();
   final _courseService = CourseService();
   final _studentService = StudentService();
-  final _teacherService = TeacherService();
   final _attendanceService = AttendanceService();
 
   final RxBool isSyncing = false.obs;

@@ -486,7 +486,12 @@ class ReportsScreen extends StatelessWidget {
         final file = File(filePath);
         await file.writeAsBytes(bytes);
 
-        await Share.shareXFiles([XFile(filePath)], text: shareText);
+        await SharePlus.instance.share(
+          ShareParams(
+            files: [XFile(filePath)],
+            text: shareText,
+          ),
+        );
       } else if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
         String? outputFile = await FilePicker.platform.saveFile(
           dialogTitle: 'Save PDF File',
