@@ -581,6 +581,34 @@ class AttendanceService {
     }
   }
 
+  // Fetches all attendance sessions for a specific teacher with pagination
+  Future<List<AttendanceSessionModel>> getSessionsForTeacher({
+    required String teacherId,
+    int limit = defaultSessionFetchLimit,
+    int offset = 0,
+  }) async {
+    try {
+      debugPrint('Fetching sessions for teacher: $teacherId with limit: $limit, offset: $offset');
+      
+      // Use the attendance_session_details view which already has all the joined data
+      // Filter by teacher_id/created_by
+      final response = await supabase
+          .from('attendance_session_details')
+          .select()
+          .eq('created_by', teacherId)
+          .range(offset, offset + limit - 1)
+          .order('date', ascending: false);
+
+      return (response as List)
+          .map((data) => AttendanceSessionModel.fromJson(data))
+          .toList();
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
+      debugPrint('Error fetching teacher attendance sessions: $e');
+      throw 'Failed to load attendance sessions';
+    }
+  }
+
   // Fetches all attendance sessions from the database
   Future<List<AttendanceSessionModel>> getAllAttendanceSessions() async {
     try {
@@ -596,7 +624,8 @@ class AttendanceService {
       return (response as List)
           .map((data) => AttendanceSessionModel.fromJson(data))
           .toList();
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Error fetching all attendance sessions: $e');
       throw 'Failed to load attendance sessions';
     }

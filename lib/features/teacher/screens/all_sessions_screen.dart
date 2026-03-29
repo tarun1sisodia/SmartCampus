@@ -261,11 +261,20 @@ class AllSessionsScreen extends StatelessWidget {
             // Sessions list
             Expanded(
               child: ListView.builder(
+                controller: allSessionsController.scrollController,
                 padding: const EdgeInsets.symmetric(
                   horizontal: TSizes.defaultSpace,
                 ),
-                itemCount: allSessionsController.filteredSessions.length,
+                itemCount: allSessionsController.filteredSessions.length + 
+                    (allSessionsController.isLoadingMore.value ? 1 : 0),
                 itemBuilder: (context, index) {
+                  if (index == allSessionsController.filteredSessions.length) {
+                    return const Padding(
+                      padding: EdgeInsets.all(TSizes.md),
+                      child: Center(child: CircularProgressIndicator()),
+                    );
+                  }
+                  
                   final session = allSessionsController.filteredSessions[index];
                   // print('Rendering session: ${session.id}');
                   final formattedDate = DateFormat(
