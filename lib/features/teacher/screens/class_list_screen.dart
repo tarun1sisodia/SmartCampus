@@ -296,10 +296,31 @@ class ClassListScreen extends StatelessWidget {
       child: ListView.builder(
         physics: const AlwaysScrollableScrollPhysics(),
         padding: const EdgeInsets.all(TSizes.defaultSpace),
-        itemCount: classController.classes.length,
+        itemCount: classController.filteredClasses.length +
+            ((classController.hasMoreClasses.value ||
+                    classController.isLoadingMore.value)
+                ? 1
+                : 0),
         itemBuilder: (context, index) {
+          if (index >= classController.filteredClasses.length) {
+            if (classController.isLoadingMore.value) {
+              return const Padding(
+                padding: EdgeInsets.only(bottom: TSizes.spaceBtwItems),
+                child: Center(child: CircularProgressIndicator()),
+              );
+            }
+            return Padding(
+              padding: const EdgeInsets.only(bottom: TSizes.spaceBtwItems),
+              child: Center(
+                child: OutlinedButton(
+                  onPressed: classController.loadMoreClasses,
+                  child: const Text('Load More'),
+                ),
+              ),
+            );
+          }
           ///print('Building class item at index $index');
-          final classItem = classController.classes[index];
+          final classItem = classController.filteredClasses[index];
 
           // Check if this class is selected
           final isSelected =

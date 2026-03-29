@@ -1,7 +1,9 @@
 import 'services/feedback_service.dart';
 import 'services/storage_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:get_storage/get_storage.dart';
 import 'app/bindings/app_bindings.dart';
@@ -25,6 +27,10 @@ import 'services/local_storage_service.dart';
 // - Launches the main application widget
 Future<void> main() async {
   try {
+    WidgetsFlutterBinding.ensureInitialized();
+
+    await dotenv.load(fileName: '.env');
+
     // Initialize database factory for SQLite
     if (DatabaseHelper.isSupported) {
       DatabaseHelper.initializeDatabaseFactory();
@@ -32,10 +38,6 @@ Future<void> main() async {
       debugPrint('SQLite not supported on this platform');
     }
     //print('Starting app initialization...');
-    // Intializing the binding for the app.
-    WidgetsFlutterBinding.ensureInitialized();
-    //print('Flutter bindings initialized.');
-
     await GetStorage.init();
     //print('GetStorage initialized.');
 
@@ -64,13 +66,29 @@ Future<void> main() async {
     // Running the App
 
     //print('Launching MyApp...');
-    runApp(MyApp());
+    await _runAppWithMonitoring();
   } catch (e) {
     //print('ERROR DURING APP INITIALIZATION: $e');
     //print('Stack trace: $stackTrace');
     // Still try to run the app with minimal functionality
     runApp(FallbackErrorApp(error: e.toString()));
   }
+}
+
+Future<void> _runAppWithMonitoring() async {
+  final dsn = ApiConstants.sentryDsn;
+  if (dsn == null) {
+    runApp(MyApp());
+    return;
+  }
+
+  await SentryFlutter.init(
+    (options) {
+      options.dsn = dsn;
+      options.tracesSampleRate = 1.0;
+    },
+    appRunner: () => runApp(MyApp()),
+  );
 }
 
 Future<void> _initializeServices() async {

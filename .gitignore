@@ -10,7 +10,7 @@
 .svn/
 .swiftpm/
 migrate_working_dir/
-
+react_native_app/
 # IntelliJ related  
 *.iml
 *.ipr
@@ -70,3 +70,10 @@ android/*.properties
 .kiro/steering/byterover-rules.md
 .qoder/rules/byterover-rules.md
 .augment/rules/byterover-rules.md
+
+# Large/Unnecessary project artifacts
+bundletool.jar
+sentry-wizard
+
+# Shorebird related
+.shorebird/

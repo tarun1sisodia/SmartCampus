@@ -45,8 +45,12 @@ class ClassController extends GetxController {
   // Search functionality
   final searchQuery = ''.obs;
   final filteredClasses = <ClassModel>[].obs;
+  final hasMoreClasses = true.obs;
+  final isLoadingMore = false.obs;
 
   final List<StreamSubscription> _subscriptions = [];
+  static const int _teacherClassFetchLimit = 20;
+  int _classesOffset = 0;
 
   @override
   void onInit() {
@@ -153,51 +157,74 @@ class ClassController extends GetxController {
       final currentUser = Supabase.instance.client.auth.currentUser;
       if (currentUser == null) return;
 
-      // Filter classes for current teacher and convert to ClassModel
-      final teacherClasses = <ClassModel>[];
-      
-      for (var classData in data) {
-        if (classData['teacher_id'] == currentUser.id) {
-          try {
-            // Fetch related subject and course data
-            final subjectData = await Supabase.instance.client
-                .from('subjects')
-                .select()
-                .eq('id', classData['subject_id'])
-                .single();
-            
-            final courseData = await Supabase.instance.client
-                .from('courses')
-                .select()
-                .eq('id', classData['course_id'])
-                .single();
-
-            final classModel = ClassModel(
-              id: classData['id'],
-              teacherId: classData['teacher_id'],
-              subjectId: classData['subject_id'],
-              courseId: classData['course_id'],
-              semester: classData['semester'],
-              section: classData['section'],
-              subjectName: subjectData['name'],
-              courseName: courseData['name'],
-              createdAt: classData['created_at'] != null
-                  ? DateTime.parse(classData['created_at'])
-                  : null,
-              updatedAt: classData['updated_at'] != null
-                  ? DateTime.parse(classData['updated_at'])
-                  : null,
-            );
-            
-            teacherClasses.add(classModel);
-          } catch (e) {
-            debugPrint('Error fetching related data for class ${classData['id']}: $e');
-          }
-        }
+      final teacherClassData = data
+          .where((classData) => classData['teacher_id'] == currentUser.id)
+          .toList();
+      if (teacherClassData.isEmpty) {
+        classes.clear();
+        filteredClasses.clear();
+        return;
       }
+
+      final subjectIds = teacherClassData
+          .map((classData) => classData['subject_id'] as String?)
+          .whereType<String>()
+          .toSet()
+          .toList();
+      final courseIds = teacherClassData
+          .map((classData) => classData['course_id'] as String?)
+          .whereType<String>()
+          .toSet()
+          .toList();
+
+      final subjectRows = subjectIds.isEmpty
+          ? <dynamic>[]
+          : await Supabase.instance.client
+              .from('subjects')
+              .select('id, name')
+              .inFilter('id', subjectIds);
+      final courseRows = courseIds.isEmpty
+          ? <dynamic>[]
+          : await Supabase.instance.client
+              .from('courses')
+              .select('id, name')
+              .inFilter('id', courseIds);
+
+      final subjectNames = {
+        for (final row in subjectRows) row['id'] as String: row['name'] as String?,
+      };
+      final courseNames = {
+        for (final row in courseRows) row['id'] as String: row['name'] as String?,
+      };
+
+      final teacherClasses = teacherClassData.map((classData) {
+        return ClassModel(
+          id: classData['id'],
+          teacherId: classData['teacher_id'],
+          subjectId: classData['subject_id'],
+          courseId: classData['course_id'],
+          semester: classData['semester'],
+          section: classData['section'],
+          subjectName: subjectNames[classData['subject_id']],
+          courseName: courseNames[classData['course_id']],
+          createdAt: classData['created_at'] != null
+              ? DateTime.parse(classData['created_at'])
+              : null,
+          updatedAt: classData['updated_at'] != null
+              ? DateTime.parse(classData['updated_at'])
+              : null,
+        );
+      }).toList()
+        ..sort((a, b) {
+          final aTime = a.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0);
+          final bTime = b.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0);
+          return bTime.compareTo(aTime);
+        });
 
       // Update classes list - this will automatically update the UI
       classes.assignAll(teacherClasses);
+      _classesOffset = classes.length;
+      hasMoreClasses.value = teacherClasses.length >= _teacherClassFetchLimit;
       
       // Update filtered classes based on current search
       if (searchQuery.value.isNotEmpty) {
@@ -287,9 +314,22 @@ class ClassController extends GetxController {
 
   // Load all classes for the current teacher (initial load)
   Future<void> loadClasses() async {
+    await loadClassesPage(reset: true);
+  }
+
+  Future<void> loadClassesPage({bool reset = false}) async {
     try {
       debugPrint('Loading classes...');
-      isLoading.value = true;
+      if (reset) {
+        isLoading.value = true;
+        _classesOffset = 0;
+        hasMoreClasses.value = true;
+      } else {
+        if (isLoading.value || isLoadingMore.value || !hasMoreClasses.value) {
+          return;
+        }
+        isLoadingMore.value = true;
+      }
 
       final currentUser = Supabase.instance.client.auth.currentUser;
       if (currentUser == null) {
@@ -300,17 +340,33 @@ class ClassController extends GetxController {
 
       final teacherClasses = await classService.getTeacherClasses(
         currentUser.id,
+        limit: _teacherClassFetchLimit,
+        offset: _classesOffset,
       );
 
       debugPrint('Classes loaded: ${teacherClasses.length}');
-      classes.assignAll(teacherClasses);
-      filteredClasses.assignAll(teacherClasses);
+      if (reset) {
+        classes.assignAll(teacherClasses);
+      } else {
+        classes.addAll(teacherClasses);
+      }
+      _classesOffset = classes.length;
+      hasMoreClasses.value = teacherClasses.length == _teacherClassFetchLimit;
+      _filterClasses(searchQuery.value);
     } catch (e) {
       debugPrint('Error loading classes: $e');
       TSnackBar.showError(message: 'Failed to load classes: ${e.toString()}');
     } finally {
-      isLoading.value = false;
+      if (reset) {
+        isLoading.value = false;
+      } else {
+        isLoadingMore.value = false;
+      }
     }
+  }
+
+  Future<void> loadMoreClasses() async {
+    await loadClassesPage();
   }
 
   // Load courses and subjects for dropdowns (initial load)

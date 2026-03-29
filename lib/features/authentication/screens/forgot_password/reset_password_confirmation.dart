@@ -74,30 +74,39 @@ class ResetPasswordConfirmationScreen extends StatelessWidget {
               const SizedBox(height: TSizes.spaceBtwItems),
 
               // Resend email button
-              SizedBox(
-                width: double.infinity,
-                child: TextButton(
-                  onPressed: () async {
-                    try {
-                      // Make sure the controller has the email
-                      controller.emailController.text = email;
-                      await controller.resetPassword();
-                      Get.snackbar(
-                        'Email Sent',
-                        'Password reset email has been resent',
-                        snackPosition: SnackPosition.BOTTOM,
-                      );
-                    } catch (e) {
-                      Get.snackbar(
-                        TTexts.error,
-                        'Failed to resend password reset email',
-                        snackPosition: SnackPosition.BOTTOM,
-                      );
-                    }
-                  },
-                  child: Text(
-                    'Resend Email',
-                    style: Theme.of(context).textTheme.labelSmall,
+              Obx(
+                () => SizedBox(
+                  width: double.infinity,
+                  child: TextButton(
+                    onPressed: controller.isLoading.value
+                        ? null
+                        : () async {
+                            try {
+                              controller.emailController.text = email;
+                              await controller.resetPassword();
+                              Get.snackbar(
+                                'Email Sent',
+                                'Password reset email has been resent',
+                                snackPosition: SnackPosition.BOTTOM,
+                              );
+                            } catch (e) {
+                              Get.snackbar(
+                                TTexts.error,
+                                'Failed to resend password reset email',
+                                snackPosition: SnackPosition.BOTTOM,
+                              );
+                            }
+                          },
+                    child: controller.isLoading.value
+                        ? const SizedBox(
+                            width: 18,
+                            height: 18,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : Text(
+                            'Resend Email',
+                            style: Theme.of(context).textTheme.labelSmall,
+                          ),
                   ),
                 ),
               ),

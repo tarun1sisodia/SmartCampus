@@ -81,6 +81,8 @@ CREATE TABLE IF NOT EXISTS attendance_sessions (
     created_by UUID NOT NULL REFERENCES users(id),
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ,
+    status TEXT NOT NULL DEFAULT 'open' CHECK (status IN ('open', 'closed')),
+    closed_at TIMESTAMPTZ,
     UNIQUE(class_id, date)
 );
 
@@ -1366,11 +1368,6 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- =============================================
--- STEP 12: Commit all changes
--- =============================================
-COMMIT;
-
--- =============================================
 -- STEP 6: Performance Optimization (Indexes)
 -- =============================================
 
@@ -1389,3 +1386,17 @@ CREATE INDEX IF NOT EXISTS idx_attendance_sessions_date ON attendance_sessions(d
 CREATE INDEX IF NOT EXISTS idx_attendance_records_session_id ON attendance_records(session_id);
 CREATE INDEX IF NOT EXISTS idx_attendance_records_student_id ON attendance_records(student_id);
 CREATE INDEX IF NOT EXISTS idx_attendance_records_status ON attendance_records(status);
+
+CREATE INDEX IF NOT EXISTS idx_attendance_sessions_class_date
+    ON attendance_sessions (class_id, date DESC);
+
+CREATE INDEX IF NOT EXISTS idx_attendance_records_session_student
+    ON attendance_records (session_id, student_id);
+
+CREATE INDEX IF NOT EXISTS idx_students_roll_number
+    ON students (roll_number);
+
+-- =============================================
+-- STEP 12: Commit all changes
+-- =============================================
+COMMIT;

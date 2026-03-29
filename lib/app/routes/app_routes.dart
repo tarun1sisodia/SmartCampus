@@ -174,7 +174,7 @@ class AppRoutes {
       name: message,
       page: () {
         //print('Navigating to Messages Screen');
-        return const TeacherMessagesScreen();
+        return TeacherMessagesScreen();
       },
       binding: MessagesBinding(),
       transition: Transition.rightToLeft,

@@ -4,8 +4,6 @@ import 'package:get/get.dart';
 import '../../../../common/utils/constants/image_strings.dart';
 import '../../../../common/utils/constants/sized.dart';
 import '../../../../common/utils/constants/text_strings.dart';
-import '../../../../common/utils/helpers/snackbar_helper.dart';
-import '../../../../services/google_sign_in_service.dart';
 import '../../controllers/login_controller.dart';
 import 'login_widgets/login_form.dart';
 import 'login_widgets/logo_text.dart';
@@ -53,41 +51,39 @@ class Login extends StatelessWidget {
               ],
             ),
             const SizedBox(height: TSizes.spaceBtwItems),
-            SizedBox(
-              width: double.infinity,
-              height: TSizes.appBarHeight,
-              child: OutlinedButton.icon(
-                icon: Image.network(
-                  TImageStrings.google,
-                  height: TSizes.iconLg,
-                  width: TSizes.iconLg,
-                  cacheWidth: TSizes.iconLg.toInt(),
-                  cacheHeight: TSizes.iconLg.toInt(),
-                  errorBuilder: (context, error, stackTrace) {
-                    return const Icon(Icons.g_mobiledata, size: TSizes.iconLg);
-                  },
+            Obx(
+              () => SizedBox(
+                width: double.infinity,
+                height: TSizes.appBarHeight,
+                child: OutlinedButton.icon(
+                  icon: controller.isGoogleLoading.value
+                      ? const SizedBox(
+                          width: TSizes.iconMd,
+                          height: TSizes.iconMd,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : Image.network(
+                          TImageStrings.google,
+                          height: TSizes.iconLg,
+                          width: TSizes.iconLg,
+                          cacheWidth: TSizes.iconLg.toInt(),
+                          cacheHeight: TSizes.iconLg.toInt(),
+                          errorBuilder: (context, error, stackTrace) {
+                            return const Icon(
+                              Icons.g_mobiledata,
+                              size: TSizes.iconLg,
+                            );
+                          },
+                        ),
+                  label: Text(
+                    controller.isGoogleLoading.value
+                        ? 'Signing in...'
+                        : TTexts.orSignInWithGoogle,
+                  ),
+                  onPressed: controller.isGoogleLoading.value
+                      ? null
+                      : controller.signInWithGoogle,
                 ),
-                label: Text(TTexts.orSignInWithGoogle),
-                onPressed: () async {
-                  try {
-                    final googleSignInService = Get.find<GoogleSignInService>();
-                    final user = await googleSignInService.signInWithGoogle();
-                    if (user != null) {
-                      // Navigate to dashboard or home screen
-                      Get.offAllNamed('/dashboard');
-                    } else {
-                      TSnackBar.showError(
-                        message: TTexts.googleError,
-                        title: TTexts.error,
-                      );
-                    }
-                  } catch (e) {
-                    TSnackBar.showError(
-                      message: TTexts.errorOccured + e.toString(),
-                      title: TTexts.error,
-                    );
-                  }
-                },
               ),
             ),
 
