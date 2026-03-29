@@ -1,0 +1,43 @@
+{
+  "name": "smartcampus-tooling",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Node-based command runner for Flutter and Android workflows.",
+  "packageManager": "npm@11.9.0",
+  "engines": {
+    "node": ">=24.14.0",
+    "npm": ">=11.9.0"
+  },
+  "scripts": {
+    "help": "node tools/run.mjs help",
+    "bootstrap": "node tools/run.mjs bootstrap",
+    "env:check": "node tools/run.mjs env-check",
+    "doctor": "node tools/run.mjs doctor",
+    "clean": "node tools/run.mjs clean",
+    "deps": "node tools/run.mjs deps",
+    "deps:upgrade": "node tools/run.mjs deps-upgrade",
+    "analyze": "node tools/run.mjs analyze",
+    "test": "node tools/run.mjs test",
+    "run": "node tools/run.mjs flutter run",
+    "run:android": "node tools/run.mjs flutter run -d android",
+    "android:devices": "node tools/run.mjs flutter devices",
+    "android:sync": "node tools/run.mjs android-sync",
+    "android:clean": "node tools/run.mjs android-clean",
+    "android:lint": "node tools/run.mjs gradle lint",
+    "android:install:debug": "node tools/run.mjs flutter install",
+    "android:build": "node tools/run.mjs build-apk-release",
+    "android:build:debug": "node tools/run.mjs build-apk-debug",
+    "android:build:split": "node tools/run.mjs build-apk-split",
+    "android:bundle": "node tools/run.mjs build-appbundle-release",
+    "android:analyze-size": "node tools/run.mjs analyze-size",
+    "gradle:clean": "node tools/run.mjs gradle clean",
+    "gradle:tasks": "node tools/run.mjs gradle tasks --all",
+    "gradle:assemble:debug": "node tools/run.mjs gradle assembleDebug",
+    "gradle:assemble:release": "node tools/run.mjs gradle assembleRelease",
+    "gradle:bundle:release": "node tools/run.mjs gradle bundleRelease",
+    "gradle:dependencies": "node tools/run.mjs gradle app:dependencies",
+    "gradle:signing-report": "node tools/run.mjs gradle signingReport",
+    "flutter": "node tools/run.mjs flutter",
+    "gradle": "node tools/run.mjs gradle"
+  }
+}

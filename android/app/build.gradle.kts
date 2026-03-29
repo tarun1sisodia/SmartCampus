@@ -70,6 +70,12 @@ android {
     }
 }
 
+dependencies {
+    // Flutter's Android embedding can reference Play Feature Delivery classes
+    // during release shrinking. Use the current split Play Core artifact.
+    implementation("com.google.android.play:feature-delivery:2.1.0")
+}
+
 flutter {
     source = "../.."
 }

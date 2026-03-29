@@ -142,6 +142,104 @@ If you prefer to set up manually or the scripts don't work for your OS:
    flutter run
    ```
 
+### Node-Based Command Layer
+
+This repository now includes a lightweight Node.js command runner so you can use `npm run ...` for Flutter and Android workflows from the project root.
+
+1. **Use the pinned Node version**
+   ```bash
+   nvm use
+   ```
+
+2. **Verify the environment**
+   ```bash
+   npm run env:check
+   npm run doctor
+   ```
+
+3. **Install Flutter dependencies**
+   ```bash
+   npm run deps
+   ```
+
+4. **Sync Android tooling**
+   ```bash
+   npm run android:sync
+   ```
+
+#### Common commands
+
+```bash
+# Development
+npm run run
+npm run run:android
+npm run analyze
+npm run test
+
+# Android builds
+npm run android:build           # release APK
+npm run android:build:debug     # debug APK
+npm run android:build:split     # split APKs by ABI
+npm run android:bundle          # release AAB
+npm run android:analyze-size
+
+# Android / Gradle maintenance
+npm run android:clean
+npm run android:lint
+npm run gradle:assemble:debug
+npm run gradle:assemble:release
+npm run gradle:bundle:release
+npm run gradle:dependencies
+npm run gradle:signing-report
+```
+
+#### Advanced usage
+
+Use the pass-through commands when you want direct access to the underlying tools:
+
+```bash
+npm run flutter -- build apk --profile
+npm run flutter -- pub outdated
+npm run gradle -- app:assembleRelease --stacktrace
+```
+
+`npm run android:sync` runs `flutter pub get` and then the Android Gradle wrapper, which is the closest equivalent to a professional "sync project" command for this Flutter app.
+
+#### Android signing setup
+
+The release Gradle config already reads [android/key.properties](/home/shit/DFQ/SmartCampus/android/key.properties), so keep your real signing secrets there and keep the keystore file outside the repository.
+
+1. Create the keystore:
+   ```bash
+   keytool -genkeypair -v \
+     -keystore ~/secure/smartcampus-upload-keystore.jks \
+     -keyalg RSA \
+     -keysize 2048 \
+     -validity 10000 \
+     -alias upload
+   ```
+
+2. Create your local secrets file from [android/key.properties.example](/home/shit/DFQ/SmartCampus/android/key.properties.example):
+   ```bash
+   cp android/key.properties.example android/key.properties
+   ```
+
+3. Edit `android/key.properties` with your real values:
+   ```properties
+   storePassword=your-keystore-password
+   keyPassword=your-key-password
+   keyAlias=upload
+   storeFile=/home/your-user/secure/smartcampus-upload-keystore.jks
+   ```
+
+4. Build the signed app:
+   ```bash
+   npm run android:build
+   npm run android:bundle
+   ```
+
+`android/key.properties` is ignored by git, and the template file stays committed so the setup is repeatable.
+
 ---
 
 ## 🧪 Testing

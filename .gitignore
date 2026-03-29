@@ -56,6 +56,8 @@ app.*.map.json
 
 # Signing
 android/key.properties
+android/*.properties
+!android/key.properties.example
 **/*.jks
 **/*.keystore
 
