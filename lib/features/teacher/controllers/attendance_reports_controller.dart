@@ -456,7 +456,9 @@ class AttendanceReportsController extends GetxController {
       int l = 0;
       double avg = 0.0;
       
-      final Map<String, dynamic> statsMap = Map<String, dynamic>.from(result['stats'] ?? {});
+      final Map<String, Map<String, dynamic>> statsMap = (result['stats'] as Map? ?? {}).map(
+        (key, value) => MapEntry(key.toString(), Map<String, dynamic>.from(value as Map)),
+      );
       
       statsMap.forEach((key, val) {
         p += (val['present'] as num? ?? 0).toInt();
