@@ -28,6 +28,11 @@ class AttendanceController extends GetxController {
   final isLoadingMoreSessions = false.obs;
   int _sessionOffset = 0;
 
+  final hasMoreStudents = true.obs;
+  final isLoadingMoreStudents = false.obs;
+  int _studentsOffset = 0;
+  static const int _studentsPageSize = 25;
+
   // For creating new sessions
   final sessionDate = DateTime.now().obs;
   final startTimeController = TextEditingController();
@@ -91,7 +96,7 @@ class AttendanceController extends GetxController {
         await loadStudentsForClass();
       }
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       //printnt('Error loading attendance sessions: $e');
       TSnackBar.showError(
         message: 'Failed to load attendance sessions: ${e.toString()}',
@@ -110,6 +115,15 @@ class AttendanceController extends GetxController {
     await loadAttendanceSessionsPage(selectedClass.value!.id);
   }
 
+  Future<void> loadMoreStudents() async {
+    if (selectedClass.value == null) return;
+    if (currentSessionId.value.isNotEmpty) {
+      await loadStudentsForSession(reset: false);
+    } else {
+      await loadStudentsForClass(reset: false);
+    }
+  }
+
   // load students for the class
   // Loads students for the currently selected class.
   //
@@ -119,7 +133,7 @@ class AttendanceController extends GetxController {
   //
   // If the `selectedClass` is null, the function returns immediately without
   // performing any action.
-  Future<void> loadStudentsForClass() async {
+  Future<void> loadStudentsForClass({bool reset = true}) async {
     try {
       if (selectedClass.value == null) {
         //printnt('No class selected, returning');
@@ -127,12 +141,24 @@ class AttendanceController extends GetxController {
       }
 
       //printnt('Loading students for class: ${selectedClass.value!.id}');
-      isLoading.value = true;
+      if (reset) {
+        isLoading.value = true;
+        _studentsOffset = 0;
+        hasMoreStudents.value = true;
+      } else {
+        if (isLoading.value ||
+            isLoadingMoreStudents.value ||
+            !hasMoreStudents.value) {
+          return;
+        }
+        isLoadingMoreStudents.value = true;
+      }
 
       // Load students for the class
       final classStudents = await studentService.getStudentsForClass(
         selectedClass.value!.id,
-        limit: 1000,
+        limit: _studentsPageSize,
+        offset: _studentsOffset,
       );
 
       //printnt('Loaded ${classStudents.length} students');
@@ -142,14 +168,24 @@ class AttendanceController extends GetxController {
         student.attendanceStatus = 'absent'; // Default status
       }
 
-      students.assignAll(classStudents);
+      if (reset) {
+        students.assignAll(classStudents);
+      } else {
+        students.addAll(classStudents);
+      }
+      _studentsOffset = students.length;
+      hasMoreStudents.value = classStudents.length == _studentsPageSize;
       isStudentsLoaded.value = true;
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       //printnt('Error loading students: $e');
       TSnackBar.showError(message: 'Failed to load students: ${e.toString()}');
     } finally {
-      isLoading.value = false;
+      if (reset) {
+        isLoading.value = false;
+      } else {
+        isLoadingMoreStudents.value = false;
+      }
     }
   }
 
@@ -166,7 +202,7 @@ class AttendanceController extends GetxController {
   // If no session is selected or if no class is associated with the selected
   // session, the function returns immediately without performing any action.
 
-  Future<void> loadStudentsForSession() async {
+  Future<void> loadStudentsForSession({bool reset = true}) async {
     try {
       if (currentSessionId.value.isEmpty || selectedClass.value == null) {
         //printnt('No session or class selected, returning');
@@ -174,19 +210,32 @@ class AttendanceController extends GetxController {
       }
 
       //printnt('Loading students for session: ${currentSessionId.value}');
-      isLoading.value = true;
+      if (reset) {
+        isLoading.value = true;
+        _studentsOffset = 0;
+        hasMoreStudents.value = true;
+      } else {
+        if (isLoading.value ||
+            isLoadingMoreStudents.value ||
+            !hasMoreStudents.value) {
+          return;
+        }
+        isLoadingMoreStudents.value = true;
+      }
 
       // Load students for the class
       final classStudents = await studentService.getStudentsForClass(
         selectedClass.value!.id,
-        limit: 1000,
+        limit: _studentsPageSize,
+        offset: _studentsOffset,
       );
 
       //printnt('Loaded ${classStudents.length} students');
 
-      // Load existing attendance records for this session
+      // Load existing attendance records for this session for the current page of students
+      final studentIds = classStudents.map((s) => s.id).toList();
       final attendanceRecords = await attendanceService
-          .getAttendanceRecordsForSession(currentSessionId.value);
+          .getAttendanceRecordsForStudentsInSession(currentSessionId.value, studentIds);
 
       //printnt('Loaded ${attendanceRecords.length} attendance records');
 
@@ -199,14 +248,24 @@ class AttendanceController extends GetxController {
         student.attendanceStatus = record?.status ?? 'absent';
       }
 
-      students.assignAll(classStudents);
+      if (reset) {
+        students.assignAll(classStudents);
+      } else {
+        students.addAll(classStudents);
+      }
+      _studentsOffset = students.length;
+      hasMoreStudents.value = classStudents.length == _studentsPageSize;
       isStudentsLoaded.value = true;
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       //printnt('Error loading students for session: $e');
       TSnackBar.showError(message: 'Failed to load students: ${e.toString()}');
     } finally {
-      isLoading.value = false;
+      if (reset) {
+        isLoading.value = false;
+      } else {
+        isLoadingMoreStudents.value = false;
+      }
     }
   }
 
@@ -270,7 +329,7 @@ class AttendanceController extends GetxController {
       // await allSessionsController.closeSession(currentSessionId.value);
       // Show success message and navigate back
       TSnackBar.showSuccess(
-        message: 'Attendance submitted and session closed',
+        message: 'Attendance submitted and session closed successfully',
         title: 'Success',
       );
       Get.back();
@@ -282,18 +341,8 @@ class AttendanceController extends GetxController {
       if (selectedClass.value != null) {
         await loadAttendanceSessions(selectedClass.value!.id);
       }
-
-      //printnt('Attendance submitted and session closed successfully');
-
-      TSnackBar.showSuccess(
-        message: 'Attendance submitted and session closed successfully',
-        title: 'Success',
-      );
-
-      // Navigate back to attendance screen
-      Get.back();
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       //printnt('Error submitting attendance: $e');
       TSnackBar.showError(
         message: 'Failed to submit attendance: ${e.toString()}',
@@ -366,7 +415,7 @@ class AttendanceController extends GetxController {
         title: 'Success',
       );
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       //printnt('Error creating attendance session: $e');
       TSnackBar.showError(message: 'Failed to create session: ${e.toString()}');
     } finally {
@@ -442,7 +491,7 @@ class AttendanceController extends GetxController {
 
         return {'isValid': true, 'message': 'Session Active'};
       } catch (e, stackTrace) {
-        await Sentry.captureException(e, stackTrace: stackTrace);
+        Sentry.captureException(e, stackTrace: stackTrace);
         // print('Time parsing error: $e');
         // If parsing fails, allow access but log warning
         return {
@@ -451,7 +500,7 @@ class AttendanceController extends GetxController {
         };
       }
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       // print('Error in checkSessionStatus: $e');
       return {'isValid': false, 'message': 'Error checking session status: $e'};
     }

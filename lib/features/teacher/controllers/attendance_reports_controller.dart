@@ -42,6 +42,12 @@ class AttendanceReportsController extends GetxController {
   final presentCount = 0.obs;
   final absentCount = 0.obs;
   final lateCount = 0.obs;
+  
+  // Pagination for students in report
+  final hasMoreStudentsInReport = true.obs;
+  final isLoadingMoreReport = false.obs;
+  int _reportStudentsOffset = 0;
+  static const int _reportPageSize = 25;
 
   // Map to store attendance stats for each student
   final studentStats = <String, Map<String, dynamic>>{}.obs;
@@ -52,6 +58,12 @@ class AttendanceReportsController extends GetxController {
 
   // Filtered data
   final filteredStudents = <StudentModel>[].obs;
+
+  // Convenience getter for UI
+  List<StudentModel> get displayStudents => filteredStudents;
+
+  // Get stats for a specific student
+  Map<String, dynamic>? getStudentStats(String studentId) => studentStats[studentId];
 
   final List<StreamSubscription> _subscriptions = [];
 
@@ -245,7 +257,7 @@ class AttendanceReportsController extends GetxController {
       debugPrint(
           'AttendanceReportsController classes updated via real-time: ${teacherClasses.length} classes');
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error handling classes update in AttendanceReportsController: $e');
     }
   }
@@ -281,7 +293,7 @@ class AttendanceReportsController extends GetxController {
       debugPrint(
           'AttendanceReportsController sessions updated via real-time: ${classSessions.length} sessions');
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint(
           'Error handling attendance sessions update in AttendanceReportsController: $e');
     }
@@ -311,7 +323,7 @@ class AttendanceReportsController extends GetxController {
       debugPrint(
           'AttendanceReportsController attendance records updated via real-time: ${relevantRecords.length} relevant records');
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint(
           'Error handling attendance records update in AttendanceReportsController: $e');
     }
@@ -328,9 +340,56 @@ class AttendanceReportsController extends GetxController {
 
       debugPrint('AttendanceReportsController students updated via real-time');
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint(
           'Error handling students update in AttendanceReportsController: $e');
+    }
+  }
+
+  Future<void> loadMoreReportStudents() async {
+    if (selectedClassId.value.isEmpty ||
+        isLoading.value ||
+        isLoadingMoreReport.value ||
+        !hasMoreStudentsInReport.value) {
+      return;
+    }
+
+    try {
+      isLoadingMoreReport.value = true;
+
+      // Load next batch of students for the class
+      final nextStudents = await studentService.getStudentsForClass(
+        selectedClassId.value,
+        limit: _reportPageSize,
+        offset: _reportStudentsOffset,
+      );
+
+      if (nextStudents.isEmpty) {
+        hasMoreStudentsInReport.value = false;
+        return;
+      }
+
+      // Fetch batched stats for the next batch of students
+      final nextStudentIds = nextStudents.map((s) => s.id).toList();
+      final nextBatchStats =
+          await attendanceService.getAttendanceStatsForStudentsInDateRange(
+        classId: selectedClassId.value,
+        studentIds: nextStudentIds,
+        startDate: startDate.value,
+        endDate: endDate.value,
+      );
+
+      students.addAll(nextStudents);
+      studentStats.addAll(nextBatchStats);
+      _reportStudentsOffset = students.length;
+      hasMoreStudentsInReport.value = nextStudents.length == _reportPageSize;
+
+      _filterStudents();
+    } catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
+      debugPrint('Error loading more report students: $e');
+    } finally {
+      isLoadingMoreReport.value = false;
     }
   }
 
@@ -346,7 +405,7 @@ class AttendanceReportsController extends GetxController {
       _filterStudents();
       _updateStudentStats();
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error loading students for class: $e');
     }
   }
@@ -370,34 +429,29 @@ class AttendanceReportsController extends GetxController {
       lateCount.value = stats['lateCount'] ?? 0;
       averageAttendance.value = stats['averageAttendance'] ?? 0.0;
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error recalculating statistics: $e');
       _resetStatistics();
     }
   }
 
-  // Update individual student statistics
+  // Update individual student statistics (Batched)
   Future<void> _updateStudentStats() async {
     if (selectedClassId.value.isEmpty || students.isEmpty) return;
 
     try {
-      final newStudentStats = <String, Map<String, dynamic>>{};
-
-      for (var student in students) {
-        final studentStat =
-            await attendanceService.getAttendanceStatsForStudentInDateRange(
-          classId: selectedClassId.value,
-          studentId: student.id,
-          startDate: startDate.value,
-          endDate: endDate.value,
-        );
-
-        newStudentStats[student.id] = studentStat;
-      }
+      final studentIds = students.map((s) => s.id).toList();
+      final newStudentStats =
+          await attendanceService.getAttendanceStatsForStudentsInDateRange(
+        classId: selectedClassId.value,
+        studentIds: studentIds,
+        startDate: startDate.value,
+        endDate: endDate.value,
+      );
 
       studentStats.assignAll(newStudentStats);
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error updating student stats: $e');
     }
   }
@@ -458,11 +512,13 @@ class AttendanceReportsController extends GetxController {
         await loadAttendanceData();
       }
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error loading classes: $e');
       TSnackBar.showError(message: 'Failed to load classes: ${e.toString()}');
     } finally {
       isLoading.value = false;
+      _reportStudentsOffset = 0;
+      hasMoreStudentsInReport.value = true;
     }
   }
 
@@ -476,6 +532,8 @@ class AttendanceReportsController extends GetxController {
 
       debugPrint('Loading attendance data for class: ${selectedClassId.value}');
       isLoading.value = true;
+      _reportStudentsOffset = 0;
+      hasMoreStudentsInReport.value = true;
 
       // Load sessions for the date range
       final classSessions =
@@ -487,12 +545,17 @@ class AttendanceReportsController extends GetxController {
       debugPrint('Sessions fetched: ${classSessions.length}');
       sessions.assignAll(classSessions);
 
-      // Load students for the class
+      // Load first page of students for the class
       final classStudents = await studentService.getStudentsForClass(
         selectedClassId.value,
+        limit: _reportPageSize,
+        offset: 0,
       );
       debugPrint('Students fetched: ${classStudents.length}');
       students.assignAll(classStudents);
+      _reportStudentsOffset = students.length;
+      hasMoreStudentsInReport.value = classStudents.length == _reportPageSize;
+      
       _filterStudents();
 
       // Reset statistics
@@ -522,21 +585,12 @@ class AttendanceReportsController extends GetxController {
       debugPrint(
           'Overall stats - Present: ${presentCount.value}, Absent: ${absentCount.value}, Late: ${lateCount.value}, Average: ${averageAttendance.value}');
 
-      // Load individual student statistics
-      for (var student in students) {
-        final studentStat =
-            await attendanceService.getAttendanceStatsForStudentInDateRange(
-          classId: selectedClassId.value,
-          studentId: student.id,
-          startDate: startDate.value,
-          endDate: endDate.value,
-        );
-
-        studentStats[student.id] = studentStat;
-        debugPrint('Stats for student ${student.name}: $studentStat');
+      // Load initial individual student statistics (Batched)
+      if (students.isNotEmpty) {
+        await _updateStudentStats();
       }
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error loading attendance data: $e');
       TSnackBar.showError(
         message: 'Failed to load attendance data: ${e.toString()}',
@@ -673,7 +727,7 @@ class AttendanceReportsController extends GetxController {
 
       TSnackBar.showSuccess(message: 'Report exported successfully');
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error exporting report: $e');
       TSnackBar.showError(message: 'Failed to export report: ${e.toString()}');
     } finally {
@@ -709,7 +763,7 @@ class AttendanceReportsController extends GetxController {
       await realtimeService.forceReconnect();
       debugPrint('Successfully reconnected to real-time service');
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Failed to reconnect to real-time service: $e');
     }
   }
@@ -724,7 +778,7 @@ class AttendanceReportsController extends GetxController {
       }
       TSnackBar.showSuccess(message: 'Data refreshed successfully');
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error refreshing data: $e');
       TSnackBar.showError(message: 'Failed to refresh data: ${e.toString()}');
     }
@@ -822,5 +876,15 @@ class AttendanceReportsController extends GetxController {
     });
 
     return sortedStudents;
+  }
+
+  // Navigate to student detail screen
+  void navigateToStudentDetail(StudentModel student) {
+    Get.to(() => StudentDetailScreen(
+          student: student,
+          classId: selectedClassId.value,
+          startDate: startDate.value,
+          endDate: endDate.value,
+        ));
   }
 }

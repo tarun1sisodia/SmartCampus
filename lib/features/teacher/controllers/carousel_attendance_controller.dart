@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'dart:async';
@@ -119,7 +120,7 @@ class CarouselAttendanceController extends GetxController {
             sessionStartTime.value = parsedStartTime;
           }
         } catch (e, stackTrace) {
-          await Sentry.captureException(e, stackTrace: stackTrace);
+          Sentry.captureException(e, stackTrace: stackTrace);
           Get.snackbar(
               'Error Parsing Start time', 'Carousel Attendance Controller');
           // print('Error parsing start time: $e');
@@ -165,7 +166,7 @@ class CarouselAttendanceController extends GetxController {
             sessionEndTime.value = parsedEndTime;
           }
         } catch (e, stackTrace) {
-          await Sentry.captureException(e, stackTrace: stackTrace);
+          Sentry.captureException(e, stackTrace: stackTrace);
           Get.snackbar('Error parsing end time:', 'The Code');
           // print('Error parsing end time: $e');
         }
@@ -307,7 +308,7 @@ class CarouselAttendanceController extends GetxController {
       // Get.off(() =>AttendanceReportsScreen()); // Return to previous screen after submission
       Get.offNamed('/attendance-reports'); // Navigate to attendance reports screen
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       TSnackBar.showError(
         message: 'Failed to submit attendance: ${e.toString()}',
       );

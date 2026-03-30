@@ -1,4 +1,6 @@
 import 'package:intl/intl.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import '../../../models/class_model.dart';
@@ -90,7 +92,7 @@ class AllSessionsController extends GetxController {
       _setupRealtimeSubscriptions();
       debugPrint('Real-time service initialized for AllSessionsController');
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error initializing real-time service: $e');
     }
   }
@@ -149,7 +151,7 @@ class AllSessionsController extends GetxController {
       isRealtimeConnected.value = realtimeService.isConnected.value;
       debugPrint('Real-time subscriptions set up successfully');
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error setting up real-time subscriptions: $e');
       isRealtimeConnected.value = false;
     }
@@ -175,7 +177,7 @@ class AllSessionsController extends GetxController {
 
       debugPrint('Attendance sessions updated successfully');
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error handling attendance sessions update: $e');
     }
   }
@@ -222,7 +224,7 @@ class AllSessionsController extends GetxController {
 
       debugPrint('Classes updated successfully: ${updatedClasses.length} classes');
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error handling classes update: $e');
     }
   }
@@ -303,7 +305,7 @@ class AllSessionsController extends GetxController {
       lastUpdated.value = DateTime.now();
       
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error loading sessions: $e');
       TSnackBar.showError(message: 'Failed to load sessions: ${e.toString()}');
     } finally {
@@ -340,7 +342,7 @@ class AllSessionsController extends GetxController {
       classes.assignAll(teacherClasses);
       lastUpdated.value = DateTime.now();
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error loading classes: $e');
     }
   }
@@ -394,7 +396,7 @@ class AllSessionsController extends GetxController {
         title: 'Success',
       );
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error deleting session: $e');
       TSnackBar.showError(message: 'Failed to delete session: ${e.toString()}');
     } finally {
@@ -483,7 +485,7 @@ class AllSessionsController extends GetxController {
         title: 'Success',
       );
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error closing session: $e');
       TSnackBar.showError(message: 'Failed to close session: ${e.toString()}');
     } finally {
@@ -543,11 +545,10 @@ class AllSessionsController extends GetxController {
     try {
       isLoading.value = true;
 
-      // Create a copy to avoid modification during iteration
-      final sessionsToDelete = Set<String>.from(selectedSessionIds);
-
-      for (var sessionId in sessionsToDelete) {
-        await deleteSession(sessionId);
+      // Use the optimized batched deletion method
+      final sessionsToDelete = selectedSessionIds.toList();
+      if (sessionsToDelete.isNotEmpty) {
+        await attendanceService.deleteSessions(sessionsToDelete);
       }
 
       // Exit selection mode
@@ -562,7 +563,7 @@ class AllSessionsController extends GetxController {
         title: 'Success',
       );
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error deleting selected sessions: $e');
       TSnackBar.showError(
           message: 'Failed to delete sessions: ${e.toString()}');

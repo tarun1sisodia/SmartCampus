@@ -88,7 +88,7 @@ class StudentController extends GetxController {
       _studentsOffset = students.length;
       hasMoreStudents.value = classStudents.length == _studentsPageSize;
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       //printnt('Error loading students: $e');
       TSnackBar.showError(message: 'Failed to load students: ${e.toString()}');
     } finally {
@@ -126,7 +126,7 @@ class StudentController extends GetxController {
         //printnt('Image selected: ${pickedFile.path}');
       }
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       //printnt('Error picking image: $e');
       TSnackBar.showError(message: 'Failed to pick image: ${e.toString()}');
     }
@@ -165,7 +165,7 @@ class StudentController extends GetxController {
 
       TSnackBar.showSuccess(message: 'Student added successfully');
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       //printnt('Error adding student: $e');
       TSnackBar.showError(message: 'Failed to add student: ${e.toString()}');
     } finally {
@@ -236,9 +236,8 @@ class StudentController extends GetxController {
             '$count ${count == 1 ? 'student' : 'students'} removed successfully',
         title: 'Success',
       );
-        message: 'Failed to remove students: ${e.toString()}');
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       TSnackBar.showError(
           message: 'Unexpected error removing students: ${e.toString()}');
     } finally {
@@ -284,7 +283,7 @@ class StudentController extends GetxController {
         TSnackBar.showSuccess(message: 'Student image updated successfully');
       }
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       //printnt('Error updating student image: $e');
       TSnackBar.showError(
           message: 'Failed to update student image: ${e.toString()}');
@@ -318,7 +317,7 @@ class StudentController extends GetxController {
         TSnackBar.showSuccess(message: 'Student removed successfully');
       }
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       //printnt('Error removing student: $e');
       TSnackBar.showError(message: 'Failed to remove student: ${e.toString()}');
     } finally {
@@ -351,7 +350,7 @@ class StudentController extends GetxController {
 
       availableStudents.assignAll(filteredStudents);
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       //printnt('Error fetching available students: $e');
       TSnackBar.showError(
           message: 'Failed to fetch available students: ${e.toString()}');
@@ -406,7 +405,7 @@ class StudentController extends GetxController {
       TSnackBar.showSuccess(
           message: 'Successfully imported ${selectedStudents.length} students');
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       //printnt('Error importing students: $e');
       TSnackBar.showError(
           message: 'Failed to import students: ${e.toString()}');
@@ -480,7 +479,7 @@ class StudentController extends GetxController {
 
       return semester.clamp(1, 6);
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       //printnt('Error parsing semester from roll number: $e');
       return 0;
     }

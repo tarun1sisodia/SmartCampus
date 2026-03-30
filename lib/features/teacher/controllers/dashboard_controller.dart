@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
+import '../../../common/utils/helpers/snackbar_helper.dart';
 import '../../../models/class_model.dart';
 import '../../../services/class_service.dart';
 import '../../../services/attendance_service.dart';
@@ -11,6 +12,7 @@ import '../../../services/course_service.dart';
 import '../../../services/realtime_service.dart';
 import '../../../services/auth_service.dart';
 import '../../../services/biometric_auth_service.dart';
+import '../../../services/subject_service.dart';
 import 'dart:async';
 
 import '../../authentication/controllers/supabase_auth_controller.dart';
@@ -18,6 +20,7 @@ import '../../authentication/controllers/supabase_auth_controller.dart';
 class DashboardController extends GetxController {
   final attendanceService = AttendanceService();
   final subjectService = SubjectService();
+  final studentService = StudentService();
   final classService = ClassService();
   final courseService = CourseService();
   final biometricAuthService = Get.put(BiometricAuthService());
@@ -71,6 +74,7 @@ class DashboardController extends GetxController {
 
   // Initialize the realtime service
   void _initializeRealtimeService() {
+    try {
       realtimeService = Get.find<RealtimeService>();
       debugPrint('Found existing RealtimeService instance');
     } catch (e, stackTrace) {
@@ -154,47 +158,46 @@ class DashboardController extends GetxController {
       final currentUser = Supabase.instance.client.auth.currentUser;
       if (currentUser == null) return;
 
-      // Filter classes for current teacher and convert to ClassModel
-      final teacherClasses = <ClassModel>[];
+      // 1. Collect all class IDs, subject IDs, and course IDs
+      final classIds = data.map((d) => d['id'] as String).toList();
+      final subjectIds =
+          data.map((d) => d['subject_id'] as String).toSet().toList();
+      final courseIds =
+          data.map((d) => d['course_id'] as String).toSet().toList();
 
+      // 2. Fetch all subjects and courses in batches
+      final subjectsResponse = await Supabase.instance.client
+          .from('subjects')
+          .select()
+          .inFilter('id', subjectIds);
+      final coursesResponse = await Supabase.instance.client
+          .from('courses')
+          .select()
+          .inFilter('id', courseIds);
+
+      final subjectMap = {for (var s in subjectsResponse) s['id']: s['name']};
+      final courseMap = {for (var c in coursesResponse) c['id']: c['name']};
+
+      // 3. Map to ClassModel for current teacher
+      final teacherClasses = <ClassModel>[];
       for (var classData in data) {
         if (classData['teacher_id'] == currentUser.id) {
-          try {
-            // Fetch related subject and course data
-            final subjectData = await Supabase.instance.client
-                .from('subjects')
-                .select()
-                .eq('id', classData['subject_id'])
-                .single();
-
-            final courseData = await Supabase.instance.client
-                .from('courses')
-                .select()
-                .eq('id', classData['course_id'])
-                .single();
-
-            final classModel = ClassModel(
-              id: classData['id'],
-              teacherId: classData['teacher_id'],
-              subjectId: classData['subject_id'],
-              courseId: classData['course_id'],
-              semester: classData['semester'],
-              section: classData['section'],
-              subjectName: subjectData['name'],
-              courseName: courseData['name'],
-              createdAt: classData['created_at'] != null
-                  ? DateTime.parse(classData['created_at'])
-                  : null,
-              updatedAt: classData['updated_at'] != null
-                  ? DateTime.parse(classData['updated_at'])
-                  : null,
-            );
-
-            teacherClasses.add(classModel);
-          } catch (e) {
-            debugPrint(
-                'Error fetching related data for class ${classData['id']}: $e');
-          }
+          teacherClasses.add(ClassModel(
+            id: classData['id'],
+            teacherId: classData['teacher_id'],
+            subjectId: classData['subject_id'],
+            courseId: classData['course_id'],
+            semester: classData['semester'],
+            section: classData['section'],
+            subjectName: subjectMap[classData['subject_id']],
+            courseName: courseMap[classData['course_id']],
+            createdAt: classData['created_at'] != null
+                ? DateTime.parse(classData['created_at'])
+                : null,
+            updatedAt: classData['updated_at'] != null
+                ? DateTime.parse(classData['updated_at'])
+                : null,
+          ));
         }
       }
 
@@ -220,52 +223,63 @@ class DashboardController extends GetxController {
     }
 }
 
-  // Update total students count
   void _updateTotalStudents() async {
     try {
-      int totalStudentsCount = 0;
-
-      for (var classModel in classes) {
-        final studentsCount = await _getStudentCountForClass(classModel.id);
-        totalStudentsCount += studentsCount;
+      if (classes.isEmpty) {
+        totalStudents.value = 0;
+        return;
       }
 
-      totalStudents.value = totalStudentsCount;
-      debugPrint('Total students updated: $totalStudentsCount');
+      final classIds = classes.map((c) => c.id).toList();
+      final countsMap = await studentService.getStudentCountsForClasses(classIds);
+      
+      int total = 0;
+      countsMap.forEach((_, count) => total += count);
+
+      totalStudents.value = total;
+      debugPrint('Total students updated (Batched): $total');
     } catch (e, stackTrace) {
       await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error updating total students: $e');
     }
   }
 
-  // Update attendance statistics
   void _updateAttendanceStats() async {
     try {
-      classStats.clear();
+      if (classes.isEmpty) {
+        _resetStats();
+        return;
+      }
+
+      final classIds = classes.map((c) => c.id).toList();
+      final newClassStats = await attendanceService.getAttendanceStatsForClasses(classIds);
+      
+      classStats.assignAll(newClassStats);
+
       double totalAttendancePercentage = 0.0;
+      int activeClasses = 0;
 
-      for (var classModel in classes) {
-        final stats = await attendanceService.getAttendanceStatsForClass(
-          classModel.id,
-        );
-        classStats[classModel.id] = stats;
-
-        if (stats['totalSessions'] > 0) {
-          totalAttendancePercentage += stats['averageAttendance'] as double;
+      newClassStats.forEach((_, stats) {
+        if ((stats['totalSessions'] ?? 0) > 0) {
+          totalAttendancePercentage += (stats['averageAttendance'] ?? 0.0) as double;
+          activeClasses++;
         }
-      }
+      });
 
-      if (classes.isNotEmpty) {
-        averageAttendance.value = totalAttendancePercentage / classes.length;
-      } else {
-        averageAttendance.value = 0.0;
-      }
+      averageAttendance.value = activeClasses > 0 
+          ? totalAttendancePercentage / activeClasses 
+          : 0.0;
 
-      debugPrint('Attendance stats updated: ${averageAttendance.value}%');
+      debugPrint('Attendance stats updated (Batched): ${averageAttendance.value}%');
     } catch (e, stackTrace) {
       await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error updating attendance stats: $e');
     }
+  }
+
+  void _resetStats() {
+    classStats.clear();
+    averageAttendance.value = 0.0;
   }
 
   // Get connection status string
@@ -418,68 +432,69 @@ class DashboardController extends GetxController {
 
   Future<void> loadDashboardData() async {
     try {
-      // THelperFunction.showAlert('Let me Check this','Alert is Running');
-      //debugPrint('Loading dashboard data...');
       isLoading.value = true;
 
       final currentUser = Supabase.instance.client.auth.currentUser;
       if (currentUser == null) {
-        //debugPrint('No user is logged in');
         TSnackBar.showError(
           message: 'You must be logged in to view the dashboard',
         );
         return;
       }
 
-      //debugPrint('Fetching classes for teacher: ${currentUser.id}');
-      final teacherClasses = await classService.getTeacherClasses(
-        currentUser.id,
-      );
-      //debugPrint('Classes fetched: ${teacherClasses.length}');
+      // 1. Fetch classes
+      final teacherClasses = await classService.getTeacherClasses(currentUser.id);
       classes.assignAll(teacherClasses);
       filteredClasses.assignAll(teacherClasses);
       totalClasses.value = teacherClasses.length;
 
-      classStats.clear();
+      if (teacherClasses.isEmpty) {
+        totalStudents.value = 0;
+        averageAttendance.value = 0.0;
+        classStats.clear();
+        return;
+      }
+
+      final classIds = teacherClasses.map((c) => c.id).toList();
+
+      // 2. Fetch stats and counts in parallel (Batched)
+      final results = await Future.wait([
+        attendanceService.getAttendanceStatsForClasses(classIds),
+        studentService.getStudentCountsForClasses(classIds),
+      ]);
+
+      final newClassStats = results[0] as Map<String, Map<String, dynamic>>;
+      final countsMap = results[1] as Map<String, int>;
+
+      classStats.assignAll(newClassStats);
+
+      // 3. Aggregate totals
       int totalStudentsCount = 0;
       double totalAttendancePercentage = 0.0;
+      int activeClasses = 0;
 
-      for (var classModel in teacherClasses) {
-        //debugPrint('Fetching stats for class: ${classModel.id}');
-        final stats = await attendanceService.getAttendanceStatsForClass(
-          classModel.id,
-        );
-        //debugPrint('Stats for class ${classModel.id}: $stats');
-        classStats[classModel.id] = stats;
-
-        final studentsCount = await _getStudentCountForClass(classModel.id);
-        //debugPrint('Student count for class ${classModel.id}: $studentsCount');
-        totalStudentsCount += studentsCount;
-
-        if (stats['totalSessions'] > 0) {
-          totalAttendancePercentage += stats['averageAttendance'] as double;
+      countsMap.forEach((_, count) => totalStudentsCount += count);
+      
+      newClassStats.forEach((_, stats) {
+        if ((stats['totalSessions'] ?? 0) > 0) {
+          totalAttendancePercentage += (stats['averageAttendance'] ?? 0.0) as double;
+          activeClasses++;
         }
-      }
+      });
 
       totalStudents.value = totalStudentsCount;
-      if (teacherClasses.isNotEmpty) {
-        averageAttendance.value =
-            totalAttendancePercentage / teacherClasses.length;
-      } else {
-        averageAttendance.value = 0.0;
-      }
+      averageAttendance.value = activeClasses > 0 
+          ? totalAttendancePercentage / activeClasses 
+          : 0.0;
+
       update();
-      //debugPrint('Total students: $totalStudentsCount');
-      //debugPrint('Average attendance: ${averageAttendance.value}');
     } catch (e, stackTrace) {
       await Sentry.captureException(e, stackTrace: stackTrace);
-      //debugPrint('Error loading dashboard data: $e');
       TSnackBar.showError(
         message: 'Failed to load dashboard data: ${e.toString()}',
       );
     } finally {
       isLoading.value = false;
-      //debugPrint('Dashboard data loading complete');
     }
   }
 

@@ -17,7 +17,7 @@ class BiometricAuthService extends GetxController {
     try {
       return Platform.isLinux;
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       // print("Error checking platform: $e");
       return false;
     }
@@ -140,7 +140,7 @@ class BiometricAuthService extends GetxController {
         // useErrorDialogs: true,
       );
 
-      return false;
+      return didAuthenticate;
     } catch (e, stackTrace) {
       await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Unexpected error during biometrics: $e');

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:path/path.dart' as path;
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -7,6 +9,27 @@ import '../models/student_model.dart';
 class StudentService {
   final supabase = Supabase.instance.client;
   static const int defaultStudentsPerClassLimit = 200;
+
+  // Get student counts for multiple classes (Batched)
+  Future<Map<String, int>> getStudentCountsForClasses(List<String> classIds) async {
+    try {
+      if (classIds.isEmpty) return {};
+
+      final counts = <String, int>{};
+      await Future.wait(classIds.map((id) async {
+        final response = await supabase
+            .from('class_students')
+            .select('*', const FetchOptions(count: CountOption.exact, head: true))
+            .eq('class_id', id);
+        counts[id] = response.count ?? 0;
+      }));
+
+      return counts;
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
+      throw 'Failed to get student counts: $e';
+    }
+  }
 
   // Get all students for a class
   Future<List<StudentModel>> getStudentsForClass(
@@ -50,7 +73,7 @@ class StudentService {
     }
   }
 
-  // a student to a class
+  // add student to a class
   Future<void> addStudentToClass({
     required String name,
     required String rollNumber,
