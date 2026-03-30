@@ -26,8 +26,12 @@ class AttendanceService {
     try {
       debugPrint('Invoking calculate-attendance-stats Edge Function for class: $classId');
       
+      final currentUser = supabase.auth.currentUser;
+      final jwt = supabase.auth.currentSession?.accessToken;
+
       final response = await supabase.functions.invoke(
         'calculate-attendance-stats',
+        headers: jwt != null ? {'Authorization': 'Bearer $jwt'} : {},
         body: {
           'classId': classId,
           'startDate': startDate?.toIso8601String().split('T')[0],

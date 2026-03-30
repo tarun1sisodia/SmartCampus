@@ -16,13 +16,9 @@ class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        padding: EdgeInsets.only(
-          top: TSizes.appBarHeight,
-          left: TSizes.defaultSpace,
-          right: TSizes.defaultSpace,
-          bottom: TSizes.defaultSpace,
-        ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(TSizes.defaultSpace),
         child: Column(
           children: [
             //for logo
@@ -90,7 +86,7 @@ class Login extends StatelessWidget {
             // FooterButton(),
           ],
         ),
-      ),
+      ),),
     );
   }
 }

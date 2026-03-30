@@ -332,7 +332,9 @@ class AttendanceController extends GetxController {
         message: 'Attendance submitted and session closed successfully',
         title: 'Success',
       );
-      Get.back();
+      if (Get.context != null) {
+        Navigator.of(Get.context!).pop();
+      }
 
       // Close the session after submitting attendance
       await attendanceService.closeAttendanceSession(currentSessionId.value);
@@ -408,7 +410,9 @@ class AttendanceController extends GetxController {
       await loadAttendanceSessions(selectedClass.value!.id);
 
       // Close dialog
-      Get.back();
+      if (Get.context != null) {
+        Navigator.of(Get.context!).pop();
+      }
 
       TSnackBar.showSuccess(
         message: 'Attendance session created successfully',
