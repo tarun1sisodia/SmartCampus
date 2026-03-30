@@ -84,6 +84,7 @@ class ClassListScreen extends StatelessWidget {
                 opacity: classController.isLoading.value ? 0.0 : 1.0,
                 duration: const Duration(milliseconds: 300),
                 child: FloatingActionButton.extended(
+                  heroTag: null, // Prevents multiple hero tag conflicts
                   onPressed: () {
                     Get.to(() => CreateClassScreen());
                   },
@@ -538,7 +539,7 @@ class ClassListScreen extends StatelessWidget {
                 title: const Text('Edit Class',
                     style: TextStyle(color: TColors.primaryDark)),
                 onTap: () {
-                  Navigator.pop(context); // Close the bottom sheet
+                  Get.back(); // Close the bottom sheet
                   ///print('Edit class ${classItem.id}');
                   _showEditClassDialog(context, classItem);
                 },
@@ -548,7 +549,7 @@ class ClassListScreen extends StatelessWidget {
                 title: const Text('Delete Class',
                     style: TextStyle(color: Colors.red)),
                 onTap: () {
-                  Navigator.pop(context);
+                  Get.back();
 
                   ///print('Delete class ${classItem.id}');
                   _showDeleteConfirmation(context, classItem);
@@ -558,7 +559,7 @@ class ClassListScreen extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () => Get.back(),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: dark ? TColors.indigo : TColors.coral,
                     foregroundColor: dark ? Colors.white : TColors.dark,
@@ -583,12 +584,12 @@ class ClassListScreen extends StatelessWidget {
               'Are you sure you want to delete "${classItem.subjectName}"? This will also delete all attendance sessions and records for this class.'),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => Get.back(),
               child: const Text(TTexts.cancel),
             ),
             TextButton(
               onPressed: () {
-                Navigator.pop(context);
+                Get.back();
                 classController.deleteClass(classItem.id);
               },
               child: const Text('Delete', style: TextStyle(color: Colors.red)),
@@ -615,13 +616,13 @@ class ClassListScreen extends StatelessWidget {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.pop(context);
+                Get.back();
               },
               child: const Text(TTexts.cancel),
             ),
             TextButton(
               onPressed: () {
-                Navigator.pop(context);
+                Get.back();
                 classController.deleteSelectedClasses();
               },
               child: const Text(
@@ -750,14 +751,14 @@ class ClassListScreen extends StatelessWidget {
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => Get.back(),
               child: Text(TTexts.cancel),
             ),
             ElevatedButton(
               onPressed: () {
                 // the class
                 classController.updateClass(classItem.id);
-                Navigator.pop(context);
+                Get.back();
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: dark ? TColors.yellow : TColors.primary,

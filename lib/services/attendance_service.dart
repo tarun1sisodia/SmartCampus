@@ -27,11 +27,9 @@ class AttendanceService {
       debugPrint('Invoking calculate-attendance-stats Edge Function for class: $classId');
       
       final currentUser = supabase.auth.currentUser;
-      final jwt = supabase.auth.currentSession?.accessToken;
 
       final response = await supabase.functions.invoke(
         'calculate-attendance-stats',
-        headers: jwt != null ? {'Authorization': 'Bearer $jwt'} : {},
         body: {
           'classId': classId,
           'startDate': startDate?.toIso8601String().split('T')[0],
@@ -129,17 +127,35 @@ class AttendanceService {
         'created_at': DateTime.now().toIso8601String(),
       };
 
-      final response = await supabase
-          .from('attendance_sessions')
-          .insert(data)
-          .select(_sessionSelectFields)
-          .single();
+      try {
+        final response = await supabase
+            .from('attendance_sessions')
+            .insert(data)
+            .select(_sessionSelectFields)
+            .single();
 
-      return AttendanceSessionModel.fromJson(response);
+        return AttendanceSessionModel.fromJson(response);
+      } on PostgrestException catch (e) {
+        if (e.code == '23505') {
+          // Conflict: Session already exists for this class and date
+          final String dateOnly = date.toIso8601String().split('T')[0];
+          debugPrint('Session already exists, fetching existing session for $classId on $dateOnly');
+          
+          final existingResponse = await supabase
+              .from('attendance_sessions')
+              .select(_sessionSelectFields)
+              .eq('class_id', classId)
+              .eq('date', dateOnly)
+              .single();
+              
+          return AttendanceSessionModel.fromJson(existingResponse);
+        }
+        rethrow;
+      }
     } catch (e, stackTrace) {
       await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Error creating attendance session: $e');
-      Get.snackbar('Failed to Create Attendance Session', '');
+      Get.snackbar('Failed to Create Attendance Session', 'Session might already exist or server error.');
       throw 'Failed to create attendance session: $e';
     }
   }

@@ -59,6 +59,7 @@ class AllSessionsController extends GetxController {
       attendanceController = Get.put(AttendanceController());
     }
 
+    scrollController.addListener(_onScroll);
     _initializeRealtimeService();
     loadAllSessions();
     loadClasses();
@@ -68,6 +69,7 @@ class AllSessionsController extends GetxController {
   void onClose() {
     debugPrint('AllSessionsController disposed');
     searchController.dispose();
+    scrollController.removeListener(_onScroll);
     scrollController.dispose();
 
     // Cancel all stream subscriptions

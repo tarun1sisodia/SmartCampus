@@ -79,32 +79,43 @@ class TSnackBar {
 
     // Use addPostFrameCallback to ensure we don't show snackbar during a build/navigator transition
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (Get.isSnackbarOpen) return;
-
       // Ensure the navigator is ready
       if (Get.key.currentState == null) {
         debugPrint('Skipping snackbar: Get.key.currentState is null');
         return;
       }
 
-      Get.showSnackbar(
-        GetSnackBar(
-          title: sourcePrefix + title,
-          message: message,
-          snackPosition: position,
-          backgroundColor: backgroundColor,
-          borderRadius: 10,
-          margin: const EdgeInsets.all(10),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          icon: Icon(icon, color: textColor),
-          duration: duration,
-          isDismissible: true,
-          forwardAnimationCurve: Curves.easeOutCirc,
-          reverseAnimationCurve: Curves.easeInCirc,
-          overlayBlur: 0,
-          overlayColor: TColors.dark.withAlpha(20),
-        ),
-      );
+      try {
+        if (!context.mounted) return;
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                Icon(icon, color: textColor),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(sourcePrefix + title, style: TextStyle(fontWeight: FontWeight.bold, color: textColor)),
+                      Text(message, style: TextStyle(color: textColor)),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            backgroundColor: backgroundColor,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            margin: const EdgeInsets.all(10),
+            duration: duration,
+          ),
+        );
+      } catch (e) {
+        debugPrint('Failed to show snackbar via ScaffoldMessenger: $e');
+      }
     });
   }
 

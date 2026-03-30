@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+// import 'package:supabase_flutter/supabase_flutter.dart';
 
 class OAuthConsentController extends GetxController {
   static OAuthConsentController get instance => Get.find();

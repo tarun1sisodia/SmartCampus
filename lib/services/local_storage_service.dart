@@ -45,7 +45,7 @@ class LocalStorageService extends GetxService {
 
   // Database info
   static const String _databaseName = 'smartcampus.db';
-  static const int _databaseVersion = 1;
+  static const int _databaseVersion = 2;
 
   @override
   Future<void> onInit() async {
@@ -442,9 +442,14 @@ class LocalStorageService extends GetxService {
   Future<void> _upgradeDatabase(
       Database db, int oldVersion, int newVersion) async {
     // Handle database upgrades here
-    if (oldVersion < newVersion) {
-      // Add migration logic here
-      debugPrint('Upgrading database from version $oldVersion to $newVersion');
+    debugPrint('Upgrading database from version $oldVersion to $newVersion');
+    if (oldVersion < 2) {
+      try {
+        await db.execute('ALTER TABLE students ADD COLUMN class_id TEXT');
+        debugPrint('Added class_id column to students table');
+      } catch (e) {
+        debugPrint('Migration error (might already exist): $e');
+      }
     }
   }
 
@@ -586,9 +591,13 @@ class LocalStorageService extends GetxService {
   // ==================== SQLite Database Methods ====================
 
   // Generic database operations
-  Future<int> insertRecord(String table, Map<String, dynamic> data) async {
+  Future<int> insertRecord(
+    String table,
+    Map<String, dynamic> data, {
+    ConflictAlgorithm conflictAlgorithm = ConflictAlgorithm.replace,
+  }) async {
     try {
-      return await _database.insert(table, data);
+      return await _database.insert(table, data, conflictAlgorithm: conflictAlgorithm);
     } catch (e) {
       debugPrint('Error inserting record into $table: $e');
       rethrow;
@@ -840,10 +849,12 @@ class LocalStorageService extends GetxService {
       id TEXT PRIMARY KEY,
       name TEXT NOT NULL,
       roll_number TEXT NOT NULL UNIQUE,
+      class_id TEXT,
       image_url TEXT,
       created_at TEXT,
       updated_at TEXT,
       is_synced INTEGER DEFAULT 0
+
     )
   ''');
 
@@ -1272,7 +1283,7 @@ class LocalStorageService extends GetxService {
       for (final student in students) {
         final studentData = student.toJson();
         studentData['is_synced'] = 0;
-        batch.insert('students', studentData);
+        batch.insert('students', studentData, conflictAlgorithm: ConflictAlgorithm.replace);
       }
       await batch.commit();
       return true;
@@ -1289,7 +1300,7 @@ class LocalStorageService extends GetxService {
       for (final record in records) {
         final recordData = record.toJson();
         recordData['is_synced'] = 0;
-        batch.insert('attendance_records', recordData);
+        batch.insert('attendance_records', recordData, conflictAlgorithm: ConflictAlgorithm.replace);
       }
       await batch.commit();
       return true;
