@@ -71,23 +71,30 @@ class OAuthConsentScreen extends StatelessWidget {
                 width: 100,
                 height: 100,
                 decoration: BoxDecoration(
-                  color: TColors.primary.withOpacity(0.1),
+                  color: TColors.primary.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Iconsax.security_user, size: 50, color: TColors.primary),
+                child: const Icon(Iconsax.security_user,
+                    size: 50, color: TColors.primary),
               ),
               const SizedBox(height: TSizes.spaceBtwSections),
 
               // Title
               Text(
                 'Authorize ${client['name']}',
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
+                style: Theme.of(context)
+                    .textTheme
+                    .headlineMedium
+                    ?.copyWith(fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: TSizes.sm),
               Text(
                 'This application is requesting access to your SmartCampus account.',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: TColors.textSecondary),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium
+                    ?.copyWith(color: TColors.textSecondary),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: TSizes.spaceBtwSections),
@@ -98,10 +105,10 @@ class OAuthConsentScreen extends StatelessWidget {
                 child: Text(
                   'THE APPLICATION WILL BE ABLE TO:',
                   style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                    letterSpacing: 1.2,
-                    fontWeight: FontWeight.bold,
-                    color: TColors.primary,
-                  ),
+                        letterSpacing: 1.2,
+                        fontWeight: FontWeight.bold,
+                        color: TColors.primary,
+                      ),
                 ),
               ),
               const SizedBox(height: TSizes.spaceBtwItems),
@@ -117,12 +124,15 @@ class OAuthConsentScreen extends StatelessWidget {
                     padding: const EdgeInsets.all(TSizes.md),
                     decoration: BoxDecoration(
                       color: isDark ? TColors.dark54 : TColors.white,
-                      borderRadius: BorderRadius.circular(TSizes.borderRadiusMd),
-                      border: Border.all(color: TColors.borderPrimary.withOpacity(0.5)),
+                      borderRadius:
+                          BorderRadius.circular(TSizes.borderRadiusMd),
+                      border: Border.all(
+                          color: TColors.borderPrimary.withValues(alpha: 0.5)),
                     ),
                     child: Row(
                       children: [
-                        const Icon(Iconsax.tick_circle5, color: TColors.success, size: 20),
+                        const Icon(Iconsax.tick_circle5,
+                            color: TColors.success, size: 20),
                         const SizedBox(width: TSizes.md),
                         Expanded(
                           child: Column(
@@ -130,7 +140,10 @@ class OAuthConsentScreen extends StatelessWidget {
                             children: [
                               Text(
                                 scope['name'] ?? '',
-                                style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleSmall
+                                    ?.copyWith(fontWeight: FontWeight.bold),
                               ),
                               Text(
                                 scope['description'] ?? '',
@@ -149,7 +162,10 @@ class OAuthConsentScreen extends StatelessWidget {
               // Authentication Disclaimer
               Text(
                 'Make sure you trust this application before authorizing.',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(fontStyle: FontStyle.italic),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall
+                    ?.copyWith(fontStyle: FontStyle.italic),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: TSizes.spaceBtwSections),
@@ -159,20 +175,27 @@ class OAuthConsentScreen extends StatelessWidget {
                 children: [
                   Expanded(
                     child: OutlinedButton(
-                      onPressed: controller.isLoading.value ? null : () => controller.deny(),
+                      onPressed: controller.isLoading.value
+                          ? null
+                          : () => controller.deny(),
                       style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: TSizes.md),
+                        padding:
+                            const EdgeInsets.symmetric(vertical: TSizes.md),
                         side: const BorderSide(color: TColors.textSecondary),
                       ),
-                      child: const Text('Cancel', style: TextStyle(color: TColors.textSecondary)),
+                      child: const Text('Cancel',
+                          style: TextStyle(color: TColors.textSecondary)),
                     ),
                   ),
                   const SizedBox(width: TSizes.md),
                   Expanded(
                     child: ElevatedButton(
-                      onPressed: controller.isLoading.value ? null : () => controller.approve(),
+                      onPressed: controller.isLoading.value
+                          ? null
+                          : () => controller.approve(),
                       style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: TSizes.md),
+                        padding:
+                            const EdgeInsets.symmetric(vertical: TSizes.md),
                         backgroundColor: TColors.primary,
                       ),
                       child: const Text('Authorize'),

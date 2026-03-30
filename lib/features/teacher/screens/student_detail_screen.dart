@@ -107,7 +107,7 @@ class StudentDetailScreen extends StatelessWidget {
                                           ? CachedNetworkImage(
                                               imageUrl:
                                                   ApiConstants.optimizeImageUrl(
-                                                currentStudent!.imageUrl!,
+                                                currentStudent.imageUrl!,
                                                 width: 160,
                                                 height: 160,
                                               ),

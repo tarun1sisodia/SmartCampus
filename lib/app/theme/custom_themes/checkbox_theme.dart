@@ -9,90 +9,46 @@ import '../../../common/utils/constants/sized.dart';
 class TCheckboxTheme {
   TCheckboxTheme._();
 
-  static CheckboxThemeData lightCheckBoxTheme = CheckboxThemeData(
-    // Consistent shape (Law of Similarity)
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(TSizes.xs),
-    ),
+  static CheckboxThemeData createCheckboxTheme(Color primaryColor, Color checkColorValue, Brightness brightness) {
+    return CheckboxThemeData(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(TSizes.xs),
+      ),
+      checkColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
+          return checkColorValue;
+        } else {
+          return brightness == Brightness.light ? TColors.dark : Colors.white;
+        }
+      }),
+      fillColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
+          return primaryColor;
+        } else if (states.contains(WidgetState.disabled)) {
+          return brightness == Brightness.light ? TColors.grey : TColors.darkerGrey;
+        } else {
+          return Colors.transparent;
+        }
+      }),
+      overlayColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.pressed)) {
+          return primaryColor.withAlpha(26);
+        } else if (states.contains(WidgetState.hovered)) {
+          return primaryColor.withAlpha(13);
+        } else {
+          return Colors.transparent;
+        }
+      }),
+      materialTapTargetSize: MaterialTapTargetSize.padded,
+      side: const BorderSide(
+        color: TColors.grey,
+        width: 1.5,
+      ),
+      splashRadius: 20,
+    );
+  }
 
-    // Clear visual feedback (Doherty Threshold)
-    checkColor: WidgetStateProperty.resolveWith((states) {
-      if (states.contains(WidgetState.selected)) {
-        return TColors.white;
-      } else {
-        return TColors.dark;
-      }
-    }),
-
-    // Fill color based on state
-    fillColor: WidgetStateProperty.resolveWith((states) {
-      if (states.contains(WidgetState.selected)) {
-        return TColors.primary;
-      } else if (states.contains(WidgetState.disabled)) {
-        return TColors.grey;
-      } else {
-        return Colors.transparent;
-      }
-    }),
-
-    // Border color based on state
-    overlayColor: WidgetStateProperty.resolveWith((states) {
-      if (states.contains(WidgetState.pressed)) {
-        return TColors.primary.withAlpha(26);
-      } else if (states.contains(WidgetState.hovered)) {
-        return TColors.primary.withAlpha(13);
-      } else {
-        return Colors.transparent;
-      }
-    }),
-
-    // Appropriate sizing (Fitts's Law)
-    materialTapTargetSize: MaterialTapTargetSize.padded,
-
-    // Border styling
-    side: BorderSide(
-      color: TColors.grey,
-      width: 1.5,
-    ),
-
-    // Subtle splash effect
-    splashRadius: 20,
-  );
-
-  static CheckboxThemeData darkCheckBoxTheme = CheckboxThemeData(
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(TSizes.xs),
-    ),
-    checkColor: WidgetStateProperty.resolveWith((states) {
-      if (states.contains(WidgetState.selected)) {
-        return TColors.white;
-      } else {
-        return TColors.white;
-      }
-    }),
-    fillColor: WidgetStateProperty.resolveWith((states) {
-      if (states.contains(WidgetState.selected)) {
-        return TColors.primary;
-      } else if (states.contains(WidgetState.disabled)) {
-        return TColors.darkerGrey;
-      } else {
-        return Colors.transparent;
-      }
-    }),
-    overlayColor: WidgetStateProperty.resolveWith((states) {
-      if (states.contains(WidgetState.pressed)) {
-        return TColors.primary.withAlpha(26);
-      } else if (states.contains(WidgetState.hovered)) {
-        return TColors.primary.withAlpha(13);
-      } else {
-        return Colors.transparent;
-      }
-    }),
-    materialTapTargetSize: MaterialTapTargetSize.padded,
-    side: BorderSide(
-      color: TColors.grey,
-      width: 1.5,
-    ),
-    splashRadius: 20,
-  );
+  static final lightCheckBoxTheme = createCheckboxTheme(TColors.primary, TColors.white, Brightness.light);
+  static final darkCheckBoxTheme = createCheckboxTheme(TColors.primary, TColors.white, Brightness.dark);
 }
+

@@ -26,7 +26,7 @@ class AttendanceService {
     try {
       debugPrint('Invoking calculate-attendance-stats Edge Function for class: $classId');
       
-      final currentUser = supabase.auth.currentUser;
+      // final currentUser = supabase.auth.currentUser;
 
       final response = await supabase.functions.invoke(
         'calculate-attendance-stats',
@@ -560,7 +560,7 @@ class AttendanceService {
           .eq('student_id', studentId)
           .inFilter('session_id', sessionIds);
 
-      final List<Map<String, dynamic>> records = recordsResponse as List<Map<String, dynamic>>;
+      final List<Map<String, dynamic>> records = recordsResponse;
 
       // 3. Create a map for fast record lookup
       final recordsBySession = {
@@ -720,8 +720,11 @@ class AttendanceService {
         int p = 0;
         int l = 0;
         for (var status in statuses) {
-          if (status == 'present') p++;
-          else if (status == 'late') l++;
+          if (status == 'present') {
+            p++;
+          } else if (status == 'late') {
+            l++;
+          }
         }
         
         final totalSessionsForStudent = sessions.length;

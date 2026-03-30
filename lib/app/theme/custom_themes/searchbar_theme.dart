@@ -9,56 +9,28 @@ import '../../../common/utils/constants/sized.dart';
 class TSearchbarTheme {
   TSearchbarTheme._();
 
-  static final lightSearchBar = SearchBarThemeData(
-    // Subtle elevation for depth perception
-    elevation: WidgetStatePropertyAll(0.5),
+  static SearchBarThemeData createSearchBarTheme(Color backgroundColor, Color textColor, Color hintColor, Brightness brightness) {
+    return SearchBarThemeData(
+      elevation: const WidgetStatePropertyAll(0.5),
+      backgroundColor: WidgetStatePropertyAll(backgroundColor),
+      shadowColor: WidgetStatePropertyAll(brightness == Brightness.dark ? Colors.black.withAlpha(77) : Colors.black.withAlpha(25)),
+      padding: const WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: TSizes.md)),
+      shape: WidgetStatePropertyAll(RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
+        side: BorderSide(color: brightness == Brightness.dark ? TColors.darkGrey : TColors.grey.withAlpha(77)),
+      )),
+      textStyle: WidgetStatePropertyAll(TextStyle(
+        color: textColor,
+        fontSize: 14,
+      )),
+      hintStyle: WidgetStatePropertyAll(TextStyle(
+        color: hintColor,
+        fontSize: 14,
+      )),
+    );
+  }
 
-    // Consistent background color (Aesthetic-Usability Effect)
-    backgroundColor: WidgetStatePropertyAll(Colors.white),
-
-    // Shadow color for depth
-    shadowColor: WidgetStatePropertyAll(Colors.black.withAlpha(25)),
-
-    // Appropriate sizing (Fitts's Law)
-    padding:
-        WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: TSizes.md)),
-
-    // Consistent shape (Law of Similarity)
-    shape: WidgetStatePropertyAll(RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
-      side: BorderSide(color: TColors.grey.withAlpha(77)),
-    )),
-
-    // Text styling
-    textStyle: WidgetStatePropertyAll(TextStyle(
-      color: TColors.textPrimary,
-      fontSize: 14,
-    )),
-
-    // Hint styling
-    hintStyle: WidgetStatePropertyAll(TextStyle(
-      color: TColors.darkGrey,
-      fontSize: 14,
-    )),
-  );
-
-  static final darkSearchBar = SearchBarThemeData(
-    elevation: WidgetStatePropertyAll(1),
-    backgroundColor: WidgetStatePropertyAll(TColors.darkerGrey),
-    shadowColor: WidgetStatePropertyAll(Colors.black.withAlpha(77)),
-    padding:
-        WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: TSizes.md)),
-    shape: WidgetStatePropertyAll(RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
-      side: BorderSide(color: TColors.darkGrey),
-    )),
-    textStyle: WidgetStatePropertyAll(TextStyle(
-      color: TColors.white,
-      fontSize: 14,
-    )),
-    hintStyle: WidgetStatePropertyAll(TextStyle(
-      color: TColors.white.withAlpha(179),
-      fontSize: 14,
-    )),
-  );
+  static final lightSearchBar = createSearchBarTheme(Colors.white, TColors.textPrimary, TColors.darkGrey, Brightness.light);
+  static final darkSearchBar = createSearchBarTheme(TColors.darkerGrey, TColors.white, TColors.white.withAlpha(179), Brightness.dark);
 }
+

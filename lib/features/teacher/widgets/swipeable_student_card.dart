@@ -1,11 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 import '../../../models/student_model.dart';
 import '../../../common/utils/constants/api_constants.dart';
-import '../../../common/utils/constants/colors.dart';
 import '../../../common/utils/constants/sized.dart';
 import '../../../common/utils/device/device_utility.dart';
-import '../../../common/utils/helpers/helper_function.dart';
 
 class SwipeableStudentCard extends StatelessWidget {
   final StudentModel student;
@@ -23,171 +22,108 @@ class SwipeableStudentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dark = THelperFunction.isDarkMode(context);
-    // final screenSize = MediaQuery.of(context).size;
-    // final isMobile = screenSize.width <= 500;
     final isLandscape = DeviceUtility.isLandscapeOrientation(context);
-
-    // Card height calculation - taller in portrait, shorter in landscape
-    final cardHeight = isLandscape ? 220.0 : 320.0;
+    final cardHeight = isLandscape ? 240.0 : 360.0;
+    final primaryColor = Theme.of(context).colorScheme.primary;
 
     return GestureDetector(
       onHorizontalDragEnd: (details) {
         if (details.primaryVelocity! > 0) {
-          // Swiped right - mark as present
           onStatusChanged('present');
           onSwipeRight();
         } else if (details.primaryVelocity! < 0) {
-          // Swiped left - mark as absent
           onStatusChanged('absent');
           onSwipeLeft();
         }
       },
       child: Card(
-        elevation: 8,
+        elevation: 6,
+        shadowColor: primaryColor.withValues(alpha: 0.1),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
+          borderRadius: BorderRadius.circular(TSizes.cardRadiusLg),
           side: BorderSide(
-            color: _getStatusColor(student.attendanceStatus, dark),
+            color: _getStatusColor(student.attendanceStatus, context).withValues(alpha: 0.5),
             width: 2,
           ),
         ),
+        clipBehavior: Clip.antiAlias,
         child: SizedBox(
           height: cardHeight,
           width: double.infinity,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Status indicator at the top
+              // Header Status
               Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: TSizes.sm,
-                  vertical: TSizes.xs / 2,
-                ),
-                decoration: BoxDecoration(
-                  color: _getStatusColor(student.attendanceStatus, dark),
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(TSizes.cardRadiusMd - 2),
-                    topRight: Radius.circular(TSizes.cardRadiusMd - 2),
-                  ),
-                ),
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                color: _getStatusColor(student.attendanceStatus, context),
                 child: Text(
-                  _getStatusText(student.attendanceStatus),
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  ),
+                  _getStatusText(student.attendanceStatus).toUpperCase(),
                   textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.2,
+                      ),
                 ),
               ),
 
-              // Student image - takes most of the card space
+              // Image Section
               Expanded(
                 child: Container(
-                  color: Colors.grey[200],
-                  child: student.imageUrl == null || student.imageUrl!.isEmpty
-                      ? Center(
-                          child: Text(
-                            student.name.isNotEmpty
-                                ? student.name.substring(0, 1).toUpperCase()
-                                : "?",
-                            style: TextStyle(
-                              fontSize: 60,
-                              fontWeight: FontWeight.bold,
-                              color: _getStatusColor(
-                                  student.attendanceStatus, dark),
-                            ),
-                          ),
+                  color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      if (student.imageUrl != null && student.imageUrl!.isNotEmpty)
+                        CachedNetworkImage(
+                          imageUrl: ApiConstants.optimizeImageUrl(student.imageUrl!, width: 600, height: 600),
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) => Center(child: CircularProgressIndicator(color: primaryColor, strokeWidth: 2)),
+                          errorWidget: (context, url, error) => _buildPlaceholder(context),
                         )
-                      : CachedNetworkImage(
-                          imageUrl: ApiConstants.optimizeImageUrl(
-                            student.imageUrl!,
-                            width: 600,
-                            height: 600,
-                          ),
-                          fit: BoxFit.contain,
-                          memCacheWidth: 600,
-                          memCacheHeight: 600,
-                          maxWidthDiskCache: 600,
-                          maxHeightDiskCache: 600,
-                          filterQuality: FilterQuality.low,
-                          placeholder: (context, url) => const Center(
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          ),
-                          errorWidget: (context, url, error) => Center(
-                            child: Text(
-                              student.name.isNotEmpty
-                                  ? student.name.substring(0, 1).toUpperCase()
-                                  : "?",
-                              style: TextStyle(
-                                fontSize: 60,
-                                fontWeight: FontWeight.bold,
-                                color: _getStatusColor(
-                                    student.attendanceStatus, dark),
-                              ),
+                      else
+                        _buildPlaceholder(context),
+                      
+                      // Gradient overlay
+                      Positioned.fill(
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Colors.transparent,
+                                Theme.of(context).colorScheme.surface.withValues(alpha: 0.7),
+                              ],
+                              stops: const [0.6, 1.0],
                             ),
                           ),
                         ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
 
-              // Student info at the bottom
+              // Footer Info
               Container(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 8.0,
-                  horizontal: 12.0,
-                ),
-                decoration: BoxDecoration(
-                  color: dark ? Colors.grey[800] : Colors.white,
-                  borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(12),
-                    bottomRight: Radius.circular(12),
-                  ),
-                ),
+                padding: const EdgeInsets.all(16),
+                color: Theme.of(context).colorScheme.surface,
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Student name
                     Text(
                       student.name,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
                     ),
-
-                    // Roll number
+                    const SizedBox(height: 4),
                     Text(
                       'Roll: ${student.rollNumber}',
-                      style: Theme.of(context).textTheme.bodyMedium,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.labelMedium?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                      textAlign: TextAlign.center,
                     ),
-
-                    // // Swipe instructions
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.center,
-                    //   children: [
-                    //     Icon(
-                    //       Icons.swipe_left,
-                    //       color: Colors.red.withAlpha(179),
-                    //       size: 16,
-                    //     ),
-                    //     const SizedBox(width: 4),
-                    //     Text(
-                    //       'Swipe to mark',
-                    //       style: Theme.of(context).textTheme.bodySmall,
-                    //     ),
-                    //     const SizedBox(width: 4),
-                    //     Icon(
-                    //       Icons.swipe_right,
-                    //       color: Colors.green.withAlpha(179),
-                    //       size: 16,
-                    //     ),
-                    //   ],
-                    // ),
                   ],
                 ),
               ),
@@ -198,33 +134,43 @@ class SwipeableStudentCard extends StatelessWidget {
     );
   }
 
+  Widget _buildPlaceholder(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Iconsax.user, size: 80, color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2)),
+          const SizedBox(height: 8),
+          Text(
+            student.name.substring(0, 1).toUpperCase(),
+            style: TextStyle(
+              fontSize: 48,
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   String _getStatusText(String? status) {
     switch (status) {
-      case 'present':
-        return 'Present';
-      case 'absent':
-        return 'Absent';
-      case 'late':
-        return 'Late';
-      case 'excused':
-        return 'Excused';
-      default:
-        return 'Not Marked';
+      case 'present': return 'Present';
+      case 'absent': return 'Absent';
+      case 'late': return 'Late';
+      case 'excused': return 'Excused';
+      default: return 'Swipe to Mark';
     }
   }
 
-  Color _getStatusColor(String? status, bool dark) {
+  Color _getStatusColor(String? status, BuildContext context) {
     switch (status) {
-      case 'present':
-        return Colors.green;
-      case 'absent':
-        return Colors.red;
-      case 'late':
-        return Colors.orange;
-      case 'excused':
-        return Colors.blue;
-      default:
-        return dark ? TColors.yellow : TColors.primary;
+      case 'present': return Colors.green;
+      case 'absent': return Colors.red;
+      case 'late': return Colors.orange;
+      case 'excused': return Colors.blue;
+      default: return Theme.of(context).colorScheme.primary;
     }
   }
 }

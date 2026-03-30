@@ -6,7 +6,6 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../common/utils/constants/colors.dart';
 import '../../../common/utils/constants/sized.dart';
-import '../../../common/utils/helpers/helper_function.dart';
 import '../controllers/attendance_reports_controller.dart';
 
 class AttendanceReportsScreen extends StatelessWidget {
@@ -16,8 +15,6 @@ class AttendanceReportsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dark = THelperFunction.isDarkMode(context);
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -39,15 +36,15 @@ class AttendanceReportsScreen extends StatelessWidget {
       ),
       body: Obx(() {
         if (reportsController.isLoading.value) {
-          return _buildLoadingShimmer(context, dark);
+          return _buildLoadingShimmer(context);
         }
 
         return RefreshIndicator(
           onRefresh: () async {
             await reportsController.loadAttendanceData();
           },
-          color: dark ? TColors.yellow : TColors.primary,
-          backgroundColor: dark ? TColors.darkerGrey : Colors.white,
+          color: Theme.of(context).colorScheme.primary,
+          backgroundColor: Theme.of(context).cardTheme.color ?? Colors.white,
           child: CustomScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             slivers: [
@@ -58,7 +55,7 @@ class AttendanceReportsScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       // Class selection
-                      _buildClassSelectionCard(context, dark),
+                      _buildClassSelectionCard(context),
                       const SizedBox(height: TSizes.spaceBtwItems),
 
                       // Date range selection
@@ -67,7 +64,7 @@ class AttendanceReportsScreen extends StatelessWidget {
 
                       // Attendance summary (Only if data exists)
                       if (reportsController.sessions.isNotEmpty)
-                        _buildAttendanceSummary(context, dark),
+                        _buildAttendanceSummary(context),
                     ],
                   ),
                 ),
@@ -86,7 +83,7 @@ class AttendanceReportsScreen extends StatelessWidget {
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: TSizes.spaceBtwItems),
-                      _buildTableHeader(context, dark),
+                      _buildTableHeader(context),
                     ],
                   ),
                 ),
@@ -114,7 +111,7 @@ class AttendanceReportsScreen extends StatelessWidget {
                         final isLast = index == filteredStudents.length - 1;
                         final hasMore = reportsController.hasMoreStudentsInReport.value;
 
-                        return _buildStudentRow(context, student, stats, dark, isLast && !hasMore);
+                        return _buildStudentRow(context, student, stats, isLast && !hasMore);
                       },
                       childCount: filteredStudents.length,
                     ),
@@ -148,12 +145,12 @@ class AttendanceReportsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildClassSelectionCard(BuildContext context, bool dark) {
+  Widget _buildClassSelectionCard(BuildContext context) {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
-        side: BorderSide(color: dark ? TColors.indigo : Colors.grey.shade300, width: 2),
+        side: BorderSide(color: Theme.of(context).colorScheme.outlineVariant, width: 1),
       ),
       child: Padding(
         padding: const EdgeInsets.all(TSizes.md),
@@ -174,7 +171,7 @@ class AttendanceReportsScreen extends StatelessWidget {
                 isExpanded: true,
                 iconSize: 24,
                 icon: const Icon(Iconsax.arrow),
-                initialValue: reportsController.selectedClassId.value,
+                value: reportsController.selectedClassId.value,
                 items: reportsController.classes.map((classItem) {
                   return DropdownMenuItem<String>(
                     value: classItem.id,
@@ -204,7 +201,7 @@ class AttendanceReportsScreen extends StatelessWidget {
       elevation: 2,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
-        side: BorderSide(color: THelperFunction.isDarkMode(context) ? TColors.indigo : Colors.grey.shade300, width: 2),
+        side: BorderSide(color: Theme.of(context).colorScheme.outlineVariant, width: 1),
       ),
       child: Padding(
         padding: const EdgeInsets.all(TSizes.md),
@@ -274,7 +271,7 @@ class AttendanceReportsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAttendanceSummary(BuildContext context, bool dark) {
+  Widget _buildAttendanceSummary(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -287,7 +284,7 @@ class AttendanceReportsScreen extends StatelessWidget {
           elevation: 2,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
-            side: BorderSide(color: dark ? TColors.indigo : Colors.grey.shade300, width: 2),
+            side: BorderSide(color: Theme.of(context).colorScheme.outlineVariant, width: 1),
           ),
           child: Padding(
             padding: const EdgeInsets.all(TSizes.md),
@@ -317,14 +314,14 @@ class AttendanceReportsScreen extends StatelessWidget {
                         child: Text('Average Attendance', style: Theme.of(context).textTheme.bodySmall),
                       ),
                       circularStrokeCap: CircularStrokeCap.round,
-                      progressColor: dark ? TColors.yellow : TColors.primary,
-                      backgroundColor: dark ? Colors.grey.shade800 : Colors.grey.shade200,
+                      progressColor: Theme.of(context).colorScheme.primary,
+                      backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
                     ),
                     Column(
                       children: [
-                        _buildSummaryItem(context, 'Sessions', reportsController.sessions.length.toString(), Iconsax.calendar_1, dark ? TColors.yellow : TColors.primary),
+                        _buildSummaryItem(context, 'Sessions', reportsController.sessions.length.toString(), Iconsax.calendar_1, Theme.of(context).colorScheme.primary),
                         const SizedBox(height: TSizes.spaceBtwItems),
-                        _buildSummaryItem(context, 'Students', reportsController.students.length.toString(), Iconsax.people, dark ? TColors.yellow : TColors.primary),
+                        _buildSummaryItem(context, 'Students', reportsController.students.length.toString(), Iconsax.people, Theme.of(context).colorScheme.primary),
                       ],
                     ),
                   ],
@@ -348,7 +345,7 @@ class AttendanceReportsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTableHeader(BuildContext context, bool dark) {
+  Widget _buildTableHeader(BuildContext context) {
     return Card(
       elevation: 2,
       margin: EdgeInsets.zero,
@@ -374,7 +371,7 @@ class AttendanceReportsScreen extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(vertical: TSizes.sm),
               decoration: BoxDecoration(
-                color: dark ? const Color.fromARGB(255, 67, 115, 226) : const Color.fromARGB(255, 28, 219, 229),
+                color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(TSizes.borderRadiusSm),
               ),
               child: Row(
@@ -384,7 +381,7 @@ class AttendanceReportsScreen extends StatelessWidget {
                   Expanded(flex: 1, child: Text('P', style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center)),
                   Expanded(flex: 1, child: Text('A', style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center)),
                   Expanded(flex: 1, child: Text('L', style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center)),
-                  Expanded(flex: 1, child: Text('%', style: Theme.of(context).textTheme.titleSmall?.copyWith(fontFamily: 'Poppins'), textAlign: TextAlign.center)),
+                  Expanded(flex: 1, child: Text('%', style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center)),
                 ],
               ),
             ),
@@ -394,7 +391,7 @@ class AttendanceReportsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildStudentRow(BuildContext context, dynamic student, Map<String, dynamic> stats, bool dark, bool isLast) {
+  Widget _buildStudentRow(BuildContext context, dynamic student, Map<String, dynamic> stats, bool isLast) {
     final pCount = stats['presentCount'] ?? 0;
     final aCount = stats['absentCount'] ?? 0;
     final lCount = stats['lateCount'] ?? 0;
@@ -405,6 +402,7 @@ class AttendanceReportsScreen extends StatelessWidget {
       elevation: 2,
       shape: RoundedRectangleBorder(
         borderRadius: isLast ? const BorderRadius.vertical(bottom: Radius.circular(TSizes.cardRadiusMd)) : BorderRadius.zero,
+        side: BorderSide(color: Theme.of(context).colorScheme.outlineVariant, width: 0.5),
       ),
       child: InkWell(
         onTap: () => reportsController.navigateToStudentDetail(student),
@@ -434,13 +432,12 @@ class AttendanceReportsScreen extends StatelessWidget {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: percentage >= 75 ? (dark ? TColors.yellow : TColors.primary) : Colors.red,
+                        color: percentage >= 75 ? Theme.of(context).colorScheme.primary : Colors.red,
                       ),
                     ),
                   ),
                 ],
               ),
-              if (!isLast) const Divider(height: 1),
             ],
           ),
         ),
@@ -472,23 +469,26 @@ class AttendanceReportsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildLoadingShimmer(BuildContext context, bool dark) {
+  Widget _buildLoadingShimmer(BuildContext context) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(TSizes.defaultSpace),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: List.generate(4, (index) => _buildShimmerCard(dark)),
+        children: List.generate(4, (index) => _buildShimmerCard(context)),
       ),
     );
   }
 
-  Widget _buildShimmerCard(bool dark) {
+  Widget _buildShimmerCard(BuildContext context) {
+    final baseColor = Theme.of(context).colorScheme.surfaceContainerHighest;
+    final highlightColor = Theme.of(context).colorScheme.surface.withValues(alpha: 0.5);
+
     return Shimmer.fromColors(
-      baseColor: dark ? TColors.darkerGrey : Colors.grey.shade300,
-      highlightColor: dark ? TColors.yellow : TColors.primary,
+      baseColor: baseColor,
+      highlightColor: highlightColor,
       child: Card(
         margin: const EdgeInsets.only(bottom: TSizes.spaceBtwItems),
-        child: Container(height: 100, width: double.infinity, color: Colors.grey),
+        child: Container(height: 100, width: double.infinity, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(TSizes.cardRadiusMd))),
       ),
     );
   }

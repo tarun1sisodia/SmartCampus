@@ -152,8 +152,8 @@ class NavigationMenu extends StatelessWidget {
             Icon(
               icon,
               color: isSelected
-                  ? (dark ? TColors.orange : Colors.deepPurpleAccent)
-                  : (dark ? TColors.blue : TColors.black),
+                  ? Theme.of(context).colorScheme.primary
+                  : Theme.of(context).colorScheme.onSurface.withAlpha(153),
               size: 28,
             ),
             const SizedBox(height: 4),
@@ -167,8 +167,8 @@ class NavigationMenu extends StatelessWidget {
                   label,
                   style: TextStyle(
                     color: isSelected
-                        ? (dark ? Colors.orange : Colors.deepPurpleAccent)
-                        : Colors.grey,
+                        ? Theme.of(context).colorScheme.primary
+                        : Theme.of(context).colorScheme.onSurface.withAlpha(128),
                     fontSize: 12,
                     fontWeight:
                         isSelected ? FontWeight.bold : FontWeight.normal,
@@ -180,6 +180,7 @@ class NavigationMenu extends StatelessWidget {
         ),
       ),
     );
+
   }
 }
 
