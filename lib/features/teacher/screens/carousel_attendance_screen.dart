@@ -340,7 +340,7 @@ class CarouselAttendanceScreen extends StatelessWidget {
         actions: [
           TextButton(
               onPressed: () {
-                Get.back();
+                Navigator.of(context).pop();
               },
               child: const Text(
                 TTexts.cancel,
@@ -348,7 +348,7 @@ class CarouselAttendanceScreen extends StatelessWidget {
               )),
           ElevatedButton(
             onPressed: () {
-              Get.back();
+              Navigator.of(context).pop();
               carouselAttendanceController.submitAttendance();
             },
             style: ElevatedButton.styleFrom(

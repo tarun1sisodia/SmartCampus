@@ -69,31 +69,43 @@ class TSnackBar {
         break;
     }
 
-    // Check if Overlay is available
-    if (Get.overlayContext == null) {
+    // Check if Overlay/Context is available
+    final context = Get.context;
+    if (context == null) {
       debugPrint(
-          'Skipping snackbar: No Overlay widget found. Title: $title, Message: $message');
+          'Skipping snackbar: No context found. Title: $title, Message: $message');
       return;
     }
 
-    // Show the snackbar
-    Get.snackbar(
-      sourcePrefix + title,
-      message,
-      snackPosition: position,
-      backgroundColor: backgroundColor,
-      colorText: textColor,
-      duration: duration,
-      borderRadius: 10,
-      margin: const EdgeInsets.all(10),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      icon: Icon(icon, color: textColor),
-      isDismissible: true,
-      forwardAnimationCurve: Curves.easeOutCirc,
-      reverseAnimationCurve: Curves.easeInCirc,
-      overlayBlur: 0,
-      overlayColor: TColors.dark.withAlpha(20),
-    );
+    // Use addPostFrameCallback to ensure we don't show snackbar during a build/navigator transition
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (Get.isSnackbarOpen) return;
+
+      // Ensure the navigator is ready
+      if (Get.key.currentState == null) {
+        debugPrint('Skipping snackbar: Get.key.currentState is null');
+        return;
+      }
+
+      Get.showSnackbar(
+        GetSnackBar(
+          title: sourcePrefix + title,
+          message: message,
+          snackPosition: position,
+          backgroundColor: backgroundColor,
+          borderRadius: 10,
+          margin: const EdgeInsets.all(10),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          icon: Icon(icon, color: textColor),
+          duration: duration,
+          isDismissible: true,
+          forwardAnimationCurve: Curves.easeOutCirc,
+          reverseAnimationCurve: Curves.easeInCirc,
+          overlayBlur: 0,
+          overlayColor: TColors.dark.withAlpha(20),
+        ),
+      );
+    });
   }
 
   //Convenience method for showing success messages

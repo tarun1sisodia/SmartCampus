@@ -434,7 +434,7 @@ class AttendanceScreen extends StatelessWidget {
           TextButton(
             onPressed: () {
               //print('Canceling session creation');
-              Get.back();
+              Navigator.of(context).pop();
             },
             child: const Text(TTexts.cancel,
                 style: TextStyle(

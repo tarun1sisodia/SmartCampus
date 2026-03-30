@@ -2,6 +2,7 @@ import 'services/feedback_service.dart';
 import 'services/storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -31,6 +32,19 @@ Future<void> main() async {
     WidgetsFlutterBinding.ensureInitialized();
 
     await dotenv.load(fileName: '.env');
+
+    // Enable Edge-to-Edge mode for modern Android UI
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+
+    // Set status and navigation bars to transparent
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        systemNavigationBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+        systemNavigationBarIconBrightness: Brightness.dark,
+      ),
+    );
 
     // Initialize database factory for SQLite
     if (DatabaseHelper.isSupported) {
