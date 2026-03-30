@@ -15,6 +15,9 @@ import '../../../services/biometric_auth_service.dart';
 import '../../../services/subject_service.dart';
 import 'dart:async';
 
+import '../../../services/student_service.dart';
+import '../../../services/local_db_service.dart';
+import '../../../services/connectivity_service.dart';
 import '../../authentication/controllers/supabase_auth_controller.dart';
 
 class DashboardController extends GetxController {
@@ -58,9 +61,28 @@ class DashboardController extends GetxController {
   void onInit() {
     super.onInit();
     //debugPrint('DashboardController initialized');
+    _loadCachedData();
     _initializeRealtimeService();
     checkBiometricAuthentication();
     initializeGreeting();
+    loadDashboardData();
+  }
+
+  final localDb = LocalDbService();
+
+  Future<void> _loadCachedData() async {
+    try {
+      final cached = await localDb.getCachedClasses();
+      if (cached.isNotEmpty) {
+        final cachedClasses = cached.map((c) => ClassModel.fromJson(c)).toList();
+        classes.assignAll(cachedClasses);
+        filteredClasses.assignAll(cachedClasses);
+        totalClasses.value = cachedClasses.length;
+        debugPrint('Loaded ${cached.length} classes from local cache');
+      }
+    } catch (e) {
+      debugPrint('Error loading cached data: $e');
+    }
   }
 
   @override
@@ -234,7 +256,7 @@ class DashboardController extends GetxController {
       final countsMap = await studentService.getStudentCountsForClasses(classIds);
       
       int total = 0;
-      countsMap.forEach((_, count) => total += count);
+      countsMap.forEach((_, count) => total += (count as num).toInt());
 
       totalStudents.value = total;
       debugPrint('Total students updated (Batched): $total');
@@ -447,6 +469,9 @@ class DashboardController extends GetxController {
       classes.assignAll(teacherClasses);
       filteredClasses.assignAll(teacherClasses);
       totalClasses.value = teacherClasses.length;
+      
+      // Save for offline access
+      await localDb.saveClasses(teacherClasses.map((c) => c.toJson()).toList());
 
       if (teacherClasses.isEmpty) {
         totalStudents.value = 0;
@@ -458,7 +483,7 @@ class DashboardController extends GetxController {
       final classIds = teacherClasses.map((c) => c.id).toList();
 
       // 2. Fetch stats and counts in parallel (Batched)
-      final results = await Future.wait([
+      final results = await Future.wait<dynamic>([
         attendanceService.getAttendanceStatsForClasses(classIds),
         studentService.getStudentCountsForClasses(classIds),
       ]);
