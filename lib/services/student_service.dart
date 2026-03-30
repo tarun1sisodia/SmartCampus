@@ -16,12 +16,13 @@ class StudentService {
       if (classIds.isEmpty) return {};
 
       final counts = <String, int>{};
-      await Future.wait(classIds.map((id) async {
-        final response = await supabase
+      await Future.wait<void>(classIds.map((id) async {
+        final res = await supabase
             .from('class_students')
-            .select('*', const FetchOptions(count: CountOption.exact, head: true))
-            .eq('class_id', id);
-        counts[id] = response.count ?? 0;
+            .select()
+            .eq('class_id', id)
+            .count(CountOption.exact);
+        counts[id] = res.count;
       }));
 
       return counts;

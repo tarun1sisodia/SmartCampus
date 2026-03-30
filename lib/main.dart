@@ -15,6 +15,7 @@ import 'services/database_helper.dart';
 import 'services/google_sign_in_service.dart';
 import 'services/language_service.dart';
 import 'services/local_storage_service.dart';
+import 'services/connectivity_service.dart';
 
 // The main entry point of the app.
 //
@@ -103,6 +104,7 @@ Future<void> _initializeServices() async {
       debugPrint('GoogleSignInService not supported on this platform: $e');
     }
     await Get.putAsync(() => LocalStorageService().init(), permanent: true);
+    Get.put(ConnectivityService(), permanent: true);
 
     // Initialize app bindings
     AppBindings.initGlobalBindings();

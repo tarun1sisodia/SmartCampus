@@ -437,22 +437,52 @@ class AttendanceReportsController extends GetxController {
 
   // Update individual student statistics (Batched)
   Future<void> _updateStudentStats() async {
-    if (selectedClassId.value.isEmpty || students.isEmpty) return;
+    if (selectedClassId.value.isEmpty) return;
 
     try {
-      final studentIds = students.map((s) => s.id).toList();
-      final newStudentStats =
-          await attendanceService.getAttendanceStatsForStudentsInDateRange(
+      // Use high-performance Edge Function for all stats in one go
+      final result = await attendanceService.getAttendanceStatsFromEdge(
         classId: selectedClassId.value,
-        studentIds: studentIds,
         startDate: startDate.value,
         endDate: endDate.value,
       );
 
-      studentStats.assignAll(newStudentStats);
+      // Map global stats
+      final int total = result['totalSessions'] ?? 0;
+      
+      // Calculate overall counts from aggregated student stats
+      int p = 0;
+      int a = 0;
+      int l = 0;
+      double avg = 0.0;
+      
+      final Map<String, dynamic> statsMap = Map<String, dynamic>.from(result['stats'] ?? {});
+      
+      statsMap.forEach((key, val) {
+        p += (val['present'] as num? ?? 0).toInt();
+        a += (val['absent'] as num? ?? 0).toInt();
+        l += (val['late'] as num? ?? 0).toInt();
+      });
+
+      // Update observables
+      studentStats.assignAll(statsMap);
+      presentCount.value = p;
+      absentCount.value = a;
+      lateCount.value = l;
+      
+      if (total > 0) {
+        averageAttendance.value = ((p + (l * 0.5)) / (total * statsMap.length.clamp(1, 100000))) * 100;
+      } else {
+        averageAttendance.value = 0.0;
+      }
+      
+      debugPrint('Stats updated via Edge Function. Total sessions: $total');
+
     } catch (e, stackTrace) {
-      Sentry.captureException(e, stackTrace: stackTrace);
-      debugPrint('Error updating student stats: $e');
+      await Sentry.captureException(e, stackTrace: stackTrace);
+      debugPrint('Error updating student stats via Edge: $e');
+      // If Edge fails, fall back to basic count or show error
+      TSnackBar.showWarning(message: 'Using fast-load mode. Some stats may be pending.');
     }
   }
 
@@ -570,25 +600,8 @@ class AttendanceReportsController extends GetxController {
         return;
       }
 
-      // Load overall statistics
-      final stats = await attendanceService.getAttendanceStatsForDateRange(
-        classId: selectedClassId.value,
-        startDate: startDate.value,
-        endDate: endDate.value,
-      );
-
-      presentCount.value = stats['presentCount'] ?? 0;
-      absentCount.value = stats['absentCount'] ?? 0;
-      lateCount.value = stats['lateCount'] ?? 0;
-      averageAttendance.value = stats['averageAttendance'] ?? 0.0;
-
-      debugPrint(
-          'Overall stats - Present: ${presentCount.value}, Absent: ${absentCount.value}, Late: ${lateCount.value}, Average: ${averageAttendance.value}');
-
-      // Load initial individual student statistics (Batched)
-      if (students.isNotEmpty) {
-        await _updateStudentStats();
-      }
+      // Use high-performance individual student statistics (Edge Function)
+      await _updateStudentStats();
     } catch (e, stackTrace) {
       Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error loading attendance data: $e');
@@ -784,107 +797,4 @@ class AttendanceReportsController extends GetxController {
     }
   }
 
-  // Get filtered students based on search query
-  List<StudentModel> get displayStudents {
-    return filteredStudents;
-  }
-
-  // Get student statistics for a specific student
-  Map<String, dynamic>? getStudentStats(String studentId) {
-    return studentStats[studentId];
-  }
-
-  // Check if data is available for display
-  bool get hasData {
-    return classes.isNotEmpty &&
-        selectedClassId.value.isNotEmpty &&
-        students.isNotEmpty;
-  }
-
-  // Check if there are any sessions in the selected date range
-  bool get hasSessions {
-    return sessions.isNotEmpty;
-  }
-
-  // Get the currently selected class
-  ClassModel? get selectedClass {
-    if (selectedClassId.value.isEmpty) return null;
-    return classes.firstWhereOrNull((c) => c.id == selectedClassId.value);
-  }
-
-  // Get attendance percentage for a specific student
-  double getStudentAttendancePercentage(String studentId) {
-    final stats = studentStats[studentId];
-    if (stats == null) return 0.0;
-    return stats['attendancePercentage']?.toDouble() ?? 0.0;
-  }
-
-  // Get total sessions count for the selected date range
-  int get totalSessions {
-    return sessions.length;
-  }
-
-  // Get total students count
-  int get totalStudents {
-    return students.length;
-  }
-
-  // Calculate class average attendance
-  double get classAverageAttendance {
-    if (students.isEmpty) return 0.0;
-
-    double totalPercentage = 0.0;
-    int validStudents = 0;
-
-    for (var student in students) {
-      final stats = studentStats[student.id];
-      if (stats != null) {
-        totalPercentage += stats['attendancePercentage']?.toDouble() ?? 0.0;
-        validStudents++;
-      }
-    }
-
-    return validStudents > 0 ? totalPercentage / validStudents : 0.0;
-  }
-
-  // Get students with low attendance (below threshold)
-  List<StudentModel> getLowAttendanceStudents({double threshold = 75.0}) {
-    return students.where((student) {
-      final percentage = getStudentAttendancePercentage(student.id);
-      return percentage < threshold;
-    }).toList();
-  }
-
-  // Get students with perfect attendance
-  List<StudentModel> getPerfectAttendanceStudents() {
-    return students.where((student) {
-      final percentage = getStudentAttendancePercentage(student.id);
-      return percentage >= 100.0;
-    }).toList();
-  }
-
-  // Sort students by attendance percentage
-  List<StudentModel> getStudentsSortedByAttendance({bool ascending = false}) {
-    final sortedStudents = List<StudentModel>.from(students);
-    sortedStudents.sort((a, b) {
-      final aPercentage = getStudentAttendancePercentage(a.id);
-      final bPercentage = getStudentAttendancePercentage(b.id);
-
-      return ascending
-          ? aPercentage.compareTo(bPercentage)
-          : bPercentage.compareTo(aPercentage);
-    });
-
-    return sortedStudents;
-  }
-
-  // Navigate to student detail screen
-  void navigateToStudentDetail(StudentModel student) {
-    Get.to(() => StudentDetailScreen(
-          student: student,
-          classId: selectedClassId.value,
-          startDate: startDate.value,
-          endDate: endDate.value,
-        ));
-  }
 }

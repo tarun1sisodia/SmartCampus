@@ -6,6 +6,8 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 import '../models/attendance_record_model.dart';
 import '../models/attendance_session_model.dart';
 import '../models/class_model.dart';
+import 'local_db_service.dart';
+import 'connectivity_service.dart';
 
 class AttendanceService {
   final supabase = Supabase.instance.client;
@@ -14,6 +16,36 @@ class AttendanceService {
       'id, class_id, date, start_time, end_time, created_by, created_at, updated_at, status, closed_at';
   static const String _attendanceRecordSelectFields =
       'id, session_id, student_id, status, remarks, created_at, updated_at';
+
+  // Fetch attendance statistics from Edge Function (Scaling)
+  Future<Map<String, dynamic>> getAttendanceStatsFromEdge({
+    required String classId,
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
+    try {
+      debugPrint('Invoking calculate-attendance-stats Edge Function for class: $classId');
+      
+      final response = await supabase.functions.invoke(
+        'calculate-attendance-stats',
+        body: {
+          'classId': classId,
+          'startDate': startDate?.toIso8601String().split('T')[0],
+          'endDate': endDate?.toIso8601String().split('T')[0],
+        },
+      );
+
+      if (response.status != 200) {
+        throw 'Edge Function error: ${response.data}';
+      }
+
+      return response.data as Map<String, dynamic>;
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
+      debugPrint('Error calling Edge Function: $e');
+      throw 'Failed to get high-performance statistics: $e';
+    }
+  }
 
   // Get attendance sessions for a class
   Future<List<AttendanceSessionModel>> getAttendanceSessions(
@@ -690,14 +722,29 @@ class AttendanceService {
     }
   }
 
-  // Submit bulk attendance records in a single high-efficiency query (Optimized)
-  Future<void> submitBulkAttendance({
-    required String sessionId,
-    required List<Map<String, dynamic>> records,
-  }) async {
-    try {
-      if (records.isEmpty) return;
-      debugPrint('Submitting ${records.length} attendance records for session $sessionId');
+   Future<void> submitBulkAttendance({
+     required String sessionId,
+     required List<Map<String, dynamic>> records,
+   }) async {
+     try {
+       if (records.isEmpty) return;
+       debugPrint('Submitting ${records.length} attendance records for session $sessionId');
+ 
+       // Check connectivity
+       final connectivity = Get.find<ConnectivityService>();
+       if (!connectivity.isOnline.value) {
+         debugPrint('Offline: Queuing ${records.length} records locally');
+         final localDb = LocalDbService();
+         for (var record in records) {
+           await localDb.queueAttendance({
+             'session_id': sessionId,
+             'student_id': record['student_id'],
+             'status': record['status'],
+             'remarks': record['remarks'],
+           });
+         }
+         return;
+       }
 
       final now = DateTime.now().toIso8601String();
       final List<Map<String, dynamic>> upsertData = records.map((record) {
