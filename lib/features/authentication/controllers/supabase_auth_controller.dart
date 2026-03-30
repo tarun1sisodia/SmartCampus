@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -27,16 +28,43 @@ class SupabaseAuthController extends GetxController {
 
   final supabase = Supabase.instance.client;
 
+  late final StreamSubscription<AuthState> _authSubscription;
+
   @override
   void onInit() {
     super.onInit();
     //printrint('SupabaseAuthController initialized');
+    
+    // Listen to authentication state changes for deep link handling
+    _authSubscription = supabase.auth.onAuthStateChange.listen((data) {
+      final AuthChangeEvent event = data.event;
+      final Session? session = data.session;
+
+      debugPrint('Auth state change event: $event');
+
+      if (event == AuthChangeEvent.signedIn && session != null) {
+        debugPrint('User signed in via deep link or manual login');
+        // If we're on the splash or login/signup screens, navigate to home
+        final currentRoute = Get.currentRoute;
+        if (currentRoute == AppRoutes.splash || 
+            currentRoute == AppRoutes.login || 
+            currentRoute == AppRoutes.signup ||
+            currentRoute == AppRoutes.verifyEmail) {
+          Get.offAllNamed(AppRoutes.home);
+        }
+      } else if (event == AuthChangeEvent.passwordRecovery) {
+        debugPrint('Navigating to Change Password screen (Recovery)');
+        Get.toNamed(AppRoutes.changePassword);
+      }
+    });
+
     loadSavedCredentials();
   }
 
   @override
   void onClose() {
     //printrint('SupabaseAuthController disposed');
+    _authSubscription.cancel();
     emailController.dispose();
     passwordController.dispose();
     super.onClose();

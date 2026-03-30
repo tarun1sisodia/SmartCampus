@@ -71,6 +71,7 @@ class SignupController extends GetxController {
       final response = await supabase.auth.signUp(
         email: emailController.text.trim(),
         password: passwordController.text,
+        emailRedirectTo: 'com.smartcampus.attendance://login-callback',
         data: {
           'name': nameController.text.trim(),
           'phone': phoneController.text.trim(),

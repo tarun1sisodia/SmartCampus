@@ -26,7 +26,10 @@ class ForgotPasswordController extends GetxController {
       errorMessage.value = '';
 
       // Request password reset email from Supabase
-      await supabase.auth.resetPasswordForEmail(emailController.text.trim());
+      await supabase.auth.resetPasswordForEmail(
+        emailController.text.trim(),
+        redirectTo: 'com.smartcampus.attendance://login-callback',
+      );
 
       // Success - no need to set a message as we'll navigate to confirmation screen
     } catch (e, stackTrace) {
