@@ -10,72 +10,36 @@ import '../../../common/utils/constants/sized.dart';
 class TChipTheme {
   TChipTheme._();
 
-  static ChipThemeData lightChipThemeData = ChipThemeData(
-    // Disabled state styling
-    disabledColor: TColors.grey.withAlpha(102),
+  static ChipThemeData createChipTheme(Color primaryColor, Color backgroundColor, Color textColor, Brightness brightness) {
+    return ChipThemeData(
+      disabledColor: brightness == Brightness.dark ? TColors.darkerGrey : TColors.grey.withAlpha(102),
+      selectedColor: primaryColor.withAlpha(brightness == Brightness.dark ? 102 : 51),
+      secondarySelectedColor: primaryColor.withAlpha(brightness == Brightness.dark ? 102 : 51),
+      labelStyle: TextStyle(
+        color: textColor,
+        fontSize: 14,
+      ),
+      secondaryLabelStyle: TextStyle(
+        color: primaryColor,
+        fontSize: 14,
+      ),
+      deleteIconColor: brightness == Brightness.dark ? TColors.white.withAlpha(179) : TColors.darkGrey,
+      checkmarkColor: brightness == Brightness.dark ? Colors.white : primaryColor,
+      padding: const EdgeInsets.symmetric(
+        horizontal: TSizes.sm,
+        vertical: TSizes.xs,
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(TSizes.cardRadiusSm),
+        side: BorderSide(color: brightness == Brightness.dark ? TColors.darkGrey : TColors.grey.withAlpha(77)),
+      ),
+      backgroundColor: backgroundColor,
+      elevation: 0,
+      shadowColor: TColors.dark.withAlpha(brightness == Brightness.dark ? 13 : 26),
+    );
+  }
 
-    // Selected state styling (Doherty Threshold - clear feedback)
-    selectedColor: TColors.primary.withAlpha(51),
-    secondarySelectedColor: TColors.primary.withAlpha(51),
-
-    // Text styling
-    labelStyle: TextStyle(
-      color: TColors.textPrimary,
-      fontSize: 14,
-    ),
-    secondaryLabelStyle: TextStyle(
-      color: TColors.primary,
-      fontSize: 14,
-    ),
-
-    // Icon styling
-    deleteIconColor: TColors.darkGrey,
-    checkmarkColor: TColors.primary,
-
-    // Consistent padding (Law of Proximity)
-    padding: EdgeInsets.symmetric(
-      horizontal: TSizes.sm,
-      vertical: TSizes.xs,
-    ),
-
-    // Shape and border
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(TSizes.cardRadiusSm),
-      side: BorderSide(color: TColors.grey.withAlpha(77)),
-    ),
-
-    // Background color
-    backgroundColor: TColors.white,
-
-    // Shadow for depth perception
-    elevation: 0,
-    shadowColor: TColors.dark.withAlpha(26),
-  );
-
-  static ChipThemeData darkChipThemeData = ChipThemeData(
-    disabledColor: TColors.darkerGrey,
-    selectedColor: TColors.primary.withAlpha(102),
-    secondarySelectedColor: TColors.primary.withAlpha(102),
-    labelStyle: TextStyle(
-      color: TColors.white,
-      fontSize: 14,
-    ),
-    secondaryLabelStyle: TextStyle(
-      color: TColors.primary.withAlpha(230),
-      fontSize: 14,
-    ),
-    deleteIconColor: TColors.white.withAlpha(179),
-    checkmarkColor: TColors.white,
-    padding: EdgeInsets.symmetric(
-      horizontal: TSizes.sm,
-      vertical: TSizes.xs,
-    ),
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(TSizes.cardRadiusSm),
-      side: BorderSide(color: TColors.darkGrey),
-    ),
-    backgroundColor: TColors.darkerGrey,
-    elevation: 0,
-    shadowColor: TColors.dark.withAlpha(13),
-  );
+  static final lightChipThemeData = createChipTheme(TColors.primary, TColors.white, TColors.textPrimary, Brightness.light);
+  static final darkChipThemeData = createChipTheme(TColors.primary, TColors.darkerGrey, TColors.white, Brightness.dark);
 }
+

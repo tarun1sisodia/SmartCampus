@@ -9,37 +9,19 @@ import '../../../common/utils/constants/sized.dart';
 class TCardTheme {
   TCardTheme._();
 
-  // Light theme card
-  static final CardTheme lightCardTheme = CardTheme(
-    color: TColors.lightContainerHighlight,
-    shadowColor: TColors.dark.withAlpha(26),
-    elevation: 2,
+  static CardThemeData createCardTheme(Color surfaceColor, Brightness brightness) {
+    return CardThemeData(
+      color: surfaceColor,
+      shadowColor: brightness == Brightness.dark ? Colors.black.withAlpha(77) : TColors.dark.withAlpha(26),
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
+      ),
+      margin: const EdgeInsets.all(TSizes.sm),
+      clipBehavior: Clip.antiAlias,
+    );
+  }
 
-    // Consistent corner radius (Aesthetic-Usability Effect)
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
-    ),
-
-    // Consistent spacing (Law of Proximity)
-    margin: EdgeInsets.all(TSizes.sm),
-
-    // Subtle border for definition
-    clipBehavior: Clip.antiAlias,
-  );
-
-  // Dark theme card
-  static final CardTheme darkCardTheme = CardTheme(
-    color: TColors.darkSurface,
-    shadowColor: Colors.black.withAlpha(77),
-    elevation: 3,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
-      // side: BorderSide(
-      //   color: TColors.darkerGrey,
-      //   width: 0.5,
-      // ),
-    ),
-    margin: EdgeInsets.all(TSizes.sm),
-    clipBehavior: Clip.antiAlias,
-  );
+  static final lightCardTheme = createCardTheme(TColors.lightContainerHighlight, Brightness.light);
+  static final darkCardTheme = createCardTheme(TColors.darkSurface, Brightness.dark);
 }
