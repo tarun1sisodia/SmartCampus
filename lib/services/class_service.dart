@@ -1,6 +1,7 @@
 import 'package:smart_campus/common/utils/helpers/snackbar_helper.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:flutter/foundation.dart';
 
 import '../models/class_model.dart';
 
@@ -161,28 +162,36 @@ class ClassService {
   // Delete a class
   Future<void> deleteClass(String classId) async {
     try {
-      //print('Deleting class with ID: $classId');
-      // First delete all related records
-      await supabase.from('attendance_records').delete().eq(
-            'session_id',
-            supabase
-                .from('attendance_sessions')
-                .select('id')
-                .eq('class_id', classId),
-          );
+      debugPrint('Deleting class with ID: $classId');
 
-      // Delete attendance sessions
+      // 1. Get all session IDs for this class
+      final List<Map<String, dynamic>> sessionRecords = await supabase
+          .from('attendance_sessions')
+          .select('id')
+          .eq('class_id', classId);
+
+      final sessionIds = sessionRecords.map((s) => s['id'] as String).toList();
+
+      // 2. Delete all attendance records for these sessions
+      if (sessionIds.isNotEmpty) {
+        await supabase
+            .from('attendance_records')
+            .delete()
+            .filter('session_id', 'in', sessionIds);
+      }
+
+      // 3. Delete attendance sessions
       await supabase
           .from('attendance_sessions')
           .delete()
           .eq('class_id', classId);
 
-      // Delete class-student relationships
+      // 4. Delete class-student relationships
       await supabase.from('class_students').delete().eq('class_id', classId);
 
-      // Finally delete the class
+      // 5. Finally delete the class
       await supabase.from('classes').delete().eq('id', classId);
-      //print('Class deleted successfully');
+      debugPrint('Class deleted successfully');
     } catch (e, stackTrace) {
       await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Error deleting class: $e');

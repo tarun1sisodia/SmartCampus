@@ -26,7 +26,17 @@ class AttendanceService {
     try {
       debugPrint('Invoking calculate-attendance-stats Edge Function for class: $classId');
       
-      // final currentUser = supabase.auth.currentUser;
+      final session = supabase.auth.currentSession;
+      if (session == null) {
+        debugPrint('Edge Function Diagnostic: No active session found.');
+        throw 'Session expired or not found. Please log in again.';
+      }
+
+      // Diagnostic logging
+      final expiry = DateTime.fromMillisecondsSinceEpoch(session.expiresAt! * 1000);
+      final isExpired = expiry.isBefore(DateTime.now());
+      debugPrint('Edge Function Diagnostic: JWT Session Expiry: $expiry (Is Expired: $isExpired)');
+      debugPrint('Edge Function Diagnostic: Current Time: ${DateTime.now()}');
 
       final response = await supabase.functions.invoke(
         'calculate-attendance-stats',

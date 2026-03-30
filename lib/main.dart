@@ -98,12 +98,18 @@ Future<void> _runAppWithMonitoring() async {
     return;
   }
 
+  if (GetPlatform.isLinux) {
+    debugPrint('Sentry initialization skipped on Linux to avoid crashpad permission issues.');
+    runApp(const MyApp());
+    return;
+  }
+
   await SentryFlutter.init(
     (options) {
       options.dsn = dsn;
       options.tracesSampleRate = 1.0;
     },
-    appRunner: () => runApp(MyApp()),
+    appRunner: () => runApp(const MyApp()),
   );
 }
 
@@ -112,10 +118,14 @@ Future<void> _initializeServices() async {
     await Get.putAsync(() => StorageService().init());
     await Get.putAsync(() => FeedbackService().init());
     await Get.putAsync(() => LanguageService().init());
-    try {
-      await Get.putAsync(() => GoogleSignInService().init());
-    } catch (e) {
-      debugPrint('GoogleSignInService not supported on this platform: $e');
+    if (!GetPlatform.isLinux) {
+      try {
+        await Get.putAsync(() => GoogleSignInService().init());
+      } catch (e) {
+        debugPrint('GoogleSignInService not supported on this platform: $e');
+      }
+    } else {
+      debugPrint('GoogleSignInService initialization skipped on Linux.');
     }
     await Get.putAsync(() => LocalStorageService().init(), permanent: true);
     Get.put(ConnectivityService(), permanent: true);

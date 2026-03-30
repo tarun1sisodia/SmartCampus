@@ -30,6 +30,8 @@ class TSnackBar {
     MessageSource source = MessageSource.app,
     SnackPosition position = SnackPosition.BOTTOM,
     Duration duration = const Duration(seconds: 3),
+    VoidCallback? onActionPressed,
+    String? actionLabel,
   }) {
     // Determine icon and colors based on message type
     IconData icon;
@@ -108,6 +110,13 @@ class TSnackBar {
             ),
             backgroundColor: backgroundColor,
             behavior: SnackBarBehavior.floating,
+            action: onActionPressed != null && actionLabel != null
+                ? SnackBarAction(
+                    label: actionLabel,
+                    textColor: textColor,
+                    onPressed: onActionPressed,
+                  )
+                : null,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             margin: const EdgeInsets.all(10),
             duration: duration,
@@ -124,12 +133,18 @@ class TSnackBar {
     required String message,
     String title = 'Success',
     MessageSource source = MessageSource.app,
+    VoidCallback? onActionPressed,
+    String? actionLabel,
+    Duration duration = const Duration(seconds: 3),
   }) {
     show(
       title: title,
       message: message,
       type: MessageType.success,
       source: source,
+      onActionPressed: onActionPressed,
+      actionLabel: actionLabel,
+      duration: duration,
     );
   }
 

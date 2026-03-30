@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:csv/csv.dart';
@@ -768,12 +769,22 @@ class AttendanceReportsController extends GetxController {
 
       debugPrint('CSV file saved at: $filePath');
 
-      await SharePlus.instance.share(
-        ShareParams(
-          files: [XFile(filePath)],
-          text: 'Attendance Report for $className',
-        ),
-      );
+      if (GetPlatform.isLinux) {
+        // Fallback for Linux since SharePlus might not support file sharing
+        TSnackBar.showSuccess(
+          message: 'Report saved to: $filePath',
+          onActionPressed: () => _openFolder(directory.path),
+          actionLabel: 'OPEN FOLDER',
+          duration: const Duration(seconds: 10),
+        );
+      } else {
+        await SharePlus.instance.share(
+          ShareParams(
+            files: [XFile(filePath)],
+            text: 'Attendance Report for $className',
+          ),
+        );
+      }
 
       TSnackBar.showSuccess(message: 'Report exported successfully');
     } catch (e, stackTrace) {
@@ -831,6 +842,16 @@ class AttendanceReportsController extends GetxController {
       Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error refreshing data: $e');
       TSnackBar.showError(message: 'Failed to refresh data: ${e.toString()}');
+    }
+  }
+
+  // Helper to open folder on Linux
+  Future<void> _openFolder(String path) async {
+    final uri = Uri.directory(path);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      debugPrint('Could not launch folder: $path');
     }
   }
 

@@ -1,0 +1,24 @@
+Analyzing SmartCampus...                                        
+
+   info • Statements in an if should be enclosed in a block • lib/features/teacher/screens/add_student_screen.dart:67:11 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block • lib/features/teacher/screens/add_student_screen.dart:69:11 • curly_braces_in_flow_control_structures
+   info • Empty catch block • lib/features/teacher/screens/add_student_screen.dart:514:17 • empty_catches
+warning • Unused import: '../../../common/utils/constants/colors.dart' • lib/features/teacher/screens/all_sessions_screen.dart:12:8 • unused_import
+warning • Unused import: '../../../common/utils/helpers/helper_function.dart' • lib/features/teacher/screens/all_sessions_screen.dart:14:8 • unused_import
+warning • Unused import: '../../../common/utils/constants/colors.dart' • lib/features/teacher/screens/attendance_reports_screen.dart:7:8 • unused_import
+   info • 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre • lib/features/teacher/screens/attendance_reports_screen.dart:174:17 • deprecated_member_use
+   info • Don't use 'BuildContext's across async gaps • lib/features/teacher/screens/attendance_screen.dart:383:109 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps • lib/features/teacher/screens/attendance_screen.dart:397:107 • use_build_context_synchronously
+warning • Unused import: '../../../common/utils/constants/text_strings.dart' • lib/features/teacher/screens/carousel_attendance_screen.dart:5:8 • unused_import
+   info • The import of 'package:flutter/services.dart' is unnecessary because all of the used elements are also provided by the import of 'package:flutter/material.dart' • lib/features/teacher/screens/class_list_screen.dart:2:8 • unnecessary_import
+   info • 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre • lib/features/teacher/screens/class_list_screen.dart:370:21 • deprecated_member_use
+   info • 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre • lib/features/teacher/screens/class_list_screen.dart:380:21 • deprecated_member_use
+warning • Unused import: '../../../common/utils/constants/text_strings.dart' • lib/features/teacher/screens/mark_attendance_screen.dart:6:8 • unused_import
+warning • Unused import: 'package:pdf/pdf.dart' • lib/features/teacher/screens/reports_screen.dart:6:8 • unused_import
+warning • Unused import: '../../../common/utils/constants/text_strings.dart' • lib/features/teacher/screens/teacher_settings_screen.dart:9:8 • unused_import
+   info • 'activeColor' is deprecated and shouldn't be used. Use activeThumbColor or activeTrackColor instead. This feature was deprecated after v3.31.0-2.0.pre • lib/features/teacher/screens/teacher_settings_screen.dart:60:23 • deprecated_member_use
+   info • 'activeColor' is deprecated and shouldn't be used. Use activeThumbColor or activeTrackColor instead. This feature was deprecated after v3.31.0-2.0.pre • lib/features/teacher/screens/teacher_settings_screen.dart:71:21 • deprecated_member_use
+warning • The value of the local variable 'colorScheme' isn't used • lib/features/teacher/widgets/attendance_action_buttons.dart:24:11 • unused_local_variable
+warning • The value of the local variable 'secondaryColor' isn't used • lib/features/teacher/widgets/session_timer_widget.dart:21:11 • unused_local_variable
+
+20 issues found. (ran in 25.4s)

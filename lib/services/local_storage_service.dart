@@ -45,7 +45,7 @@ class LocalStorageService extends GetxService {
 
   // Database info
   static const String _databaseName = 'smartcampus.db';
-  static const int _databaseVersion = 2;
+  static const int _databaseVersion = 3;
 
   @override
   Future<void> onInit() async {
@@ -441,14 +441,25 @@ class LocalStorageService extends GetxService {
 
   Future<void> _upgradeDatabase(
       Database db, int oldVersion, int newVersion) async {
-    // Handle database upgrades here
     debugPrint('Upgrading database from version $oldVersion to $newVersion');
     if (oldVersion < 2) {
       try {
         await db.execute('ALTER TABLE students ADD COLUMN class_id TEXT');
         debugPrint('Added class_id column to students table');
       } catch (e) {
-        debugPrint('Migration error (might already exist): $e');
+        debugPrint('Migration error (version 2): $e');
+      }
+    }
+    if (oldVersion < 3) {
+      try {
+        await db.execute('ALTER TABLE attendance_sessions ADD COLUMN subject_name TEXT');
+        await db.execute('ALTER TABLE attendance_sessions ADD COLUMN course_name TEXT');
+        await db.execute('ALTER TABLE attendance_sessions ADD COLUMN semester INTEGER');
+        await db.execute('ALTER TABLE attendance_sessions ADD COLUMN section TEXT');
+        await db.execute('ALTER TABLE attendance_sessions ADD COLUMN closed_at TEXT');
+        debugPrint('Added migration for denormalized attendance_sessions columns');
+      } catch (e) {
+        debugPrint('Migration error (version 3): $e');
       }
     }
   }
@@ -882,6 +893,11 @@ class LocalStorageService extends GetxService {
       end_time TEXT,
       status TEXT DEFAULT 'open',
       created_by TEXT NOT NULL,
+      subject_name TEXT,
+      course_name TEXT,
+      semester INTEGER,
+      section TEXT,
+      closed_at TEXT,
       created_at TEXT,
       updated_at TEXT,
       is_synced INTEGER DEFAULT 0,
