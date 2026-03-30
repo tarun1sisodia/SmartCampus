@@ -454,7 +454,6 @@ class AttendanceReportsController extends GetxController {
       int p = 0;
       int a = 0;
       int l = 0;
-      double avg = 0.0;
       
       final Map<String, Map<String, dynamic>> statsMap = (result['stats'] as Map? ?? {}).map(
         (key, value) => MapEntry(key.toString(), Map<String, dynamic>.from(value as Map)),
@@ -483,8 +482,44 @@ class AttendanceReportsController extends GetxController {
     } catch (e, stackTrace) {
       await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error updating student stats via Edge: $e');
-      // If Edge fails, fall back to basic count or show error
-      TSnackBar.showWarning(message: 'Using fast-load mode. Some stats may be pending.');
+      // If Edge fails, fall back to local Dart calculation
+      
+      try {
+        final localStats = await attendanceService.getAttendanceStatsForStudentsInDateRange(
+          classId: selectedClassId.value,
+          studentIds: students.map((s) => s.id).toList(),
+          startDate: startDate.value,
+          endDate: endDate.value,
+        );
+        
+        // Calculate overall counts from aggregated student stats
+        int p = 0;
+        int a = 0;
+        int l = 0;
+        
+        localStats.forEach((key, val) {
+          p += (val['presentCount'] as num? ?? 0).toInt();
+          a += (val['absentCount'] as num? ?? 0).toInt();
+          l += (val['lateCount'] as num? ?? 0).toInt();
+        });
+
+        studentStats.assignAll(localStats);
+        presentCount.value = p;
+        absentCount.value = a;
+        lateCount.value = l;
+        
+        final int total = sessions.length;
+        if (total > 0 && localStats.isNotEmpty) {
+          averageAttendance.value = ((p + (l * 0.5)) / (total * localStats.length)) * 100;
+        } else {
+          averageAttendance.value = 0.0;
+        }
+        
+        debugPrint('Stats updated via local fallback calculation. Total sessions: $total');
+      } catch (fallbackErr) {
+        debugPrint('Local fallback calculation also failed: $fallbackErr');
+        TSnackBar.showWarning(message: 'Using fast-load mode. Some stats may be pending.');
+      }
     }
   }
 

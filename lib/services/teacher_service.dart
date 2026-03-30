@@ -1,3 +1,4 @@
+import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import '../models/user_model.dart';

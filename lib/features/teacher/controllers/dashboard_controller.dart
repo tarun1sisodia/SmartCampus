@@ -10,14 +10,12 @@ import '../../../services/class_service.dart';
 import '../../../services/attendance_service.dart';
 import '../../../services/course_service.dart';
 import '../../../services/realtime_service.dart';
-import '../../../services/auth_service.dart';
 import '../../../services/biometric_auth_service.dart';
 import '../../../services/subject_service.dart';
 import 'dart:async';
 
 import '../../../services/student_service.dart';
 import '../../../services/local_db_service.dart';
-import '../../../services/connectivity_service.dart';
 import '../../authentication/controllers/supabase_auth_controller.dart';
 
 class DashboardController extends GetxController {
@@ -180,8 +178,7 @@ class DashboardController extends GetxController {
       final currentUser = Supabase.instance.client.auth.currentUser;
       if (currentUser == null) return;
 
-      // 1. Collect all class IDs, subject IDs, and course IDs
-      final classIds = data.map((d) => d['id'] as String).toList();
+      // 1. Collect all subject IDs, and course IDs
       final subjectIds =
           data.map((d) => d['subject_id'] as String).toSet().toList();
       final courseIds =
@@ -528,23 +525,6 @@ class DashboardController extends GetxController {
     _hasInitialized = true;
     splashAuthenticationCompleted.value = true;
     await loadDashboardData();
-  }
-
-  Future<int> _getStudentCountForClass(String classId) async {
-    try {
-      //debugPrint('Getting student count for class: $classId');
-      final response = await Supabase.instance.client
-          .from('class_students')
-          .select('id')
-          .eq('class_id', classId);
-
-      //debugPrint('Student count response for class $classId: $response');
-      return response.length;
-    } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
-      //debugPrint('Error getting student count for class $classId: $e');
-      return 0;
-    }
   }
 
   Future<void> createInitialData() async {
