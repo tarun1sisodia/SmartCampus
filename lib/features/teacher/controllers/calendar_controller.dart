@@ -157,7 +157,7 @@ class CalendarController extends GetxController {
 
         return now.isAfter(sessionStart) && now.isBefore(sessionEnd);
       } catch (e, stackTrace) {
-        await Sentry.captureException(e, stackTrace: stackTrace);
+        Sentry.captureException(e, stackTrace: stackTrace);
         //printnt('Error parsing session times: $e');
         return false;
       }
@@ -281,7 +281,7 @@ class CalendarController extends GetxController {
 
       return now.isAfter(sessionStart) && now.isBefore(sessionEnd);
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       //printnt('Error parsing session times: $e');
       return false;
     }
@@ -338,14 +338,14 @@ class CalendarController extends GetxController {
                 await attendanceService.getTeacherName(teacherId);
             teacherNames[teacherId] = teacherName;
           } catch (e, stackTrace) {
-            await Sentry.captureException(e, stackTrace: stackTrace);
+            Sentry.captureException(e, stackTrace: stackTrace);
             //printnt('Error fetching teacher name for ID $teacherId: $e');
             teacherNames[teacherId] = 'Unknown Teacher';
           }
         }
       }
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       //printnt('Error fetching teacher names: $e');
     }
   }

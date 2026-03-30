@@ -429,6 +429,7 @@ class SupabaseAuthController extends GetxController {
             ) ??
             false;
 
+        if (!keepBiometrics) {
           try {
             await biometricAuthService.disableBiometrics();
           } catch (e, stackTrace) {

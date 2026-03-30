@@ -237,7 +237,7 @@ class ClassController extends GetxController {
       debugPrint('ClassController classes updated via real-time: ${teacherClasses.length} classes');
       
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error handling classes update in ClassController: $e');
     }
   }
@@ -261,7 +261,7 @@ class ClassController extends GetxController {
 
       debugPrint('ClassController subjects updated via real-time: ${subjectsList.length} subjects');
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error handling subjects update in ClassController: $e');
     }
   }
@@ -285,7 +285,7 @@ class ClassController extends GetxController {
 
       debugPrint('ClassController courses updated via real-time: ${coursesList.length} courses');
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error handling courses update in ClassController: $e');
     }
   }
@@ -358,7 +358,7 @@ class ClassController extends GetxController {
       hasMoreClasses.value = teacherClasses.length == _teacherClassFetchLimit;
       _filterClasses(searchQuery.value);
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error loading classes: $e');
       TSnackBar.showError(message: 'Failed to load classes: ${e.toString()}');
     } finally {
@@ -401,7 +401,7 @@ class ClassController extends GetxController {
         debugPrint('Default subject selected: ${subjects[0].name}');
       }
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error loading courses and subjects: $e');
       TSnackBar.showError(
         message: 'Failed to load courses and subjects: ${e.toString()}',
@@ -483,7 +483,7 @@ class ClassController extends GetxController {
 
       TSnackBar.showSuccess(message: 'Class created successfully');
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Failed to create class: $e');
       TSnackBar.showError(message: 'Failed to create class: ${e.toString()}');
     } finally {
@@ -522,7 +522,7 @@ class ClassController extends GetxController {
 
       TSnackBar.showSuccess(message: 'Class updated successfully');
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Failed to update class: $e');
       TSnackBar.showError(message: 'Failed to update class: ${e.toString()}');
     } finally {
@@ -545,7 +545,7 @@ class ClassController extends GetxController {
       
       TSnackBar.showSuccess(message: 'Class deleted successfully');
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Failed to delete class: $e');
       TSnackBar.showError(message: 'Failed to delete class: ${e.toString()}');
     } finally {
@@ -580,7 +580,7 @@ class ClassController extends GetxController {
       // Note: The real-time subscription will automatically update the UI
       // No need to manually remove from the list here - the stream will handle it
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error deleting selected classes: $e');
       TSnackBar.showError(message: 'Failed to delete classes: ${e.toString()}');
     } finally {
@@ -694,7 +694,7 @@ class ClassController extends GetxController {
       await realtimeService.forceReconnect();
       debugPrint('Successfully reconnected to real-time service');
     } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Failed to reconnect to real-time service: $e');
     }
   }

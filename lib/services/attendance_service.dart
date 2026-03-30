@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -107,27 +108,34 @@ class AttendanceService {
     }
   }
 
-  // Deletes an attendance session by its ID.
-  //
-  // This method interacts with the backend to delete the session
-  // with the specified [sessionId]. Throws an exception if the
-  // deletion fails.
-  Future<void> deleteSession(String sessionId) async {
+  // Deletes multiple attendance sessions and their records (Batched)
+  Future<void> deleteSessions(List<String> sessionIds) async {
     try {
-      //print('Deleting attendance session: $sessionId');
-      // First delete all attendance records for this session
+      if (sessionIds.isEmpty) return;
+      debugPrint('Deleting ${sessionIds.length} attendance sessions');
+
+      // 1. Delete all attendance records for these sessions in one batch
       await supabase
           .from('attendance_records')
           .delete()
-          .eq('session_id', sessionId);
+          .inFilter('session_id', sessionIds);
 
-      // Then delete the session
-      await supabase.from('attendance_sessions').delete().eq('id', sessionId);
+      // 2. Delete the sessions themselves in one batch
+      await supabase
+          .from('attendance_sessions')
+          .delete()
+          .inFilter('id', sessionIds);
+
+      debugPrint('Batch deletion successful');
     } catch (e, stackTrace) {
       await Sentry.captureException(e, stackTrace: stackTrace);
-      //print('Error deleting session: $e');
-      throw 'Failed to delete session: $e';
+      throw 'Failed to delete sessions: $e';
     }
+  }
+
+  // Deletes an attendance session by its ID.
+  Future<void> deleteSession(String sessionId) async {
+    await deleteSessions([sessionId]);
   }
 
   // Get attendance records for a session
@@ -212,6 +220,25 @@ class AttendanceService {
       await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Error closing attendance session: $e');
       throw 'Failed to close attendance session: $e';
+    }
+  }
+
+  // Get attendance statistics for multiple classes (Batched)
+  Future<Map<String, Map<String, dynamic>>> getAttendanceStatsForClasses(
+    List<String> classIds,
+  ) async {
+    try {
+      if (classIds.isEmpty) return {};
+
+      final stats = <String, Map<String, dynamic>>{};
+      await Future.wait(classIds.map((id) async {
+        stats[id] = await getAttendanceStatsForClass(id);
+      }));
+
+      return stats;
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
+      throw 'Failed to get batched attendance statistics: $e';
     }
   }
 
@@ -463,31 +490,40 @@ class AttendanceService {
     }
   }
 
-  // Get student attendance history
+  // Get student attendance history (Optimized for Scaling)
   Future<List<Map<String, dynamic>>> getStudentAttendanceHistory({
     required String classId,
     required String studentId,
   }) async {
     try {
-      // Get all sessions for the class
+      // 1. Get all sessions for the class
       final sessions = await getAttendanceSessions(classId);
+      if (sessions.isEmpty) return [];
 
+      // 2. Fetch all attendance records for this student in these sessions in ONE query
+      final sessionIds = sessions.map((s) => s.id).toList();
+      final recordsResponse = await supabase
+          .from('attendance_records')
+          .select()
+          .eq('student_id', studentId)
+          .inFilter('session_id', sessionIds);
+
+      final List<Map<String, dynamic>> records = recordsResponse as List<Map<String, dynamic>>;
+
+      // 3. Create a map for fast record lookup
+      final recordsBySession = {
+        for (var r in records) r['session_id']: r
+      };
+
+      // 4. Build history by matching sessions to records in-memory
       final history = <Map<String, dynamic>>[];
-
       for (var session in sessions) {
-        // Get attendance record for this session
-        final response = await supabase
-            .from('attendance_records')
-            .select()
-            .eq('session_id', session.id)
-            .eq('student_id', studentId)
-            .maybeSingle();
-
-        if (response != null) {
+        final record = recordsBySession[session.id];
+        if (record != null) {
           history.add({
             'session': session,
-            'status': response['status'],
-            'remarks': response['remarks'],
+            'status': record['status'],
+            'remarks': record['remarks'],
           });
         } else {
           // No record found, mark as not recorded
@@ -500,7 +536,8 @@ class AttendanceService {
       }
 
       return history;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       throw 'Failed to get student attendance history: $e';
     }
   }
@@ -545,38 +582,146 @@ class AttendanceService {
   }
 
   // the AttendanceService class
-  Future<List<AttendanceRecordModel>> getAttendanceRecordsForSession(
+  // Get attendance records for a specific list of students in a session
+  Future<List<AttendanceRecordModel>> getAttendanceRecordsForStudentsInSession(
     String sessionId,
+    List<String> studentIds,
   ) async {
     try {
+      if (studentIds.isEmpty) return [];
+      
       final response = await supabase
           .from('attendance_records')
           .select()
-          .eq('session_id', sessionId);
+          .eq('session_id', sessionId)
+          .inFilter('student_id', studentIds);
 
-      return response.map<AttendanceRecordModel>((json) {
+      return (response as List).map<AttendanceRecordModel>((json) {
         return AttendanceRecordModel.fromJson(json);
       }).toList();
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       throw 'Failed to get attendance records: $e';
     }
   }
 
-  //for bulk attendance submission
+  // Get attendance statistics for multiple students in a class and date range (Batched)
+  Future<Map<String, Map<String, dynamic>>> getAttendanceStatsForStudentsInDateRange({
+    required String classId,
+    required List<String> studentIds,
+    required DateTime startDate,
+    required DateTime endDate,
+  }) async {
+    try {
+      if (studentIds.isEmpty) return {};
+
+      // Get sessions in date range
+      final sessions = await getAttendanceSessionsForDateRange(
+        classId: classId,
+        startDate: startDate,
+        endDate: endDate,
+      );
+
+      if (sessions.isEmpty) {
+        return {
+          for (var id in studentIds)
+            id: {
+              'totalSessions': 0,
+              'presentCount': 0,
+              'absentCount': 0,
+              'lateCount': 0,
+              'attendancePercentage': 0.0,
+            }
+        };
+      }
+
+      final sessionIds = sessions.map((s) => s.id).toList();
+      
+      // Fetch all records for these students in these sessions
+      final response = await supabase
+          .from('attendance_records')
+          .select('student_id, status')
+          .inFilter('session_id', sessionIds)
+          .inFilter('student_id', studentIds);
+
+      final results = <String, Map<String, dynamic>>{};
+      for (var id in studentIds) {
+        results[id] = {
+          'totalSessions': sessions.length,
+          'presentCount': 0,
+          'absentCount': 0, // We'll calculate this as total - (present + late + excused)
+          'lateCount': 0,
+          'attendancePercentage': 0.0,
+        };
+      }
+
+      // Group records by student
+      final recordsByStudent = <String, List<String>>{};
+      for (var record in response) {
+        final sId = record['student_id'] as String;
+        final status = record['status'] as String;
+        recordsByStudent.putIfAbsent(sId, () => []).add(status);
+      }
+
+      for (var sId in studentIds) {
+        final statuses = recordsByStudent[sId] ?? [];
+        int p = 0;
+        int l = 0;
+        for (var status in statuses) {
+          if (status == 'present') p++;
+          else if (status == 'late') l++;
+        }
+        
+        final totalSessionsForStudent = sessions.length;
+        final absent = totalSessionsForStudent - statuses.length; // Students with no record are absent by default
+        
+        results[sId]!['presentCount'] = p;
+        results[sId]!['lateCount'] = l;
+        results[sId]!['absentCount'] = absent + (statuses.length - p - l);
+        results[sId]!['attendancePercentage'] = totalSessionsForStudent > 0
+            ? ((p + (l * 0.5)) / totalSessionsForStudent) * 100
+            : 0.0;
+      }
+
+      return results;
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
+      throw 'Failed to get batched student attendance statistics: $e';
+    }
+  }
+
+  // Submit bulk attendance records in a single high-efficiency query (Optimized)
   Future<void> submitBulkAttendance({
     required String sessionId,
     required List<Map<String, dynamic>> records,
   }) async {
     try {
-      for (var record in records) {
-        await submitAttendance(
-          sessionId: sessionId,
-          studentId: record['student_id'],
-          status: record['status'],
-          remarks: record['remarks'],
-        );
-      }
-    } catch (e) {
+      if (records.isEmpty) return;
+      debugPrint('Submitting ${records.length} attendance records for session $sessionId');
+
+      final now = DateTime.now().toIso8601String();
+      final List<Map<String, dynamic>> upsertData = records.map((record) {
+        return {
+          'session_id': sessionId,
+          'student_id': record['student_id'],
+          'status': (record['status'] as String).toLowerCase(),
+          'remarks': record['remarks'],
+          'updated_at': now,
+          // Since we're upserting, we don't strictly need created_at if already exists,
+          // but if it's new, we'll want it.
+        };
+      }).toList();
+
+      // Using upsert with student_id and session_id as the unique constraint
+      // Assuming session_id and student_id form a unique constraint on attendance_records
+      await supabase.from('attendance_records').upsert(
+        upsertData,
+        onConflict: 'session_id, student_id',
+      );
+
+      debugPrint('Bulk submission successful');
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       throw 'Failed to submit bulk attendance: $e';
     }
   }

@@ -1,5 +1,10 @@
-import 'package:share_plus/share_plus.dart';
 import 'dart:convert';
+import 'dart:io';
+
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 class StorageService extends GetxService {

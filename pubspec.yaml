@@ -107,6 +107,7 @@ flutter:
     - assets/logos/logo-transparent.png
     - assets/animations/hello_robo.json
     - assets/images/onboarding_images/
+    - shorebird.yaml
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 

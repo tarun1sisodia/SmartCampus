@@ -6,7 +6,7 @@ import 'package:iconsax/iconsax.dart';
 import '../../../common/utils/constants/colors.dart';
 import '../../../common/utils/constants/sized.dart';
 import '../../../common/utils/helpers/helper_function.dart';
-import '../../../common/widgets/loaders/snackbar.dart';
+import '../../../common/utils/helpers/snackbar_helper.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 

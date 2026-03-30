@@ -246,8 +246,30 @@ class MarkAttendanceScreen extends StatelessWidget {
           triggerMode: RefreshIndicatorTriggerMode.onEdge,
           child: ListView.builder(
             padding: EdgeInsets.all(isMobile ? TSizes.sm : TSizes.defaultSpace),
-            itemCount: attendanceController.students.length,
+            itemCount: attendanceController.students.length +
+                ((attendanceController.hasMoreStudents.value ||
+                        attendanceController.isLoadingMoreStudents.value)
+                    ? 1
+                    : 0),
             itemBuilder: (context, index) {
+              if (index >= attendanceController.students.length) {
+                if (attendanceController.isLoadingMoreStudents.value) {
+                  return const Padding(
+                    padding: EdgeInsets.symmetric(vertical: TSizes.spaceBtwItems),
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                }
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: TSizes.spaceBtwItems),
+                  child: Center(
+                    child: OutlinedButton(
+                      onPressed: attendanceController.loadMoreStudents,
+                      child: const Text('Load More Students'),
+                    ),
+                  ),
+                );
+              }
+
               final student = attendanceController.students[index];
               //print('Rendering student: ${student.name}');
               return Card(
