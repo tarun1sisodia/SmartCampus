@@ -1,4 +1,3 @@
-import 'package:smart_campus/common/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 
 class Textfields extends StatelessWidget {

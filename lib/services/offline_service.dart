@@ -44,7 +44,7 @@ class OfflineService extends GetxService {
       if (localClasses.isNotEmpty) {
         // If we have local data, return it and sync in background
         if (_syncService.isOnline.value && !_syncService.isSyncing.value) {
-          _syncService.syncClasses();
+          _syncService.syncAllData();
         }
         return localClasses;
       }
@@ -128,7 +128,7 @@ class OfflineService extends GetxService {
       if (localStudents.isNotEmpty) {
         // If we have local data, return it and sync in background
         if (_syncService.isOnline.value && !_syncService.isSyncing.value) {
-          _syncService.syncStudents();
+          _syncService.syncAllData();
         }
         return localStudents;
       }
@@ -224,7 +224,7 @@ class OfflineService extends GetxService {
       if (localSessions.isNotEmpty) {
         // If we have local data, return it and sync in background
         if (_syncService.isOnline.value && !_syncService.isSyncing.value) {
-          _syncService.syncAttendance();
+          _syncService.syncAllData();
         }
         return localSessions;
       }
@@ -307,7 +307,7 @@ class OfflineService extends GetxService {
       if (localRecords.isNotEmpty) {
         // If we have local data, return it and sync in background
         if (_syncService.isOnline.value && !_syncService.isSyncing.value) {
-          _syncService.syncAttendance();
+          _syncService.syncAllData();
         }
         return localRecords;
       }

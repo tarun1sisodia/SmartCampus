@@ -1,139 +1,58 @@
-import '../../../../app/routes/app_routes.dart';
-import '../../../../common/utils/constants/colors.dart';
-import '../../../../common/utils/constants/image_strings.dart';
-import '../../../../common/utils/constants/sized.dart';
-import '../../../../common/utils/constants/text_strings.dart';
-import '../../../../common/utils/helpers/helper_function.dart';
-import '../../controllers/forgot_password_controller.dart';
-import '../../screens/signup/singup_widgets/textfields.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:iconsax/iconsax.dart';
+import '../../../../common/ui_patterns/ui_style.dart';
+import '../../../../common/ui_patterns/ui_style_controller.dart';
+import '../../controllers/controllers_forgot_password/forgot_password_controller.dart';
+import 'variants/forgot_password_academic.dart';
+import 'variants/forgot_password_brutalist.dart';
+import 'variants/forgot_password_corporate.dart';
+import 'variants/forgot_password_cupertino.dart';
+import 'variants/forgot_password_cyberpunk.dart';
+import 'variants/forgot_password_fluent.dart';
+import 'variants/forgot_password_glassmorphism.dart';
+import 'variants/forgot_password_material3.dart';
+import 'variants/forgot_password_minimalist.dart';
+import 'variants/forgot_password_neumorphism.dart';
 
-class ForgotPasswordScreen extends StatelessWidget {
-  const ForgotPasswordScreen({super.key});
+class ForgotPassword extends StatelessWidget {
+  ForgotPassword({super.key});
+
+  final controller = Get.put(ForgotPasswordController());
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(ForgotPasswordController());
-    final formKey = GlobalKey<FormState>();
-    final dark = THelperFunction.isDarkMode(context);
+    final uiController = UIStyleController.instance;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          TTexts.forgotPassword,
-          style: Theme.of(context).textTheme.headlineSmall,
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(TSizes.defaultSpace),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // Image
-              Image(
-                image: NetworkImage(
-                  TImageStrings.verifyemail,
-                ),
-                width: THelperFunction.screenWidth() * 0.6,
-              ),
-              const SizedBox(height: TSizes.spaceBtwSections),
+    return Obx(() {
+      final style = uiController.currentStyle.value;
+      return Scaffold(
+        body: _buildVariant(style),
+      );
+    });
+  }
 
-              // Title
-              Text(
-                TTexts.forgotPasswordTitle,
-                style: Theme.of(context).textTheme.headlineMedium,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: TSizes.spaceBtwItems),
-
-              // Subtitle
-              Text(
-                TTexts.forgetPasswordSubTitle,
-                style: Theme.of(context).textTheme.bodyMedium,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: TSizes.spaceBtwSections),
-
-              // Form
-              Form(
-                key: formKey,
-                child: Column(
-                  children: [
-                    // Email field
-                    Textfields(
-                      controller: controller.emailController,
-                      iconColor: dark ? TColors.yellow : TColors.primary,
-                      prefixIcon: const Icon(Iconsax.direct_right),
-                      labelText: TTexts.email,
-                      keyboardType: TextInputType.emailAddress,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return TTexts.pleaseEnterEmail;
-                        }
-                        if (!GetUtils.isEmail(value)) {
-                          return TTexts.pleaseEnterValidEmail;
-                        }
-                        return null;
-                      },
-                    ),
-
-                    // Error message
-                    Obx(
-                      () => controller.errorMessage.value.isNotEmpty
-                          ? Padding(
-                              padding: const EdgeInsets.only(
-                                top: TSizes.spaceBtwItems,
-                              ),
-                              child: Text(
-                                controller.errorMessage.value,
-                                style: const TextStyle(color: Colors.red),
-                              ),
-                            )
-                          : const SizedBox.shrink(),
-                    ),
-
-                    const SizedBox(height: TSizes.spaceBtwSections),
-
-                    // Submit button
-                    Obx(
-                      () => SizedBox(
-                        width: double.infinity,
-                        height: TSizes.appBarHeight,
-                        child: ElevatedButton(
-                          onPressed: controller.isLoading.value
-                              ? null
-                              : () async {
-                                  if (formKey.currentState!.validate()) {
-                                    try {
-                                      await controller.resetPassword();
-                                      // Navigate using named route and pass the email
-                                      Get.toNamed(
-                                        AppRoutes.resetConfirmation,
-                                        arguments: controller
-                                            .emailController.text
-                                            .trim(),
-                                      );
-                                    } catch (e) {
-                                      // Error is already handled in the controller
-                                    }
-                                  }
-                                },
-                          child: controller.isLoading.value
-                              ? const CircularProgressIndicator()
-                              : Text(TTexts.resetPassword),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+  Widget _buildVariant(UIStyle style) {
+    switch (style) {
+      case UIStyle.industrialCorporate:
+        return const ForgotPasswordCorporate();
+      case UIStyle.softMinimalist:
+        return const ForgotPasswordMinimalist();
+      case UIStyle.glassmorphism:
+        return const ForgotPasswordGlassmorphism();
+      case UIStyle.neumorphism:
+        return const ForgotPasswordNeumorphism();
+      case UIStyle.material3:
+        return const ForgotPasswordMaterial3();
+      case UIStyle.cupertinoPro:
+        return const ForgotPasswordCupertino();
+      case UIStyle.cyberpunkNeon:
+        return const ForgotPasswordCyberpunk();
+      case UIStyle.brutalistBold:
+        return const ForgotPasswordBrutalist();
+      case UIStyle.academicClassic:
+        return const ForgotPasswordAcademic();
+      case UIStyle.fluentLayered:
+        return const ForgotPasswordFluent();
+    }
   }
 }
