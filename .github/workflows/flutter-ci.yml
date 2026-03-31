@@ -47,7 +47,9 @@ jobs:
             cmake \
             ninja-build \
             pkg-config \
-            liblzma-dev
+            liblzma-dev \
+            libcurl4-openssl-dev \
+            libssl-dev
 
       - name: Build Linux Desktop
         run: flutter build linux --release
