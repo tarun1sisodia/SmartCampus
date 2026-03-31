@@ -38,12 +38,15 @@ class NavigationMenu extends StatelessWidget {
               Icon(
                 Iconsax.user_minus,
                 size: 64,
-                color: dark ? TColors.yellow : TColors.primary,
+                color: Theme.of(context).primaryColor,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 24),
               Text(
-                'Not Logged In',
-                style: Theme.of(context).textTheme.headlineMedium,
+                'SESSION EXPIRED',
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: 1.0,
+                    ),
               ),
               const SizedBox(height: 8),
               Text(
@@ -60,7 +63,7 @@ class NavigationMenu extends StatelessWidget {
                     //print('Navigating to login screen...');
                     Get.offAllNamed(AppRoutes.login);
                   },
-                  child: const Text('Go to Login'),
+                  child: const Text('GO TO LOGIN'),
                 ),
               ),
             ],
@@ -78,13 +81,12 @@ class NavigationMenu extends StatelessWidget {
             color: dark
                 ? Theme.of(context).scaffoldBackgroundColor
                 : Theme.of(context).scaffoldBackgroundColor,
-            boxShadow: [
-              BoxShadow(
-                color: TColors.dark.withAlpha(13),
-                blurRadius: 10,
-                offset: const Offset(0, -5),
+            border: Border(
+              top: BorderSide(
+                color: dark ? TColors.slate700 : TColors.slate400,
+                width: 1.5,
               ),
-            ],
+            ),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -144,8 +146,16 @@ class NavigationMenu extends StatelessWidget {
         controller.selectedIndex.value = index;
       },
       child: Container(
-        width: 70,
-        color: Colors.transparent,
+        width: 80,
+        decoration: BoxDecoration(
+          color: isSelected 
+              ? (dark ? TColors.slate800 : TColors.blue100) 
+              : Colors.transparent,
+          border: isSelected 
+              ? Border.all(color: Theme.of(context).primaryColor, width: 1.5)
+              : null,
+          borderRadius: BorderRadius.circular(4),
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -153,8 +163,8 @@ class NavigationMenu extends StatelessWidget {
               icon,
               color: isSelected
                   ? Theme.of(context).colorScheme.primary
-                  : Theme.of(context).colorScheme.onSurface.withAlpha(153),
-              size: 28,
+                  : TColors.textSecondary,
+              size: 24,
             ),
             const SizedBox(height: 4),
             AnimatedContainer(
@@ -164,14 +174,14 @@ class NavigationMenu extends StatelessWidget {
                 duration: const Duration(milliseconds: 200),
                 opacity: isSelected ? 1.0 : 0.0,
                 child: Text(
-                  label,
+                  label.toUpperCase(),
                   style: TextStyle(
                     color: isSelected
                         ? Theme.of(context).colorScheme.primary
-                        : Theme.of(context).colorScheme.onSurface.withAlpha(128),
-                    fontSize: 12,
-                    fontWeight:
-                        isSelected ? FontWeight.bold : FontWeight.normal,
+                        : TColors.textSecondary,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 0.5,
                   ),
                 ),
               ),

@@ -12,10 +12,13 @@ class TCardTheme {
   static CardThemeData createCardTheme(Color surfaceColor, Brightness brightness) {
     return CardThemeData(
       color: surfaceColor,
-      shadowColor: brightness == Brightness.dark ? Colors.black.withAlpha(77) : TColors.dark.withAlpha(26),
-      elevation: 2,
+      elevation: 0, // No shadows
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
+        side: BorderSide(
+          color: brightness == Brightness.dark ? Color(0xFF334155) : Color(0xFF94A3B8),
+          width: TSizes.cardBorderWidth,
+        ),
       ),
       margin: const EdgeInsets.all(TSizes.sm),
       clipBehavior: Clip.antiAlias,

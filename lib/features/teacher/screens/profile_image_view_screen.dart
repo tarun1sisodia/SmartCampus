@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 
 import '../../../common/utils/constants/api_constants.dart';
 import '../../../common/utils/constants/colors.dart';
-import '../../../common/utils/helpers/helper_function.dart';
 
 class ProfileImageViewScreen extends StatelessWidget {
   final String imageUrl;
@@ -16,17 +15,16 @@ class ProfileImageViewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dark = THelperFunction.isDarkMode(context);
     final size = MediaQuery.of(context).size;
-    final imageSize = size.width * 0.8; // 80% of screen width
+    final imageSize = size.width * 0.9; // 90% of screen width for bold look
 
     return Scaffold(
-      backgroundColor: TColors.dark.withAlpha(230),
+      backgroundColor: Colors.black.withOpacity(0.95),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.close, color: Colors.white, size: 28),
           onPressed: () => Get.back(),
         ),
       ),
@@ -34,42 +32,43 @@ class ProfileImageViewScreen extends StatelessWidget {
         onTap: () => Get.back(),
         child: Center(
           child: Hero(
-            tag: 'profileImageFull',
+            tag: 'profileImage', // Matching tag from TeacherProfileScreen
             child: Container(
               width: imageSize,
               height: imageSize,
               decoration: BoxDecoration(
-                shape: BoxShape.circle,
+                color: TColors.white,
+                borderRadius: BorderRadius.circular(4),
                 border: Border.all(
-                  color: dark ? TColors.yellow : TColors.primary,
-                  width: 4,
+                  color: TColors.executiveNavy,
+                  width: 3,
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: TColors.dark.withAlpha(77),
-                    blurRadius: 20,
-                    spreadRadius: 5,
-                  ),
-                ],
               ),
-              child: ClipOval(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(2),
                 child: CachedNetworkImage(
                   imageUrl: ApiConstants.optimizeImageUrl(
                     imageUrl,
-                    width: imageSize.toInt() * 2,
-                    height: imageSize.toInt() * 2,
+                    width: (imageSize * 2).toInt(),
+                    height: (imageSize * 2).toInt(),
                   ),
                   fit: BoxFit.cover,
-                  memCacheWidth: imageSize.toInt() * 2,
-                  memCacheHeight: imageSize.toInt() * 2,
-                  filterQuality: FilterQuality.medium,
+                  memCacheWidth: (imageSize * 2).toInt(),
+                  memCacheHeight: (imageSize * 2).toInt(),
+                  filterQuality: FilterQuality.high,
                   placeholder: (context, url) => const Center(
-                    child: CircularProgressIndicator(strokeWidth: 2),
+                    child: CircularProgressIndicator(strokeWidth: 3, color: TColors.executiveNavy),
                   ),
-                  errorWidget: (context, url, error) => const Icon(
-                    Icons.person,
-                    color: Colors.white,
-                    size: 64,
+                  errorWidget: (context, url, error) => Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.person_off, color: TColors.slate400, size: 64),
+                      const SizedBox(height: 12),
+                      Text(
+                        'IMAGE NOT AVAILABLE'.toUpperCase(), 
+                        style: const TextStyle(color: TColors.slate600, fontWeight: FontWeight.w900, fontSize: 12)
+                      ),
+                    ],
                   ),
                 ),
               ),

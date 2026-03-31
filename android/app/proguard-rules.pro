@@ -14,3 +14,11 @@
 -keep class io.supabase.** { *; }
 
 -keep class com.hivedb.** { *; }
+
+# Google Play Core Tasks / Deferred Components
+-keep class com.google.android.play.core.tasks.** { *; }
+-keep class com.google.android.play.core.splitinstall.** { *; }
+-keep class com.google.android.play.core.appupdate.** { *; }
+-keep class com.google.android.play.core.assetpacks.** { *; }
+-keep class com.google.android.play.core.common.** { *; }
+-keep class com.google.android.play.core.review.** { *; }

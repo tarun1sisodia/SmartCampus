@@ -116,17 +116,17 @@ class AppThemes {
       textSecondary: Color(0xFF2A9D8F),
       border: Color(0xFF2A9D8F),
     ),
-    // 13: Crisp Executive Navy
+    // 13: Crisp Executive Navy (New Corporate Standard)
     ThemeConfig(
       name: 'Crisp Executive Navy',
       isDark: false,
-      primary: Color(0xFF1D4ED8),
-      background: Color(0xFFF8FAFC),
-      surface: Color(0xFFFFFFFF),
-      accent: Color(0xFF60A5FA),
-      textPrimary: Color(0xFF1E293B),
-      textSecondary: Color(0xFF64748B),
-      border: Color(0xFFE2E8F0),
+      primary: Color(0xFF1E3A8A),      // blue-900
+      background: Color(0xFFF8FAFC),   // slate-50
+      surface: Colors.white,           // Card Background
+      accent: Color(0xFF1E3A8A),
+      textPrimary: Color(0xFF0F172A),   // slate-900
+      textSecondary: Color(0xFF475569), // slate-600
+      border: Color(0xFF94A3B8),       // slate-400
     ),
     // 15: Banking Blue Light
     ThemeConfig(
@@ -164,17 +164,18 @@ class AppThemes {
       textSecondary: Color(0xFFCC8888),
       border: Color(0xFF2A0000),
     ),
-    // 21: Deep Ocean Cyan
+    // 21: Deep Ocean Cyan (New Corporate Standard)
     ThemeConfig(
       name: 'Deep Ocean Cyan',
       isDark: true,
-      primary: Color(0xFF22D3EE),
-      background: Color(0xFF081C25),
-      surface: Color(0xFF0E2E3B),
-      accent: Color(0xFF06B6D4),
-      textPrimary: Color(0xFFE0F2FE),
-      textSecondary: Color(0xFF7DD3FC),
-      border: Color(0xFF164E63),
+      primary: Color(0xFF22D3EE),      // cyan-400
+      background: Color(0xFF020617),   // slate-950
+      surface: Color(0xFF0F172A),      // slate-900
+      accent: Color(0xFF22D3EE),
+      textPrimary: Color(0xFFF8FAFC),   // slate-50
+      textSecondary: Color(0xFF94A3B8), // slate-400
+      border: Color(0xFF334155),       // slate-700
+      error: Color(0xFFF43F5E),        // rose-500
     ),
     // 23: Obsidian & Amber
     ThemeConfig(

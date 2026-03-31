@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../../common/utils/constants/colors.dart';
 import '../../../../common/utils/constants/image_strings.dart';
 import '../../../../common/utils/constants/sized.dart';
 import '../../../../common/utils/constants/text_strings.dart';
@@ -18,75 +19,71 @@ class Login extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(TSizes.defaultSpace),
-        child: Column(
-          children: [
-            //for logo
-            LogoAndText(),
-            const SizedBox(height: TSizes.spaceBtwItems),
-            LoginForm(),
-            // const SizedBox(height: TSizes.spaceBtwItems),
-            // RememberAndForget(
-            //   initialValue: controller.rememberMe.value,
-            //   onRememberChanged: controller.setRememberMe,
-            // ),
-            // const SizedBox(height: TSizes.spaceBtwItems),
-            // CustomDivider(dividerText: TTexts.orSignInWith),
-            // const SizedBox(height: TSizes.spaceBtwItems),
-            // this at the bottom of your form, after the Sign up button
-            const SizedBox(height: TSizes.sm),
-            Row(
-              children: [
-                Expanded(child: Divider()),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: TSizes.sm),
-                  child: Text(TTexts.oR,
-                      style: Theme.of(context).textTheme.bodySmall),
-                ),
-                Expanded(child: Divider()),
-              ],
-            ),
-            const SizedBox(height: TSizes.spaceBtwItems),
-            Obx(
-              () => SizedBox(
-                width: double.infinity,
-                height: TSizes.appBarHeight,
-                child: OutlinedButton.icon(
-                  icon: controller.isGoogleLoading.value
-                      ? const SizedBox(
-                          width: TSizes.iconMd,
-                          height: TSizes.iconMd,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : Image.network(
-                          TImageStrings.google,
-                          height: TSizes.iconLg,
-                          width: TSizes.iconLg,
-                          cacheWidth: TSizes.iconLg.toInt(),
-                          cacheHeight: TSizes.iconLg.toInt(),
-                          errorBuilder: (context, error, stackTrace) {
-                            return const Icon(
-                              Icons.g_mobiledata,
-                              size: TSizes.iconLg,
-                            );
-                          },
+          padding: const EdgeInsets.symmetric(horizontal: TSizes.defaultSpace, vertical: TSizes.spaceBtwSections),
+          child: Column(
+            children: [
+              // Logo and Header
+              LogoAndText(),
+              
+              LoginForm(),
+
+              // Divider
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: TSizes.spaceBtwItems),
+                child: Row(
+                  children: [
+                    const Expanded(child: Divider(thickness: 1.5)),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: TSizes.sm),
+                      child: Text(
+                        TTexts.oR.toUpperCase(),
+                        style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                          fontWeight: FontWeight.w900,
+                          color: TColors.slate600,
                         ),
-                  label: Text(
-                    controller.isGoogleLoading.value
-                        ? 'Signing in...'
-                        : TTexts.orSignInWithGoogle,
-                  ),
-                  onPressed: controller.isGoogleLoading.value
-                      ? null
-                      : controller.signInWithGoogle,
+                      ),
+                    ),
+                    const Expanded(child: Divider(thickness: 1.5)),
+                  ],
                 ),
               ),
-            ),
 
-            // FooterButton(),
-          ],
+              // Social Sign-In
+              Obx(
+                () => SizedBox(
+                  width: double.infinity,
+                  height: TSizes.buttonHeight,
+                  child: OutlinedButton.icon(
+                    icon: controller.isGoogleLoading.value
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : Image.network(
+                            TImageStrings.google,
+                            height: 24,
+                            width: 24,
+                            errorBuilder: (context, error, stackTrace) {
+                              return const Icon(Icons.g_mobiledata, size: 24);
+                            },
+                          ),
+                    label: Text(
+                      controller.isGoogleLoading.value
+                          ? 'SIGNING IN...'
+                          : TTexts.orSignInWithGoogle.toUpperCase(),
+                      style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 12),
+                    ),
+                    onPressed: controller.isGoogleLoading.value
+                        ? null
+                        : controller.signInWithGoogle,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
-      ),),
+      ),
     );
   }
 }

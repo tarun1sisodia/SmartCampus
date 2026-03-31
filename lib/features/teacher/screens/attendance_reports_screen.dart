@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
-import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../common/utils/constants/colors.dart';
 import '../../../common/utils/constants/sized.dart';
@@ -16,20 +15,21 @@ class AttendanceReportsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: TColors.slate50,
       appBar: AppBar(
         title: Text(
-          'Attendance Reports',
-          style: Theme.of(context).textTheme.headlineSmall,
+          'ATTENDANCE REPORTS',
+          style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w900, letterSpacing: 1.0),
         ),
         actions: [
           IconButton(
             onPressed: () => reportsController.loadAttendanceData(),
-            icon: const Icon(Iconsax.refresh),
+            icon: const Icon(Iconsax.refresh, color: TColors.slate900),
             tooltip: 'Refresh',
           ),
           IconButton(
             onPressed: () => reportsController.exportAttendanceReport(),
-            icon: const Icon(Iconsax.export),
+            icon: const Icon(Iconsax.export, color: TColors.executiveNavy),
             tooltip: 'Export Report',
           ),
         ],
@@ -43,26 +43,19 @@ class AttendanceReportsScreen extends StatelessWidget {
           onRefresh: () async {
             await reportsController.loadAttendanceData();
           },
-          color: Theme.of(context).colorScheme.primary,
-          backgroundColor: Theme.of(context).cardTheme.color ?? Colors.white,
           child: CustomScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             slivers: [
-              // Selection and Summary Section
+              // 1. Selection and Summary Section
               SliverPadding(
-                padding: const EdgeInsets.all(TSizes.defaultSpace),
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                 sliver: SliverToBoxAdapter(
                   child: Column(
                     children: [
-                      // Class selection
                       _buildClassSelectionCard(context),
-                      const SizedBox(height: TSizes.spaceBtwItems),
-
-                      // Date range selection
+                      const SizedBox(height: 16),
                       _buildDateRangeCard(context),
-                      const SizedBox(height: TSizes.spaceBtwSections),
-
-                      // Attendance summary (Only if data exists)
+                      const SizedBox(height: 32),
                       if (reportsController.sessions.isNotEmpty)
                         _buildAttendanceSummary(context),
                     ],
@@ -70,35 +63,33 @@ class AttendanceReportsScreen extends StatelessWidget {
                 ),
               ),
 
-              // Student list header and search
+              // 2. Student list header
               SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: TSizes.defaultSpace),
+                padding: const EdgeInsets.symmetric(horizontal: 24),
                 sliver: SliverToBoxAdapter(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const SizedBox(height: TSizes.spaceBtwItems),
-                      Text(
-                        'Student Attendance',
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                      const SizedBox(height: 16),
+                      const Text(
+                        'STUDENT ATTENDANCE',
+                        style: TextStyle(fontWeight: FontWeight.w900, fontSize: 14, letterSpacing: 1.5, color: TColors.slate600),
                       ),
-                      const SizedBox(height: TSizes.spaceBtwItems),
+                      const SizedBox(height: 16),
                       _buildTableHeader(context),
                     ],
                   ),
                 ),
               ),
 
-              // Virtualized Student List
+              // 3. Virtualized Student List
               SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: TSizes.defaultSpace),
+                padding: const EdgeInsets.symmetric(horizontal: 24),
                 sliver: Obx(() {
                   final filteredStudents = reportsController.displayStudents;
                   
                   if (filteredStudents.isEmpty) {
-                    return SliverToBoxAdapter(
-                      child: _buildEmptyState(context),
-                    );
+                    return SliverToBoxAdapter(child: _buildEmptyState(context));
                   }
 
                   return SliverList(
@@ -108,10 +99,7 @@ class AttendanceReportsScreen extends StatelessWidget {
                         final stats = reportsController.getStudentStats(student.id);
                         if (stats == null) return const SizedBox.shrink();
 
-                        final isLast = index == filteredStudents.length - 1;
-                        final hasMore = reportsController.hasMoreStudentsInReport.value;
-
-                        return _buildStudentRow(context, student, stats, isLast && !hasMore);
+                        return _buildStudentRow(context, student, stats);
                       },
                       childCount: filteredStudents.length,
                     ),
@@ -119,9 +107,9 @@ class AttendanceReportsScreen extends StatelessWidget {
                 }),
               ),
 
-              // Load More Button
+              // 4. Load More Button
               SliverPadding(
-                padding: const EdgeInsets.all(TSizes.defaultSpace),
+                padding: const EdgeInsets.all(24),
                 sliver: SliverToBoxAdapter(
                   child: Obx(() {
                     if (!reportsController.hasMoreStudentsInReport.value) return const SizedBox.shrink();
@@ -130,14 +118,14 @@ class AttendanceReportsScreen extends StatelessWidget {
                           ? const CircularProgressIndicator()
                           : OutlinedButton(
                               onPressed: reportsController.loadMoreReportStudents,
-                              child: const Text('Load More Students'),
+                              child: const Text('LOAD MORE STUDENTS'),
                             ),
                     );
                   }),
                 ),
               ),
 
-              const SliverToBoxAdapter(child: SizedBox(height: TSizes.spaceBtwSections)),
+              const SliverToBoxAdapter(child: SizedBox(height: 48)),
             ],
           ),
         );
@@ -146,123 +134,131 @@ class AttendanceReportsScreen extends StatelessWidget {
   }
 
   Widget _buildClassSelectionCard(BuildContext context) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
-        side: BorderSide(color: Theme.of(context).colorScheme.outlineVariant, width: 1),
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: TColors.white,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: TColors.slate400, width: 1.5),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(TSizes.md),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Select Class', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
-            const SizedBox(height: TSizes.spaceBtwItems),
-            if (reportsController.classes.isEmpty)
-              const Center(child: Text('No classes available'))
-            else
-              DropdownButtonFormField<String>(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(TSizes.inputFieldRadius)),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: TSizes.md, vertical: TSizes.md),
-                  isCollapsed: true,
-                ),
-                isExpanded: true,
-                iconSize: 24,
-                icon: const Icon(Iconsax.arrow),
-                value: reportsController.selectedClassId.value,
-                items: reportsController.classes.map((classItem) {
-                  return DropdownMenuItem<String>(
-                    value: classItem.id,
-                    child: Text(
-                      '${classItem.subjectName} - ${classItem.courseName} Year ${classItem.semester}',
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                      style: const TextStyle(fontSize: 14),
-                    ),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  if (value != null) {
-                    reportsController.selectedClassId.value = value;
-                    reportsController.loadAttendanceData();
-                  }
-                },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('SELECT CLASS', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 12, letterSpacing: 1.0)),
+          const SizedBox(height: 12),
+          if (reportsController.classes.isEmpty)
+            const Center(child: Text('NO CLASSES AVAILABLE'))
+          else
+            DropdownButtonFormField<String>(
+              decoration: const InputDecoration(
+                contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               ),
-          ],
-        ),
+              isExpanded: true,
+              icon: const Icon(Iconsax.arrow_down_1, color: TColors.executiveNavy),
+              value: reportsController.selectedClassId.value,
+              items: reportsController.classes.map((classItem) {
+                return DropdownMenuItem<String>(
+                  value: classItem.id,
+                  child: Text(
+                    '${classItem.subjectName} - ${classItem.courseName} (${classItem.semester})'.toUpperCase(),
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w800),
+                  ),
+                );
+              }).toList(),
+              onChanged: (value) {
+                if (value != null) {
+                  reportsController.selectedClassId.value = value;
+                  reportsController.loadAttendanceData();
+                }
+              },
+            ),
+        ],
       ),
     );
   }
 
   Widget _buildDateRangeCard(BuildContext context) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
-        side: BorderSide(color: Theme.of(context).colorScheme.outlineVariant, width: 1),
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: TColors.white,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: TColors.slate400, width: 1.5),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(TSizes.md),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('DATE RANGE', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 12, letterSpacing: 1.0)),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(
+                child: _buildDatePickerField(
+                  context: context,
+                  label: 'START DATE',
+                  value: reportsController.startDate.value,
+                  onTap: () async {
+                    final pickedDate = await showDatePicker(
+                      context: context,
+                      initialDate: reportsController.startDate.value,
+                      firstDate: DateTime(2020),
+                      lastDate: DateTime.now(),
+                    );
+                    if (pickedDate != null) {
+                      reportsController.startDate.value = pickedDate;
+                      reportsController.loadAttendanceData();
+                    }
+                  },
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _buildDatePickerField(
+                  context: context,
+                  label: 'END DATE',
+                  value: reportsController.endDate.value,
+                  onTap: () async {
+                    final pickedDate = await showDatePicker(
+                      context: context,
+                      initialDate: reportsController.endDate.value,
+                      firstDate: DateTime(2020),
+                      lastDate: DateTime.now(),
+                    );
+                    if (pickedDate != null) {
+                      reportsController.endDate.value = pickedDate;
+                      reportsController.loadAttendanceData();
+                    }
+                  },
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDatePickerField({required BuildContext context, required String label, required DateTime value, required VoidCallback onTap}) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        decoration: BoxDecoration(
+          color: TColors.slate50,
+          borderRadius: BorderRadius.circular(4),
+          border: Border.all(color: TColors.slate300, width: 1.0),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Date Range', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
-            const SizedBox(height: TSizes.spaceBtwItems),
+            Text(label, style: const TextStyle(color: TColors.slate600, fontWeight: FontWeight.w900, fontSize: 9)),
+            const SizedBox(height: 2),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(
-                  child: InkWell(
-                    onTap: () async {
-                      final pickedDate = await showDatePicker(
-                        context: context,
-                        initialDate: reportsController.startDate.value,
-                        firstDate: DateTime(2020),
-                        lastDate: DateTime.now(),
-                      );
-                      if (pickedDate != null) {
-                        reportsController.startDate.value = pickedDate;
-                        reportsController.loadAttendanceData();
-                      }
-                    },
-                    child: InputDecorator(
-                      decoration: InputDecoration(
-                        labelText: 'Start Date',
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(TSizes.inputFieldRadius)),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: TSizes.md, vertical: TSizes.sm),
-                        suffixIcon: const Icon(Iconsax.calendar),
-                      ),
-                      child: Text(DateFormat('MMM d, yyyy').format(reportsController.startDate.value)),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: TSizes.spaceBtwItems),
-                Expanded(
-                  child: InkWell(
-                    onTap: () async {
-                      final pickedDate = await showDatePicker(
-                        context: context,
-                        initialDate: reportsController.endDate.value,
-                        firstDate: DateTime(2020),
-                        lastDate: DateTime.now(),
-                      );
-                      if (pickedDate != null) {
-                        reportsController.endDate.value = pickedDate;
-                        reportsController.loadAttendanceData();
-                      }
-                    },
-                    child: InputDecorator(
-                      decoration: InputDecoration(
-                        labelText: 'End Date',
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(TSizes.inputFieldRadius)),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: TSizes.md, vertical: TSizes.sm),
-                        suffixIcon: const Icon(Iconsax.calendar),
-                      ),
-                      child: Text(DateFormat('MMM d, yyyy').format(reportsController.endDate.value)),
-                    ),
-                  ),
-                ),
+                Text(DateFormat('MMM d, yyyy').format(value).toUpperCase(), style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 12)),
+                const Icon(Iconsax.calendar, size: 16, color: TColors.executiveNavy),
               ],
             ),
           ],
@@ -275,70 +271,54 @@ class AttendanceReportsScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Attendance Summary',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+        const Text(
+          'SUMMARY OVERVIEW',
+          style: TextStyle(fontWeight: FontWeight.w900, fontSize: 14, letterSpacing: 1.5, color: TColors.slate600),
         ),
-        const SizedBox(height: TSizes.spaceBtwItems),
-        Card(
-          elevation: 2,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
-            side: BorderSide(color: Theme.of(context).colorScheme.outlineVariant, width: 1),
+        const SizedBox(height: 16),
+        Container(
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: TColors.white,
+            borderRadius: BorderRadius.circular(4),
+            border: Border.all(color: TColors.executiveNavy, width: 2.0),
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(TSizes.md),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    CircularPercentIndicator(
-                      radius: 60.0,
-                      lineWidth: 10.0,
-                      animation: true,
-                      animationDuration: 2000,
-                      percent: reportsController.averageAttendance.value / 100,
-                      center: TweenAnimationBuilder<double>(
-                        tween: Tween<double>(begin: 0, end: reportsController.averageAttendance.value),
-                        duration: const Duration(seconds: 2),
-                        builder: (context, value, child) {
-                          return Text(
-                            '${value.toStringAsFixed(1)}%',
-                            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-                          );
-                        },
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('AVG ATTENDANCE', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 10, color: TColors.slate600)),
+                      const SizedBox(height: 4),
+                      Text(
+                        '${reportsController.averageAttendance.value.toStringAsFixed(1)}%',
+                        style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 32, letterSpacing: -1.0, color: TColors.executiveNavy),
                       ),
-                      footer: Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: Text('Average Attendance', style: Theme.of(context).textTheme.bodySmall),
-                      ),
-                      circularStrokeCap: CircularStrokeCap.round,
-                      progressColor: Theme.of(context).colorScheme.primary,
-                      backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
-                    ),
-                    Column(
-                      children: [
-                        _buildSummaryItem(context, 'Sessions', reportsController.sessions.length.toString(), Iconsax.calendar_1, Theme.of(context).colorScheme.primary),
-                        const SizedBox(height: TSizes.spaceBtwItems),
-                        _buildSummaryItem(context, 'Students', reportsController.students.length.toString(), Iconsax.people, Theme.of(context).colorScheme.primary),
-                      ],
-                    ),
-                  ],
-                ),
-                const SizedBox(height: TSizes.spaceBtwItems),
-                const Divider(),
-                const SizedBox(height: TSizes.spaceBtwItems),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    _buildSummaryItem(context, 'Present', reportsController.presentCount.toString(), Iconsax.tick_circle, Colors.green),
-                    _buildSummaryItem(context, 'Absent', reportsController.absentCount.toString(), Iconsax.close_circle, Colors.red),
-                    _buildSummaryItem(context, 'Late', reportsController.lateCount.toString(), Iconsax.clock, Colors.orange),
-                  ],
-                ),
-              ],
-            ),
+                    ],
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(color: TColors.blue100, borderRadius: BorderRadius.circular(4)),
+                    child: const Icon(Iconsax.status_up, color: TColors.executiveNavy, size: 32),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 24),
+              const Divider(thickness: 1.5),
+              const SizedBox(height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _buildSummaryItem('SESSIONS', reportsController.sessions.length.toString(), Iconsax.calendar_1, TColors.executiveNavy),
+                  _buildSummaryItem('PRESENT', reportsController.presentCount.toString(), Iconsax.tick_circle, const Color(0xFF10B981)),
+                  _buildSummaryItem('ABSENT', reportsController.absentCount.toString(), Iconsax.close_circle, const Color(0xFFEF4444)),
+                  _buildSummaryItem('LATE', reportsController.lateCount.toString(), Iconsax.clock, const Color(0xFFF59E0B)),
+                ],
+              ),
+            ],
           ),
         ),
       ],
@@ -346,44 +326,92 @@ class AttendanceReportsScreen extends StatelessWidget {
   }
 
   Widget _buildTableHeader(BuildContext context) {
-    return Card(
-      elevation: 2,
-      margin: EdgeInsets.zero,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(TSizes.cardRadiusMd)),
+    return Container(
+      decoration: BoxDecoration(
+        color: TColors.white,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
+        border: Border.all(color: TColors.slate400, width: 1.5),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(TSizes.md),
-        child: Column(
-          children: [
-            TextField(
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: TextField(
               onChanged: (value) => reportsController.updateSearchQuery(value),
-              decoration: InputDecoration(
-                hintText: 'Search students by Roll, Name...',
-                prefixIcon: const Icon(Iconsax.search_normal),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(TSizes.inputFieldRadius),
-                ),
-                contentPadding: const EdgeInsets.symmetric(horizontal: TSizes.md, vertical: TSizes.sm),
+              style: const TextStyle(fontWeight: FontWeight.w800),
+              decoration: const InputDecoration(
+                hintText: 'SEARCH BY ROLL, NAME...',
+                prefixIcon: Icon(Iconsax.search_normal),
               ),
             ),
-            const SizedBox(height: TSizes.spaceBtwItems),
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: TSizes.sm),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.3),
-                borderRadius: BorderRadius.circular(TSizes.borderRadiusSm),
-              ),
-              child: Row(
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+            color: TColors.executiveNavy,
+            child: Row(
+              children: [
+                Expanded(flex: 3, child: Text('STUDENT NAME', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 10, letterSpacing: 0.5))),
+                _buildHeaderCell('P', 1),
+                _buildHeaderCell('A', 1),
+                _buildHeaderCell('L', 1),
+                _buildHeaderCell('%', 1),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeaderCell(String label, int flex) {
+    return Expanded(
+      flex: flex,
+      child: Text(
+        label, 
+        textAlign: TextAlign.center, 
+        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 10)
+      ),
+    );
+  }
+
+  Widget _buildStudentRow(BuildContext context, dynamic student, Map<String, dynamic> stats) {
+    final pCount = stats['presentCount'] ?? 0;
+    final aCount = stats['absentCount'] ?? 0;
+    final lCount = stats['lateCount'] ?? 0;
+    final percentage = stats['attendancePercentage'] ?? 0.0;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+      decoration: const BoxDecoration(
+        color: TColors.white,
+        border: Border(
+          left: BorderSide(color: TColors.slate400, width: 1.5),
+          right: BorderSide(color: TColors.slate400, width: 1.5),
+          bottom: BorderSide(color: TColors.slate200, width: 1.0),
+        ),
+      ),
+      child: InkWell(
+        onTap: () => reportsController.navigateToStudentDetail(student),
+        child: Row(
+          children: [
+            Expanded(
+              flex: 3,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(width: TSizes.sm),
-                  Expanded(flex: 3, child: Text('Student\'s name', style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold))),
-                  Expanded(flex: 1, child: Text('P', style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center)),
-                  Expanded(flex: 1, child: Text('A', style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center)),
-                  Expanded(flex: 1, child: Text('L', style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center)),
-                  Expanded(flex: 1, child: Text('%', style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center)),
+                  Text(student.name.toString().toUpperCase(), style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 13, color: TColors.slate900), overflow: TextOverflow.ellipsis),
+                  Text('ROLL: ${student.rollNumber}'.toUpperCase(), style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 10, color: TColors.slate600)),
                 ],
               ),
+            ),
+            _buildDataCell(pCount.toString(), 1, const Color(0xFF10B981)),
+            _buildDataCell(aCount.toString(), 1, const Color(0xFFEF4444)),
+            _buildDataCell(lCount.toString(), 1, const Color(0xFFF59E0B)),
+            _buildDataCell(
+              '${percentage.toStringAsFixed(0)}%', 
+              1, 
+              percentage >= 75 ? TColors.executiveNavy : const Color(0xFFEF4444),
+              isBold: true
             ),
           ],
         ),
@@ -391,104 +419,68 @@ class AttendanceReportsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildStudentRow(BuildContext context, dynamic student, Map<String, dynamic> stats, bool isLast) {
-    final pCount = stats['presentCount'] ?? 0;
-    final aCount = stats['absentCount'] ?? 0;
-    final lCount = stats['lateCount'] ?? 0;
-    final percentage = stats['attendancePercentage'] ?? 0.0;
-
-    return Card(
-      margin: EdgeInsets.zero,
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: isLast ? const BorderRadius.vertical(bottom: Radius.circular(TSizes.cardRadiusMd)) : BorderRadius.zero,
-        side: BorderSide(color: Theme.of(context).colorScheme.outlineVariant, width: 0.5),
-      ),
-      child: InkWell(
-        onTap: () => reportsController.navigateToStudentDetail(student),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: TSizes.md, horizontal: TSizes.md),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    flex: 3,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(student.name, style: const TextStyle(fontWeight: FontWeight.bold), overflow: TextOverflow.ellipsis),
-                        Text(student.rollNumber, style: Theme.of(context).textTheme.bodySmall),
-                      ],
-                    ),
-                  ),
-                  Expanded(flex: 1, child: Text(pCount.toString(), textAlign: TextAlign.center, style: const TextStyle(color: Colors.green))),
-                  Expanded(flex: 1, child: Text(aCount.toString(), textAlign: TextAlign.center, style: const TextStyle(color: Colors.red))),
-                  Expanded(flex: 1, child: Text(lCount.toString(), textAlign: TextAlign.center, style: const TextStyle(color: Colors.orange))),
-                  Expanded(
-                    flex: 1,
-                    child: Text(
-                      '${percentage.toStringAsFixed(0)}%',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: percentage >= 75 ? Theme.of(context).colorScheme.primary : Colors.red,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
+  Widget _buildDataCell(String value, int flex, Color color, {bool isBold = false}) {
+    return Expanded(
+      flex: flex,
+      child: Text(
+        value, 
+        textAlign: TextAlign.center, 
+        style: TextStyle(
+          color: color, 
+          fontWeight: isBold ? FontWeight.w900 : FontWeight.w800, 
+          fontSize: 12
+        )
       ),
     );
   }
 
   Widget _buildEmptyState(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.zero,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(bottom: Radius.circular(TSizes.cardRadiusMd)),
+    return Container(
+      padding: const EdgeInsets.all(48),
+      decoration: BoxDecoration(
+        color: TColors.white,
+        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(4)),
+        border: Border.all(color: TColors.slate400, width: 1.5),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(TSizes.defaultSpace),
-        child: Center(child: Text('No students found', style: Theme.of(context).textTheme.bodyMedium)),
+      child: const Center(
+        child: Text(
+          'NO STUDENTS FOUND', 
+          style: TextStyle(fontWeight: FontWeight.w900, fontSize: 14, color: TColors.slate400)
+        )
       ),
     );
   }
 
-  Widget _buildSummaryItem(BuildContext context, String label, String value, IconData icon, Color color) {
+  Widget _buildSummaryItem(String label, String value, IconData icon, Color color) {
     return Column(
       children: [
-        Icon(icon, color: color, size: 24),
-        const SizedBox(height: TSizes.xs),
-        Text(value, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
-        Text(label, style: Theme.of(context).textTheme.bodySmall),
+        Icon(icon, color: color, size: 20),
+        const SizedBox(height: 6),
+        Text(value, style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16)),
+        Text(label, style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 9, color: TColors.slate600, letterSpacing: 0.5)),
       ],
     );
   }
 
   Widget _buildLoadingShimmer(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(TSizes.defaultSpace),
+      padding: const EdgeInsets.all(24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: List.generate(4, (index) => _buildShimmerCard(context)),
+        children: List.generate(5, (index) => _buildShimmerBlock()),
       ),
     );
   }
 
-  Widget _buildShimmerCard(BuildContext context) {
-    final baseColor = Theme.of(context).colorScheme.surfaceContainerHighest;
-    final highlightColor = Theme.of(context).colorScheme.surface.withValues(alpha: 0.5);
-
+  Widget _buildShimmerBlock() {
     return Shimmer.fromColors(
-      baseColor: baseColor,
-      highlightColor: highlightColor,
-      child: Card(
-        margin: const EdgeInsets.only(bottom: TSizes.spaceBtwItems),
-        child: Container(height: 100, width: double.infinity, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(TSizes.cardRadiusMd))),
+      baseColor: TColors.slate200,
+      highlightColor: TColors.white,
+      child: Container(
+        height: 100, 
+        width: double.infinity, 
+        margin: const EdgeInsets.only(bottom: 16),
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(4)),
       ),
     );
   }

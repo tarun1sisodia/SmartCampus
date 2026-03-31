@@ -5,9 +5,11 @@ import 'package:iconsax/iconsax.dart';
 import '../../../app/routes/app_routes.dart';
 import '../../../app/theme/theme_configs.dart';
 import '../../../app/theme/theme_controller.dart';
+import '../../../common/utils/constants/colors.dart';
 import '../../../common/utils/constants/sized.dart';
 import '../../../common/utils/constants/text_strings.dart';
 import '../../../common/utils/helpers/snackbar_helper.dart';
+import '../../../common/widgets/sharp_toggle.dart';
 import '../../../services/auth_service.dart';
 import '../../../services/storage_service.dart';
 import '../controllers/teacher_profile_controller.dart';
@@ -21,43 +23,46 @@ class TeacherSettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(TeacherProfileController());
     final languageService = Get.find<LanguageService>();
-    final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
+      backgroundColor: TColors.slate50,
       appBar: AppBar(
-        title: Text('Settings', style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
+        title: Text('SETTINGS', style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w900, letterSpacing: 1.0)),
         centerTitle: true,
         elevation: 0,
         backgroundColor: Colors.transparent,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: TSizes.defaultSpace, vertical: TSizes.spaceBtwItems),
+        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
         child: Column(
           children: [
             _buildProfileCard(context, controller),
-            const SizedBox(height: TSizes.spaceBtwSections),
+            const SizedBox(height: 32),
+            
             _buildSection(
               context: context,
-              title: 'Preferences',
+              title: 'PREFERENCES',
               items: [
                 _buildProfileMenuItem(
                   context: context,
                   title: 'Language',
                   icon: Iconsax.language_square,
-                  trailing: Obx(() => Text(languageService.getCurrentLanguageName(), style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: colorScheme.primary, fontWeight: FontWeight.bold))),
+                  trailing: Obx(() => Text(
+                    languageService.getCurrentLanguageName().toUpperCase(), 
+                    style: const TextStyle(color: TColors.executiveNavy, fontWeight: FontWeight.w900, fontSize: 12)
+                  )),
                   onTap: () => _showLanguageSelectionDialog(context, languageService),
                 ),
                 _buildProfileMenuItem(
                   context: context,
                   title: 'Biometric Login',
-                  icon: Icons.fingerprint,
+                  icon: Iconsax.finger_scan,
                   trailing: Obx(() {
                     final biometricService = Get.find<BiometricAuthService>();
                     if (!biometricService.isAvailable.value) return const SizedBox.shrink();
-                    return Switch.adaptive(
+                    return SharpToggle(
                       value: biometricService.isBiometricEnabled.value,
                       onChanged: (value) => controller.toggleBiometric(value),
-                      activeColor: colorScheme.primary,
                     );
                   }),
                 ),
@@ -65,45 +70,52 @@ class TeacherSettingsScreen extends StatelessWidget {
                   context: context,
                   title: 'Email Alerts',
                   icon: Iconsax.notification,
-                  trailing: Obx(() => Switch.adaptive(
+                  trailing: Obx(() => SharpToggle(
                     value: controller.emailNotifications.value,
                     onChanged: controller.toggleEmailNotifications,
-                    activeColor: colorScheme.primary,
                   )),
                 ),
               ],
             ),
-            const SizedBox(height: TSizes.spaceBtwItems),
+            
+            const SizedBox(height: 16),
             _buildSection(
               context: context,
-              title: 'Appearance',
+              title: 'APPEARANCE',
               items: [_buildThemeSelector(context)],
             ),
-            const SizedBox(height: TSizes.spaceBtwItems),
+            
+            const SizedBox(height: 16),
             _buildSection(
               context: context,
-              title: 'Data & Maintenance',
+              title: 'DATA & MAINTENANCE',
               items: [
                 _buildProfileMenuItem(context: context, title: 'Import Data', icon: Iconsax.import_1, onTap: () => Get.toNamed(AppRoutes.import)),
                 _buildProfileMenuItem(context: context, title: 'Export History', icon: Iconsax.export_3, onTap: () => Get.toNamed(AppRoutes.export)),
                 _buildProfileMenuItem(context: context, title: 'Storage Management', icon: Iconsax.cloud, onTap: () => _showStorageDataDialog(context)),
               ],
             ),
-            const SizedBox(height: TSizes.spaceBtwItems),
+            
+            const SizedBox(height: 16),
             _buildSection(
               context: context,
-              title: 'Support',
+              title: 'SUPPORT',
               items: [
                 _buildProfileMenuItem(context: context, title: 'Help Center', icon: Iconsax.support, onTap: () => Get.toNamed(AppRoutes.help)),
                 _buildProfileMenuItem(context: context, title: 'Privacy & Security', icon: Iconsax.security_safe, onTap: () => Get.toNamed(AppRoutes.privacyPolicy)),
                 _buildProfileMenuItem(context: context, title: 'App Feedback', icon: Iconsax.message_question, onTap: () => Get.toNamed(AppRoutes.feedback)),
               ],
             ),
-            const SizedBox(height: TSizes.spaceBtwSections),
+            
+            const SizedBox(height: 48),
             _buildSignOutButton(context, controller),
-            const SizedBox(height: TSizes.spaceBtwSections),
-            Text('Version 1.2.4 (Build 1205)', style: Theme.of(context).textTheme.labelSmall?.copyWith(color: colorScheme.outline)),
-            const SizedBox(height: TSizes.spaceBtwSections),
+            
+            const SizedBox(height: 32),
+            Text(
+              'VERSION 1.2.4 (BUILD 1205)', 
+              style: TextStyle(color: TColors.slate600, fontSize: 10, fontWeight: FontWeight.w800, letterSpacing: 1.0)
+            ),
+            const SizedBox(height: 32),
           ],
         ),
       ),
@@ -114,26 +126,44 @@ class TeacherSettingsScreen extends StatelessWidget {
     return Obx(() {
       final user = controller.user.value;
       return Container(
-        padding: const EdgeInsets.all(TSizes.md),
+        padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.05),
-          borderRadius: BorderRadius.circular(TSizes.cardRadiusLg),
-          border: Border.all(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2)),
+          color: TColors.white,
+          borderRadius: BorderRadius.circular(4),
+          border: Border.all(color: TColors.slate400, width: 1.5),
         ),
         child: Row(
           children: [
-            CircleAvatar(radius: 30, backgroundColor: Theme.of(context).colorScheme.primaryContainer, child: const Icon(Iconsax.user, size: 30)),
-            const SizedBox(width: TSizes.md),
+            Container(
+              width: 64,
+              height: 64,
+              decoration: BoxDecoration(
+                color: TColors.blue100,
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(color: TColors.executiveNavy, width: 1.5),
+              ),
+              child: const Icon(Iconsax.user, size: 32, color: TColors.executiveNavy),
+            ),
+            const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(user?.name ?? 'Teacher Name', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
-                  Text(user?.email ?? 'email@campus.com', style: Theme.of(context).textTheme.bodySmall),
+                  Text(
+                    (user?.name ?? 'TEACHER NAME').toUpperCase(), 
+                    style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 18, letterSpacing: -0.5, color: TColors.slate900)
+                  ),
+                  Text(
+                    user?.email ?? 'email@campus.com', 
+                    style: const TextStyle(color: TColors.slate600, fontSize: 12, fontWeight: FontWeight.w600)
+                  ),
                 ],
               ),
             ),
-            IconButton(onPressed: () => Get.to(() => TeacherProfileScreen()), icon: const Icon(Iconsax.edit, size: 20)),
+            IconButton(
+              onPressed: () => Get.to(() => TeacherProfileScreen()), 
+              icon: const Icon(Iconsax.edit, size: 24, color: TColors.slate900)
+            ),
           ],
         ),
       );
@@ -144,9 +174,19 @@ class TeacherSettingsScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(padding: const EdgeInsets.only(left: 4, bottom: 8), child: Text(title.toUpperCase(), style: Theme.of(context).textTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold, letterSpacing: 1.1, color: Theme.of(context).colorScheme.onSurfaceVariant))),
+        Padding(
+          padding: const EdgeInsets.only(left: 4, bottom: 12), 
+          child: Text(
+            title.toUpperCase(), 
+            style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 12, letterSpacing: 1.5, color: TColors.slate600)
+          )
+        ),
         Container(
-          decoration: BoxDecoration(color: Theme.of(context).colorScheme.surface, borderRadius: BorderRadius.circular(TSizes.cardRadiusLg), border: Border.all(color: Theme.of(context).colorScheme.outlineVariant)),
+          decoration: BoxDecoration(
+            color: TColors.white, 
+            borderRadius: BorderRadius.circular(4), 
+            border: Border.all(color: TColors.slate400, width: 1.5)
+          ),
           child: Column(children: items),
         ),
       ],
@@ -158,7 +198,10 @@ class TeacherSettingsScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(padding: const EdgeInsets.only(left: 16, top: 16, bottom: 8), child: Text('Interface Theme', style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold))),
+        const Padding(
+          padding: EdgeInsets.only(left: 16, top: 16, bottom: 12), 
+          child: Text('INTERFACE THEME', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 13, letterSpacing: 0.5))
+        ),
         SizedBox(
           height: 140,
           child: ListView.builder(
@@ -171,23 +214,42 @@ class TeacherSettingsScreen extends StatelessWidget {
                 final isSelected = themeController.currentThemeIndex.value == index;
                 return GestureDetector(
                   onTap: () => themeController.setTheme(index),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
+                  child: Container(
                     width: 100,
                     margin: const EdgeInsets.only(right: 12),
                     decoration: BoxDecoration(
                       color: theme.background,
-                      borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
-                      border: Border.all(color: isSelected ? theme.primary : Theme.of(context).colorScheme.outlineVariant, width: isSelected ? 3 : 1),
-                      boxShadow: isSelected ? [BoxShadow(color: theme.primary.withValues(alpha: 0.2), blurRadius: 8)] : [],
+                      borderRadius: BorderRadius.circular(4),
+                      border: Border.all(
+                        color: isSelected ? theme.primary : TColors.slate400, 
+                        width: isSelected ? 2.5 : 1.5
+                      ),
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Row(mainAxisAlignment: MainAxisAlignment.center, children: [_buildColorCircle(theme.primary), const SizedBox(width: 4), _buildColorCircle(theme.accent)]),
-                        const SizedBox(height: 8),
-                        Text(theme.name, style: TextStyle(color: theme.textPrimary, fontSize: 10, fontWeight: isSelected ? FontWeight.bold : FontWeight.normal)),
-                        if (isSelected) Icon(Icons.check_circle, color: theme.primary, size: 14),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center, 
+                          children: [
+                            _buildColorCircle(theme.primary), 
+                            const SizedBox(width: 4), 
+                            _buildColorCircle(theme.accent)
+                          ]
+                        ),
+                        const SizedBox(height: 12),
+                        Text(
+                          theme.name.toUpperCase(), 
+                          style: TextStyle(
+                            color: theme.textPrimary, 
+                            fontSize: 10, 
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: 0.5
+                          )
+                        ),
+                        if (isSelected) Padding(
+                          padding: const EdgeInsets.only(top: 4),
+                          child: Icon(Icons.check_box, color: theme.primary, size: 16),
+                        ),
                       ],
                     ),
                   ),
@@ -196,36 +258,53 @@ class TeacherSettingsScreen extends StatelessWidget {
             },
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 20),
       ],
     );
   }
 
   Widget _buildColorCircle(Color color) {
-    return Container(width: 20, height: 20, decoration: BoxDecoration(color: color, shape: BoxShape.circle, border: Border.all(color: Colors.white.withValues(alpha: 0.3))));
+    return Container(
+      width: 20, 
+      height: 20, 
+      decoration: BoxDecoration(
+        color: color, 
+        borderRadius: BorderRadius.circular(4), 
+        border: Border.all(color: Colors.white, width: 1.5)
+      )
+    );
   }
 
   Widget _buildProfileMenuItem({required BuildContext context, required String title, required IconData icon, Widget? trailing, VoidCallback? onTap}) {
-    return ListTile(
-      onTap: onTap,
-      leading: Container(padding: const EdgeInsets.all(10), decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1), shape: BoxShape.circle), child: Icon(icon, color: Theme.of(context).colorScheme.primary, size: 18)),
-      title: Text(title, style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w500)),
-      trailing: trailing ?? const Icon(Iconsax.arrow_right_3, size: 14),
+    return Container(
+      decoration: const BoxDecoration(
+        border: Border(bottom: BorderSide(color: TColors.slate200, width: 1.0)),
+      ),
+      child: ListTile(
+        onTap: onTap,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        leading: Icon(icon, color: TColors.executiveNavy, size: 24),
+        title: Text(
+          title, 
+          style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15, color: TColors.slate900)
+        ),
+        trailing: trailing ?? const Icon(Iconsax.arrow_right_3, size: 18, color: TColors.slate600),
+      ),
     );
   }
 
   Widget _buildSignOutButton(BuildContext context, TeacherProfileController controller) {
     return SizedBox(
       width: double.infinity,
+      height: 56,
       child: OutlinedButton.icon(
         onPressed: () => _confirmSignOut(context, controller),
-        icon: const Icon(Iconsax.logout, size: 18),
-        label: const Text('Sign Out'),
+        icon: const Icon(Iconsax.logout, size: 20),
+        label: const Text('SIGN OUT'),
         style: OutlinedButton.styleFrom(
-          foregroundColor: Colors.red,
-          side: const BorderSide(color: Colors.red),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(TSizes.cardRadiusLg)),
-          padding: const EdgeInsets.symmetric(vertical: 16),
+          foregroundColor: const Color(0xFFE11D48),
+          side: const BorderSide(color: Color(0xFFE11D48), width: 1.5),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
         ),
       ),
     );
@@ -234,22 +313,43 @@ class TeacherSettingsScreen extends StatelessWidget {
   void _confirmSignOut(BuildContext context, TeacherProfileController controller) {
     Get.bottomSheet(
       Container(
-        padding: const EdgeInsets.all(TSizes.defaultSpace),
-        decoration: BoxDecoration(color: Theme.of(context).scaffoldBackgroundColor, borderRadius: const BorderRadius.vertical(top: Radius.circular(20))),
+        padding: const EdgeInsets.all(24),
+        decoration: const BoxDecoration(
+          color: TColors.white, 
+          borderRadius: BorderRadius.zero,
+          border: Border(top: BorderSide(color: TColors.executiveNavy, width: 3.0)),
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.grey.withValues(alpha: 0.3), borderRadius: BorderRadius.circular(2))),
-            const SizedBox(height: TSizes.spaceBtwSections),
-            const Icon(Iconsax.logout, size: 48, color: Colors.red),
-            const SizedBox(height: TSizes.spaceBtwItems),
-            Text('Sign Out?', style: Theme.of(context).textTheme.headlineSmall),
-            const SizedBox(height: TSizes.sm),
-            const Text('Are you sure you want to exit? Attendance data is safe.', textAlign: TextAlign.center),
-            const SizedBox(height: TSizes.spaceBtwSections),
+            const Icon(Iconsax.logout, size: 48, color: Color(0xFFE11D48)),
+            const SizedBox(height: 16),
+            const Text(
+              'SIGN OUT?', 
+              style: TextStyle(fontWeight: FontWeight.w900, fontSize: 24, letterSpacing: -0.5)
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'ARE YOU SURE YOU WANT TO EXIT? ATTENDANCE DATA IS SAFE.', 
+              textAlign: TextAlign.center,
+              style: TextStyle(color: TColors.slate600, fontWeight: FontWeight.w700, fontSize: 12)
+            ),
+            const SizedBox(height: 32),
             Row(children: [
-              Expanded(child: TextButton(onPressed: () => Get.back(), child: const Text('Stay'))),
-              Expanded(child: ElevatedButton(onPressed: () => controller.logout(), style: ElevatedButton.styleFrom(backgroundColor: Colors.red), child: const Text('Sign Out'))),
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () => Get.back(), 
+                  child: const Text('STAY')
+                )
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: () => controller.logout(), 
+                  style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFE11D48)), 
+                  child: const Text('SIGN OUT')
+                )
+              ),
             ])
           ],
         ),
@@ -261,23 +361,63 @@ class TeacherSettingsScreen extends StatelessWidget {
     final storageService = Get.find<StorageService>();
     final cacheSize = await storageService.getCacheSize();
     Get.dialog(AlertDialog(
-      title: const Text('Storage Safety'),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+      title: const Text('STORAGE SAFETY', style: TextStyle(fontWeight: FontWeight.w900)),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          ListTile(title: const Text('Cache Data'), subtitle: Text('${cacheSize.toStringAsFixed(2)} MB'), trailing: TextButton(onPressed: () => _confirmClearCache(context, storageService), child: const Text('Clear'))),
-          const Divider(),
-          ListTile(leading: const Icon(Iconsax.danger, color: Colors.red), title: const Text('Hard Reset'), subtitle: const Text('Wipe all local data'), onTap: () => _confirmClearAllData(context, storageService)),
+          _buildDialogItem(
+            title: 'CACHE DATA', 
+            subtitle: '${cacheSize.toStringAsFixed(2)} MB', 
+            onTap: () => _confirmClearCache(context, storageService)
+          ),
+          const Divider(thickness: 1.5),
+          _buildDialogItem(
+            title: 'HARD RESET', 
+            subtitle: 'WIPE ALL LOCAL DATA', 
+            isDestructive: true,
+            onTap: () => _confirmClearAllData(context, storageService)
+          ),
         ],
       ),
-      actions: [TextButton(onPressed: () => Get.back(), child: const Text('Done'))],
+      actions: [
+        TextButton(
+          onPressed: () => Get.back(), 
+          child: const Text('DONE', style: TextStyle(fontWeight: FontWeight.w900))
+        )
+      ],
     ));
+  }
+
+  Widget _buildDialogItem({required String title, required String subtitle, required VoidCallback onTap, bool isDestructive = false}) {
+    return ListTile(
+      contentPadding: EdgeInsets.zero,
+      title: Text(title, style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 14)),
+      subtitle: Text(subtitle, style: TextStyle(color: isDestructive ? const Color(0xFFE11D48) : TColors.slate600, fontWeight: FontWeight.w600, fontSize: 12)),
+      trailing: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: isDestructive ? const Color(0xFFE11D48).withValues(alpha: 0.1) : TColors.executiveNavy.withValues(alpha: 0.1),
+          border: Border.all(color: isDestructive ? const Color(0xFFE11D48) : TColors.executiveNavy, width: 1.5),
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: Text(
+          isDestructive ? 'WIPE' : 'CLEAR', 
+          style: TextStyle(
+            color: isDestructive ? const Color(0xFFE11D48) : TColors.executiveNavy, 
+            fontWeight: FontWeight.w900, 
+            fontSize: 10
+          )
+        ),
+      ),
+      onTap: onTap,
+    );
   }
 
   void _confirmClearCache(BuildContext context, StorageService service) {
     Get.back();
     service.clearCache();
-    TSnackBar.showSuccess(message: 'Cache freed!');
+    TSnackBar.showSuccess(message: 'CACHE FREED!');
   }
 
   void _confirmClearAllData(BuildContext context, StorageService service) {
@@ -288,21 +428,41 @@ class TeacherSettingsScreen extends StatelessWidget {
   void _showLanguageSelectionDialog(BuildContext context, LanguageService languageService) {
     Get.bottomSheet(
       Container(
-        padding: const EdgeInsets.all(TSizes.defaultSpace),
-        decoration: BoxDecoration(color: Theme.of(context).scaffoldBackgroundColor, borderRadius: const BorderRadius.vertical(top: Radius.circular(20))),
+        padding: const EdgeInsets.all(24),
+        decoration: const BoxDecoration(
+          color: TColors.white, 
+          borderRadius: BorderRadius.zero,
+          border: Border(top: BorderSide(color: TColors.executiveNavy, width: 3.0)),
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Select Language', style: Theme.of(context).textTheme.titleLarge),
-            const SizedBox(height: TSizes.spaceBtwItems),
-            ...languageService.languages.map((lang) => ListTile(
-                  title: Text(lang['name']),
-                  trailing: languageService.currentLocale.value.toString() == lang['locale'].toString() ? Icon(Icons.check_circle, color: Theme.of(context).colorScheme.primary) : null,
-                  onTap: () {
-                    languageService.changeLanguage(lang['code']);
-                    Get.back();
-                  },
-                )),
+            const Text('SELECT LANGUAGE', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 20)),
+            const SizedBox(height: 24),
+            ...languageService.languages.map((lang) => Container(
+              margin: const EdgeInsets.only(bottom: 8),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: languageService.currentLocale.value.toString() == lang['locale'].toString() 
+                    ? TColors.executiveNavy 
+                    : TColors.slate300, 
+                  width: 1.5
+                ),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: ListTile(
+                title: Text(lang['name'].toString().toUpperCase(), style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 14)),
+                trailing: languageService.currentLocale.value.toString() == lang['locale'].toString() 
+                  ? const Icon(Icons.check_box, color: TColors.executiveNavy) 
+                  : null,
+                onTap: () {
+                  languageService.changeLanguage(lang['code']);
+                  Get.back();
+                },
+              ),
+            )),
+            const SizedBox(height: 16),
           ],
         ),
       ),

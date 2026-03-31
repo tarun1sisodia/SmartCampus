@@ -21,21 +21,21 @@ class LoginForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dark = THelperFunction.isDarkMode(context);
+    // final dark = THelperFunction.isDarkMode(context);
 
     return Form(
       key: loginController.formKey,
       child: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: TSizes.spaceBtwSections,
-          vertical: TSizes.spaceBtwSections,
+          vertical: TSizes.spaceBtwItems,
         ),
         child: Column(
           children: [
             // Email field
             Textfields(
               controller: controller.emailController,
-              iconColor: dark ? TColors.yellow : TColors.primary,
+              iconColor: TColors.executiveNavy,
               prefixIcon: const Icon(Iconsax.direct_right),
               labelText: TTexts.email,
               keyboardType: TextInputType.emailAddress,
@@ -55,7 +55,7 @@ class LoginForm extends StatelessWidget {
             Obx(
               () => Textfields(
                 controller: controller.passwordController,
-                iconColor: dark ? TColors.yellow : TColors.primary,
+                iconColor: TColors.executiveNavy,
                 prefixIcon: const Icon(Iconsax.password_check),
                 labelText: TTexts.password,
                 obscureText: !loginController.passwordVisible.value,
@@ -79,7 +79,7 @@ class LoginForm extends StatelessWidget {
               ),
             ),
 
-            SizedBox(height: TSizes.spaceBtwInputFields / 2),
+            const SizedBox(height: TSizes.spaceBtwInputFields / 2),
             Obx(
               () => RememberAndForget(
                 value: controller.rememberMe.value,
@@ -87,22 +87,14 @@ class LoginForm extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(height: TSizes.appBarHeight),
+            const SizedBox(height: TSizes.spaceBtwSections),
 
             // Sign in button
             Obx(
               () => SizedBox(
                 width: double.infinity,
-                height: TSizes.appBarHeight,
+                height: TSizes.buttonHeight,
                 child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: dark ? TColors.yellow : TColors.primary,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(
-                        TSizes.borderRadiusMd,
-                      ),
-                    ),
-                      ),
                   onPressed: controller.isLoading.value
                       ? null
                       : () {
@@ -115,15 +107,10 @@ class LoginForm extends StatelessWidget {
                         },
                   child: controller.isLoading.value
                       ? const CircularProgressIndicator(
-                          color: TColors.coral,
+                          color: Colors.white,
                         )
                       : Text(
-                          TTexts.signIn,
-                          style: TextStyle(
-                            color: dark ? TColors.primary : Colors.white,
-                            fontSize: TSizes.fontSizeMd,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          TTexts.signIn.toUpperCase(),
                         ),
                 ),
               ),
@@ -133,13 +120,8 @@ class LoginForm extends StatelessWidget {
             // Create account button
             SizedBox(
               width: double.infinity,
-              height: TSizes.appBarHeight,
+              height: TSizes.buttonHeight,
               child: OutlinedButton(
-                style: OutlinedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(TSizes.borderRadiusMd),
-                  ),
-                ),
                 onPressed: () {
                   // Clean up any existing SignupController
                   if (Get.isRegistered<SignupController>()) {
@@ -148,12 +130,7 @@ class LoginForm extends StatelessWidget {
                   Get.to(Signup());
                 },
                 child: Text(
-                  TTexts.createAccount,
-                  style: TextStyle(
-                    color: dark ? TColors.yellow : TColors.primary,
-                    fontSize: TSizes.fontSizeMd,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  TTexts.createAccount.toUpperCase(),
                 ),
               ),
             ),

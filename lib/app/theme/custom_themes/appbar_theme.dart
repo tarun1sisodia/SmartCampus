@@ -29,10 +29,10 @@ class TAppbarTheme {
         opticalSize: 24,
       ),
       titleTextStyle: TextStyle(
-        fontSize: 18,
-        fontWeight: FontWeight.w600,
+        fontSize: 20,
+        fontWeight: FontWeight.w900,
         color: iconColor,
-        letterSpacing: 0.15,
+        letterSpacing: -0.5,
       ),
       toolbarHeight: 56.0,
       titleSpacing: 16.0,

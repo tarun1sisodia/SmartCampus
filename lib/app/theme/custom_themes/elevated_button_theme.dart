@@ -13,22 +13,21 @@ class TElevatedButtonTheme {
   static ElevatedButtonThemeData createElevatedButtonTheme(Color primaryColor, Color foregroundColor, Brightness brightness) {
     return ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        elevation: 2,
-        shadowColor: brightness == Brightness.dark ? TColors.dark.withAlpha(128) : TColors.dark.withAlpha(77),
+        elevation: 0,
         foregroundColor: foregroundColor,
         backgroundColor: primaryColor,
-        disabledBackgroundColor: brightness == Brightness.dark ? TColors.darkerGrey : TColors.grey,
-        disabledForegroundColor: brightness == Brightness.dark ? TColors.grey : TColors.darkGrey,
-        side: BorderSide(color: primaryColor),
+        disabledBackgroundColor: brightness == Brightness.dark ? TColors.slate800 : TColors.slate400,
+        disabledForegroundColor: brightness == Brightness.dark ? TColors.slate400 : TColors.slate600,
+        side: BorderSide(color: primaryColor, width: 1.5),
         padding: const EdgeInsets.symmetric(
-          vertical: TSizes.buttonHeight / 2,
-          horizontal: TSizes.md,
+          vertical: 12,
+          horizontal: 24,
         ),
         textStyle: TextStyle(
-          fontSize: 16,
+          fontSize: 14,
           color: foregroundColor,
-          fontWeight: FontWeight.w600,
-          letterSpacing: 0.5,
+          fontWeight: FontWeight.w900,
+          letterSpacing: 1.0,
         ),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(TSizes.buttonRadius),

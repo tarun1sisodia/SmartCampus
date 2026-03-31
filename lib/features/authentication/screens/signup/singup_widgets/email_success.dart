@@ -1,67 +1,71 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:iconsax/iconsax.dart';
 
-import '../../../../../common/utils/constants/image_strings.dart';
-import '../../../../../common/utils/constants/sized.dart';
-import '../../../../../common/utils/constants/text_strings.dart';
-import '../../../../../common/utils/helpers/helper_function.dart';
-import '../../login/login.dart';
+import 'package:smart_campus/common/utils/constants/colors.dart';
+import 'package:smart_campus/common/utils/constants/text_strings.dart';
+import 'package:smart_campus/features/authentication/screens/login/login.dart';
 
 class EmailSuccess extends StatelessWidget {
   const EmailSuccess({super.key});
 
   @override
   Widget build(BuildContext context) {
-    ///print("EmailSuccess screen built"); // Debugging ///print
-
     return Scaffold(
+      backgroundColor: TColors.slate50,
       appBar: AppBar(
         automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent,
         actions: [
           IconButton(
-            onPressed: () {
-              ///print("Clear button pressed"); // Debugging ///print
-              Get.offAll(() => Login());
-            },
-            icon: Icon(CupertinoIcons.clear),
+            onPressed: () => Get.offAll(() => Login()),
+            icon: const Icon(Iconsax.close_circle, color: TColors.slate900, size: 28),
           ),
         ],
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(TSizes.defaultSpace),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 48),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.network(
-                TImageStrings.successemail,
-                width: THelperFunction.screenWidth() * 0.8,
+              // Success Indicator
+              Container(
+                padding: const EdgeInsets.all(32),
+                decoration: BoxDecoration(
+                  color: TColors.white,
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(color: const Color(0xFF10B981), width: 3.0),
+                ),
+                child: const Icon(Iconsax.tick_circle, size: 100, color: Color(0xFF10B981)),
               ),
-              const SizedBox(height: TSizes.spaceBtwSections),
+              
+              const SizedBox(height: 48),
+              
               Text(
-                TTexts.registrationSuccess,
-                style: Theme.of(context).textTheme.headlineMedium,
+                TTexts.registrationSuccess.toUpperCase(),
+                style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 28, letterSpacing: -1.0, color: TColors.slate900),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: TSizes.spaceBtwItems),
+              
+              const SizedBox(height: 16),
+              
               Text(
-                TTexts.emailVerified,
-                style: Theme.of(context).textTheme.labelMedium,
+                TTexts.emailVerified.toUpperCase(),
+                style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13, color: TColors.slate600, letterSpacing: 0.5),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: TSizes.spaceBtwSections),
+              
+              const SizedBox(height: 64),
+              
               SizedBox(
-                height: TSizes.appBarHeight,
                 width: double.infinity,
+                height: 56,
                 child: ElevatedButton(
-                  onPressed: () {
-                    ///print("Continue button pressed"); // Debugging ///print
-                    Get.to(() => Login());
-                  },
+                  onPressed: () => Get.to(() => Login()),
                   child: Text(
-                    TTexts.continueText,
-                    style: Theme.of(context).textTheme.headlineSmall,
+                    TTexts.continueText.toUpperCase(),
+                    style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16, letterSpacing: 1.0),
                   ),
                 ),
               ),
