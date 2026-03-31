@@ -11,45 +11,38 @@ class TTextFieldTheme {
   TTextFieldTheme._();
 
   static InputDecorationTheme createInputDecorationTheme(Color primaryColor, Color surfaceColor, Color textColor, Color errorColor, Brightness brightness) {
-    final isDark = brightness == Brightness.dark;
-    final hintColor = isDark ? Colors.white.withAlpha(179) : TColors.darkGrey;
-    final iconColor = isDark ? Colors.grey : TColors.darkGrey;
 
     return InputDecorationTheme(
       errorMaxLines: 3,
-      prefixIconColor: iconColor,
-      suffixIconColor: iconColor,
+      prefixIconColor: primaryColor,
+      suffixIconColor: primaryColor,
+      floatingLabelStyle: TextStyle(
+        color: primaryColor,
+        fontWeight: FontWeight.w900,
+        fontSize: 12,
+      ),
       labelStyle: TextStyle(
         fontSize: 14,
         color: textColor,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w600,
       ),
       hintStyle: TextStyle(
-        color: hintColor,
         fontSize: 14,
-        fontWeight: FontWeight.normal,
-      ),
-      errorStyle: TextStyle(
-        fontStyle: FontStyle.normal,
-        color: errorColor,
-        fontSize: 12,
-      ),
-      floatingLabelStyle: TextStyle(
-        color: primaryColor,
-        fontSize: 14,
+        color: textColor.withAlpha(128),
         fontWeight: FontWeight.w500,
       ),
-      contentPadding: const EdgeInsets.symmetric(
-        horizontal: TSizes.md,
-        vertical: TSizes.md - 2,
-      ),
+      errorStyle: const TextStyle(fontStyle: FontStyle.normal, fontWeight: FontWeight.w700),
+      isCollapsed: false,
+      isDense: true,
+      contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+      filled: false, // No filled, borderless inputs
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(TSizes.inputFieldRadius),
-        borderSide: const BorderSide(width: 1, color: TColors.grey),
+        borderSide: const BorderSide(width: 1.5, color: TColors.slate400),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(TSizes.inputFieldRadius),
-        borderSide: const BorderSide(width: 1, color: TColors.grey),
+        borderSide: const BorderSide(width: 1.5, color: TColors.slate400),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(TSizes.inputFieldRadius),
@@ -57,14 +50,12 @@ class TTextFieldTheme {
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(TSizes.inputFieldRadius),
-        borderSide: BorderSide(width: 1, color: errorColor),
+        borderSide: const BorderSide(width: 1.5, color: TColors.rose500),
       ),
       focusedErrorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(TSizes.inputFieldRadius),
-        borderSide: BorderSide(width: 2, color: errorColor),
+        borderSide: const BorderSide(width: 2.0, color: TColors.rose500),
       ),
-      filled: true,
-      fillColor: surfaceColor,
     );
   }
 

@@ -1,4 +1,3 @@
-import 'package:smart_campus/common/utils/constants/text_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -7,6 +6,7 @@ import 'package:shimmer/shimmer.dart';
 import '../../../common/widgets/student_avatar.dart';
 import '../../../models/class_model.dart';
 import '../../../common/utils/constants/sized.dart';
+import '../../../common/utils/constants/colors.dart';
 import '../controllers/student_controller.dart';
 import '../../../common/utils/helpers/snackbar_helper.dart';
 
@@ -18,72 +18,78 @@ class AddStudentScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       studentController.setSelectedClass(classModel);
     });
 
     return Scaffold(
+      backgroundColor: TColors.slate50,
       appBar: AppBar(
         title: Obx(() => Text(
-              studentController.isSelectionMode.value
-                  ? '${studentController.selectedStudentIds.length} Selected'
-                  : 'Add Students',
-              style: Theme.of(context).textTheme.headlineSmall,
+              (studentController.isSelectionMode.value
+                      ? '${studentController.selectedStudentIds.length} SELECTED'
+                      : 'ADD STUDENTS')
+                  .toUpperCase(),
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w900, letterSpacing: 1.0),
             )),
         leading: Obx(() => studentController.isSelectionMode.value
             ? IconButton(
-                icon: const Icon(Icons.close),
+                icon: const Icon(Icons.close, color: Color(0xFFE11D48)),
                 onPressed: () => studentController.toggleSelectionMode())
             : const BackButton()),
         actions: [
           Obx(() => studentController.isSelectionMode.value
               ? IconButton(
-                  icon: const Icon(Icons.select_all),
+                  icon: const Icon(Icons.select_all, color: TColors.executiveNavy),
                   onPressed: () => studentController.toggleSelectAll())
               : IconButton(
-                  icon: const Icon(Iconsax.import),
+                  icon: const Icon(Iconsax.import, color: TColors.executiveNavy),
                   onPressed: () => _showImportStudentsDialog(context))),
         ],
       ),
       floatingActionButton: Obx(() => studentController.isSelectionMode.value
-          ? FloatingActionButton(
+          ? FloatingActionButton.extended(
               onPressed: () => studentController.selectedStudentIds.isNotEmpty
                   ? _showDeleteSelectedConfirmation(context)
                   : null,
-              backgroundColor: Colors.red,
+              backgroundColor: const Color(0xFFE11D48),
               foregroundColor: Colors.white,
-              child: const Icon(Iconsax.trash),
+              icon: const Icon(Iconsax.trash, size: 20),
+              label: const Text('DELETE', style: TextStyle(fontWeight: FontWeight.w900, letterSpacing: 1.0)),
+              elevation: 0,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4), side: const BorderSide(color: Colors.white, width: 1.5)),
             )
-          : FloatingActionButton(
+          : FloatingActionButton.extended(
               onPressed: () => _showAddStudentDialog(context),
-              backgroundColor: colorScheme.primary,
-              foregroundColor: colorScheme.onPrimary,
-              child: const Icon(Iconsax.user_add),
+              backgroundColor: TColors.executiveNavy,
+              foregroundColor: Colors.white,
+              icon: const Icon(Iconsax.user_add, size: 20),
+              label: const Text('ADD STUDENT', style: TextStyle(fontWeight: FontWeight.w900, letterSpacing: 1.0)),
+              elevation: 0,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4), side: const BorderSide(color: Colors.white, width: 1.5)),
             )),
       body: Obx(() {
-        if (studentController.isLoading.value)
+        if (studentController.isLoading.value) {
           return _buildLoadingState(context);
-        if (studentController.students.isEmpty)
+        }
+        if (studentController.students.isEmpty) {
           return _buildEmptyState(context);
+        }
 
         return RefreshIndicator(
-          onRefresh: () =>
-              studentController.loadStudentsForClass(classModel.id),
+          onRefresh: () => studentController.loadStudentsForClass(classModel.id),
           child: ListView.builder(
             controller: studentController.scrollController,
-            padding: const EdgeInsets.all(TSizes.defaultSpace),
-            itemCount: studentController.students.length +
-                (studentController.isLoadingMoreStudents.value ? 1 : 0),
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+            itemCount: studentController.students.length + (studentController.isLoadingMoreStudents.value ? 1 : 0),
             itemBuilder: (context, index) {
               if (index == studentController.students.length) {
                 return const Padding(
-                    padding: EdgeInsets.symmetric(vertical: TSizes.md),
+                    padding: EdgeInsets.symmetric(vertical: 24),
                     child: Center(child: CircularProgressIndicator()));
               }
               final student = studentController.students[index];
-              return _buildStudentCard(context, student);
+              return _buildStudentRow(context, student);
             },
           ),
         );
@@ -93,18 +99,15 @@ class AddStudentScreen extends StatelessWidget {
 
   Widget _buildLoadingState(BuildContext context) {
     return ListView.builder(
-      padding: const EdgeInsets.all(TSizes.defaultSpace),
-      itemCount: 8,
+      padding: const EdgeInsets.all(24),
+      itemCount: 6,
       itemBuilder: (context, index) => Shimmer.fromColors(
-        baseColor: Theme.of(context).colorScheme.surfaceContainerHighest,
-        highlightColor: Theme.of(context).colorScheme.surface,
-        child: Card(
-          margin: const EdgeInsets.only(bottom: TSizes.spaceBtwItems),
-          child: Container(
-              height: 80,
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(TSizes.cardRadiusMd))),
+        baseColor: TColors.slate200,
+        highlightColor: TColors.white,
+        child: Container(
+          height: 80,
+          margin: const EdgeInsets.only(bottom: 16),
+          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(4)),
         ),
       ),
     );
@@ -112,53 +115,42 @@ class AddStudentScreen extends StatelessWidget {
 
   Widget _buildEmptyState(BuildContext context) {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Iconsax.user_add,
-              size: 72,
-              color:
-                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.5)),
-          const SizedBox(height: TSizes.spaceBtwItems),
-          Text('No Students Found',
-              style: Theme.of(context)
-                  .textTheme
-                  .titleLarge
-                  ?.copyWith(fontWeight: FontWeight.bold)),
-          const SizedBox(height: TSizes.sm),
-          const Text('Tap the button to add students to this class.',
-              textAlign: TextAlign.center),
-          const SizedBox(height: TSizes.lg),
-          ElevatedButton.icon(
-            onPressed: () => _showAddStudentDialog(context),
-            icon: const Icon(Iconsax.add_circle),
-            label: const Text('Add Student Manually'),
-          ),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.all(48.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Iconsax.user_add, size: 80, color: TColors.slate300),
+            const SizedBox(height: 24),
+            const Text('ROSTER EMPTY', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18, color: TColors.slate900)),
+            const SizedBox(height: 8),
+            const Text('NO STUDENTS ASSIGNED TO THIS CLASS YET.', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12, color: TColors.slate600), textAlign: TextAlign.center),
+            const SizedBox(height: 32),
+            ElevatedButton.icon(
+              onPressed: () => _showAddStudentDialog(context),
+              icon: const Icon(Iconsax.add_circle, size: 20),
+              label: const Text('ADD STUDENT MANUALLY'),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildStudentCard(BuildContext context, dynamic student) {
+  Widget _buildStudentRow(BuildContext context, dynamic student) {
     return Obx(() {
-      final isSelected =
-          studentController.selectedStudentIds.contains(student.id);
-      final colorScheme = Theme.of(context).colorScheme;
+      final isSelected = studentController.selectedStudentIds.contains(student.id);
 
-      return Card(
-        margin: const EdgeInsets.only(bottom: TSizes.spaceBtwItems / 2),
-        elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
-          side: BorderSide(
-            color:
-                isSelected ? colorScheme.primary : colorScheme.outlineVariant,
-            width: isSelected ? 2 : 1,
+      return Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        decoration: BoxDecoration(
+          color: TColors.white,
+          borderRadius: BorderRadius.circular(4),
+          border: Border.all(
+            color: isSelected ? TColors.executiveNavy : TColors.slate300,
+            width: isSelected ? 2.5 : 1.5,
           ),
         ),
-        color: isSelected
-            ? colorScheme.primaryContainer.withValues(alpha: 0.1)
-            : null,
         child: InkWell(
           onTap: () {
             if (studentController.isSelectionMode.value) {
@@ -171,54 +163,59 @@ class AddStudentScreen extends StatelessWidget {
               studentController.toggleStudentSelection(student.id);
             }
           },
-          borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
-          child: ListTile(
-            contentPadding: const EdgeInsets.symmetric(
-                horizontal: TSizes.md, vertical: TSizes.xs),
-            leading: studentController.isSelectionMode.value
-                ? _buildSelectionIcon(context, isSelected)
-                : StudentAvatar(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: Row(
+              children: [
+                if (studentController.isSelectionMode.value)
+                  _buildSelectionCheckbox(isSelected)
+                else
+                  StudentAvatar(
                     imageUrl: student.imageUrl,
                     name: student.name,
-                    size: 44,
-                    isDarkMode:
-                        Theme.of(context).brightness == Brightness.dark),
-            title: Text(student.name,
-                style: Theme.of(context)
-                    .textTheme
-                    .titleMedium
-                    ?.copyWith(fontWeight: FontWeight.bold)),
-            subtitle: Text('Roll: ${student.rollNumber}',
-                style: Theme.of(context).textTheme.labelSmall),
-            trailing: studentController.isSelectionMode.value
-                ? null
-                : IconButton(
-                    icon:
-                        const Icon(Iconsax.trash, color: Colors.red, size: 20),
-                    onPressed: () => _showDeleteConfirmation(
-                        context, student.id, student.name),
+                    size: 48,
+                    isDarkMode: false,
                   ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        student.name.toString().toUpperCase(),
+                        style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 14, color: TColors.slate900),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text(
+                        'ROLL: ${student.rollNumber}'.toUpperCase(),
+                        style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 10, color: TColors.slate600, letterSpacing: 0.5),
+                      ),
+                    ],
+                  ),
+                ),
+                if (!studentController.isSelectionMode.value)
+                  IconButton(
+                    icon: const Icon(Iconsax.trash, color: Color(0xFFE11D48), size: 20),
+                    onPressed: () => _showDeleteConfirmation(context, student.id, student.name),
+                  ),
+              ],
+            ),
           ),
         ),
       );
     });
   }
 
-  Widget _buildSelectionIcon(BuildContext context, bool isSelected) {
-    final colorScheme = Theme.of(context).colorScheme;
+  Widget _buildSelectionCheckbox(bool isSelected) {
     return Container(
       width: 24,
       height: 24,
       decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: isSelected ? colorScheme.primary : Colors.transparent,
-        border: Border.all(
-            color: isSelected ? colorScheme.primary : colorScheme.outline,
-            width: 2),
+        color: isSelected ? TColors.executiveNavy : Colors.transparent,
+        border: Border.all(color: TColors.executiveNavy, width: 2.5),
+        borderRadius: BorderRadius.circular(4),
       ),
-      child: isSelected
-          ? const Icon(Icons.check, size: 16, color: Colors.white)
-          : null,
+      child: isSelected ? const Icon(Icons.check, size: 16, color: Colors.white) : null,
     );
   }
 
@@ -227,213 +224,172 @@ class AddStudentScreen extends StatelessWidget {
     studentController.rollNumberController.clear();
     studentController.clearSelectedImage();
 
-    Get.dialog(
-      AlertDialog(
-        title: const Text('Add Student'),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Obx(() => GestureDetector(
-                    onTap: () => _showImagePickerOptions(context),
-                    child: Container(
-                      width: 100,
-                      height: 100,
-                      decoration: BoxDecoration(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .surfaceContainerHighest,
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                            color: Theme.of(context).colorScheme.primary,
-                            width: 2),
-                      ),
-                      child: ClipOval(
-                        child: studentController.selectedImage.value != null
-                            ? Image.file(studentController.selectedImage.value!,
-                                fit: BoxFit.cover)
-                            : Icon(Iconsax.camera,
-                                size: 40,
-                                color: Theme.of(context).colorScheme.primary),
-                      ),
+    _showCorporateDialog(
+      context,
+      title: 'ADD NEW STUDENT',
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Obx(() => GestureDetector(
+                  onTap: () => _showImagePickerOptions(context),
+                  child: Container(
+                    width: 100,
+                    height: 100,
+                    decoration: BoxDecoration(
+                      color: TColors.slate50,
+                      borderRadius: BorderRadius.circular(4),
+                      border: Border.all(color: TColors.executiveNavy, width: 2.5),
                     ),
-                  )),
-              const SizedBox(height: TSizes.lg),
-              TextField(
-                controller: studentController.nameController,
-                decoration: const InputDecoration(labelText: 'Full Name'),
-              ),
-              const SizedBox(height: TSizes.spaceBtwInputFields),
-              TextField(
-                controller: studentController.rollNumberController,
-                decoration: const InputDecoration(labelText: 'Roll Number'),
-              ),
-            ],
-          ),
+                    child: studentController.selectedImage.value != null
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(2),
+                            child: Image.file(studentController.selectedImage.value!, fit: BoxFit.cover),
+                          )
+                        : const Icon(Iconsax.camera, size: 32, color: TColors.executiveNavy),
+                  ),
+                )),
+            const SizedBox(height: 24),
+            TextFormField(
+              controller: studentController.nameController,
+              decoration: const InputDecoration(labelText: 'FULL NAME', prefixIcon: Icon(Iconsax.user)),
+            ),
+            const SizedBox(height: 16),
+            TextFormField(
+              controller: studentController.rollNumberController,
+              decoration: const InputDecoration(labelText: 'ROLL NUMBER', prefixIcon: Icon(Iconsax.hashtag)),
+            ),
+          ],
         ),
-        actions: [
-          TextButton(
-              onPressed: () => Get.back(),
-              child: const Text(TTexts.cancel,
-                  style: TextStyle(color: Colors.grey))),
-          ElevatedButton(
-            onPressed: () {
-              if (studentController.nameController.text.trim().isEmpty ||
-                  studentController.rollNumberController.text.trim().isEmpty) {
-                TSnackBar.showError(message: 'Please fill in all fields');
-                return;
-              }
-              studentController.addStudentToClass();
-              Get.back();
-            },
-            child: const Text('Add Student'),
-          ),
-        ],
       ),
+      confirmLabel: 'ADD STUDENT',
+      onConfirm: () {
+        if (studentController.nameController.text.trim().isEmpty || studentController.rollNumberController.text.trim().isEmpty) {
+          TSnackBar.showError(message: 'FILL ALL REQUIRED FIELDS.');
+          return;
+        }
+        studentController.addStudentToClass();
+        Get.back();
+      },
     );
   }
 
   void _showImagePickerOptions(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-          borderRadius:
-              BorderRadius.vertical(top: Radius.circular(TSizes.cardRadiusLg))),
-      builder: (context) => Padding(
-        padding: const EdgeInsets.all(TSizes.defaultSpace),
+    Get.bottomSheet(
+      Container(
+        padding: const EdgeInsets.all(24),
+        decoration: const BoxDecoration(
+          color: TColors.white,
+          border: Border(top: BorderSide(color: TColors.executiveNavy, width: 3.0)),
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Add Photo', style: Theme.of(context).textTheme.titleLarge),
-            const SizedBox(height: TSizes.md),
-            ListTile(
-              leading: const Icon(Iconsax.camera),
-              title: const Text('Take a Photo'),
-              onTap: () {
-                Get.back();
-                studentController.pickImage(ImageSource.camera);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Iconsax.gallery),
-              title: const Text('Choose from Gallery'),
-              onTap: () {
-                Get.back();
-                studentController.pickImage(ImageSource.gallery);
-              },
-            ),
+            const Text('PHOTO SOURCE', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18)),
+            const SizedBox(height: 16),
+            _buildOptionTile(label: 'CAMERA', icon: Iconsax.camera, onTap: () { Get.back(); studentController.pickImage(ImageSource.camera); }),
+            _buildOptionTile(label: 'GALLERY', icon: Iconsax.gallery, onTap: () { Get.back(); studentController.pickImage(ImageSource.gallery); }),
             if (studentController.selectedImage.value != null)
-              ListTile(
-                leading: const Icon(Iconsax.trash, color: Colors.red),
-                title: const Text('Remove Photo',
-                    style: TextStyle(color: Colors.red)),
-                onTap: () {
-                  Get.back();
-                  studentController.clearSelectedImage();
-                },
-              ),
-            const SizedBox(height: TSizes.md),
+              _buildOptionTile(label: 'REMOVE PHOTO', icon: Iconsax.trash, color: const Color(0xFFE11D48), onTap: () { Get.back(); studentController.clearSelectedImage(); }),
+            const SizedBox(height: 16),
           ],
         ),
       ),
     );
   }
 
-  void _showDeleteConfirmation(
-      BuildContext context, String studentId, String name) {
-    Get.defaultDialog(
-      title: 'Delete Student',
-      middleText: 'Are you sure you want to remove "$name" from this class?',
-      textConfirm: 'Delete',
-      textCancel: 'Cancel',
-      confirmTextColor: Colors.white,
-      buttonColor: Colors.red,
+  Widget _buildOptionTile({required String label, required IconData icon, Color color = TColors.executiveNavy, required VoidCallback onTap}) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      decoration: BoxDecoration(border: Border.all(color: TColors.slate300, width: 1.5), borderRadius: BorderRadius.circular(4)),
+      child: ListTile(
+        leading: Icon(icon, color: color),
+        title: Text(label, style: TextStyle(color: color, fontWeight: FontWeight.w900, fontSize: 14)),
+        onTap: onTap,
+      ),
+    );
+  }
+
+  void _showDeleteConfirmation(BuildContext context, String studentId, String name) {
+    _showCorporateDialog(
+      context,
+      title: 'DELETE STUDENT',
+      content: Text('ARE YOU SURE YOU WANT TO REMOVE "${name.toUpperCase()}" FROM THIS CLASS?', style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: TColors.slate600)),
+      confirmLabel: 'DELETE',
       onConfirm: () {
         Get.back();
         studentController.removeStudentFromClass(studentId);
       },
+      isDestructive: true,
     );
   }
 
   void _showDeleteSelectedConfirmation(BuildContext context) {
     final count = studentController.selectedStudentIds.length;
-    Get.defaultDialog(
-      title: 'Delete Selected',
-      middleText: 'Are you sure you want to delete $count selected students?',
-      textConfirm: 'Delete',
-      textCancel: 'Cancel',
-      confirmTextColor: Colors.white,
-      buttonColor: Colors.red,
+    _showCorporateDialog(
+      context,
+      title: 'DELETE SELECTED',
+      content: Text('ARE YOU SURE YOU WANT TO DELETE $count SELECTED STUDENTS FROM THIS ROSTER?', style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: TColors.slate600)),
+      confirmLabel: 'DELETE',
       onConfirm: () {
         Get.back();
         studentController.removeSelectedStudentsFromClass();
       },
+      isDestructive: true,
     );
   }
 
   void _showImportStudentsDialog(BuildContext context) {
     final searchController = TextEditingController();
     final selectedSemester = RxInt(0);
-
     studentController.fetchAvailableStudents();
 
     Get.dialog(
       AlertDialog(
-        title: const Text('Import Students'),
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero, side: BorderSide(color: TColors.executiveNavy, width: 2.0)),
+        title: const Text('IMPORT STUDENTS', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18)),
         content: SizedBox(
           width: double.maxFinite,
           height: 500,
           child: Obx(() {
-            if (studentController.isFetchingAvailableStudents.value) {
-              return const Center(child: CircularProgressIndicator());
-            }
+            if (studentController.isFetchingAvailableStudents.value) return const Center(child: CircularProgressIndicator());
+            if (studentController.availableStudents.isEmpty) return const Center(child: Text('NO DATA AVAILABLE'));
 
-            if (studentController.availableStudents.isEmpty) {
-              return _buildImportEmptyState(context);
-            }
-
-            final filteredStudents =
-                studentController.availableStudents.where((student) {
+            final filteredStudents = studentController.availableStudents.where((student) {
               final searchMatch = searchController.text.isEmpty ||
-                  student.name
-                      .toLowerCase()
-                      .contains(searchController.text.toLowerCase()) ||
-                  student.rollNumber
-                      .toLowerCase()
-                      .contains(searchController.text.toLowerCase());
-              final semesterMatch = selectedSemester.value == 0 ||
-                  _getSemesterFromRollNumber(student.rollNumber) ==
-                      selectedSemester.value;
-              return searchMatch && semesterMatch;
+                  student.name.toLowerCase().contains(searchController.text.toLowerCase()) ||
+                  student.rollNumber.toLowerCase().contains(searchController.text.toLowerCase());
+              return searchMatch;
             }).toList();
 
             return Column(
               children: [
                 TextField(
                   controller: searchController,
-                  decoration: const InputDecoration(
-                      labelText: 'Search students...',
-                      prefixIcon: Icon(Iconsax.search_normal)),
-                  onChanged: (_) =>
-                      studentController.availableStudents.refresh(),
+                  decoration: const InputDecoration(labelText: 'SEARCH ROSTER', prefixIcon: Icon(Iconsax.search_normal)),
+                  onChanged: (_) => studentController.availableStudents.refresh(),
                 ),
-                const SizedBox(height: TSizes.md),
-                _buildImportFilters(context, selectedSemester),
-                const Divider(),
+                const SizedBox(height: 16),
                 Expanded(
                   child: ListView.builder(
                     itemCount: filteredStudents.length,
                     itemBuilder: (context, index) {
                       final student = filteredStudents[index];
-                      return Obx(() => CheckboxListTile(
-                            value: studentController.selectedStudents
-                                .any((s) => s.id == student.id),
-                            onChanged: (v) => v == true
-                                ? studentController.selectStudent(student)
-                                : studentController.deselectStudent(student),
-                            title: Text(student.name),
-                            subtitle: Text('Roll: ${student.rollNumber}'),
-                          ));
+                      final isSelected = studentController.selectedStudents.any((s) => s.id == student.id);
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 8),
+                        decoration: BoxDecoration(
+                          color: isSelected ? TColors.blue100 : Colors.transparent,
+                          border: Border.all(color: TColors.slate300, width: 1.0),
+                        ),
+                        child: CheckboxListTile(
+                          value: isSelected,
+                          onChanged: (v) => v == true ? studentController.selectStudent(student) : studentController.deselectStudent(student),
+                          title: Text(student.name.toString().toUpperCase(), style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 12)),
+                          subtitle: Text('ROLL: ${student.rollNumber}', style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 9)),
+                          activeColor: TColors.executiveNavy,
+                        ),
+                      );
                     },
                   ),
                 ),
@@ -442,76 +398,32 @@ class AddStudentScreen extends StatelessWidget {
           }),
         ),
         actions: [
-          TextButton(onPressed: () => Get.back(), child: const Text('Close')),
+          TextButton(onPressed: () => Get.back(), child: const Text('CANCEL', style: TextStyle(color: TColors.slate600, fontWeight: FontWeight.w900))),
           ElevatedButton(
-            onPressed: () {
-              studentController.importSelectedStudents();
-              Get.back();
-            },
-            child: const Text('Import Selected'),
+            onPressed: () { studentController.importSelectedStudents(); Get.back(); },
+            child: const Text('IMPORT'),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildImportFilters(BuildContext context, RxInt selectedSemester) {
-    return Row(
-      children: [
-        Expanded(
-          child: Obx(() => DropdownButton<int>(
-                isExpanded: true,
-                value: selectedSemester.value,
-                onChanged: (v) => selectedSemester.value = v ?? 0,
-                items: [
-                  const DropdownMenuItem(
-                      value: 0, child: Text('All Semesters')),
-                  for (int i = 1; i <= 6; i++)
-                    DropdownMenuItem(value: i, child: Text('Semester $i')),
-                ],
-              )),
-        ),
-        const SizedBox(width: TSizes.md),
-        Expanded(
-          child: Obx(() => DropdownButton<String>(
-                isExpanded: true,
-                value: studentController.sortOption.value,
-                onChanged: (v) => v != null
-                    ? studentController.sortAvailableStudents(v)
-                    : null,
-                items: const [
-                  DropdownMenuItem(value: 'name', child: Text('Name (A-Z)')),
-                  DropdownMenuItem(value: 'rollNumber', child: Text('Roll No')),
-                ],
-              )),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildImportEmptyState(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Iconsax.people,
-              size: 64,
-              color:
-                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.3)),
-          const SizedBox(height: TSizes.md),
-          const Text('No students available to import.',
-              textAlign: TextAlign.center),
+  void _showCorporateDialog(BuildContext context, {required String title, required Widget content, required String confirmLabel, required VoidCallback onConfirm, bool isDestructive = false}) {
+    Get.dialog(
+      AlertDialog(
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero, side: BorderSide(color: TColors.executiveNavy, width: 2.0)),
+        backgroundColor: TColors.white,
+        title: Text(title, style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 18)),
+        content: content,
+        actions: [
+          TextButton(onPressed: () => Get.back(), child: const Text('CANCEL', style: TextStyle(color: TColors.slate600, fontWeight: FontWeight.w900))),
+          ElevatedButton(
+            onPressed: onConfirm,
+            style: ElevatedButton.styleFrom(backgroundColor: isDestructive ? const Color(0xFFE11D48) : TColors.executiveNavy),
+            child: Text(confirmLabel),
+          ),
         ],
       ),
     );
-  }
-
-  int _getSemesterFromRollNumber(String rollNumber) {
-    try {
-      if (rollNumber.length >= 7) {
-        return int.parse(rollNumber.substring(4, 5));
-      }
-    } catch (e) {}
-    return 0;
   }
 }

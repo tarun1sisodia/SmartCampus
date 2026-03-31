@@ -1,29 +1,24 @@
-import 'package:smart_campus/features/teacher/screens/attendance_reports_screen.dart';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:percent_indicator/percent_indicator.dart';
-
-import '../../../common/utils/constants/image_strings.dart';
-import '../../../common/widgets/connection_status_widget.dart';
-import '../controllers/dashboard_controller.dart';
+import '../../../common/utils/constants/colors.dart';
 import '../../../common/utils/constants/sized.dart';
+import '../controllers/dashboard_controller.dart';
 import '../controllers/teacher_profile_controller.dart';
-import 'class_list_screen.dart';
 import 'teacher_profile_screen.dart';
 import 'teacher_settings_screen.dart';
-
 import 'widgets/biometric_overlay.dart';
 import 'widgets/dashboard_shimmer.dart';
-import 'widgets/stat_card.dart';
+import 'widgets/dev_tag.dart';
 
+// DashboardScreen strictly follows 'Sharp, Bold & Corporate' design system.
 class DashboardScreen extends StatelessWidget {
   DashboardScreen({super.key});
 
   final dashboardController = Get.find<DashboardController>();
   final profileController = Get.put(TeacherProfileController());
   final searchController = TextEditingController();
-  final RxBool isSearching = RxBool(false);
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +26,9 @@ class DashboardScreen extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
+        backgroundColor: TColors.slate50,
         body: Obx(() {
+          // Security overlay handling
           if (!dashboardController.isAuthenticated.value &&
               dashboardController.biometricAuthService.isAvailable.value &&
               dashboardController.biometricAuthService.isBiometricEnabled.value &&
@@ -39,7 +36,10 @@ class DashboardScreen extends StatelessWidget {
             return Stack(
               children: [
                 _buildDashboardContent(context),
-                BiometricOverlay(dashboardController: dashboardController, dark: Theme.of(context).brightness == Brightness.dark),
+                BiometricOverlay(
+                  dashboardController: dashboardController, 
+                  dark: Theme.of(context).brightness == Brightness.dark
+                ),
               ],
             );
           }
@@ -50,259 +50,422 @@ class DashboardScreen extends StatelessWidget {
   }
 
   Widget _buildDashboardContent(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
     return Obx(() {
       if (dashboardController.isLoading.value) return DashboardShimmer(context: context);
 
-      if (dashboardController.classes.isEmpty) {
-        return Center(
+      return RefreshIndicator(
+        onRefresh: () => dashboardController.loadDashboardData(),
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.all(24.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(Iconsax.document_text, size: 64, color: colorScheme.outlineVariant),
-              const SizedBox(height: TSizes.lg),
-              Text('No Classes Assigned', style: Theme.of(context).textTheme.headlineSmall),
-              const SizedBox(height: TSizes.spaceBtwItems),
-              ElevatedButton(onPressed: () => dashboardController.loadDashboardData(), child: const Text('Refresh Dashboard')),
+              // 1. Connection/Offline Banner (Sharp & High Contrast)
+              _buildConnectionBanner(context),
+              const SizedBox(height: 16),
+
+              // 2. Header (Square Avatar, Sharp Greeting)
+              _buildHeader(context),
+              const SizedBox(height: 32),
+
+              // 3. Search Bar (Sharp Outline, Thick Borders)
+              _buildSearchField(context),
+              const SizedBox(height: 24),
+
+              // 4. Statistics Cards (Classes & Students)
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildStatCard(
+                      icon: Iconsax.teacher,
+                      value: dashboardController.totalClasses.value.toString(),
+                      label: "CLASSES",
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: _buildStatCard(
+                      icon: Iconsax.user_octagon,
+                      value: dashboardController.totalStudents.value.toString(),
+                      label: "STUDENTS",
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 24),
+
+              // 5. Main Attendance Chart Card (Sharp Ends/StrokeCap.square)
+              _buildAttendanceChart(context),
+              const SizedBox(height: 32),
+
+              // 6. Recent Classes Header
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    "RECENT CLASSES",
+                    style: TextStyle(
+                      color: TColors.slate900,
+                      fontWeight: FontWeight.w900,
+                      fontSize: 14,
+                      letterSpacing: 1.0,
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {},
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: TColors.executiveNavy,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: const Text(
+                        "VIEW ALL",
+                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 12, letterSpacing: 0.5),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+
+              // 7. Recent Classes List
+              ...dashboardController.filteredClasses.take(3).map((c) {
+                final stats = dashboardController.classStats[c.id];
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: _buildClassItem(
+                    avatar: (c.subjectName ?? 'C')[0],
+                    title: c.subjectName ?? 'Subject',
+                    subtitle: "${c.courseName} - Sem ${c.semester}",
+                    attendance: "ATTENDANCE: ${stats != null ? (stats['averageAttendance'] as double).toStringAsFixed(1) : '0.0'}%",
+                  ),
+                );
+              }).toList(),
             ],
           ),
-        );
-      }
-
-      return RefreshIndicator(
-        onRefresh: () async => await dashboardController.loadDashboardData(),
-        child: CustomScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          slivers: [
-            SliverAppBar(
-              floating: true,
-              snap: true,
-              flexibleSpace: FlexibleSpaceBar(
-                background: Obx(() => AnimatedCrossFade(
-                      duration: const Duration(milliseconds: 500),
-                      firstChild: _buildGreetingAppBar(context),
-                      secondChild: _buildRegularAppBar(context),
-                      crossFadeState: dashboardController.showGreetingAnimation.value ? CrossFadeState.showFirst : CrossFadeState.showSecond,
-                    )),
-              ),
-            ),
-            SliverPadding(
-              padding: const EdgeInsets.all(TSizes.defaultSpace),
-              sliver: SliverList(
-                delegate: SliverChildListDelegate([
-                  const ConnectionStatusWidget(),
-                  if (dashboardController.biometricAuthService.isAvailable.value) _buildBiometricStatus(context),
-                  _buildSearchField(context),
-                  const SizedBox(height: TSizes.spaceBtwSections),
-                  _buildStatsRow(context),
-                  const SizedBox(height: TSizes.spaceBtwItems),
-                  _buildAttendanceOverview(context),
-                  const SizedBox(height: TSizes.spaceBtwSections),
-                  _buildRecentClassesHeader(context),
-                  const SizedBox(height: TSizes.spaceBtwItems),
-                  _buildRecentClassesList(context),
-                ]),
-              ),
-            ),
-          ],
         ),
       );
     });
   }
 
-  Widget _buildBiometricStatus(BuildContext context) {
-    final auth = dashboardController.isAuthenticated.value;
-    final color = auth ? Colors.green : Theme.of(context).colorScheme.error;
+  Widget _buildConnectionBanner(BuildContext context) {
+    if (dashboardController.isRealtimeConnected.value) return const SizedBox.shrink();
+
     return Container(
-      margin: const EdgeInsets.only(bottom: TSizes.spaceBtwItems),
-      padding: const EdgeInsets.all(TSizes.sm + 4),
-      decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(TSizes.cardRadiusSm)),
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      decoration: BoxDecoration(
+        color: const Color(0xFFE11D48), // rose-600 for sharp warning
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: Colors.white, width: 1.0),
+      ),
       child: Row(
         children: [
-          Icon(auth ? Iconsax.shield_tick : Iconsax.shield_cross, size: 18, color: color),
-          const SizedBox(width: TSizes.sm),
-          Expanded(child: Text(auth ? 'Biometric Safety Active' : 'Biometric Security Required', style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.bold))),
-          if (!auth) TextButton(onPressed: () => dashboardController.authenticateWithBiometrics(), child: Text('UNLOCK', style: TextStyle(color: color, fontWeight: FontWeight.bold))),
+          const Icon(Iconsax.info_circle, color: Colors.white, size: 16),
+          const SizedBox(width: 8),
+          const Text(
+            "OFFLINE MODE", 
+            style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w900, letterSpacing: 1.0)
+          ),
+          const Spacer(),
+          DevTag(
+            fnName: 'reconnectRealtime()', 
+            child: GestureDetector(
+              onTap: () => dashboardController.reconnectRealtime(),
+              child: const Text(
+                "RETRY", 
+                style: TextStyle(color: Colors.white, decoration: TextDecoration.underline, fontSize: 11, fontWeight: FontWeight.w900)
+              ),
+            )
+          ),
         ],
       ),
+    );
+  }
+
+  Widget _buildHeader(BuildContext context) {
+    final user = profileController.user.value;
+    final pic = user?.profileImageUrl;
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            GestureDetector(
+              onTap: () => Get.to(() => TeacherProfileScreen()),
+              child: Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: TColors.blue100,
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(color: TColors.executiveNavy, width: 1.5),
+                  image: pic != null && pic.isNotEmpty 
+                    ? DecorationImage(image: NetworkImage(pic), fit: BoxFit.cover) 
+                    : null,
+                ),
+                alignment: Alignment.center,
+                child: (pic == null || pic.isEmpty) 
+                  ? Text(
+                      (user?.name ?? "T")[0],
+                      style: const TextStyle(color: TColors.executiveNavy, fontWeight: FontWeight.w900, fontSize: 22),
+                    ) 
+                  : null,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "HI, ${user?.name?.split(' ').first.toUpperCase() ?? 'TARUN'}",
+                  style: const TextStyle(
+                    color: TColors.slate900,
+                    fontSize: 22,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: -0.5,
+                  ),
+                ),
+                const Text(
+                  "PROFESSOR DASHBOARD",
+                  style: TextStyle(
+                    color: TColors.slate600,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            DevTag(
+              fnName: 'Get.to(Settings())',
+              child: IconButton(
+                icon: const Icon(Iconsax.setting, color: TColors.slate900, size: 28),
+                onPressed: () => Get.to(() => const TeacherSettingsScreen()),
+              ),
+            ),
+            DevTag(
+              fnName: 'loadDashboardData()',
+              child: IconButton(
+                icon: const Icon(Iconsax.refresh, color: TColors.slate900, size: 28),
+                onPressed: () => dashboardController.loadDashboardData(),
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 
   Widget _buildSearchField(BuildContext context) {
     return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(TSizes.cardRadiusLg),
-        border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
+        color: TColors.white,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: TColors.slate400, width: 1.5),
       ),
       child: TextField(
         controller: searchController,
-        decoration: InputDecoration(
-          hintText: 'Search classes or subjects...',
-          prefixIcon: Icon(Iconsax.search_normal_1, color: Theme.of(context).colorScheme.primary, size: 20),
+        onChanged: (v) => dashboardController.searchClasses(v),
+        style: const TextStyle(fontWeight: FontWeight.w800, color: TColors.slate900),
+        decoration: const InputDecoration(
+          icon: Icon(Iconsax.search_normal_1, color: TColors.slate900, size: 20),
+          hintText: "SEARCH CLASSES, STUDENTS...",
+          hintStyle: TextStyle(color: TColors.slate600, fontWeight: FontWeight.normal, fontSize: 13, letterSpacing: 0.5),
           border: InputBorder.none,
-          enabledBorder: InputBorder.none,
-          focusedBorder: InputBorder.none,
-          suffixIcon: Obx(() => isSearching.value ? IconButton(icon: const Icon(Icons.clear), onPressed: () => _clearSearch()) : const SizedBox.shrink()),
-        ),
-        onChanged: (v) {
-          isSearching.value = v.isNotEmpty;
-          dashboardController.searchClasses(v);
-        },
-      ),
-    );
-  }
-
-  void _clearSearch() {
-    searchController.clear();
-    isSearching.value = false;
-    dashboardController.searchClasses('');
-  }
-
-  Widget _buildStatsRow(BuildContext context) {
-    return Row(
-      children: [
-        StatCard(title: 'Active Classes', value: dashboardController.totalClasses.value.toString(), icon: Iconsax.teacher, color: Theme.of(context).colorScheme.primary),
-        const SizedBox(width: TSizes.spaceBtwItems),
-        StatCard(title: 'Total Students', value: dashboardController.totalStudents.value.toString(), icon: Iconsax.user_octagon, color: Theme.of(context).colorScheme.secondary),
-      ],
-    );
-  }
-
-  Widget _buildAttendanceOverview(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    return InkWell(
-      onTap: () => Get.to(AttendanceReportsScreen()),
-      borderRadius: BorderRadius.circular(TSizes.cardRadiusLg),
-      child: Container(
-        padding: const EdgeInsets.all(TSizes.lg),
-        decoration: BoxDecoration(
-          color: colorScheme.surface,
-          borderRadius: BorderRadius.circular(TSizes.cardRadiusLg),
-          border: Border.all(color: colorScheme.outlineVariant),
-        ),
-        child: Column(
-          children: [
-            Text('Collective Attendance', style: Theme.of(context).textTheme.titleSmall?.copyWith(color: colorScheme.onSurfaceVariant)),
-            const SizedBox(height: TSizes.lg),
-            CircularPercentIndicator(
-              radius: 65,
-              lineWidth: 12,
-              percent: (dashboardController.averageAttendance.value / 100).clamp(0, 1),
-              center: Text('${dashboardController.averageAttendance.value.toStringAsFixed(1)}%', style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold, color: colorScheme.primary)),
-              circularStrokeCap: CircularStrokeCap.round,
-              progressColor: colorScheme.primary,
-              backgroundColor: colorScheme.primary.withValues(alpha: 0.1),
-              animation: true,
-            ),
-            const SizedBox(height: TSizes.md),
-            Text('Average across all current semesters', style: Theme.of(context).textTheme.labelSmall),
-          ],
         ),
       ),
     );
   }
 
-  Widget _buildRecentClassesHeader(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text('Quick Access', style: Theme.of(context).textTheme.titleLarge),
-        TextButton.icon(
-          onPressed: () => Get.to(() => ClassListScreen()),
-          icon: const Icon(Iconsax.eye, size: 16),
-          label: const Text('View All'),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildRecentClassesList(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final classes = dashboardController.filteredClasses.take(3).toList();
-    if (classes.isEmpty) return const Center(child: Text('No matches found'));
-
-    return Column(
-      children: classes.map((c) {
-        final stats = dashboardController.classStats[c.id];
-        return Card(
-          margin: const EdgeInsets.only(bottom: TSizes.spaceBtwItems),
-          elevation: 0,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(TSizes.cardRadiusMd), side: BorderSide(color: colorScheme.outlineVariant)),
-          child: ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: TSizes.md, vertical: 8),
-            leading: _buildClassAvatar(context, c.subjectName?[0] ?? 'C'),
-            title: Text(c.subjectName ?? 'Subject', style: const TextStyle(fontWeight: FontWeight.bold)),
-            subtitle: Text('${c.courseName} | Sec ${c.section}', style: Theme.of(context).textTheme.labelSmall),
-            trailing: stats != null ? _buildTrailingStats(context, stats['averageAttendance'] ?? 0) : const Icon(Iconsax.arrow_right_3),
-            onTap: () => Get.to(() => ClassListScreen()),
-          ),
-        );
-      }).toList(),
-    );
-  }
-
-  Widget _buildClassAvatar(BuildContext context, String initial) {
+  Widget _buildStatCard({required IconData icon, required String value, required String label}) {
     return Container(
-      width: 45,
-      height: 45,
-      decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(TSizes.borderRadiusMd)),
-      child: Center(child: Text(initial, style: TextStyle(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.bold, fontSize: 18))),
-    );
-  }
-
-  Widget _buildTrailingStats(BuildContext context, dynamic percentage) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.end, mainAxisAlignment: MainAxisAlignment.center, children: [
-      Text('${(percentage as double).toStringAsFixed(1)}%', style: TextStyle(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.bold)),
-      const Text('Attendance', style: TextStyle(fontSize: 8)),
-    ]);
-  }
-
-  Widget _buildGreetingAppBar(BuildContext context) {
-    return _buildBaseAppBar(context, dashboardController.greeting.value, true);
-  }
-
-  Widget _buildRegularAppBar(BuildContext context) {
-    return _buildBaseAppBar(context, 'Hi, ${profileController.user.value?.name ?? 'Teacher'}', false);
-  }
-
-  Widget _buildBaseAppBar(BuildContext context, String title, bool isGreeting) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Row(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: TColors.white,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: TColors.slate400, width: 1.5),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildProfileAvatar(context),
-          const SizedBox(width: 12),
-          Expanded(child: Text(title, style: isGreeting ? Theme.of(context).textTheme.titleMedium : Theme.of(context).textTheme.titleLarge, maxLines: 1, overflow: TextOverflow.ellipsis)),
-          _buildActionButtons(context),
+          Icon(icon, color: TColors.executiveNavy, size: 32),
+          const SizedBox(height: 16),
+          Text(
+            value,
+            style: const TextStyle(color: TColors.slate900, fontWeight: FontWeight.w900, fontSize: 36),
+          ),
+          Text(
+            label,
+            style: const TextStyle(color: TColors.slate600, fontWeight: FontWeight.w800, fontSize: 12, letterSpacing: 0.5),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildProfileAvatar(BuildContext context) {
-    final pic = profileController.user.value?.profileImageUrl;
-    return GestureDetector(
-      onTap: () => Get.to(() => TeacherProfileScreen()),
-      child: Container(
-        width: 40,
-        height: 40,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          border: Border.all(color: Theme.of(context).colorScheme.primary, width: 1.5),
-          image: pic != null && pic.isNotEmpty ? DecorationImage(image: NetworkImage(pic), fit: BoxFit.cover) : const DecorationImage(image: AssetImage(TImageStrings.appLogo), fit: BoxFit.contain),
-        ),
+  Widget _buildAttendanceChart(BuildContext context) {
+    final attendance = dashboardController.averageAttendance.value;
+    
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: TColors.white,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: TColors.slate400, width: 1.5),
+      ),
+      child: Column(
+        children: [
+          const Text(
+            "AVERAGE ATTENDANCE",
+            style: TextStyle(
+              color: TColors.slate900,
+              fontWeight: FontWeight.w900,
+              fontSize: 14,
+              letterSpacing: 1.0,
+            ),
+          ),
+          const SizedBox(height: 32),
+          
+          SizedBox(
+            width: 160,
+            height: 160,
+            child: CustomPaint(
+              painter: CircularChartPainter(
+                percentage: attendance,
+                trackColor: TColors.slate50,
+                fillColor: TColors.executiveNavy,
+              ),
+              child: Center(
+                child: Text(
+                  "${attendance.toStringAsFixed(1)}%",
+                  style: const TextStyle(color: TColors.slate900, fontSize: 36, fontWeight: FontWeight.w900),
+                ),
+              ),
+            ),
+          ),
+          
+          const SizedBox(height: 32),
+          const Text(
+            "OVERALL PROGRESS ACROSS ALL SESSIONS",
+            style: TextStyle(color: TColors.slate600, fontSize: 11, fontWeight: FontWeight.w800, letterSpacing: 0.5),
+            textAlign: TextAlign.center,
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildActionButtons(BuildContext context) {
-    return Row(
-      children: [
-        IconButton(icon: const Icon(Iconsax.refresh, size: 20), onPressed: () => dashboardController.loadDashboardData()),
-        IconButton(icon: const Icon(Iconsax.setting, size: 20), onPressed: () => Get.to(() => const TeacherSettingsScreen())),
-      ],
+  Widget _buildClassItem({required String avatar, required String title, required String subtitle, required String attendance}) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: TColors.white,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: TColors.slate400, width: 1.5),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              color: TColors.blue100,
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(color: TColors.executiveNavy, width: 1.5),
+            ),
+            alignment: Alignment.center,
+            child: Text(
+              avatar,
+              style: const TextStyle(color: TColors.executiveNavy, fontWeight: FontWeight.w900, fontSize: 20),
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title.toUpperCase(),
+                  style: const TextStyle(color: TColors.slate900, fontWeight: FontWeight.w900, fontSize: 16, letterSpacing: -0.5),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  subtitle,
+                  style: const TextStyle(color: TColors.slate600, fontSize: 12, fontWeight: FontWeight.w600),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  attendance,
+                  style: const TextStyle(color: TColors.executiveNavy, fontSize: 11, fontWeight: FontWeight.w900, letterSpacing: 0.5),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 8),
+          const Icon(Iconsax.arrow_right_3, color: TColors.slate900, size: 20),
+        ],
+      ),
     );
   }
+}
+
+// --- CUSTOM PAINTER FOR CIRCULAR CHART (SHARP SQUARED ENDS) ---
+class CircularChartPainter extends CustomPainter {
+  final double percentage;
+  final Color trackColor;
+  final Color fillColor;
+
+  CircularChartPainter({
+    required this.percentage,
+    required this.trackColor,
+    required this.fillColor,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height / 2);
+    const strokeWidth = 16.0; 
+    final radius = min(size.width / 2, size.height / 2) - (strokeWidth / 2); 
+
+    // 1. Draw Background Track
+    final trackPaint = Paint()
+      ..color = trackColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth;
+    canvas.drawCircle(center, radius, trackPaint);
+
+    // 2. Draw Foreground Fill Arc (STRICTLY StrokeCap.square)
+    final fillPaint = Paint()
+      ..color = fillColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth
+      ..strokeCap = StrokeCap.square;
+
+    final sweepAngle = 2 * pi * (percentage.clamp(0.0, 100.0) / 100);
+    
+    canvas.drawArc(
+      Rect.fromCircle(center: center, radius: radius),
+      -pi / 2,
+      sweepAngle,
+      false,
+      fillPaint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }

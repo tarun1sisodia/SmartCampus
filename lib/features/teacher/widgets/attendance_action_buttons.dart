@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
-import '../../../common/utils/constants/sized.dart';
+import '../../../common/utils/constants/colors.dart';
 
 class AttendanceActionButtons extends StatelessWidget {
   final Function(String) onMarkAttendance;
@@ -12,17 +12,15 @@ class AttendanceActionButtons extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        _buildActionButton(context, 'Absent', Iconsax.close_circle, Colors.red, () => onMarkAttendance('absent')),
-        _buildActionButton(context, 'Late', Iconsax.timer_1, Colors.orange, () => onMarkAttendance('late')),
-        _buildActionButton(context, 'Excused', Iconsax.note_1, Colors.blue, () => onMarkAttendance('excused')),
-        _buildActionButton(context, 'Present', Iconsax.tick_circle, Colors.green, () => onMarkAttendance('present')),
+        _buildActionButton(context, 'ABSENT', Iconsax.close_circle, const Color(0xFFEF4444), () => onMarkAttendance('absent')),
+        _buildActionButton(context, 'LATE', Iconsax.timer_1, const Color(0xFFF59E0B), () => onMarkAttendance('late')),
+        _buildActionButton(context, 'EXCUSED', Iconsax.note_1, const Color(0xFF3B82F6), () => onMarkAttendance('excused')),
+        _buildActionButton(context, 'PRESENT', Iconsax.tick_circle, const Color(0xFF10B981), () => onMarkAttendance('present')),
       ],
     );
   }
 
   Widget _buildActionButton(BuildContext context, String label, IconData icon, Color color, VoidCallback onPressed) {
-    final colorScheme = Theme.of(context).colorScheme;
-
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -30,25 +28,28 @@ class AttendanceActionButtons extends StatelessWidget {
           color: Colors.transparent,
           child: InkWell(
             onTap: onPressed,
-            borderRadius: BorderRadius.circular(TSizes.borderRadiusLg),
-            child: Ink(
-              padding: const EdgeInsets.all(12),
+            onDoubleTap: onPressed,
+            borderRadius: BorderRadius.circular(2),
+            child: Container(
+              padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(TSizes.borderRadiusLg),
-                border: Border.all(color: color.withValues(alpha: 0.2), width: 1.5),
+                color: TColors.white,
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(color: color, width: 2.0),
               ),
-              child: Icon(icon, color: color, size: 28),
+              child: Icon(icon, color: color, size: 30),
             ),
           ),
         ),
-        const SizedBox(height: 6),
+        const SizedBox(height: 8),
         Text(
-          label,
-          style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
+          label.toUpperCase(),
+          style: TextStyle(
+            fontWeight: FontWeight.w900,
+            fontSize: 10,
+            letterSpacing: 1.0,
+            color: color,
+          ),
         ),
       ],
     );

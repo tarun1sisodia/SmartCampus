@@ -1,178 +1,186 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:iconsax/iconsax.dart';
 import '../controllers/class_controller.dart';
 import '../../../common/utils/constants/colors.dart';
 import '../../../common/utils/constants/sized.dart';
-import '../../../common/utils/helpers/helper_function.dart';
 
 class CreateClassScreen extends StatelessWidget {
   final classController = Get.find<ClassController>();
 
-  CreateClassScreen({super.key}) {
-    //print('CreateClassScreen initialized');
-  }
+  CreateClassScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    //print('CreateClassScreen build method called');
-    final dark = THelperFunction.isDarkMode(context);
-    //print('Dark mode: $dark');
-
     return Scaffold(
+      backgroundColor: TColors.slate50,
       appBar: AppBar(
         title: Text(
-          'Create New Class',
-          style: Theme.of(context).textTheme.headlineSmall,
+          'CREATE NEW CLASS',
+          style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w900, letterSpacing: 1.0),
         ),
       ),
       body: Obx(
         () {
-          //print(
-          // 'classController.isLoading: ${classController.isLoading.value}');
           return classController.isLoading.value
               ? const Center(child: CircularProgressIndicator())
-              : Center(
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.all(TSizes.defaultSpace),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Class Details',
-                          style: Theme.of(context).textTheme.titleLarge,
-                        ),
-                        const SizedBox(height: TSizes.spaceBtwItems),
+              : SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'STRUCTURAL DETAILS',
+                        style: TextStyle(fontWeight: FontWeight.w900, fontSize: 14, letterSpacing: 1.5, color: TColors.slate600),
+                      ),
+                      const SizedBox(height: 24),
 
-                        // Subject Dropdown
-                        DropdownButtonFormField(
-                          decoration: InputDecoration(
-                            labelText: 'Subject',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(
-                                TSizes.inputFieldRadius,
-                              ),
-                            ),
+                      // 1. Subject & Course Section
+                      _buildFormSection(
+                        children: [
+                          _buildDropdown<dynamic>(
+                            label: 'SUBJECT',
+                            icon: Iconsax.book_1,
+                            value: classController.selectedSubject.value,
+                            items: classController.subjects.map((subject) {
+                              return DropdownMenuItem(
+                                value: subject,
+                                child: Text(subject.name.toString().toUpperCase(), style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13)),
+                              );
+                            }).toList(),
+                            onChanged: (value) => classController.selectedSubject.value = value,
                           ),
-                          isExpanded: true,
-                          items: classController.subjects.map((subject) {
-                            //print('Subject: ${subject.name}');
-                            return DropdownMenuItem(
-                              value: subject,
-                              child: Text(
-                                subject.name,
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                              ),
-                            );
-                          }).toList(),
-                          onChanged: (value) {
-                            //print('Selected subject: $value');
-                            classController.selectedSubject.value = value;
-                          },
-                        ),
-                        const SizedBox(height: TSizes.spaceBtwInputFields),
+                          const SizedBox(height: 16),
+                          _buildDropdown<dynamic>(
+                            label: 'COURSE',
+                            icon: Iconsax.teacher,
+                            value: classController.selectedCourse.value,
+                            items: classController.courses.map((course) {
+                              return DropdownMenuItem(
+                                value: course,
+                                child: Text(course.name.toString().toUpperCase(), style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13)),
+                              );
+                            }).toList(),
+                            onChanged: (value) => classController.selectedCourse.value = value,
+                          ),
+                        ],
+                      ),
 
-                        // Course Dropdown
-                        DropdownButtonFormField(
-                          decoration: InputDecoration(
-                            labelText: 'Course',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(
-                                TSizes.inputFieldRadius,
-                              ),
-                            ),
-                          ),
-                          isExpanded: true,
-                          items: classController.courses.map((course) {
-                            //print('Course: ${course.name}');
-                            return DropdownMenuItem(
-                              value: course,
-                              child: Text(
-                                course.name,
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                              ),
-                            );
-                          }).toList(),
-                          onChanged: (value) {
-                            //print('Selected course: $value');
-                            classController.selectedCourse.value =
-                                value;
-                          },
-                        ),
-                        const SizedBox(height: TSizes.spaceBtwInputFields),
+                      const SizedBox(height: 24),
 
-                        // Semester TextField
-                        TextFormField(
-                          controller: classController.semesterController,
-                          decoration: InputDecoration(
-                            labelText: 'Semester',
-                            hintText: 'Enter semester (1-6)',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(
-                                TSizes.inputFieldRadius,
+                      // 2. Academic Metrics
+                      _buildFormSection(
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(
+                                child: _buildTextFormField(
+                                  controller: classController.semesterController,
+                                  label: 'SEMESTER',
+                                  hint: '1-8',
+                                  icon: Iconsax.calendar_tick,
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly,
+                                    FilteringTextInputFormatter.allow(RegExp(r'^[1-8]$')),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ),
-                          keyboardType: TextInputType.number,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly,
-                            FilteringTextInputFormatter.allow(
-                                RegExp(r'^[1-6]$')),
-                          ],
-                          onChanged: (value) {
-                            //print('Semester input: $value');
-                          },
-                        ),
-                        const SizedBox(height: TSizes.spaceBtwInputFields),
-
-                        // Section TextField
-                        TextFormField(
-                          controller: classController.sectionController,
-                          decoration: InputDecoration(
-                            labelText: 'Section (Optional)',
-                            hintText: 'Enter section (e.g., A, B, C)',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(
-                                TSizes.inputFieldRadius,
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: _buildTextFormField(
+                                  controller: classController.sectionController,
+                                  label: 'SECTION',
+                                  hint: 'A-Z',
+                                  icon: Iconsax.grid_5,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.allow(RegExp(r'^[A-Z]$')),
+                                  ],
+                                ),
                               ),
-                            ),
+                            ],
                           ),
-                          inputFormatters: [
-                            FilteringTextInputFormatter.allow(
-                                RegExp(r'^[A-Z]$')),
-                          ],
-                          onChanged: (value) {
-                            //print('Section input: $value');
-                          },
-                        ),
-                        const SizedBox(height: TSizes.spaceBtwSections),
+                        ],
+                      ),
 
-                        // Create Button
-                        SizedBox(
-                          width: double.infinity,
-                          height: 55,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              //print('Create Class button pressed');
-                              classController.createClass();
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  dark ? TColors.yellow : TColors.primary,
-                              foregroundColor:
-                                  dark ? TColors.dark : Colors.white,
-                            ),
-                            child: const Text('Create Class'),
-                          ),
+                      const SizedBox(height: 48),
+
+                      // 3. Execution Button
+                      SizedBox(
+                        width: double.infinity,
+                        height: 56,
+                        child: ElevatedButton(
+                          onPressed: () => classController.createClass(),
+                          child: const Text('CREATE CLASS'),
                         ),
-                      ],
-                    ),
+                      ),
+                      
+                      const SizedBox(height: 24),
+                      const Center(
+                        child: Text(
+                          'SESSION WILL BE INITIALIZED UPON COMPLETION.',
+                          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 10, color: TColors.slate500, letterSpacing: 0.5),
+                        ),
+                      ),
+                    ],
                   ),
                 );
         },
       ),
+    );
+  }
+
+  Widget _buildFormSection({required List<Widget> children}) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: TColors.white,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: TColors.slate300, width: 1.5),
+      ),
+      child: Column(children: children),
+    );
+  }
+
+  Widget _buildDropdown<T>({required String label, required IconData icon, required T? value, required List<DropdownMenuItem<T>> items, required ValueChanged<T?> onChanged}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 10, color: TColors.slate600, letterSpacing: 1.0)),
+        const SizedBox(height: 8),
+        DropdownButtonFormField<T>(
+          value: value,
+          items: items,
+          onChanged: onChanged,
+          icon: const Icon(Iconsax.arrow_down_1, color: TColors.executiveNavy),
+          decoration: InputDecoration(
+            prefixIcon: Icon(icon, color: TColors.executiveNavy, size: 20),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTextFormField({required TextEditingController controller, required String label, required String hint, required IconData icon, TextInputType? keyboardType, List<TextInputFormatter>? inputFormatters}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 10, color: TColors.slate600, letterSpacing: 1.0)),
+        const SizedBox(height: 8),
+        TextFormField(
+          controller: controller,
+          keyboardType: keyboardType,
+          inputFormatters: inputFormatters,
+          style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14),
+          decoration: InputDecoration(
+            hintText: hint,
+            prefixIcon: Icon(icon, color: TColors.executiveNavy, size: 20),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          ),
+        ),
+      ],
     );
   }
 }

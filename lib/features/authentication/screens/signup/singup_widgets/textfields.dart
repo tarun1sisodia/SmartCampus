@@ -1,5 +1,4 @@
 import 'package:smart_campus/common/utils/constants/colors.dart';
-import 'package:smart_campus/common/utils/helpers/helper_function.dart';
 import 'package:flutter/material.dart';
 
 class Textfields extends StatelessWidget {
@@ -32,7 +31,6 @@ class Textfields extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dark = THelperFunction.isDarkMode(context);
 
     // Get the current theme's InputDecorationTheme
     final inputTheme = Theme.of(context).inputDecorationTheme;
@@ -45,8 +43,8 @@ class Textfields extends StatelessWidget {
       validator: validator,
       onChanged: onChanged,
       onSaved: onSaved,
-      style: TextStyle(
-        color: dark ? Colors.white : Colors.black,
+      style: const TextStyle(
+        fontWeight: FontWeight.w600,
       ),
       decoration: InputDecoration(
         // Apply all theme properties
@@ -65,18 +63,8 @@ class Textfields extends StatelessWidget {
 
         // Custom properties for this specific field
         labelText: labelText,
-        prefixIcon: IconTheme(
-          data: IconThemeData(
-            color: dark ? TColors.yellow : TColors.primary,
-          ),
-          child: prefixIcon,
-        ),
-        suffixIcon: suffixIcon != null
-            ? IconTheme(
-                data: IconThemeData(color: iconColor),
-                child: suffixIcon!,
-              )
-            : null,
+        prefixIcon: prefixIcon,
+        suffixIcon: suffixIcon,
       ),
     );
   }

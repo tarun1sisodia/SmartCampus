@@ -30,7 +30,7 @@ class TSizes {
 
   // BUTTON SIZES - For appropriate touch targets (Fitts's Law)
   static const double buttonHeight = 38.0; // Minimum recommended touch target
-  static const double buttonRadius = 10.0;
+  static const double buttonRadius = 4.0;
   static const double buttonWidth = 110.0;
   static const double buttonElevation = 2.0;
 
@@ -48,37 +48,37 @@ class TSizes {
   static const double spaceBtwSections = 32.0;
   static const double spaceBtwInputFields = 16.0;
 
-  // BORDER RADIUS - For consistent component styling (Law of Similarity)
-  static const double borderRadiusXs = 4.0;
-  static const double borderRadiusSm = 8.0;
-  static const double borderRadiusMd = 12.0;
-  static const double borderRadiusLg = 16.0;
-  static const double borderRadiusXl = 20.0;
+  // BORDER RADIUS - Sharp geometric corners
+  static const double borderRadiusXs = 2.0;
+  static const double borderRadiusSm = 4.0;
+  static const double borderRadiusMd = 4.0;
+  static const double borderRadiusLg = 4.0;
+  static const double borderRadiusXl = 4.0;
 
-  // DIVIDER HEIGHT - For subtle separation
-  static const double dividerHeight = 1.0;
-  static const double dividerThickness = 1.0;
+  // DIVIDER HEIGHT - Structural separation
+  static const double dividerHeight = 1.5;
+  static const double dividerThickness = 1.5;
 
   // PRODUCT ITEM DIMENSIONS - For consistent product display
   static const double productImageSize = 120.0;
-  static const double productImageRadius = 16.0;
+  static const double productImageRadius = 4.0;
   static const double productItemHeight = 160.0;
 
   // INPUT FIELD - For consistent form elements (Fitts's Law)
-  static const double inputFieldRadius = 12.0;
+  static const double inputFieldRadius = 4.0;
   static const double inputFieldHeight = 56.0;
   static const double inputIconSize = 24.0;
 
   // CARD SIZES - For consistent card styling (Law of Common Region)
-  static const double cardRadiusLg = 16.0;
-  static const double cardRadiusMd = 12.0;
-  static const double cardRadiusSm = 8.0;
-  static const double cardRadiusXs = 6.0;
-  static const double cardElevation = 2.0;
-  static const double cardBorderWidth = 1.0;
+  static const double cardRadiusLg = 4.0;
+  static const double cardRadiusMd = 4.0;
+  static const double cardRadiusSm = 4.0;
+  static const double cardRadiusXs = 2.0;
+  static const double cardElevation = 0.0; // Remove all elevation
+  static const double cardBorderWidth = 1.5; // Distinct structural lines
 
   // CHIP RADIUS - For consistent chip styling
-  static const double chipRadius = 8.0;
+  static const double chipRadius = 4.0;
 
   // IMAGE CAROUSEL HEIGHT - For consistent carousel display
   static const double imageCarouselHeight = 200.0;

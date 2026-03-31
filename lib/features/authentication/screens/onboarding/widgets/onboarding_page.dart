@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-
-import '../../../../../common/utils/constants/sized.dart';
-import '../../../../../common/utils/helpers/helper_function.dart';
+import 'package:smart_campus/common/utils/constants/sized.dart';
+import 'package:smart_campus/common/utils/constants/colors.dart';
+import 'package:smart_campus/common/utils/helpers/helper_function.dart';
 
 class OnboardingPage extends StatelessWidget {
   const OnboardingPage({
@@ -12,6 +12,7 @@ class OnboardingPage extends StatelessWidget {
   });
 
   final String image, title, subtitle;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -24,14 +25,14 @@ class OnboardingPage extends StatelessWidget {
             image: AssetImage(image),
           ),
           Text(
-            title,
-            style: Theme.of(context).textTheme.headlineMedium,
+            title.toUpperCase(),
+            style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 24, letterSpacing: -0.5, color: TColors.slate900),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: TSizes.spaceBtwItems),
           Text(
-            subtitle,
-            style: Theme.of(context).textTheme.bodyMedium,
+            subtitle.toUpperCase(),
+            style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: TColors.slate600, letterSpacing: 0.5),
             textAlign: TextAlign.center,
           ),
         ],

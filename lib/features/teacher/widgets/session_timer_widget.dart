@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
+import '../../../common/utils/constants/colors.dart';
 
 class SessionTimerWidget extends StatelessWidget {
   final String remainingTime;
@@ -14,41 +16,41 @@ class SessionTimerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
-    // Use current theme colors for a consistent look
-    final primaryColor = colorScheme.primary;
-    final secondaryColor = colorScheme.secondary;
-    final errorColor = colorScheme.error;
-
-    // Choose icon based on mode
-    final icon = isCountdownMode
-        ? (isSessionActive ? Icons.timer : Icons.timer_off)
-        : Icons.hourglass_top;
-
-    // Choose color based on status
-    final color = isSessionActive ? primaryColor : errorColor;
+    // Choose status configuration
+    final bool isEnded = remainingTime.contains('Ended') || !isSessionActive;
+    final Color statusColor = isEnded ? const Color(0xFFE11D48) : TColors.executiveNavy;
+    final IconData icon = isCountdownMode ? Iconsax.timer_1 : Iconsax.watch5; //watch5 replace with stopwatch
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(icon, color: color, size: 20),
-        const SizedBox(width: 8),
+        Icon(icon, color: statusColor, size: 20),
+        const SizedBox(width: 12),
         Text(
-          isCountdownMode ? 'Remaining:' : 'Duration:',
-          style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-                fontWeight: FontWeight.w600,
-              ),
+          (isCountdownMode ? 'REMAINING:' : 'DURATION:').toUpperCase(),
+          style: const TextStyle(
+            color: TColors.slate600,
+            fontWeight: FontWeight.w900,
+            fontSize: 11,
+            letterSpacing: 1.0,
+          ),
         ),
-        const SizedBox(width: 8),
-        Text(
-          remainingTime,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                color: color,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 0.5,
-              ),
+        const SizedBox(width: 12),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+          decoration: BoxDecoration(
+            color: statusColor,
+            borderRadius: BorderRadius.circular(2),
+          ),
+          child: Text(
+            remainingTime.toUpperCase(),
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w900,
+              fontSize: 14,
+              letterSpacing: 0.5,
+            ),
+          ),
         ),
       ],
     );

@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../../common/utils/constants/colors.dart';
 import '../../../common/utils/constants/sized.dart';
-import '../../../common/utils/helpers/helper_function.dart';
 import '../../../common/utils/helpers/snackbar_helper.dart';
 
 class ImportDataScreen extends StatelessWidget {
@@ -11,292 +10,181 @@ class ImportDataScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dark = THelperFunction.isDarkMode(context);
     final RxBool isImporting = false.obs;
     final RxString selectedFileType = 'Excel'.obs;
     final RxBool fileSelected = false.obs;
     final RxString fileName = ''.obs;
+    final RxBool replaceData = false.obs;
+    final RxBool skipHeader = true.obs;
 
     return Scaffold(
+      backgroundColor: TColors.slate50,
       appBar: AppBar(
         title: Text(
-          'Import Data',
-          style: Theme.of(context).textTheme.headlineSmall,
+          'IMPORT DATA',
+          style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w900, letterSpacing: 1.0),
         ),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(TSizes.defaultSpace),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Import Options',
-              style: Theme.of(
-                context,
-              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+            const Text(
+              'IMPORT PARAMETERS',
+              style: TextStyle(fontWeight: FontWeight.w900, fontSize: 14, letterSpacing: 1.5, color: TColors.slate600),
             ),
-            const SizedBox(height: TSizes.spaceBtwItems),
+            const SizedBox(height: 16),
 
-            // Import format selection
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(TSizes.md),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+            // 1. Format Selection
+            _buildSection(
+              title: 'FILE FORMAT',
+              child: Obx(
+                () => Row(
                   children: [
-                    Text(
-                      'File Format',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                    _buildFormatOption(
+                      format: 'EXCEL',
+                      icon: Iconsax.document_text,
+                      color: const Color(0xFF10B981),
+                      isSelected: selectedFileType.value == 'Excel',
+                      onTap: () => selectedFileType.value = 'Excel',
                     ),
-                    const SizedBox(height: TSizes.spaceBtwItems),
-                    Obx(
-                      () => Row(
-                        children: [
-                          _buildFormatOption(
-                            context,
-                            format: 'Excel',
-                            icon: Iconsax.document_text,
-                            color: Colors.green,
-                            isSelected: selectedFileType.value == 'Excel',
-                            onTap: () => selectedFileType.value = 'Excel',
-                          ),
-                          const SizedBox(width: TSizes.spaceBtwItems),
-                          _buildFormatOption(
-                            context,
-                            format: 'CSV',
-                            icon: Iconsax.document_text_1,
-                            color: Colors.blue,
-                            isSelected: selectedFileType.value == 'CSV',
-                            onTap: () => selectedFileType.value = 'CSV',
-                          ),
-                        ],
-                      ),
+                    const SizedBox(width: 12),
+                    _buildFormatOption(
+                      format: 'CSV',
+                      icon: Iconsax.document_text_1,
+                      color: const Color(0xFF3B82F6),
+                      isSelected: selectedFileType.value == 'CSV',
+                      onTap: () => selectedFileType.value = 'CSV',
                     ),
                   ],
                 ),
               ),
             ),
 
-            const SizedBox(height: TSizes.spaceBtwItems),
+            const SizedBox(height: 16),
 
-            // File selection
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(TSizes.md),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Select File',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                    ),
-                    const SizedBox(height: TSizes.spaceBtwItems),
-                    Obx(
-                      () => fileSelected.value
-                          ? Container(
-                              padding: const EdgeInsets.all(TSizes.md),
-                              decoration: BoxDecoration(
-                                color: Colors.grey.withAlpha(26),
-                                borderRadius: BorderRadius.circular(
-                                  TSizes.borderRadiusMd,
-                                ),
-                                border: Border.all(
-                                  color: Colors.grey.withAlpha(77),
-                                ),
-                              ),
-                              child: Row(
+            // 2. File dropzone
+            _buildSection(
+              title: 'SELECT FILE',
+              child: Obx(
+                () => fileSelected.value
+                    ? Container(
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: TColors.white,
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(color: TColors.executiveNavy, width: 2.0),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              selectedFileType.value == 'Excel' ? Iconsax.document_text : Iconsax.document_text_1,
+                              color: TColors.executiveNavy,
+                              size: 32,
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Icon(
-                                    selectedFileType.value == 'Excel'
-                                        ? Iconsax.document_text
-                                        : Iconsax.document_text_1,
-                                    color: selectedFileType.value == 'Excel'
-                                        ? Colors.green
-                                        : Colors.blue,
+                                  Text(
+                                    fileName.value.toUpperCase(),
+                                    style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 13, color: TColors.slate900),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                  const SizedBox(width: TSizes.spaceBtwItems),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          fileName.value,
-                                          style: Theme.of(
-                                            context,
-                                          ).textTheme.bodyMedium?.copyWith(
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        Text(
-                                          'Ready to import',
-                                          style: Theme.of(
-                                            context,
-                                          ).textTheme.bodySmall,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  IconButton(
-                                    icon: const Icon(
-                                      Iconsax.close_circle,
-                                      color: Colors.red,
-                                    ),
-                                    onPressed: () {
-                                      fileSelected.value = false;
-                                      fileName.value = '';
-                                    },
-                                  ),
+                                  const Text('READY TO ANALYZE', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 10, color: Color(0xFF10B981))),
                                 ],
                               ),
-                            )
-                          : InkWell(
-                              onTap: () {
-                                // Simulate file selection
-                                fileSelected.value = true;
-                                fileName.value =
-                                    'student_data.${selectedFileType.value.toLowerCase()}';
-                              },
-                              borderRadius: BorderRadius.circular(
-                                TSizes.borderRadiusMd,
-                              ),
-                              child: Container(
-                                width: double.infinity,
-                                padding: const EdgeInsets.all(TSizes.lg),
-                                decoration: BoxDecoration(
-                                  color: Colors.grey.withAlpha(26),
-                                  borderRadius: BorderRadius.circular(
-                                    TSizes.borderRadiusMd,
-                                  ),
-                                  border: Border.all(
-                                    color: Colors.grey.withAlpha(77),
-                                    style: BorderStyle.solid,
-                                  ),
-                                ),
-                                child: Column(
-                                  children: [
-                                    Icon(
-                                      Iconsax.import,
-                                      size: 48,
-                                      color: dark
-                                          ? TColors.yellow
-                                          : TColors.primary,
-                                    ),
-                                    const SizedBox(
-                                      height: TSizes.spaceBtwItems,
-                                    ),
-                                    Text(
-                                      'Click to select a file',
-                                      style: Theme.of(
-                                        context,
-                                      ).textTheme.titleMedium,
-                                    ),
-                                    const SizedBox(height: TSizes.xs),
-                                    Text(
-                                      'Supported formats: ${selectedFileType.value}',
-                                      style: Theme.of(
-                                        context,
-                                      ).textTheme.bodySmall,
-                                    ),
-                                  ],
-                                ),
-                              ),
                             ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            const SizedBox(height: TSizes.spaceBtwItems),
-
-            // Import options
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(TSizes.md),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Import Options',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
+                            IconButton(
+                              icon: const Icon(Iconsax.close_circle, color: Color(0xFFE11D48)),
+                              onPressed: () {
+                                fileSelected.value = false;
+                                fileName.value = '';
+                              },
+                            ),
+                          ],
+                        ),
+                      )
+                    : InkWell(
+                        onTap: () {
+                          fileSelected.value = true;
+                          fileName.value = 'STUDENT_ROSTER_Q2.${selectedFileType.value.toLowerCase()}';
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(vertical: 40),
+                          decoration: BoxDecoration(
+                            color: TColors.white,
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(color: TColors.slate400, width: 2.0, style: BorderStyle.solid),
                           ),
-                    ),
-                    const SizedBox(height: TSizes.spaceBtwItems),
-                    CheckboxListTile(
-                      title: const Text('Replace existing data'),
-                      subtitle: const Text(
-                        'Warning: This will overwrite any existing data',
+                          child: Column(
+                            children: [
+                              const Icon(Iconsax.import, size: 48, color: TColors.slate300),
+                              const SizedBox(height: 16),
+                              const Text('SELECT SOURCE FILE', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 14)),
+                              const SizedBox(height: 4),
+                              Text(
+                                'SUPPORTED: ${selectedFileType.value.toUpperCase()}',
+                                style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 10, color: TColors.slate600),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                      value: false,
-                      onChanged: (value) {
-                        // Toggle replace option
-                      },
-                      activeColor: dark ? TColors.yellow : TColors.primary,
-                    ),
-                    CheckboxListTile(
-                      title: const Text('Skip header row'),
-                      subtitle: const Text(
-                        'If your file contains column headers',
-                      ),
-                      value: true,
-                      onChanged: (value) {
-                        // Toggle skip header option
-                      },
-                      activeColor: dark ? TColors.yellow : TColors.primary,
-                    ),
-                  ],
-                ),
               ),
             ),
 
-            const SizedBox(height: TSizes.spaceBtwSections),
+            const SizedBox(height: 16),
 
-            // Import button
+            // 3. Configuration
+            _buildSection(
+              title: 'CONFIGURATION',
+              child: Column(
+                children: [
+                  _buildSharpToggle(
+                    label: 'REPLACE EXISTING DATA',
+                    subtitle: 'WARNING: OVERWRITES LOCAL CLASHES',
+                    value: replaceData,
+                  ),
+                  const SizedBox(height: 8),
+                  _buildSharpToggle(
+                    label: 'SKIP HEADER ROW',
+                    subtitle: 'IGNORES FIRST ROW OF FILE',
+                    value: skipHeader,
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 40),
+
+            // 4. Action Button
             SizedBox(
               width: double.infinity,
-              height: 55,
+              height: 56,
               child: Obx(
                 () => ElevatedButton.icon(
                   onPressed: (!fileSelected.value || isImporting.value)
                       ? null
                       : () {
-                          // Start import
                           isImporting.value = true;
-
-                          // Simulate import process
                           Future.delayed(const Duration(seconds: 2), () {
                             isImporting.value = false;
-                            TSnackBar.showSuccess(
-                              message: 'Data imported successfully',
-                            );
+                            TSnackBar.showSuccess(message: 'DATA IMPORTED SUCCESSFULLY');
                             Get.back();
                           });
                         },
                   icon: isImporting.value
-                      ? const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Colors.white,
-                          ),
-                        )
-                      : const Icon(Iconsax.import),
-                  label: Text(
-                    isImporting.value ? 'Importing...' : 'Import Data',
-                  ),
+                      ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 3, color: Colors.white))
+                      : const Icon(Iconsax.import, size: 20),
+                  label: Text(isImporting.value ? 'IMPORTING...' : 'INITIATE IMPORT'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: dark ? TColors.yellow : TColors.primary,
-                    foregroundColor: dark ? TColors.dark : Colors.white,
-                    disabledBackgroundColor: Colors.grey,
+                    backgroundColor: TColors.executiveNavy,
+                    disabledBackgroundColor: TColors.slate300,
                   ),
                 ),
               ),
@@ -307,46 +195,84 @@ class ImportDataScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildFormatOption(
-    BuildContext context, {
-    required String format,
-    required IconData icon,
-    required Color color,
-    required bool isSelected,
-    required VoidCallback onTap,
-  }) {
+  Widget _buildSection({required String title, required Widget child}) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: TColors.white,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: TColors.slate400, width: 1.5),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 11, letterSpacing: 1.0, color: TColors.slate900)),
+          const SizedBox(height: 16),
+          child,
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFormatOption({required String format, required IconData icon, required Color color, required bool isSelected, required VoidCallback onTap}) {
     return Expanded(
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(TSizes.borderRadiusMd),
         child: Container(
-          padding: const EdgeInsets.symmetric(
-            vertical: TSizes.md,
-            horizontal: TSizes.sm,
-          ),
+          padding: const EdgeInsets.symmetric(vertical: 16),
           decoration: BoxDecoration(
-            color: isSelected ? color.withAlpha(26) : Colors.transparent,
-            borderRadius: BorderRadius.circular(TSizes.borderRadiusMd),
-            border: Border.all(
-              color: isSelected ? color : Colors.grey.withAlpha(77),
-              width: isSelected ? 2 : 1,
-            ),
+            color: isSelected ? color.withOpacity(0.1) : TColors.slate50,
+            borderRadius: BorderRadius.circular(4),
+            border: Border.all(color: isSelected ? color : TColors.slate300, width: 2.0),
           ),
           child: Column(
             children: [
-              Icon(icon, color: color),
-              const SizedBox(height: TSizes.xs),
+              Icon(icon, color: isSelected ? color : TColors.slate400, size: 26),
+              const SizedBox(height: 8),
               Text(
                 format,
-                style: TextStyle(
-                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                  color: isSelected ? color : null,
-                ),
+                style: TextStyle(fontWeight: FontWeight.w900, fontSize: 12, color: isSelected ? color : TColors.slate600),
               ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Widget _buildSharpToggle({required String label, required String subtitle, required RxBool value}) {
+    return Obx(() => InkWell(
+      onTap: () => value.toggle(),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+        decoration: BoxDecoration(
+          color: TColors.slate50,
+          borderRadius: BorderRadius.circular(4),
+          border: Border.all(color: TColors.slate200, width: 1.0),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(label, style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 12, color: TColors.slate900)),
+                Text(subtitle, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 8, color: TColors.slate500)),
+              ],
+            ),
+            Container(
+              width: 24,
+              height: 24,
+              decoration: BoxDecoration(
+                color: value.value ? TColors.executiveNavy : Colors.transparent,
+                border: Border.all(color: TColors.executiveNavy, width: 2.0),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: value.value ? const Icon(Icons.check, size: 16, color: Colors.white) : null,
+            ),
+          ],
+        ),
+      ),
+    ));
   }
 }

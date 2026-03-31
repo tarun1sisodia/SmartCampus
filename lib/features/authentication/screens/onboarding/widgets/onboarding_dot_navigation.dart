@@ -1,10 +1,9 @@
-import '../../../controllers/controllers_onboarding/onboarding_controller.dart';
-import '../../../../../common/utils/constants/colors.dart';
-import '../../../../../common/utils/constants/sized.dart';
-import '../../../../../common/utils/device/device_utility.dart';
-import '../../../../../common/utils/helpers/helper_function.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:smart_campus/common/utils/constants/colors.dart';
+import 'package:smart_campus/common/utils/constants/sized.dart';
+import 'package:smart_campus/common/utils/device/device_utility.dart';
+import 'package:smart_campus/features/authentication/controllers/controllers_onboarding/onboarding_controller.dart';
 
 class OnboardingDotNavigation extends StatelessWidget {
   const OnboardingDotNavigation({super.key});
@@ -12,21 +11,24 @@ class OnboardingDotNavigation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = OnboardingController.instance;
-    final dark = THelperFunction.isDarkMode(context);
+
     return Positioned(
       bottom: DeviceUtility.getBottomNavigationBarHeight() + 25,
       left: TSizes.defaultSpace,
-
       child: SmoothPageIndicator(
-        effect: ExpandingDotsEffect(
-          dotHeight: 7,
-          dotWidth: 10,
-          dotColor: dark ? TColors.textPrimary : TColors.buttonPrimary,
-          activeDotColor: dark ? TColors.light : TColors.dark,
-        ),
+        count: 3,
         controller: controller.pageController,
         onDotClicked: controller.dotNavigationClick,
-        count: 3,
+        effect: const ExpandingDotsEffect(
+          activeDotColor: TColors.executiveNavy,
+          dotColor: TColors.slate300,
+          dotHeight: 8,
+          dotWidth: 8,
+          expansionFactor: 4,
+          spacing: 8,
+          // Sharp edges (Fixed radius)
+          radius: 2,
+        ),
       ),
     );
   }

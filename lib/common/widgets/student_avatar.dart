@@ -38,20 +38,14 @@ class StudentAvatar extends StatelessWidget {
             height: size,
             decoration: BoxDecoration(
               color: colorScheme.surfaceContainerHighest,
-              shape: BoxShape.circle,
+              borderRadius: BorderRadius.circular(4),
               border: Border.all(
                 color: colorScheme.primary,
                 width: 1.5,
               ),
-              boxShadow: [
-                BoxShadow(
-                  color: colorScheme.primary.withValues(alpha: 0.1),
-                  blurRadius: 4,
-                  spreadRadius: 1,
-                ),
-              ],
             ),
-            child: ClipOval(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(2.5), // Slightly less than container to fit inside border
               child: hasImage
                   ? CachedNetworkImage(
                       imageUrl: ApiConstants.optimizeImageUrl(imageUrl!, width: size.toInt() * 2, height: size.toInt() * 2),
@@ -72,8 +66,8 @@ class StudentAvatar extends StatelessWidget {
                 padding: const EdgeInsets.all(4),
                 decoration: BoxDecoration(
                   color: colorScheme.primary,
-                  shape: BoxShape.circle,
-                  border: Border.all(color: colorScheme.surface, width: 2),
+                  borderRadius: BorderRadius.circular(2),
+                  border: Border.all(color: colorScheme.surface, width: 1.5),
                 ),
                 child: Icon(
                   Iconsax.camera,
@@ -89,7 +83,7 @@ class StudentAvatar extends StatelessWidget {
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.black.withValues(alpha: 0.4),
-                  shape: BoxShape.circle,
+                  borderRadius: BorderRadius.circular(4),
                 ),
                 child: Center(
                   child: SizedBox(
@@ -117,8 +111,9 @@ class StudentAvatar extends StatelessWidget {
           name.isNotEmpty ? name.substring(0, 1).toUpperCase() : "?",
           style: TextStyle(
             fontSize: size * 0.4,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w900,
             color: colorScheme.primary,
+            letterSpacing: -0.5,
           ),
         ),
       ),

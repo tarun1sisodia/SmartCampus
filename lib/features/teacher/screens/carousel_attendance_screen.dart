@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import '../../../common/utils/constants/colors.dart';
 import '../../../common/utils/constants/text_strings.dart';
 import '../../../common/utils/device/device_utility.dart';
+import '../../../common/utils/helpers/snackbar_helper.dart';
 import '../controllers/carousel_attendance_controller.dart';
 import '../widgets/session_timer_widget.dart';
 import '../widgets/swipeable_student_card.dart';
@@ -24,18 +26,22 @@ class CarouselAttendanceScreen extends StatelessWidget {
     final isLandscape = DeviceUtility.isLandscapeOrientation(context);
 
     return Scaffold(
+      backgroundColor: TColors.slate50,
       appBar: AppBar(
-        title: const Text('Swift Attendance'),
+        title: Text(
+          'SWIFT ATTENDANCE', 
+          style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w900, letterSpacing: 1.0)
+        ),
         actions: [
           IconButton(
             onPressed: () {
               if (carouselAttendanceController.attendanceController.currentSessionId.value.isNotEmpty) {
                 carouselAttendanceController.attendanceController.loadStudentsForSession();
               } else {
-                Get.snackbar('No Session', 'Select a session first', snackPosition: SnackPosition.BOTTOM);
+                TSnackBar.showInfo(message: 'SELECT A SESSION FIRST', title: 'NO SESSION');
               }
             },
-            icon: const Icon(Iconsax.refresh),
+            icon: const Icon(Iconsax.refresh, color: TColors.slate900),
           ),
         ],
       ),
@@ -47,19 +53,19 @@ class CarouselAttendanceScreen extends StatelessWidget {
         }
 
         if (attendanceController.currentSessionId.value.isEmpty) {
-          return _buildEmptyState(context, Iconsax.calendar_1, 'No Session Selected', 'Please select an attendance session');
+          return _buildEmptyState(context, Iconsax.calendar_1, 'NO SESSION SELECTED', 'PLEASE SELECT AN ATTENDANCE SESSION');
         }
 
         if (attendanceController.students.isEmpty) {
-          return _buildEmptyState(context, Iconsax.people, 'No Students Found', 'Add students to this class first');
+          return _buildEmptyState(context, Iconsax.people, 'NO STUDENTS FOUND', 'ADD STUDENTS TO THIS CLASS FIRST');
         }
 
         return Column(
           children: [
-            // Timer View
+            // 1. Timer View (Sharp Header)
             _buildTimerSection(context),
 
-            // Carousel Section
+            // 2. Carousel Section (Sharp Cards)
             Expanded(
               child: CarouselSlider.builder(
                 carouselController: carouselController,
@@ -83,12 +89,12 @@ class CarouselAttendanceScreen extends StatelessWidget {
               ),
             ),
 
-            // Navigation Indicators
+            // 3. Navigation Indicators (Bold & Structural)
             _buildNavigationRow(context, attendanceController.students.length),
 
-            // Action Buttons
+            // 4. Action Buttons (Sharp Square Icons)
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: TSizes.defaultSpace, vertical: TSizes.md),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
               child: AttendanceActionButtons(
                 onMarkAttendance: (status) {
                   final student = carouselAttendanceController.currentStudent;
@@ -100,9 +106,9 @@ class CarouselAttendanceScreen extends StatelessWidget {
               ),
             ),
 
-            // Submit Button
-            _buildSubmitButton(context, isMobile),
-            SizedBox(height: isMobile ? TSizes.md : TSizes.lg),
+            // 5. Submit Button (Full Width, Sharp)
+            _buildSubmitButton(context),
+            const SizedBox(height: 24),
           ],
         );
       }),
@@ -119,12 +125,15 @@ class CarouselAttendanceScreen extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, size: 64, color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5)),
-          const SizedBox(height: TSizes.md),
-          Text(title, style: Theme.of(context).textTheme.titleMedium),
-          Text(subtitle, style: Theme.of(context).textTheme.bodySmall, textAlign: TextAlign.center),
-          const SizedBox(height: TSizes.lg),
-          ElevatedButton(onPressed: () => Get.to(() => ClassListScreen()), child: const Text('Go to Classes')),
+          Icon(icon, size: 64, color: TColors.slate300),
+          const SizedBox(height: 16),
+          Text(title, style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 18, color: TColors.slate900)),
+          Text(subtitle, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 12, color: TColors.slate600), textAlign: TextAlign.center),
+          const SizedBox(height: 32),
+          ElevatedButton(
+            onPressed: () => Get.to(() => ClassListScreen()), 
+            child: const Text('GO TO CLASSES')
+          ),
         ],
       ),
     );
@@ -138,12 +147,15 @@ class CarouselAttendanceScreen extends StatelessWidget {
       final isEnded = timerText.contains('Ended');
 
       return Container(
-        margin: const EdgeInsets.all(TSizes.defaultSpace),
-        padding: const EdgeInsets.symmetric(horizontal: TSizes.md, vertical: TSizes.sm),
+        margin: const EdgeInsets.all(24),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          color: isEnded ? Colors.red.withValues(alpha: 0.1) : Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.4),
-          borderRadius: BorderRadius.circular(TSizes.borderRadiusMd),
-          border: Border.all(color: isEnded ? Colors.red.withValues(alpha: 0.3) : Theme.of(context).colorScheme.primary.withValues(alpha: 0.3)),
+          color: isEnded ? const Color(0xFFE11D48).withOpacity(0.1) : TColors.blue100.withOpacity(0.4),
+          borderRadius: BorderRadius.circular(4),
+          border: Border.all(
+            color: isEnded ? const Color(0xFFE11D48) : TColors.executiveNavy, 
+            width: 1.5
+          ),
         ),
         child: SessionTimerWidget(remainingTime: timerText, isSessionActive: !isEnded, isCountdownMode: isCountdown),
       );
@@ -152,7 +164,7 @@ class CarouselAttendanceScreen extends StatelessWidget {
 
   Widget _buildNavigationRow(BuildContext context, int total) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: TSizes.sm),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -161,35 +173,45 @@ class CarouselAttendanceScreen extends StatelessWidget {
               carouselAttendanceController.moveToPreviousStudent();
               carouselController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
             },
-            icon: Icon(Icons.arrow_back_ios, size: 18, color: carouselAttendanceController.isFirstStudent ? Colors.grey : Theme.of(context).colorScheme.primary),
+            icon: Icon(Icons.arrow_back_ios, size: 20, color: carouselAttendanceController.isFirstStudent ? TColors.slate300 : TColors.executiveNavy),
           ),
-          Obx(() => Text('${carouselAttendanceController.currentIndex.value + 1} / $total', style: Theme.of(context).textTheme.labelLarge?.copyWith(fontWeight: FontWeight.bold))),
+          Obx(() => Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+            decoration: BoxDecoration(
+              color: TColors.executiveNavy,
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Text(
+              '${carouselAttendanceController.currentIndex.value + 1} / $total', 
+              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 13, letterSpacing: 1.0)
+            ),
+          )),
           IconButton(
             onPressed: carouselAttendanceController.isLastStudent ? null : () {
               carouselAttendanceController.moveToNextStudent();
               carouselController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
             },
-            icon: Icon(Icons.arrow_forward_ios, size: 18, color: carouselAttendanceController.isLastStudent ? Colors.grey : Theme.of(context).colorScheme.primary),
+            icon: Icon(Icons.arrow_forward_ios, size: 20, color: carouselAttendanceController.isLastStudent ? TColors.slate300 : TColors.executiveNavy),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildSubmitButton(BuildContext context, bool isMobile) {
+  Widget _buildSubmitButton(BuildContext context) {
     return Obx(() => carouselAttendanceController.attendanceController.isStudentsLoaded.value
-        ? Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: TSizes.defaultSpace),
-            child: ElevatedButton.icon(
-              onPressed: () => _showSubmitConfirmation(context),
-              icon: const Icon(Iconsax.tick_square, size: 20),
-              label: const Text('Finalize Attendance'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.primary,
-                foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                elevation: 4,
+        ? Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: SizedBox(
+              width: double.infinity,
+              height: 56,
+              child: ElevatedButton.icon(
+                onPressed: () => _showSubmitConfirmation(context),
+                icon: const Icon(Iconsax.tick_square, size: 20),
+                label: const Text('FINALIZE ATTENDANCE'),
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 0),
+                ),
               ),
             ),
           )
@@ -197,17 +219,29 @@ class CarouselAttendanceScreen extends StatelessWidget {
   }
 
   void _showSubmitConfirmation(BuildContext context) {
-    Get.defaultDialog(
-      title: 'Submit Attendance',
-      middleText: 'Ready to finalize attendance for this session?',
-      textConfirm: 'Yes, Submit',
-      textCancel: 'Wait',
-      confirmTextColor: Colors.white,
-      buttonColor: Theme.of(context).colorScheme.primary,
-      onConfirm: () {
-        Get.back();
-        carouselAttendanceController.submitAttendance();
-      },
+    Get.dialog(
+      AlertDialog(
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero, side: BorderSide(color: TColors.executiveNavy, width: 2.0)),
+        backgroundColor: TColors.white,
+        title: const Text('SUBMIT ATTENDANCE', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18)),
+        content: const Text(
+          'ARE YOU READY TO FINALIZE ATTENDANCE FOR THIS SESSION? DATA WILL BE SYNCED IMMEDIATELY.',
+          style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: TColors.slate600),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(), 
+            child: const Text('WAIT', style: TextStyle(color: TColors.slate600, fontWeight: FontWeight.w900))
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Get.back();
+              carouselAttendanceController.submitAttendance();
+            },
+            child: const Text('YES, SUBMIT'),
+          ),
+        ],
+      ),
     );
   }
 }

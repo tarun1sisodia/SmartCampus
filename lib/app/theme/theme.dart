@@ -19,7 +19,7 @@ class TAppTheme {
     
     return ThemeData(
       useMaterial3: true,
-      fontFamily: 'Poppins',
+      fontFamily: 'Inter', // Geometric sans-serif
       brightness: brightness,
       primaryColor: config.primary,
       scaffoldBackgroundColor: config.background,
@@ -57,8 +57,7 @@ class TAppTheme {
     );
   }
 
-  // Default themes for backward compatibility
-  // Using themes[7] (Executive Navy) and themes[1] (Onyx Brutalist) as defaults
+  // Default themes: 7 (Executive Navy) and 11 (Deep Ocean Cyan)
   static ThemeData lightTheme = createTheme(AppThemes.themes[7]); 
-  static ThemeData darkTheme = createTheme(AppThemes.themes[1]);
+  static ThemeData darkTheme = createTheme(AppThemes.themes[11]);
 }

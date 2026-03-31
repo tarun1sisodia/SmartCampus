@@ -8,24 +8,40 @@ import 'package:flutter/material.dart';
 class TColors {
   TColors._();
 
-  // PRIMARY COLOR PALETTE - Core brand colors (Hick's Law - limited choices)
-  static const Color primary = Color(0xFF4B68FF);
-  static const Color primaryDark = Color(0xFF3451E0);
-  static const Color primaryLight = Color(0xFF6F85FF);
+  // CORPORATE COLOR PALETTE - Sharp, Bold & High Contrast
+  static const Color executiveNavy = Color(0xFF1E3A8A); // blue-900
+  static const Color deepOceanCyan = Color(0xFF22D3EE); // cyan-400
+  static const Color slate50 = Color(0xFFF8FAFC);
+  static const Color slate200 = Color(0xFFE2E8F0);
+  static const Color slate300 = Color(0xFFCBD5E1);
+  static const Color slate400 = Color(0xFF94A3B8);
+  static const Color slate500 = Color(0xFF64748B);
+  static const Color slate600 = Color(0xFF475569);
+  static const Color slate700 = Color(0xFF334155);
+  static const Color slate800 = Color(0xFF1E293B);
+  static const Color slate900 = Color(0xFF0F172A);
+  static const Color slate950 = Color(0xFF020617);
+  static const Color blue100 = Color(0xFFDBEAFE);
+  static const Color rose500 = Color(0xFFF43F5E); // Danger action
+
+  // PRIMARY COLOR PALETTE - Core brand colors
+  static const Color primary = executiveNavy;
+  static const Color primaryDark = slate900;
+  static const Color primaryLight = blue100;
 
   // SECONDARY COLOR PALETTE - Complementary colors
-  static const Color secondary = Color(0xFFFFE248);
-  static const Color secondaryDark = Color(0xFFE6C800);
-  static const Color secondaryLight = Color(0xFFFFF176);
+  static const Color secondary = deepOceanCyan;
+  static const Color secondaryDark = Color(0xFF0891B2);
+  static const Color secondaryLight = Color(0xFF67E8F9);
 
   // ACCENT COLOR - For highlights and emphasis
-  static const Color accent = Color(0xFFB0C7FF);
+  static const Color accent = deepOceanCyan;
 
   // FUNCTIONAL COLORS - For specific UI purposes
-  static const Color info = Color(0xFF2196F3);
-  static const Color success = Color(0xFF4CAF50);
-  static const Color warning = Color(0xFFFFC107);
-  static const Color error = Color(0xFFE53935);
+  static const Color info = blue100;
+  static const Color success = Color(0xFF10B981);
+  static const Color warning = Color(0xFFF59E0B);
+  static const Color error = rose500;
 
   // GRADIENT DEFINITIONS - For dimensional effects
   static const Gradient linearGradient = LinearGradient(
@@ -41,10 +57,10 @@ class TColors {
   );
 
   // TEXT COLORS - For typography hierarchy
-  static const Color textPrimary = Color(0xFF333333);
-  static const Color textSecondary = Color(0xFF6C757D);
-  static const Color textTertiary = Color(0xFF9E9E9E);
-  static const Color textWhite = Colors.white;
+  static const Color textPrimary = slate900;
+  static const Color textSecondary = slate600;
+  static const Color textTertiary = slate400;
+  static const Color textWhite = slate50;
 
   // BACKGROUND COLORS - For surfaces and containers
   static const Color light = Color(0xFFF6F6F6);
@@ -64,17 +80,17 @@ class TColors {
   static const Color buttonDisabled = Color(0xFFC4C4C4);
 
   // BORDER COLORS - For dividers, separators, etc.
-  static const Color borderPrimary = Color(0xFFDEE2E6);
-  static const Color borderSecondary = Color(0xFFE9ECEF);
+  static const Color borderPrimary = slate400;
+  static const Color borderSecondary = slate700;
 
   // NEUTRAL SHADES - For UI elements
-  static const Color black = Color(0xFF232323);
-  static const Color darkerGrey = Color(0xFF4F4F4F);
-  static const Color darkGrey = Color(0xFF939393);
-  static const Color grey = Color(0xFFE0E0E0);
-  static const Color softGrey = Color(0xFFF4F4F4);
-  static const Color lightGrey = Color(0xFFF9F9F9);
-  static const Color white = Color(0xFFFFFFFF);
+  static const Color black = slate950;
+  static const Color darkerGrey = slate900;
+  static const Color darkGrey = slate700;
+  static const Color grey = slate400;
+  static const Color softGrey = slate50;
+  static const Color lightGrey = Color(0xFFF1F5F9);
+  static const Color white = Colors.white;
 
   // SOCIAL COLORS - For social media integration
   static const Color facebook = Color(0xFF3B5998);
