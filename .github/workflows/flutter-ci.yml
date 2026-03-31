@@ -9,13 +9,11 @@ on:
 permissions:
   contents: write
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
 jobs:
   build-linux:
     name: Build Linux
     runs-on: ubuntu-latest
+    environment: smartcampus
     
     steps:
       - name: Checkout code
@@ -28,6 +26,14 @@ jobs:
 
       - name: Enable desktop builds
         run: flutter config --enable-linux-desktop
+
+      - name: Create .env file
+        shell: bash
+        run: |
+          cat > .env <<'EOF'
+          SUPABASE_URL=${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}
+          EOF
 
       - name: Install dependencies
         run: flutter pub get
@@ -55,6 +61,7 @@ jobs:
   build-windows:
     name: Build Windows
     runs-on: windows-latest
+    environment: smartcampus
     
     steps:
       - name: Checkout code
@@ -67,6 +74,14 @@ jobs:
 
       - name: Enable desktop builds
         run: flutter config --enable-windows-desktop
+
+      - name: Create .env file
+        shell: pwsh
+        run: |
+          @"
+          SUPABASE_URL=${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}
+          "@ | Out-File -FilePath .env -Encoding utf8
 
       - name: Install dependencies
         run: flutter pub get
@@ -83,6 +98,7 @@ jobs:
   build-android:
     name: Build Android 
     runs-on: ubuntu-latest
+    environment: smartcampus
 
     steps:
       - name: Checkout code
@@ -112,6 +128,14 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
+
+      - name: Create .env file
+        shell: bash
+        run: |
+          cat > .env <<'EOF'
+          SUPABASE_URL=${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}
+          EOF
 
       - name: Install dependencies
         run: flutter pub get

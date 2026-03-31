@@ -540,4 +540,12 @@ class AttendanceController extends GetxController {
   bool isSessionRunning(String sessionId) {
     return checkSessionStatus(sessionId)['isValid'] as bool;
   }
+
+  @override
+  void onClose() {
+    //printnt('Disposing controllers');
+    startTimeController.dispose();
+    endTimeController.dispose();
+    super.onClose();
+  }
 }
