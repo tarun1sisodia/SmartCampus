@@ -165,8 +165,15 @@ jobs:
           EOF
 
       - name: Verify keystore (fail fast)
+        shell: bash
         run: |
           set -euo pipefail
+          
+          # Explicitly check for missing secrets to provide clear error messages
+          [ -n "${{ secrets.KEYSTORE_PASSWORD }}" ] || { echo "ERROR: KEYSTORE_PASSWORD secret is missing or empty"; exit 1; }
+          [ -n "${{ secrets.KEY_ALIAS }}" ] || { echo "ERROR: KEY_ALIAS secret is missing or empty"; exit 1; }
+          [ -n "${{ secrets.KEY_PASSWORD }}" ] || { echo "ERROR: KEY_PASSWORD secret is missing or empty"; exit 1; }
+
           echo "Checking if keystore file exists..."
           ls -lah android/app/smartcampus.jks
 
