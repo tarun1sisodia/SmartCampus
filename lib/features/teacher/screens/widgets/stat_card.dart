@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
-import '../../../../common/utils/constants/colors.dart';
 import '../../../../common/utils/constants/sized.dart';
 
 class StatCard extends StatelessWidget {
   const StatCard({
     super.key,
-    required this.dark,
     required this.title,
     required this.value,
     required this.icon,
     required this.color,
   });
 
-  final bool dark;
   final String title;
   final String value;
   final IconData icon;
@@ -20,18 +17,23 @@ class StatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Expanded(
       child: Container(
-        padding: const EdgeInsets.all(TSizes.md),
+        padding: const EdgeInsets.all(TSizes.md + 4),
         decoration: BoxDecoration(
-          gradient: dark ? TColors.cardGradient5 : TColors.cardGradient1,
-          borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
+          color: colorScheme.surface,
+          borderRadius: BorderRadius.circular(TSizes.cardRadiusLg),
+          border: Border.all(
+            color: color.withValues(alpha: 0.2),
+            width: 1.5,
+          ),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withAlpha(26),
-              spreadRadius: 1,
-              blurRadius: 5,
-              offset: const Offset(0, 2),
+              color: color.withValues(alpha: 0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
             ),
           ],
         ),
@@ -39,7 +41,14 @@ class StatCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, color: Colors.white, size: 32),
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(TSizes.borderRadiusLg),
+              ),
+              child: Icon(icon, color: color, size: 24),
+            ),
             const SizedBox(height: TSizes.spaceBtwItems),
             FittedBox(
               fit: BoxFit.scaleDown,
@@ -47,16 +56,16 @@ class StatCard extends StatelessWidget {
                 value,
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                       fontWeight: FontWeight.bold,
-                      fontFamily: 'Poppins',
-                      color: Colors.white,
+                      color: colorScheme.onSurface,
                     ),
               ),
             ),
-            const SizedBox(height: TSizes.spaceBtwItems / 2),
+            const SizedBox(height: 2),
             Text(
               title,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.white,
+              style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                    fontWeight: FontWeight.w600,
                   ),
             ),
           ],

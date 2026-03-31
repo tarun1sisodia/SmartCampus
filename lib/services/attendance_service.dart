@@ -1,29 +1,86 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '../models/attendance_record_model.dart';
 import '../models/attendance_session_model.dart';
 import '../models/class_model.dart';
+import 'local_db_service.dart';
+import 'connectivity_service.dart';
 
 class AttendanceService {
   final supabase = Supabase.instance.client;
+  static const int defaultSessionFetchLimit = 60;
+  static const String _sessionSelectFields =
+      'id, class_id, date, start_time, end_time, created_by, created_at, updated_at, status, closed_at';
+  static const String _attendanceRecordSelectFields =
+      'id, session_id, student_id, status, remarks, created_at, updated_at';
+
+  // Fetch attendance statistics from Edge Function (Scaling)
+  Future<Map<String, dynamic>> getAttendanceStatsFromEdge({
+    required String classId,
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
+    try {
+      debugPrint('Invoking calculate-attendance-stats Edge Function for class: $classId');
+      
+      final session = supabase.auth.currentSession;
+      if (session == null) {
+        debugPrint('Edge Function Diagnostic: No active session found.');
+        throw 'Session expired or not found. Please log in again.';
+      }
+
+      // Diagnostic logging
+      final expiry = DateTime.fromMillisecondsSinceEpoch(session.expiresAt! * 1000);
+      final isExpired = expiry.isBefore(DateTime.now());
+      debugPrint('Edge Function Diagnostic: JWT Session Expiry: $expiry (Is Expired: $isExpired)');
+      debugPrint('Edge Function Diagnostic: Current Time: ${DateTime.now()}');
+
+      final response = await supabase.functions.invoke(
+        'calculate-attendance-stats',
+        body: {
+          'classId': classId,
+          'startDate': startDate?.toIso8601String().split('T')[0],
+          'endDate': endDate?.toIso8601String().split('T')[0],
+        },
+      );
+
+      if (response.status != 200) {
+        throw 'Edge Function error: ${response.data}';
+      }
+
+      return response.data as Map<String, dynamic>;
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
+      debugPrint('Error calling Edge Function: $e');
+      throw 'Failed to get high-performance statistics: $e';
+    }
+  }
 
   // Get attendance sessions for a class
   Future<List<AttendanceSessionModel>> getAttendanceSessions(
     String classId,
+    {
+    int limit = defaultSessionFetchLimit,
+    int offset = 0,
+  }
   ) async {
     try {
       //print('Fetching attendance sessions for class: $classId');
       final response = await supabase
           .from('attendance_sessions')
-          .select()
+          .select(_sessionSelectFields)
           .eq('class_id', classId)
+          .range(offset, offset + limit - 1)
           .order('date', ascending: false);
 
       return response.map<AttendanceSessionModel>((json) {
         return AttendanceSessionModel.fromJson(json);
       }).toList();
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Error getting attendance sessions: $e');
       throw 'Failed to get attendance sessions: $e';
     }
@@ -39,7 +96,7 @@ class AttendanceService {
       //print('Fetching attendance sessions for date range: $startDate to $endDate');
       final response = await supabase
           .from('attendance_sessions')
-          .select()
+          .select(_sessionSelectFields)
           .eq('class_id', classId)
           .gte('date', startDate.toIso8601String().split('T')[0])
           .lte('date', endDate.toIso8601String().split('T')[0])
@@ -48,7 +105,8 @@ class AttendanceService {
       return response.map<AttendanceSessionModel>((json) {
         return AttendanceSessionModel.fromJson(json);
       }).toList();
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Error getting attendance sessions for date range: $e');
       throw 'Failed to get attendance sessions: $e';
     }
@@ -79,40 +137,67 @@ class AttendanceService {
         'created_at': DateTime.now().toIso8601String(),
       };
 
-      final response = await supabase
-          .from('attendance_sessions')
-          .insert(data)
-          .select()
-          .single();
+      try {
+        final response = await supabase
+            .from('attendance_sessions')
+            .insert(data)
+            .select(_sessionSelectFields)
+            .single();
 
-      return AttendanceSessionModel.fromJson(response);
-    } catch (e) {
+        return AttendanceSessionModel.fromJson(response);
+      } on PostgrestException catch (e) {
+        if (e.code == '23505') {
+          // Conflict: Session already exists for this class and date
+          final String dateOnly = date.toIso8601String().split('T')[0];
+          debugPrint('Session already exists, fetching existing session for $classId on $dateOnly');
+          
+          final existingResponse = await supabase
+              .from('attendance_sessions')
+              .select(_sessionSelectFields)
+              .eq('class_id', classId)
+              .eq('date', dateOnly)
+              .single();
+              
+          return AttendanceSessionModel.fromJson(existingResponse);
+        }
+        rethrow;
+      }
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Error creating attendance session: $e');
-      Get.snackbar('Failed to Create Attendance Session', '');
+      Get.snackbar('Failed to Create Attendance Session', 'Session might already exist or server error.');
       throw 'Failed to create attendance session: $e';
     }
   }
 
-  // Deletes an attendance session by its ID.
-  //
-  // This method interacts with the backend to delete the session
-  // with the specified [sessionId]. Throws an exception if the
-  // deletion fails.
-  Future<void> deleteSession(String sessionId) async {
+  // Deletes multiple attendance sessions and their records (Batched)
+  Future<void> deleteSessions(List<String> sessionIds) async {
     try {
-      //print('Deleting attendance session: $sessionId');
-      // First delete all attendance records for this session
+      if (sessionIds.isEmpty) return;
+      debugPrint('Deleting ${sessionIds.length} attendance sessions');
+
+      // 1. Delete all attendance records for these sessions in one batch
       await supabase
           .from('attendance_records')
           .delete()
-          .eq('session_id', sessionId);
+          .inFilter('session_id', sessionIds);
 
-      // Then delete the session
-      await supabase.from('attendance_sessions').delete().eq('id', sessionId);
-    } catch (e) {
-      //print('Error deleting session: $e');
-      throw 'Failed to delete session: $e';
+      // 2. Delete the sessions themselves in one batch
+      await supabase
+          .from('attendance_sessions')
+          .delete()
+          .inFilter('id', sessionIds);
+
+      debugPrint('Batch deletion successful');
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
+      throw 'Failed to delete sessions: $e';
     }
+  }
+
+  // Deletes an attendance session by its ID.
+  Future<void> deleteSession(String sessionId) async {
+    await deleteSessions([sessionId]);
   }
 
   // Get attendance records for a session
@@ -123,13 +208,14 @@ class AttendanceService {
       //print('Fetching attendance records for session: $sessionId');
       final response = await supabase
           .from('attendance_records')
-          .select()
+          .select(_attendanceRecordSelectFields)
           .eq('session_id', sessionId);
 
       return response.map<AttendanceRecordModel>((json) {
         return AttendanceRecordModel.fromJson(json);
       }).toList();
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Error getting attendance records: $e');
       throw 'Failed to get attendance records: $e';
     }
@@ -172,7 +258,8 @@ class AttendanceService {
         data['created_at'] = DateTime.now().toIso8601String();
         await supabase.from('attendance_records').insert(data);
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Error submitting attendance: $e');
       throw 'Failed to submit attendance: $e';
     }
@@ -191,9 +278,29 @@ class AttendanceService {
       }).eq('id', sessionId);
 
       //print('Session closed successfully');
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Error closing attendance session: $e');
       throw 'Failed to close attendance session: $e';
+    }
+  }
+
+  // Get attendance statistics for multiple classes (Batched)
+  Future<Map<String, Map<String, dynamic>>> getAttendanceStatsForClasses(
+    List<String> classIds,
+  ) async {
+    try {
+      if (classIds.isEmpty) return {};
+
+      final stats = <String, Map<String, dynamic>>{};
+      await Future.wait(classIds.map((id) async {
+        stats[id] = await getAttendanceStatsForClass(id);
+      }));
+
+      return stats;
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
+      throw 'Failed to get batched attendance statistics: $e';
     }
   }
 
@@ -233,7 +340,8 @@ class AttendanceService {
         'lateCount': data['late_count'] ?? 0,
         'averageAttendance': (data['average_attendance'] ?? 0.0).toDouble(),
       };
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Error getting attendance statistics: $e');
       throw 'Failed to get attendance statistics: $e';
     }
@@ -444,31 +552,40 @@ class AttendanceService {
     }
   }
 
-  // Get student attendance history
+  // Get student attendance history (Optimized for Scaling)
   Future<List<Map<String, dynamic>>> getStudentAttendanceHistory({
     required String classId,
     required String studentId,
   }) async {
     try {
-      // Get all sessions for the class
+      // 1. Get all sessions for the class
       final sessions = await getAttendanceSessions(classId);
+      if (sessions.isEmpty) return [];
 
+      // 2. Fetch all attendance records for this student in these sessions in ONE query
+      final sessionIds = sessions.map((s) => s.id).toList();
+      final recordsResponse = await supabase
+          .from('attendance_records')
+          .select()
+          .eq('student_id', studentId)
+          .inFilter('session_id', sessionIds);
+
+      final List<Map<String, dynamic>> records = recordsResponse;
+
+      // 3. Create a map for fast record lookup
+      final recordsBySession = {
+        for (var r in records) r['session_id']: r
+      };
+
+      // 4. Build history by matching sessions to records in-memory
       final history = <Map<String, dynamic>>[];
-
       for (var session in sessions) {
-        // Get attendance record for this session
-        final response = await supabase
-            .from('attendance_records')
-            .select()
-            .eq('session_id', session.id)
-            .eq('student_id', studentId)
-            .maybeSingle();
-
-        if (response != null) {
+        final record = recordsBySession[session.id];
+        if (record != null) {
           history.add({
             'session': session,
-            'status': response['status'],
-            'remarks': response['remarks'],
+            'status': record['status'],
+            'remarks': record['remarks'],
           });
         } else {
           // No record found, mark as not recorded
@@ -481,7 +598,8 @@ class AttendanceService {
       }
 
       return history;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       throw 'Failed to get student attendance history: $e';
     }
   }
@@ -526,39 +644,193 @@ class AttendanceService {
   }
 
   // the AttendanceService class
-  Future<List<AttendanceRecordModel>> getAttendanceRecordsForSession(
+  // Get attendance records for a specific list of students in a session
+  Future<List<AttendanceRecordModel>> getAttendanceRecordsForStudentsInSession(
     String sessionId,
+    List<String> studentIds,
   ) async {
     try {
+      if (studentIds.isEmpty) return [];
+      
       final response = await supabase
           .from('attendance_records')
           .select()
-          .eq('session_id', sessionId);
+          .eq('session_id', sessionId)
+          .inFilter('student_id', studentIds);
 
-      return response.map<AttendanceRecordModel>((json) {
+      return (response as List).map<AttendanceRecordModel>((json) {
         return AttendanceRecordModel.fromJson(json);
       }).toList();
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       throw 'Failed to get attendance records: $e';
     }
   }
 
-  //for bulk attendance submission
-  Future<void> submitBulkAttendance({
-    required String sessionId,
-    required List<Map<String, dynamic>> records,
+  // Get attendance statistics for multiple students in a class and date range (Batched)
+  Future<Map<String, Map<String, dynamic>>> getAttendanceStatsForStudentsInDateRange({
+    required String classId,
+    required List<String> studentIds,
+    required DateTime startDate,
+    required DateTime endDate,
   }) async {
     try {
-      for (var record in records) {
-        await submitAttendance(
-          sessionId: sessionId,
-          studentId: record['student_id'],
-          status: record['status'],
-          remarks: record['remarks'],
-        );
+      if (studentIds.isEmpty) return {};
+
+      // Get sessions in date range
+      final sessions = await getAttendanceSessionsForDateRange(
+        classId: classId,
+        startDate: startDate,
+        endDate: endDate,
+      );
+
+      if (sessions.isEmpty) {
+        return {
+          for (var id in studentIds)
+            id: {
+              'totalSessions': 0,
+              'presentCount': 0,
+              'absentCount': 0,
+              'lateCount': 0,
+              'attendancePercentage': 0.0,
+            }
+        };
       }
-    } catch (e) {
+
+      final sessionIds = sessions.map((s) => s.id).toList();
+      
+      // Fetch all records for these students in these sessions
+      final response = await supabase
+          .from('attendance_records')
+          .select('student_id, status')
+          .inFilter('session_id', sessionIds)
+          .inFilter('student_id', studentIds);
+
+      final results = <String, Map<String, dynamic>>{};
+      for (var id in studentIds) {
+        results[id] = {
+          'totalSessions': sessions.length,
+          'presentCount': 0,
+          'absentCount': 0, // We'll calculate this as total - (present + late + excused)
+          'lateCount': 0,
+          'attendancePercentage': 0.0,
+        };
+      }
+
+      // Group records by student
+      final recordsByStudent = <String, List<String>>{};
+      for (var record in response) {
+        final sId = record['student_id'] as String;
+        final status = record['status'] as String;
+        recordsByStudent.putIfAbsent(sId, () => []).add(status);
+      }
+
+      for (var sId in studentIds) {
+        final statuses = recordsByStudent[sId] ?? [];
+        int p = 0;
+        int l = 0;
+        for (var status in statuses) {
+          if (status == 'present') {
+            p++;
+          } else if (status == 'late') {
+            l++;
+          }
+        }
+        
+        final totalSessionsForStudent = sessions.length;
+        final absent = totalSessionsForStudent - statuses.length; // Students with no record are absent by default
+        
+        results[sId]!['presentCount'] = p;
+        results[sId]!['lateCount'] = l;
+        results[sId]!['absentCount'] = absent + (statuses.length - p - l);
+        results[sId]!['attendancePercentage'] = totalSessionsForStudent > 0
+            ? ((p + (l * 0.5)) / totalSessionsForStudent) * 100
+            : 0.0;
+      }
+
+      return results;
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
+      throw 'Failed to get batched student attendance statistics: $e';
+    }
+  }
+
+   Future<void> submitBulkAttendance({
+     required String sessionId,
+     required List<Map<String, dynamic>> records,
+   }) async {
+     try {
+       if (records.isEmpty) return;
+       debugPrint('Submitting ${records.length} attendance records for session $sessionId');
+ 
+       // Check connectivity
+       final connectivity = Get.find<ConnectivityService>();
+       if (!connectivity.isOnline.value) {
+         debugPrint('Offline: Queuing ${records.length} records locally');
+         final localDb = LocalDbService();
+         for (var record in records) {
+           await localDb.queueAttendance({
+             'session_id': sessionId,
+             'student_id': record['student_id'],
+             'status': record['status'],
+             'remarks': record['remarks'],
+           });
+         }
+         return;
+       }
+
+      final now = DateTime.now().toIso8601String();
+      final List<Map<String, dynamic>> upsertData = records.map((record) {
+        return {
+          'session_id': sessionId,
+          'student_id': record['student_id'],
+          'status': (record['status'] as String).toLowerCase(),
+          'remarks': record['remarks'],
+          'updated_at': now,
+          // Since we're upserting, we don't strictly need created_at if already exists,
+          // but if it's new, we'll want it.
+        };
+      }).toList();
+
+      // Using upsert with student_id and session_id as the unique constraint
+      // Assuming session_id and student_id form a unique constraint on attendance_records
+      await supabase.from('attendance_records').upsert(
+        upsertData,
+        onConflict: 'session_id, student_id',
+      );
+
+      debugPrint('Bulk submission successful');
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       throw 'Failed to submit bulk attendance: $e';
+    }
+  }
+
+  // Fetches all attendance sessions for a specific teacher with pagination
+  Future<List<AttendanceSessionModel>> getSessionsForTeacher({
+    required String teacherId,
+    int limit = defaultSessionFetchLimit,
+    int offset = 0,
+  }) async {
+    try {
+      debugPrint('Fetching sessions for teacher: $teacherId with limit: $limit, offset: $offset');
+      
+      // Use the attendance_session_details view which already has all the joined data
+      // Filter by teacher_id/created_by
+      final response = await supabase
+          .from('attendance_session_details')
+          .select()
+          .eq('created_by', teacherId)
+          .range(offset, offset + limit - 1)
+          .order('date', ascending: false);
+
+      return (response as List)
+          .map((data) => AttendanceSessionModel.fromJson(data))
+          .toList();
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
+      debugPrint('Error fetching teacher attendance sessions: $e');
+      throw 'Failed to load attendance sessions';
     }
   }
 
@@ -577,7 +849,8 @@ class AttendanceService {
       return (response as List)
           .map((data) => AttendanceSessionModel.fromJson(data))
           .toList();
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Error fetching all attendance sessions: $e');
       throw 'Failed to load attendance sessions';
     }

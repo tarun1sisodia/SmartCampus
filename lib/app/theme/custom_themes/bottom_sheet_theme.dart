@@ -10,54 +10,29 @@ import '../../../common/utils/constants/sized.dart';
 class TBottomSheetTheme {
   TBottomSheetTheme._();
 
-  static BottomSheetThemeData lightBottomSheetTheme = BottomSheetThemeData(
-    // Show drag handle for better usability (Jakob's Law)
-    showDragHandle: true,
-    dragHandleColor: TColors.grey,
-    dragHandleSize: Size(40, 4),
-
-    // Background styling
-    backgroundColor: TColors.white,
-    modalBackgroundColor: TColors.white,
-
-    // Shadow for depth perception
-    shadowColor: TColors.dark.withAlpha(26),
-    elevation: 5,
-
-    // Constraints for consistent sizing
-    constraints: BoxConstraints(
-      minWidth: double.infinity,
-      minHeight: 100,
-    ),
-
-    // Consistent shape (Law of Similarity)
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(
-        top: Radius.circular(TSizes.cardRadiusLg),
+  static BottomSheetThemeData createBottomSheetTheme(Color surfaceColor, Brightness brightness) {
+    return BottomSheetThemeData(
+      showDragHandle: true,
+      dragHandleColor: TColors.grey,
+      dragHandleSize: const Size(40, 4),
+      backgroundColor: surfaceColor,
+      modalBackgroundColor: surfaceColor,
+      shadowColor: brightness == Brightness.dark ? Colors.black.withAlpha(128) : TColors.dark.withAlpha(26),
+      elevation: 5,
+      constraints: const BoxConstraints(
+        minWidth: double.infinity,
+        minHeight: 100,
       ),
-    ),
-
-    // Clip behavior for rounded corners
-    clipBehavior: Clip.antiAlias,
-  );
-
-  static BottomSheetThemeData darkBottomSheetTheme = BottomSheetThemeData(
-    showDragHandle: true,
-    dragHandleColor: TColors.grey,
-    dragHandleSize: Size(40, 4),
-    backgroundColor: TColors.dark,
-    modalBackgroundColor: TColors.dark,
-    shadowColor: Colors.black.withAlpha(128),
-    elevation: 5,
-    constraints: BoxConstraints(
-      minWidth: double.infinity,
-      minHeight: 100,
-    ),
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(
-        top: Radius.circular(TSizes.cardRadiusLg),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(TSizes.cardRadiusLg),
+        ),
       ),
-    ),
-    clipBehavior: Clip.antiAlias,
-  );
+      clipBehavior: Clip.antiAlias,
+    );
+  }
+
+  static final lightBottomSheetTheme = createBottomSheetTheme(TColors.white, Brightness.light);
+  static final darkBottomSheetTheme = createBottomSheetTheme(TColors.dark, Brightness.dark);
 }
+

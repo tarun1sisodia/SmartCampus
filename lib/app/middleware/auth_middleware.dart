@@ -13,11 +13,10 @@ class AuthMiddleware extends GetMiddleware {
       try {
         isLinux = Platform.isLinux;
       } catch (e) {
-        print("Error checking platform: $e");
+        debugPrint('Error checking platform: $e');
       }
 
       if (isLinux) {
-        print("Linux platform detected, bypassing auth middleware");
         return null; // Allow access on Linux without checks
       }
 
@@ -27,22 +26,18 @@ class AuthMiddleware extends GetMiddleware {
 
       // If controller is not found, redirect to login
       if (authController == null) {
-        print("Auth controller not found, redirecting to login");
         return RouteSettings(name: AppRoutes.login);
       }
 
       // Check if the user is authenticated (synchronous check)
       final currentUser = authController.supabase.auth.currentUser;
       if (currentUser == null) {
-        print("No current user, redirecting to login");
         return RouteSettings(name: AppRoutes.login);
       }
 
-      // User is authenticated, allow access
-      print("User authenticated, allowing access to route: $route");
       return null;
     } catch (e) {
-      print("Error in auth middleware: $e");
+      debugPrint('Error in auth middleware: $e');
       // In case of any error, redirect to login
       return RouteSettings(name: AppRoutes.login);
     }

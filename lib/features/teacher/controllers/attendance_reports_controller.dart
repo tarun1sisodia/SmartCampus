@@ -1,10 +1,13 @@
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:csv/csv.dart';
 import 'dart:io';
 import 'package:share_plus/share_plus.dart';
 import 'package:intl/intl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'dart:async';
 
 import '../../../common/utils/helpers/snackbar_helper.dart';
@@ -40,6 +43,12 @@ class AttendanceReportsController extends GetxController {
   final presentCount = 0.obs;
   final absentCount = 0.obs;
   final lateCount = 0.obs;
+  
+  // Pagination for students in report
+  final hasMoreStudentsInReport = true.obs;
+  final isLoadingMoreReport = false.obs;
+  int _reportStudentsOffset = 0;
+  static const int _reportPageSize = 25;
 
   // Map to store attendance stats for each student
   final studentStats = <String, Map<String, dynamic>>{}.obs;
@@ -51,19 +60,25 @@ class AttendanceReportsController extends GetxController {
   // Filtered data
   final filteredStudents = <StudentModel>[].obs;
 
+  // Convenience getter for UI
+  List<StudentModel> get displayStudents => filteredStudents;
+
+  // Get stats for a specific student
+  Map<String, dynamic>? getStudentStats(String studentId) => studentStats[studentId];
+
   final List<StreamSubscription> _subscriptions = [];
 
   @override
   void onInit() {
     super.onInit();
-    print('AttendanceReportsController initialized');
+    debugPrint('AttendanceReportsController initialized');
     _initializeRealtimeService();
     loadClasses();
   }
 
   @override
   void onClose() {
-    print('AttendanceReportsController disposed');
+    debugPrint('AttendanceReportsController disposed');
 
     // Clean up subscriptions
     for (var subscription in _subscriptions) {
@@ -76,10 +91,10 @@ class AttendanceReportsController extends GetxController {
   void _initializeRealtimeService() {
     try {
       realtimeService = Get.find<RealtimeService>();
-      print(
+      debugPrint(
           'Found existing RealtimeService instance in AttendanceReportsController');
     } catch (e) {
-      print(
+      debugPrint(
           'RealtimeService not found, creating new instance in AttendanceReportsController');
       realtimeService = Get.put(RealtimeService());
     }
@@ -92,13 +107,13 @@ class AttendanceReportsController extends GetxController {
     // Subscribe to classes stream for real-time updates
     final classesSubscription = realtimeService.classesStream.listen(
       (data) {
-        print(
+        debugPrint(
             'Real-time classes update in AttendanceReportsController: ${data.length} classes');
         _handleClassesUpdate(data);
         lastUpdated.value = DateTime.now();
       },
       onError: (error) {
-        print('Error in classes stream (AttendanceReportsController): $error');
+        debugPrint('Error in classes stream (AttendanceReportsController): $error');
         isRealtimeConnected.value = false;
       },
     );
@@ -107,13 +122,13 @@ class AttendanceReportsController extends GetxController {
     final attendanceSessionsSubscription =
         realtimeService.attendanceSessionsStream.listen(
       (data) {
-        print(
+        debugPrint(
             'Real-time attendance sessions update in AttendanceReportsController: ${data.length} sessions');
         _handleAttendanceSessionsUpdate(data);
         lastUpdated.value = DateTime.now();
       },
       onError: (error) {
-        print(
+        debugPrint(
             'Error in attendance sessions stream (AttendanceReportsController): $error');
       },
     );
@@ -122,13 +137,13 @@ class AttendanceReportsController extends GetxController {
     final attendanceRecordsSubscription =
         realtimeService.attendanceRecordsStream.listen(
       (data) {
-        print(
+        debugPrint(
             'Real-time attendance records update in AttendanceReportsController: ${data.length} records');
         _handleAttendanceRecordsUpdate(data);
         lastUpdated.value = DateTime.now();
       },
       onError: (error) {
-        print(
+        debugPrint(
             'Error in attendance records stream (AttendanceReportsController): $error');
       },
     );
@@ -136,13 +151,13 @@ class AttendanceReportsController extends GetxController {
     // Subscribe to students stream
     final studentsSubscription = realtimeService.studentsStream.listen(
       (data) {
-        print(
+        debugPrint(
             'Real-time students update in AttendanceReportsController: ${data.length} students');
         _handleStudentsUpdate(data);
         lastUpdated.value = DateTime.now();
       },
       onError: (error) {
-        print('Error in students stream (AttendanceReportsController): $error');
+        debugPrint('Error in students stream (AttendanceReportsController): $error');
       },
     );
 
@@ -151,14 +166,14 @@ class AttendanceReportsController extends GetxController {
       (isConnected) {
         isRealtimeConnected.value = isConnected;
         if (isConnected) {
-          print('Real-time connection restored in AttendanceReportsController');
+          debugPrint('Real-time connection restored in AttendanceReportsController');
           // Refresh data when connection is restored
           loadClasses();
           if (selectedClassId.value.isNotEmpty) {
             loadAttendanceData();
           }
         } else {
-          print('Real-time connection lost in AttendanceReportsController');
+          debugPrint('Real-time connection lost in AttendanceReportsController');
         }
       },
     );
@@ -218,7 +233,7 @@ class AttendanceReportsController extends GetxController {
 
             teacherClasses.add(classModel);
           } catch (e) {
-            print(
+            debugPrint(
                 'Error fetching related data for class ${classData['id']}: $e');
           }
         }
@@ -240,10 +255,11 @@ class AttendanceReportsController extends GetxController {
         }
       }
 
-      print(
+      debugPrint(
           'AttendanceReportsController classes updated via real-time: ${teacherClasses.length} classes');
-    } catch (e) {
-      print('Error handling classes update in AttendanceReportsController: $e');
+    } catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
+      debugPrint('Error handling classes update in AttendanceReportsController: $e');
     }
   }
 
@@ -275,10 +291,11 @@ class AttendanceReportsController extends GetxController {
       // Recalculate statistics
       _recalculateStatistics();
 
-      print(
+      debugPrint(
           'AttendanceReportsController sessions updated via real-time: ${classSessions.length} sessions');
-    } catch (e) {
-      print(
+    } catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
+      debugPrint(
           'Error handling attendance sessions update in AttendanceReportsController: $e');
     }
   }
@@ -304,10 +321,11 @@ class AttendanceReportsController extends GetxController {
         _updateStudentStats();
       }
 
-      print(
+      debugPrint(
           'AttendanceReportsController attendance records updated via real-time: ${relevantRecords.length} relevant records');
-    } catch (e) {
-      print(
+    } catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
+      debugPrint(
           'Error handling attendance records update in AttendanceReportsController: $e');
     }
   }
@@ -321,10 +339,58 @@ class AttendanceReportsController extends GetxController {
       // For now, we'll reload students data when there are changes
       _loadStudentsForClass();
 
-      print('AttendanceReportsController students updated via real-time');
-    } catch (e) {
-      print(
+      debugPrint('AttendanceReportsController students updated via real-time');
+    } catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
+      debugPrint(
           'Error handling students update in AttendanceReportsController: $e');
+    }
+  }
+
+  Future<void> loadMoreReportStudents() async {
+    if (selectedClassId.value.isEmpty ||
+        isLoading.value ||
+        isLoadingMoreReport.value ||
+        !hasMoreStudentsInReport.value) {
+      return;
+    }
+
+    try {
+      isLoadingMoreReport.value = true;
+
+      // Load next batch of students for the class
+      final nextStudents = await studentService.getStudentsForClass(
+        selectedClassId.value,
+        limit: _reportPageSize,
+        offset: _reportStudentsOffset,
+      );
+
+      if (nextStudents.isEmpty) {
+        hasMoreStudentsInReport.value = false;
+        return;
+      }
+
+      // Fetch batched stats for the next batch of students
+      final nextStudentIds = nextStudents.map((s) => s.id).toList();
+      final nextBatchStats =
+          await attendanceService.getAttendanceStatsForStudentsInDateRange(
+        classId: selectedClassId.value,
+        studentIds: nextStudentIds,
+        startDate: startDate.value,
+        endDate: endDate.value,
+      );
+
+      students.addAll(nextStudents);
+      studentStats.addAll(nextBatchStats);
+      _reportStudentsOffset = students.length;
+      hasMoreStudentsInReport.value = nextStudents.length == _reportPageSize;
+
+      _filterStudents();
+    } catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
+      debugPrint('Error loading more report students: $e');
+    } finally {
+      isLoadingMoreReport.value = false;
     }
   }
 
@@ -339,8 +405,9 @@ class AttendanceReportsController extends GetxController {
       students.assignAll(classStudents);
       _filterStudents();
       _updateStudentStats();
-    } catch (e) {
-      print('Error loading students for class: $e');
+    } catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
+      debugPrint('Error loading students for class: $e');
     }
   }
 
@@ -362,34 +429,98 @@ class AttendanceReportsController extends GetxController {
       absentCount.value = stats['absentCount'] ?? 0;
       lateCount.value = stats['lateCount'] ?? 0;
       averageAttendance.value = stats['averageAttendance'] ?? 0.0;
-    } catch (e) {
-      print('Error recalculating statistics: $e');
+    } catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
+      debugPrint('Error recalculating statistics: $e');
       _resetStatistics();
     }
   }
 
-  // Update individual student statistics
+  // Update individual student statistics (Batched)
   Future<void> _updateStudentStats() async {
-    if (selectedClassId.value.isEmpty || students.isEmpty) return;
+    if (selectedClassId.value.isEmpty) return;
 
     try {
-      final newStudentStats = <String, Map<String, dynamic>>{};
+      // Use high-performance Edge Function for all stats in one go
+      final result = await attendanceService.getAttendanceStatsFromEdge(
+        classId: selectedClassId.value,
+        startDate: startDate.value,
+        endDate: endDate.value,
+      );
 
-      for (var student in students) {
-        final studentStat =
-            await attendanceService.getAttendanceStatsForStudentInDateRange(
+      // Map global stats
+      final int total = result['totalSessions'] ?? 0;
+      
+      // Calculate overall counts from aggregated student stats
+      int p = 0;
+      int a = 0;
+      int l = 0;
+      
+      final Map<String, Map<String, dynamic>> statsMap = (result['stats'] as Map? ?? {}).map(
+        (key, value) => MapEntry(key.toString(), Map<String, dynamic>.from(value as Map)),
+      );
+      
+      statsMap.forEach((key, val) {
+        p += (val['present'] as num? ?? 0).toInt();
+        a += (val['absent'] as num? ?? 0).toInt();
+        l += (val['late'] as num? ?? 0).toInt();
+      });
+
+      // Update observables
+      studentStats.assignAll(statsMap);
+      presentCount.value = p;
+      absentCount.value = a;
+      lateCount.value = l;
+      
+      if (total > 0) {
+        averageAttendance.value = ((p + (l * 0.5)) / (total * statsMap.length.clamp(1, 100000))) * 100;
+      } else {
+        averageAttendance.value = 0.0;
+      }
+      
+      debugPrint('Stats updated via Edge Function. Total sessions: $total');
+
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
+      debugPrint('Error updating student stats via Edge: $e');
+      // If Edge fails, fall back to local Dart calculation
+      
+      try {
+        final localStats = await attendanceService.getAttendanceStatsForStudentsInDateRange(
           classId: selectedClassId.value,
-          studentId: student.id,
+          studentIds: students.map((s) => s.id).toList(),
           startDate: startDate.value,
           endDate: endDate.value,
         );
+        
+        // Calculate overall counts from aggregated student stats
+        int p = 0;
+        int a = 0;
+        int l = 0;
+        
+        localStats.forEach((key, val) {
+          p += (val['presentCount'] as num? ?? 0).toInt();
+          a += (val['absentCount'] as num? ?? 0).toInt();
+          l += (val['lateCount'] as num? ?? 0).toInt();
+        });
 
-        newStudentStats[student.id] = studentStat;
+        studentStats.assignAll(localStats);
+        presentCount.value = p;
+        absentCount.value = a;
+        lateCount.value = l;
+        
+        final int total = sessions.length;
+        if (total > 0 && localStats.isNotEmpty) {
+          averageAttendance.value = ((p + (l * 0.5)) / (total * localStats.length)) * 100;
+        } else {
+          averageAttendance.value = 0.0;
+        }
+        
+        debugPrint('Stats updated via local fallback calculation. Total sessions: $total');
+      } catch (fallbackErr) {
+        debugPrint('Local fallback calculation also failed: $fallbackErr');
+        TSnackBar.showWarning(message: 'Using fast-load mode. Some stats may be pending.');
       }
-
-      studentStats.assignAll(newStudentStats);
-    } catch (e) {
-      print('Error updating student stats: $e');
     }
   }
 
@@ -427,12 +558,12 @@ class AttendanceReportsController extends GetxController {
   // Load all classes for the current teacher (initial load)
   Future<void> loadClasses() async {
     try {
-      print('Loading classes...');
+      debugPrint('Loading classes...');
       isLoading.value = true;
 
       final currentUser = Supabase.instance.client.auth.currentUser;
       if (currentUser == null) {
-        print('User not authenticated');
+        debugPrint('User not authenticated');
         TSnackBar.showError(message: 'You must be logged in to view reports');
         return;
       }
@@ -440,19 +571,22 @@ class AttendanceReportsController extends GetxController {
       final teacherClasses = await classService.getTeacherClasses(
         currentUser.id,
       );
-      print('Classes fetched: ${teacherClasses.length}');
+      debugPrint('Classes fetched: ${teacherClasses.length}');
       classes.assignAll(teacherClasses);
 
       if (classes.isNotEmpty && selectedClassId.isEmpty) {
         selectedClassId.value = classes[0].id;
-        print('Selected class ID: ${selectedClassId.value}');
+        debugPrint('Selected class ID: ${selectedClassId.value}');
         await loadAttendanceData();
       }
-    } catch (e) {
-      print('Error loading classes: $e');
+    } catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
+      debugPrint('Error loading classes: $e');
       TSnackBar.showError(message: 'Failed to load classes: ${e.toString()}');
     } finally {
       isLoading.value = false;
+      _reportStudentsOffset = 0;
+      hasMoreStudentsInReport.value = true;
     }
   }
 
@@ -460,12 +594,14 @@ class AttendanceReportsController extends GetxController {
   Future<void> loadAttendanceData() async {
     try {
       if (selectedClassId.isEmpty) {
-        print('No class selected');
+        debugPrint('No class selected');
         return;
       }
 
-      print('Loading attendance data for class: ${selectedClassId.value}');
+      debugPrint('Loading attendance data for class: ${selectedClassId.value}');
       isLoading.value = true;
+      _reportStudentsOffset = 0;
+      hasMoreStudentsInReport.value = true;
 
       // Load sessions for the date range
       final classSessions =
@@ -474,15 +610,20 @@ class AttendanceReportsController extends GetxController {
         startDate: startDate.value,
         endDate: endDate.value,
       );
-      print('Sessions fetched: ${classSessions.length}');
+      debugPrint('Sessions fetched: ${classSessions.length}');
       sessions.assignAll(classSessions);
 
-      // Load students for the class
+      // Load first page of students for the class
       final classStudents = await studentService.getStudentsForClass(
         selectedClassId.value,
+        limit: _reportPageSize,
+        offset: 0,
       );
-      print('Students fetched: ${classStudents.length}');
+      debugPrint('Students fetched: ${classStudents.length}');
       students.assignAll(classStudents);
+      _reportStudentsOffset = students.length;
+      hasMoreStudentsInReport.value = classStudents.length == _reportPageSize;
+      
       _filterStudents();
 
       // Reset statistics
@@ -492,41 +633,16 @@ class AttendanceReportsController extends GetxController {
       studentStats.clear();
 
       if (sessions.isEmpty) {
-        print('No sessions found');
+        debugPrint('No sessions found');
         averageAttendance.value = 0.0;
         return;
       }
 
-      // Load overall statistics
-      final stats = await attendanceService.getAttendanceStatsForDateRange(
-        classId: selectedClassId.value,
-        startDate: startDate.value,
-        endDate: endDate.value,
-      );
-
-      presentCount.value = stats['presentCount'] ?? 0;
-      absentCount.value = stats['absentCount'] ?? 0;
-      lateCount.value = stats['lateCount'] ?? 0;
-      averageAttendance.value = stats['averageAttendance'] ?? 0.0;
-
-      print(
-          'Overall stats - Present: ${presentCount.value}, Absent: ${absentCount.value}, Late: ${lateCount.value}, Average: ${averageAttendance.value}');
-
-      // Load individual student statistics
-      for (var student in students) {
-        final studentStat =
-            await attendanceService.getAttendanceStatsForStudentInDateRange(
-          classId: selectedClassId.value,
-          studentId: student.id,
-          startDate: startDate.value,
-          endDate: endDate.value,
-        );
-
-        studentStats[student.id] = studentStat;
-        print('Stats for student ${student.name}: $studentStat');
-      }
-    } catch (e) {
-      print('Error loading attendance data: $e');
+      // Use high-performance individual student statistics (Edge Function)
+      await _updateStudentStats();
+    } catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
+      debugPrint('Error loading attendance data: $e');
       TSnackBar.showError(
         message: 'Failed to load attendance data: ${e.toString()}',
       );
@@ -556,7 +672,7 @@ class AttendanceReportsController extends GetxController {
 
   // Navigate to student detail screen
   void navigateToStudentDetail(StudentModel student) {
-    print('Navigating to student detail for: ${student.name}');
+    debugPrint('Navigating to student detail for: ${student.name}');
     Get.to(
       () =>
           StudentDetailScreen(student: student, classId: selectedClassId.value),
@@ -567,12 +683,12 @@ class AttendanceReportsController extends GetxController {
   Future<void> exportAttendanceReport() async {
     try {
       if (selectedClassId.isEmpty || students.isEmpty || sessions.isEmpty) {
-        print('No data available to export');
+        debugPrint('No data available to export');
         TSnackBar.showInfo(message: 'No data available to export');
         return;
       }
 
-      print('Exporting attendance report...');
+      debugPrint('Exporting attendance report...');
       isLoading.value = true;
 
       final classModel = classes.firstWhere(
@@ -651,15 +767,29 @@ class AttendanceReportsController extends GetxController {
       final file = File(filePath);
       await file.writeAsString(csv);
 
-      print('CSV file saved at: $filePath');
+      debugPrint('CSV file saved at: $filePath');
 
-      await Share.shareXFiles([
-        XFile(filePath),
-      ], text: 'Attendance Report for $className');
+      if (GetPlatform.isLinux) {
+        // Fallback for Linux since SharePlus might not support file sharing
+        TSnackBar.showSuccess(
+          message: 'Report saved to: $filePath',
+          onActionPressed: () => _openFolder(directory.path),
+          actionLabel: 'OPEN FOLDER',
+          duration: const Duration(seconds: 10),
+        );
+      } else {
+        await SharePlus.instance.share(
+          ShareParams(
+            files: [XFile(filePath)],
+            text: 'Attendance Report for $className',
+          ),
+        );
+      }
 
       TSnackBar.showSuccess(message: 'Report exported successfully');
-    } catch (e) {
-      print('Error exporting report: $e');
+    } catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
+      debugPrint('Error exporting report: $e');
       TSnackBar.showError(message: 'Failed to export report: ${e.toString()}');
     } finally {
       isLoading.value = false;
@@ -689,121 +819,40 @@ class AttendanceReportsController extends GetxController {
   // Reconnect to real-time service
   Future<void> reconnectRealtime() async {
     try {
-      print(
+      debugPrint(
           'Attempting to reconnect to real-time service from AttendanceReportsController...');
       await realtimeService.forceReconnect();
-      print('Successfully reconnected to real-time service');
-    } catch (e) {
-      print('Failed to reconnect to real-time service: $e');
+      debugPrint('Successfully reconnected to real-time service');
+    } catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
+      debugPrint('Failed to reconnect to real-time service: $e');
     }
   }
 
   // Refresh all data manually
   Future<void> refreshData() async {
     try {
-      print('Manually refreshing attendance reports data...');
+      debugPrint('Manually refreshing attendance reports data...');
       await loadClasses();
       if (selectedClassId.value.isNotEmpty) {
         await loadAttendanceData();
       }
       TSnackBar.showSuccess(message: 'Data refreshed successfully');
-    } catch (e) {
-      print('Error refreshing data: $e');
+    } catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
+      debugPrint('Error refreshing data: $e');
       TSnackBar.showError(message: 'Failed to refresh data: ${e.toString()}');
     }
   }
 
-  // Get filtered students based on search query
-  List<StudentModel> get displayStudents {
-    return filteredStudents;
-  }
-
-  // Get student statistics for a specific student
-  Map<String, dynamic>? getStudentStats(String studentId) {
-    return studentStats[studentId];
-  }
-
-  // Check if data is available for display
-  bool get hasData {
-    return classes.isNotEmpty &&
-        selectedClassId.value.isNotEmpty &&
-        students.isNotEmpty;
-  }
-
-  // Check if there are any sessions in the selected date range
-  bool get hasSessions {
-    return sessions.isNotEmpty;
-  }
-
-  // Get the currently selected class
-  ClassModel? get selectedClass {
-    if (selectedClassId.value.isEmpty) return null;
-    return classes.firstWhereOrNull((c) => c.id == selectedClassId.value);
-  }
-
-  // Get attendance percentage for a specific student
-  double getStudentAttendancePercentage(String studentId) {
-    final stats = studentStats[studentId];
-    if (stats == null) return 0.0;
-    return stats['attendancePercentage']?.toDouble() ?? 0.0;
-  }
-
-  // Get total sessions count for the selected date range
-  int get totalSessions {
-    return sessions.length;
-  }
-
-  // Get total students count
-  int get totalStudents {
-    return students.length;
-  }
-
-  // Calculate class average attendance
-  double get classAverageAttendance {
-    if (students.isEmpty) return 0.0;
-
-    double totalPercentage = 0.0;
-    int validStudents = 0;
-
-    for (var student in students) {
-      final stats = studentStats[student.id];
-      if (stats != null) {
-        totalPercentage += stats['attendancePercentage']?.toDouble() ?? 0.0;
-        validStudents++;
-      }
+  // Helper to open folder on Linux
+  Future<void> _openFolder(String path) async {
+    final uri = Uri.directory(path);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      debugPrint('Could not launch folder: $path');
     }
-
-    return validStudents > 0 ? totalPercentage / validStudents : 0.0;
   }
 
-  // Get students with low attendance (below threshold)
-  List<StudentModel> getLowAttendanceStudents({double threshold = 75.0}) {
-    return students.where((student) {
-      final percentage = getStudentAttendancePercentage(student.id);
-      return percentage < threshold;
-    }).toList();
-  }
-
-  // Get students with perfect attendance
-  List<StudentModel> getPerfectAttendanceStudents() {
-    return students.where((student) {
-      final percentage = getStudentAttendancePercentage(student.id);
-      return percentage >= 100.0;
-    }).toList();
-  }
-
-  // Sort students by attendance percentage
-  List<StudentModel> getStudentsSortedByAttendance({bool ascending = false}) {
-    final sortedStudents = List<StudentModel>.from(students);
-    sortedStudents.sort((a, b) {
-      final aPercentage = getStudentAttendancePercentage(a.id);
-      final bPercentage = getStudentAttendancePercentage(b.id);
-
-      return ascending
-          ? aPercentage.compareTo(bPercentage)
-          : bPercentage.compareTo(aPercentage);
-    });
-
-    return sortedStudents;
-  }
 }

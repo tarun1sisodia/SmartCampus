@@ -1,9 +1,12 @@
-import 'package:attedance__/common/utils/constants/image_strings.dart';
+import 'package:smart_campus/common/utils/constants/image_strings.dart';
 import 'package:flutter/material.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../../common/utils/constants/colors.dart';
 import '../../../common/utils/constants/sized.dart';
 import '../../../common/utils/helpers/helper_function.dart';
+import '../../../common/utils/helpers/snackbar_helper.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 
@@ -60,6 +63,20 @@ class AboutScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('About', style: Theme.of(context).textTheme.headlineSmall),
+        actions: [
+          if (dotenv.env['DEBUG'] == 'true' || true) // Show in debug mode
+            IconButton(
+              icon: const Icon(Icons.bug_report),
+              onPressed: () async {
+                try {
+                  throw Exception('Sentry Test Error from SmartCampus About Screen');
+                } catch (exception, stackTrace) {
+                  await Sentry.captureException(exception, stackTrace: stackTrace);
+                  TSnackBar.showSuccess(message: 'Test error reported to Sentry');
+                }
+              },
+            ),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(TSizes.defaultSpace),

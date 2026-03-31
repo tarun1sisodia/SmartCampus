@@ -20,7 +20,9 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../navigation_menu.dart';
 import '../../services/local_storage_service.dart';
 import '../../services/offline_service.dart';
+import '../../services/realtime_service.dart';
 import '../../services/storage_service.dart';
+import '../../services/sync_service.dart';
 
 // A class that manages all controller bindings for the app
 // This centralizes dependency injection and improves performance
@@ -29,11 +31,28 @@ class AppBindings {
   static void initGlobalBindings() {
     //print('Initializing global bindings by AppBindings');
     // Auth controllers with permanent: true will persist throughout the app lifecycle
-    Get.put(SupabaseAuthController(), permanent: true);
-    Get.putAsync(() => LocalStorageService().init(), permanent: true);
-    Get.put(OfflineService(), permanent: true);
+    if (!Get.isRegistered<SupabaseAuthController>()) {
+      Get.put(SupabaseAuthController(), permanent: true);
+    }
+    if (!Get.isRegistered<LocalStorageService>()) {
+      Get.putAsync(() => LocalStorageService().init(), permanent: true);
+    }
+    if (!Get.isRegistered<OfflineService>()) {
+      Get.put(OfflineService(), permanent: true);
+    }
     // attendance controller
-    Get.lazyPut<AttendanceController>(() => AttendanceController());
+    if (!Get.isRegistered<AttendanceController>()) {
+      Get.lazyPut<AttendanceController>(() => AttendanceController());
+    }
+  }
+
+  static void initAuthenticatedBindings() {
+    if (!Get.isRegistered<RealtimeService>()) {
+      Get.put(RealtimeService(), permanent: true);
+    }
+    if (!Get.isRegistered<SyncService>()) {
+      Get.put(SyncService(), permanent: true);
+    }
   }
 
   // Onboarding bindings
@@ -151,6 +170,7 @@ class HomeBinding extends Bindings {
     // Check if user is authenticated before binding controllers
     final currentUser = Supabase.instance.client.auth.currentUser;
     if (currentUser != null) {
+      AppBindings.initAuthenticatedBindings();
       //print('User authenticated, initializing controllers');
       Get.lazyPut(() => DashboardController(), fenix: true);
       Get.lazyPut(() => ClassController(), fenix: true);

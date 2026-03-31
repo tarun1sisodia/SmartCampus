@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import '../models/student_model.dart';
 import '../models/attendance_record_model.dart';
 import '../models/attendance_session_model.dart';
@@ -62,7 +63,8 @@ class OfflineService extends GetxService {
 
       // No local data and offline
       return [];
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error getting teacher classes: $e');
       // Fallback to local data even if there's an error
       return await _localStorage.getOfflineClasses(teacherId: teacherId);
@@ -108,7 +110,8 @@ class OfflineService extends GetxService {
 
         return newClass;
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error creating class: $e');
       return null;
     }
@@ -146,7 +149,8 @@ class OfflineService extends GetxService {
 
       // No local data and offline
       return [];
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error getting students for class: $e');
       return await _localStorage.getOfflineStudents(classId: classId);
     }
@@ -202,7 +206,8 @@ class OfflineService extends GetxService {
 
         return newStudent;
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error adding student to class: $e');
       return null;
     }
@@ -239,7 +244,8 @@ class OfflineService extends GetxService {
 
       // No local data and offline
       return [];
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error getting attendance sessions: $e');
       return await _localStorage.getOfflineAttendanceSessions(classId: classId);
     }
@@ -284,7 +290,8 @@ class OfflineService extends GetxService {
 
         return newSession;
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error creating attendance session: $e');
       return null;
     }
@@ -320,7 +327,8 @@ class OfflineService extends GetxService {
 
       // No local data and offline
       return [];
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error getting attendance records: $e');
       return await _localStorage.getOfflineAttendanceRecords(
           sessionId: sessionId);
@@ -380,7 +388,8 @@ class OfflineService extends GetxService {
 
         return true;
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error submitting attendance: $e');
       return false;
     }
@@ -409,7 +418,8 @@ class OfflineService extends GetxService {
       }
 
       return [];
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error getting subjects: $e');
       return await _localStorage.getOfflineSubjects();
     }
@@ -437,7 +447,8 @@ class OfflineService extends GetxService {
       }
 
       return [];
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error getting courses: $e');
       return await _localStorage.getOfflineCourses();
     }
@@ -461,7 +472,8 @@ class OfflineService extends GetxService {
 
       // Get stats from local data
       return await _localStorage.getOfflineAttendanceStats(classId);
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error getting attendance stats: $e');
       return {
         'total_sessions': 0,
@@ -534,7 +546,8 @@ class OfflineService extends GetxService {
 
         return true;
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error bulk submitting attendance: $e');
       return false;
     }

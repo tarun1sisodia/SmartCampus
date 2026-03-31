@@ -1,6 +1,29 @@
 {
-    "cmake.sourceDirectory": "D:/StudioPro/attedance__/windows",
-    "cmake.generator": "Visual Studio 17 2022",
-    "cmake.buildDirectory": "${workspaceFolder}/build",
-    "cmake.configureOnOpen": true
+  "[typescript]": {
+    "editor.defaultFormatter": "denoland.vscode-deno"
+  },
+  "cmake.buildDirectory": "${workspaceFolder}/build",
+  "cmake.configureOnOpen": true,
+  "cmake.generator": "Visual Studio 17 2022",
+  "cmake.sourceDirectory": "D:/StudioPro/smart_campus/windows",
+  "deno.enablePaths": [
+    "supabase/functions"
+  ],
+  "deno.lint": true,
+  "deno.unstable": [
+    "bare-node-builtins",
+    "byonm",
+    "sloppy-imports",
+    "unsafe-proto",
+    "webgpu",
+    "broadcast-channel",
+    "worker-options",
+    "cron",
+    "kv",
+    "ffi",
+    "fs",
+    "http",
+    "net"
+  ],
+  "java.configuration.updateBuildConfiguration": "automatic"
 }

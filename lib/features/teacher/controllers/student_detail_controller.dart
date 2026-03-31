@@ -1,6 +1,8 @@
 import 'dart:io';
+
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '../../../common/utils/helpers/snackbar_helper.dart';
 import '../../../models/class_model.dart';
@@ -85,7 +87,8 @@ class StudentDetailController extends GetxController {
       attendanceHistory.assignAll(history);
 
       ///print('Attendance history loaded: $history');
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       ///print('Error loading student data: ${e.toString()}');
       TSnackBar.showError(
           message: 'Failed to load student data: ${e.toString()}');
@@ -111,7 +114,8 @@ class StudentDetailController extends GetxController {
 
         ///print('Image selected: ${pickedFile.path}');
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       ///print('Error picking image: $e');
       TSnackBar.showError(message: 'Failed to pick image: ${e.toString()}');
     }
@@ -147,7 +151,8 @@ class StudentDetailController extends GetxController {
       );
 
       TSnackBar.showSuccess(message: 'Student image removed successfully');
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       ///print('Error deleting student image: ${e.toString()}');
       TSnackBar.showError(
           message: 'Failed to delete student image: ${e.toString()}');
@@ -190,7 +195,8 @@ class StudentDetailController extends GetxController {
         selectedImage.value = null;
         TSnackBar.showSuccess(message: 'Student image updated successfully');
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       ///print('Error updating student image: ${e.toString()}');
       TSnackBar.showError(
           message: 'Failed to update student image: ${e.toString()}');
@@ -228,7 +234,8 @@ class StudentDetailController extends GetxController {
       await loadStudentData();
 
       TSnackBar.showSuccess(message: 'Attendance updated successfully');
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       ///print('Error updating attendance: ${e.toString()}');
       TSnackBar.showError(
           message: 'Failed to update attendance: ${e.toString()}');

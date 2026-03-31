@@ -1,19 +1,29 @@
-import 'package:attedance__/common/utils/helpers/snackbar_helper.dart';
+import 'package:smart_campus/common/utils/helpers/snackbar_helper.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:flutter/foundation.dart';
 
 import '../models/class_model.dart';
 
 class ClassService {
   final supabase = Supabase.instance.client;
+  static const int defaultClassFetchLimit = 100;
+  static const String _classSelectFields =
+      'id, teacher_id, subject_id, course_id, semester, section, created_at, updated_at, subjects(name), courses(name)';
 
   // Get all classes for a teacher
-  Future<List<ClassModel>> getTeacherClasses(String teacherId) async {
+  Future<List<ClassModel>> getTeacherClasses(
+    String teacherId, {
+    int limit = defaultClassFetchLimit,
+    int offset = 0,
+  }) async {
     try {
       //print('Fetching classes for teacher with ID: $teacherId');
       final response = await supabase
           .from('classes')
-          .select('*, subjects(*), courses(*)')
+          .select(_classSelectFields)
           .eq('teacher_id', teacherId)
+          .range(offset, offset + limit - 1)
           .order('created_at', ascending: false);
 
       //print('Classes fetched successfully: $response');
@@ -38,7 +48,8 @@ class ClassService {
               : null,
         );
       }).toList();
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Error fetching classes: $e');
       throw 'Failed to get teacher classes: $e';
     }
@@ -66,7 +77,7 @@ class ClassService {
       final response = await supabase
           .from('classes')
           .insert(data)
-          .select('*, subjects(*), courses(*)')
+          .select(_classSelectFields)
           .single();
 
       //print('Class created successfully: $response');
@@ -89,7 +100,8 @@ class ClassService {
             ? DateTime.parse(response['updated_at'])
             : null,
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Error creating class: $e');
       throw 'Failed to create class: $e';
     }
@@ -117,7 +129,7 @@ class ClassService {
           .from('classes')
           .update(data)
           .eq('id', classId)
-          .select('*, subjects(*), courses(*)')
+          .select(_classSelectFields)
           .single();
 
       //print('Class updated successfully: $response');
@@ -140,7 +152,8 @@ class ClassService {
             ? DateTime.parse(response['updated_at'])
             : null,
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Error updating class: $e');
       throw 'Failed to update class: $e';
     }
@@ -149,29 +162,38 @@ class ClassService {
   // Delete a class
   Future<void> deleteClass(String classId) async {
     try {
-      //print('Deleting class with ID: $classId');
-      // First delete all related records
-      await supabase.from('attendance_records').delete().eq(
-            'session_id',
-            supabase
-                .from('attendance_sessions')
-                .select('id')
-                .eq('class_id', classId),
-          );
+      debugPrint('Deleting class with ID: $classId');
 
-      // Delete attendance sessions
+      // 1. Get all session IDs for this class
+      final List<Map<String, dynamic>> sessionRecords = await supabase
+          .from('attendance_sessions')
+          .select('id')
+          .eq('class_id', classId);
+
+      final sessionIds = sessionRecords.map((s) => s['id'] as String).toList();
+
+      // 2. Delete all attendance records for these sessions
+      if (sessionIds.isNotEmpty) {
+        await supabase
+            .from('attendance_records')
+            .delete()
+            .filter('session_id', 'in', sessionIds);
+      }
+
+      // 3. Delete attendance sessions
       await supabase
           .from('attendance_sessions')
           .delete()
           .eq('class_id', classId);
 
-      // Delete class-student relationships
+      // 4. Delete class-student relationships
       await supabase.from('class_students').delete().eq('class_id', classId);
 
-      // Finally delete the class
+      // 5. Finally delete the class
       await supabase.from('classes').delete().eq('id', classId);
-      //print('Class deleted successfully');
-    } catch (e) {
+      debugPrint('Class deleted successfully');
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Error deleting class: $e');
       TSnackBar.showError(message: 'Oops Failed to Delete Class');
       throw 'Failed to delete class: $e';
@@ -184,7 +206,7 @@ class ClassService {
       //print('Fetching class with ID: $classId');
       final response = await supabase
           .from('classes')
-          .select('*, subjects(*), courses(*)')
+          .select(_classSelectFields)
           .eq('id', classId)
           .single();
 
@@ -208,7 +230,8 @@ class ClassService {
             ? DateTime.parse(response['updated_at'])
             : null,
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Error fetching class: $e');
       throw 'Failed to get class: $e';
     }

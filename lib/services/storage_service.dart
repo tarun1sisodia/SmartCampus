@@ -1,9 +1,11 @@
+import 'dart:convert';
 import 'dart:io';
+
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
-import 'dart:convert';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 class StorageService extends GetxService {
   static StorageService get instance => Get.find();
@@ -13,14 +15,19 @@ class StorageService extends GetxService {
   static const String onboardingCompletedKey = 'onboardingCompleted';
   static const String rememberUserKey = 'rememberUser';
   static const String userEmailKey = 'userEmail';
-  static const String userPasswordKey = 'userPassword';
+  static const String legacyUserPasswordKey = 'userPassword';
 
   // Initialize storage service
   Future<StorageService> init() async {
-    //print('Initializing StorageService...');
     await GetStorage.init();
-    //print('StorageService initialized.');
+    await _clearLegacyCredentialData();
     return this;
+  }
+
+  Future<void> _clearLegacyCredentialData() async {
+    if (_storage.hasData(legacyUserPasswordKey)) {
+      await _storage.remove(legacyUserPasswordKey);
+    }
   }
 
   // Onboarding
@@ -52,11 +59,8 @@ class StorageService extends GetxService {
   }
 
   // User Credentials
-  Future<void> saveUserCredentials(String email, String password) async {
-    //print('Saving user credentials...');
+  Future<void> saveUserCredentials(String email) async {
     await _storage.write(userEmailKey, email);
-    await _storage.write(userPasswordKey, password);
-    //print('User credentials saved.');
   }
 
   String? getUserEmail() {
@@ -66,18 +70,8 @@ class StorageService extends GetxService {
     return email;
   }
 
-  String? getUserPassword() {
-    //print('Getting user password...');
-    final password = _storage.read(userPasswordKey);
-    //print('User password: $password');
-    return password;
-  }
-
   Future<void> clearUserCredentials() async {
-    //print('Clearing user credentials...');
     await _storage.remove(userEmailKey);
-    await _storage.remove(userPasswordKey);
-    //print('User credentials cleared.');
   }
 
   // Get cache size in MB - optimized for mobile platforms
@@ -96,7 +90,8 @@ class StorageService extends GetxService {
         //print('Returning default cache size for non-mobile platform.');
         return 15.0;
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Error calculating cache size: $e');
       return 0.0;
     }
@@ -124,7 +119,8 @@ class StorageService extends GetxService {
       }
       //print('Total size for directory ${dir.path}: $totalSize bytes');
       return totalSize;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Error calculating directory size: $e');
       return totalSize;
     }
@@ -171,7 +167,8 @@ class StorageService extends GetxService {
         }
       }
       //print('Cache cleared.');
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Error clearing cache: $e');
     }
   }
@@ -199,7 +196,8 @@ class StorageService extends GetxService {
         }
       }
       //print('All data cleared.');
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Error clearing all data: $e');
       rethrow;
     }
@@ -213,7 +211,6 @@ class StorageService extends GetxService {
       final keys = _storage.getKeys();
 
       for (final key in keys) {
-        if (key == userPasswordKey) continue;
         allData[key] = _storage.read(key);
       }
 
@@ -226,12 +223,16 @@ class StorageService extends GetxService {
       final file = File('${tempDir.path}/attendance_app_data_export.json');
       await file.writeAsString(jsonData);
 
-      await Share.shareXFiles([
-        XFile(file.path),
-      ], text: 'Attendance App Data Export');
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [XFile(file.path)],
+          text: 'Attendance App Data Export',
+        ),
+      );
 
       //print('User data exported successfully.');
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Error exporting data: $e');
       rethrow;
     }

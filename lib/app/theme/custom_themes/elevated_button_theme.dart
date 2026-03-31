@@ -10,70 +10,35 @@ import '../../../common/utils/constants/sized.dart';
 class TElevatedButtonTheme {
   TElevatedButtonTheme._();
 
-  static final lightElevatedButton = ElevatedButtonThemeData(
-    style: ElevatedButton.styleFrom(
-      // Subtle elevation for depth perception
-      elevation: 2,
-      shadowColor: TColors.dark.withAlpha(77),
-
-      // Clear color contrast (Aesthetic-Usability Effect)
-      foregroundColor: TColors.white,
-      backgroundColor: TColors.primary,
-
-      // Disabled state styling
-      disabledBackgroundColor: TColors.grey,
-      disabledForegroundColor: TColors.darkGrey,
-
-      // Subtle border for definition
-      side: BorderSide(color: TColors.primary),
-
-      // Consistent padding (Law of Proximity)
-      padding: EdgeInsets.symmetric(
-        vertical: TSizes.buttonHeight / 2,
-        horizontal: TSizes.md,
+  static ElevatedButtonThemeData createElevatedButtonTheme(Color primaryColor, Color foregroundColor, Brightness brightness) {
+    return ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        elevation: 2,
+        shadowColor: brightness == Brightness.dark ? TColors.dark.withAlpha(128) : TColors.dark.withAlpha(77),
+        foregroundColor: foregroundColor,
+        backgroundColor: primaryColor,
+        disabledBackgroundColor: brightness == Brightness.dark ? TColors.darkerGrey : TColors.grey,
+        disabledForegroundColor: brightness == Brightness.dark ? TColors.grey : TColors.darkGrey,
+        side: BorderSide(color: primaryColor),
+        padding: const EdgeInsets.symmetric(
+          vertical: TSizes.buttonHeight / 2,
+          horizontal: TSizes.md,
+        ),
+        textStyle: TextStyle(
+          fontSize: 16,
+          color: foregroundColor,
+          fontWeight: FontWeight.w600,
+          letterSpacing: 0.5,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(TSizes.buttonRadius),
+        ),
+        minimumSize: const Size(TSizes.buttonWidth, TSizes.buttonHeight),
       ),
+    );
+  }
 
-      // Clear text styling
-      textStyle: TextStyle(
-        fontSize: 16,
-        color: TColors.white,
-        fontWeight: FontWeight.w600,
-        letterSpacing: 0.5,
-      ),
-
-      // Consistent shape (Law of Similarity)
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(TSizes.buttonRadius),
-      ),
-
-      // Minimum size for touch targets (Fitts's Law)
-      minimumSize: Size(TSizes.buttonWidth, TSizes.buttonHeight),
-    ),
-  );
-
-  static final darkElevatedButton = ElevatedButtonThemeData(
-    style: ElevatedButton.styleFrom(
-      elevation: 2,
-      shadowColor: TColors.dark.withAlpha(128),
-      foregroundColor: TColors.white,
-      backgroundColor: TColors.primary,
-      disabledForegroundColor: TColors.grey,
-      disabledBackgroundColor: TColors.darkerGrey,
-      side: BorderSide(color: TColors.primary),
-      padding: EdgeInsets.symmetric(
-        vertical: TSizes.buttonHeight / 2,
-        horizontal: TSizes.md,
-      ),
-      textStyle: TextStyle(
-        fontSize: 16,
-        color: TColors.white,
-        fontWeight: FontWeight.w600,
-        letterSpacing: 0.5,
-      ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(TSizes.buttonRadius),
-      ),
-      minimumSize: Size(TSizes.buttonWidth, TSizes.buttonHeight),
-    ),
-  );
+  static final lightElevatedButton = createElevatedButtonTheme(TColors.primary, TColors.white, Brightness.light);
+  static final darkElevatedButton = createElevatedButtonTheme(TColors.primary, TColors.white, Brightness.dark);
 }
+

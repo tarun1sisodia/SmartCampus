@@ -1,16 +1,21 @@
-import 'package:attedance__/common/utils/constants/text_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
+import '../../../common/utils/constants/text_strings.dart';
 import '../../../common/utils/helpers/snackbar_helper.dart';
+import '../../../services/google_sign_in_service.dart';
 import '../../../services/storage_service.dart';
 
 class LoginController extends GetxController {
   static LoginController get instance => Get.find();
 
+  final formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final rememberMe = false.obs;
+  final passwordVisible = false.obs;
+  final isGoogleLoading = false.obs;
 
   @override
   void onInit() {
@@ -24,11 +29,9 @@ class LoginController extends GetxController {
     final remember = StorageService.instance.getRememberUserStatus();
     if (remember) {
       final email = StorageService.instance.getUserEmail();
-      final password = StorageService.instance.getUserPassword();
 
-      if (email != null && password != null) {
+      if (email != null) {
         emailController.text = email;
-        passwordController.text = password;
         rememberMe.value = true;
         //printnt('Credentials loaded: email=$email');
       }
@@ -41,11 +44,7 @@ class LoginController extends GetxController {
     StorageService.instance.setRememberUserStatus(value);
 
     if (value) {
-      // Save current credentials
-      StorageService.instance.saveUserCredentials(
-        emailController.text,
-        passwordController.text,
-      );
+      StorageService.instance.saveUserCredentials(emailController.text.trim());
       //printnt('Credentials saved: email=${emailController.text}');
       // Show a confirmation message
       TSnackBar.showInfo(
@@ -64,10 +63,38 @@ class LoginController extends GetxController {
     }
   }
 
+  void togglePasswordVisibility() {
+    passwordVisible.value = !passwordVisible.value;
+  }
+
+  Future<void> signInWithGoogle() async {
+    try {
+      isGoogleLoading.value = true;
+      final googleSignInService = Get.find<GoogleSignInService>();
+      final user = await googleSignInService.signInWithGoogle();
+      if (user != null) {
+        Get.offAllNamed('/dashboard');
+        return;
+      }
+
+      TSnackBar.showError(
+        message: TTexts.googleError,
+        title: TTexts.error,
+      );
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
+      TSnackBar.showError(
+        message: TTexts.errorOccured + e.toString(),
+        title: TTexts.error,
+      );
+    } finally {
+      isGoogleLoading.value = false;
+    }
+  }
+
   bool isUserLoggedIn() {
     final email = StorageService.instance.getUserEmail();
-    final password = StorageService.instance.getUserPassword();
-    final loggedIn = email != null && password != null;
+    final loggedIn = email != null;
     //printnt('Is user logged in? $loggedIn');
     return loggedIn;
   }
@@ -77,10 +104,7 @@ class LoginController extends GetxController {
     try {
       // Your login logic here
       if (rememberMe.value) {
-        StorageService.instance.saveUserCredentials(
-          emailController.text,
-          passwordController.text,
-        );
+        StorageService.instance.saveUserCredentials(emailController.text.trim());
         //printnt('Credentials saved during login: email=${emailController.text}');
       }
 
@@ -90,7 +114,8 @@ class LoginController extends GetxController {
         title: TTexts.welcomeback,
       );
       //printnt('Login successful');
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //printnt('Login failed: $e');
       // Determine if it's a server error or client error
       if (e.toString().contains('network') ||

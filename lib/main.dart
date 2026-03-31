@@ -1,7 +1,10 @@
-import '../../services/feedback_service.dart';
-import '../../services/storage_service.dart';
+import 'services/feedback_service.dart';
+import 'services/storage_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:get_storage/get_storage.dart';
 import 'app/bindings/app_bindings.dart';
@@ -13,38 +16,43 @@ import 'services/database_helper.dart';
 import 'services/google_sign_in_service.dart';
 import 'services/language_service.dart';
 import 'services/local_storage_service.dart';
+import 'services/connectivity_service.dart';
 
 // The main entry point of the app.
 //
 // Initializes the app's bindings, services, and global state.
-// Checks if the user is already logged in and tries to log in
-// automatically if credentials are saved.
-// Starts the app normally even if auto-login fails.
-//
-// Main entry point of the application.
 //
 // Performs the following startup tasks:
 // - Initializes Flutter bindings
 // - Configures Supabase authentication
 // - Initializes storage and global app services
-// - Attempts automatic user login if credentials are saved
 // - Launches the main application widget
-//
-// Handles auto-login gracefully, continuing app startup even if login fails.
 Future<void> main() async {
   try {
+    WidgetsFlutterBinding.ensureInitialized();
+
+    await dotenv.load(fileName: '.env');
+
+    // Enable Edge-to-Edge mode for modern Android UI
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+
+    // Set status and navigation bars to transparent
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        systemNavigationBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+        systemNavigationBarIconBrightness: Brightness.dark,
+      ),
+    );
+
     // Initialize database factory for SQLite
     if (DatabaseHelper.isSupported) {
-      DatabaseHelper.initializeDatabaseFactory();
-      print('Database factory initialized successfully');
+      await DatabaseHelper.initializeDatabaseFactory();
     } else {
-      print('SQLite not supported on this platform');
+      debugPrint('SQLite not supported on this platform');
     }
     //print('Starting app initialization...');
-    // Intializing the binding for the app.
-    WidgetsFlutterBinding.ensureInitialized();
-    //print('Flutter bindings initialized.');
-
     await GetStorage.init();
     //print('GetStorage initialized.');
 
@@ -73,8 +81,9 @@ Future<void> main() async {
     // Running the App
 
     //print('Launching MyApp...');
-    runApp(MyApp());
-  } catch (e) {
+    await _runAppWithMonitoring();
+  } catch (e, stackTrace) {
+    await Sentry.captureException(e, stackTrace: stackTrace);
     //print('ERROR DURING APP INITIALIZATION: $e');
     //print('Stack trace: $stackTrace');
     // Still try to run the app with minimal functionality
@@ -82,29 +91,50 @@ Future<void> main() async {
   }
 }
 
+Future<void> _runAppWithMonitoring() async {
+  final dsn = ApiConstants.sentryDsn;
+  if (dsn == null) {
+    runApp(MyApp());
+    return;
+  }
+
+  if (GetPlatform.isLinux) {
+    debugPrint('Sentry initialization skipped on Linux to avoid crashpad permission issues.');
+    runApp(const MyApp());
+    return;
+  }
+
+  await SentryFlutter.init(
+    (options) {
+      options.dsn = dsn;
+      options.tracesSampleRate = 1.0;
+    },
+    appRunner: () => runApp(const MyApp()),
+  );
+}
+
 Future<void> _initializeServices() async {
   try {
-    print('Initializing services...');
     await Get.putAsync(() => StorageService().init());
-    print('StorageService initialized.');
     await Get.putAsync(() => FeedbackService().init());
-    print('FeedbackService initialized.');
     await Get.putAsync(() => LanguageService().init());
-    print('LanguageService initialized.');
-    try {
-      await Get.putAsync(() => GoogleSignInService().init());
-      print('GoogleSignInService initialized.');
-    } catch (e) {
-      print('GoogleSignInService not supported on this platform: $e');
+    if (!GetPlatform.isLinux) {
+      try {
+        await Get.putAsync(() => GoogleSignInService().init());
+      } catch (e) {
+        debugPrint('GoogleSignInService not supported on this platform: $e');
+      }
+    } else {
+      debugPrint('GoogleSignInService initialization skipped on Linux.');
     }
     await Get.putAsync(() => LocalStorageService().init(), permanent: true);
-    print('LocalStorageService initialized.');
+    Get.put(ConnectivityService(), permanent: true);
 
     // Initialize app bindings
     AppBindings.initGlobalBindings();
-    print('App bindings initialized');
-  } catch (e) {
-    print('Error initializing services: $e');
+  } catch (e, stackTrace) {
+    await Sentry.captureException(e, stackTrace: stackTrace);
+    debugPrint('Error initializing services: $e');
     rethrow;
   }
 }

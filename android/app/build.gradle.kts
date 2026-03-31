@@ -15,9 +15,9 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace = "com.example.attedance__"
-    compileSdk = flutter.compileSdkVersion
-    ndkVersion = "27.0.12077973"  // Use Flutter's default NDK version
+    namespace = "com.smartcampus.attendance"
+    compileSdk = 36
+    ndkVersion = "28.2.13676358"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -29,9 +29,9 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.attedance__"
+        applicationId = "com.smartcampus.attendance"
         minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
+        targetSdk = 36
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
@@ -68,6 +68,12 @@ android {
             }
         }
     }
+}
+
+dependencies {
+    // Flutter's Android embedding can reference Play Feature Delivery classes
+    // during release shrinking. Use the current split Play Core artifact.
+    implementation("com.google.android.play:feature-delivery:2.1.0")
 }
 
 flutter {

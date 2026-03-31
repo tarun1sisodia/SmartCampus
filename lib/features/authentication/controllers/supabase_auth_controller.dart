@@ -1,8 +1,10 @@
 import 'dart:io';
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '../../../app/bindings/app_bindings.dart';
 import '../../../app/routes/app_routes.dart';
@@ -10,6 +12,7 @@ import '../../../common/utils/helpers/snackbar_helper.dart';
 import '../../../navigation_menu.dart';
 import '../../../services/auth_service.dart';
 import '../../../services/storage_service.dart';
+import '../../../services/biometric_auth_service.dart';
 
 class SupabaseAuthController extends GetxController {
   static SupabaseAuthController get instance => Get.find();
@@ -25,16 +28,43 @@ class SupabaseAuthController extends GetxController {
 
   final supabase = Supabase.instance.client;
 
+  late final StreamSubscription<AuthState> _authSubscription;
+
   @override
   void onInit() {
     super.onInit();
     //printrint('SupabaseAuthController initialized');
+    
+    // Listen to authentication state changes for deep link handling
+    _authSubscription = supabase.auth.onAuthStateChange.listen((data) {
+      final AuthChangeEvent event = data.event;
+      final Session? session = data.session;
+
+      debugPrint('Auth state change event: $event');
+
+      if (event == AuthChangeEvent.signedIn && session != null) {
+        debugPrint('User signed in via deep link or manual login');
+        // If we're on the splash or login/signup screens, navigate to home
+        final currentRoute = Get.currentRoute;
+        if (currentRoute == AppRoutes.splash || 
+            currentRoute == AppRoutes.login || 
+            currentRoute == AppRoutes.signup ||
+            currentRoute == AppRoutes.verifyEmail) {
+          Get.offAllNamed(AppRoutes.home);
+        }
+      } else if (event == AuthChangeEvent.passwordRecovery) {
+        debugPrint('Navigating to Change Password screen (Recovery)');
+        Get.toNamed(AppRoutes.changePassword);
+      }
+    });
+
     loadSavedCredentials();
   }
 
   @override
   void onClose() {
     //printrint('SupabaseAuthController disposed');
+    _authSubscription.cancel();
     emailController.dispose();
     passwordController.dispose();
     super.onClose();
@@ -47,11 +77,9 @@ class SupabaseAuthController extends GetxController {
     final remember = StorageService.instance.getRememberUserStatus();
     if (remember) {
       final email = StorageService.instance.getUserEmail();
-      final password = StorageService.instance.getUserPassword();
 
-      if (email != null && password != null) {
+      if (email != null) {
         emailController.text = email;
-        passwordController.text = password;
         rememberMe.value = true;
         //printrint('Loaded saved credentials: email=$email');
       }
@@ -64,10 +92,7 @@ class SupabaseAuthController extends GetxController {
     StorageService.instance.setRememberUserStatus(value);
 
     if (value) {
-      StorageService.instance.saveUserCredentials(
-        emailController.text,
-        passwordController.text,
-      );
+      StorageService.instance.saveUserCredentials(emailController.text.trim());
       //printrint('Credentials saved');
       TSnackBar.showInfo(
         message: 'Your credentials will be remembered for next login',
@@ -88,7 +113,7 @@ class SupabaseAuthController extends GetxController {
       isLoading.value = true;
       errorMessage.value = '';
 
-      print('Attempting to sign in with email: ${emailController.text.trim()}');
+       // print('Attempting to sign in with email: ${emailController.text.trim()}');
 
       final response = await supabase.auth.signInWithPassword(
         email: emailController.text.trim(),
@@ -96,12 +121,10 @@ class SupabaseAuthController extends GetxController {
       );
 
       if (response.user != null) {
-        print('Sign-in successful: user=${response.user!.id}');
+         // print('Sign-in successful: user=${response.user!.id}');
         if (rememberMe.value) {
-          StorageService.instance.saveUserCredentials(
-            emailController.text.trim(),
-            passwordController.text,
-          );
+          StorageService.instance
+              .saveUserCredentials(emailController.text.trim());
         }
 
         try {
@@ -111,10 +134,10 @@ class SupabaseAuthController extends GetxController {
               .eq('id', response.user!.id)
               .maybeSingle();
 
-          print('User data retrieved: $userData');
+           // print('User data retrieved: $userData');
 
           if (userData == null) {
-            print('User not found in database, creating new entry');
+             // print('User not found in database, creating new entry');
             await supabase.from('users').insert({
               'id': response.user!.id,
               'name': response.user!.userMetadata?['name'] ?? 'New User',
@@ -123,8 +146,9 @@ class SupabaseAuthController extends GetxController {
               'created_at': DateTime.now().toIso8601String(),
             });
           }
-        } catch (e) {
-          print('Error checking/creating user data: $e');
+        } catch (e, stackTrace) {
+          await Sentry.captureException(e, stackTrace: stackTrace);
+           // print('Error checking/creating user data: $e');
         }
 
         TSnackBar.showSuccess(
@@ -132,17 +156,9 @@ class SupabaseAuthController extends GetxController {
           title: 'Welcome Back',
         );
 
-        // Check if we're on Linux
-        bool isLinux = false;
         try {
-          isLinux = Platform.isLinux;
-          print('Platform is Linux: $isLinux');
-        } catch (e) {
-          print('Error checking platform: $e');
-        }
-
-        // Force navigation to home route
-        print('Navigating to home route: ${AppRoutes.home}');
+          Platform.isLinux;
+        } catch (_) {}
 
         // Use Get.offAll to bypass middleware
         Get.offAll(
@@ -152,14 +168,15 @@ class SupabaseAuthController extends GetxController {
         );
       } else {
         errorMessage.value = 'Authentication failed';
-        print('Authentication failed');
+         // print('Authentication failed');
         TSnackBar.showAuthError(
           message: 'Authentication failed. Please try again.',
         );
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       errorMessage.value = e.toString();
-      print('Error during sign-in: $e');
+       // print('Error during sign-in: $e');
       if (e is AuthException) {
         if (e.message.contains('Invalid login credentials')) {
           TSnackBar.showAuthError(
@@ -212,7 +229,8 @@ class SupabaseAuthController extends GetxController {
           title: 'Account Created',
         );
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       errorMessage.value = e.toString();
       //printrint('Error during sign-up: $e');
       if (e is AuthException) {
@@ -262,8 +280,13 @@ class SupabaseAuthController extends GetxController {
           message: 'Your account has been fully set up!',
           title: 'Setup Complete',
         );
+      } else {
+        TSnackBar.showServerError(
+          message: 'Failed to store your information. Please try again later.',
+        );
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //printrint('Error storing user data: $e');
       errorMessage.value = 'Failed to store user data';
 
@@ -296,7 +319,8 @@ class SupabaseAuthController extends GetxController {
         message: 'Verification email has been resent to $email',
         title: 'Email Sent',
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       errorMessage.value = e.toString();
       //printrint('Error resending verification email: $e');
       if (e.toString().contains('network') ||
@@ -327,7 +351,8 @@ class SupabaseAuthController extends GetxController {
       final isVerified = response.user?.emailConfirmedAt != null;
       //printrint('Email verification status: $isVerified');
       return isVerified;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //printrint('Error checking email verification: $e');
       TSnackBar.showServerError(
         message: 'Failed to check email verification status: ${e.toString()}',
@@ -348,7 +373,8 @@ class SupabaseAuthController extends GetxController {
         message: 'Password reset instructions have been sent to your email',
         title: 'Reset Email Sent',
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       errorMessage.value = e.toString();
       //printrint('Error resetting password: $e');
       if (e.toString().contains('network') ||
@@ -395,7 +421,8 @@ class SupabaseAuthController extends GetxController {
       }
 
       return true;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       errorMessage.value = e.toString();
       return false;
     }
@@ -433,7 +460,8 @@ class SupabaseAuthController extends GetxController {
         if (!keepBiometrics) {
           try {
             await biometricAuthService.disableBiometrics();
-          } catch (e) {
+          } catch (e, stackTrace) {
+            await Sentry.captureException(e, stackTrace: stackTrace);
             TSnackBar.showServerError(
               message:
                   'Failed to disable biometric authentication: ${e.toString()}',
@@ -454,7 +482,8 @@ class SupabaseAuthController extends GetxController {
       );
 
       Get.offAllNamed(AppRoutes.login);
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       TSnackBar.showServerError(message: 'Failed to sign out: ${e.toString()}');
     } finally {
       isLoading.value = false;

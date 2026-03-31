@@ -22,6 +22,7 @@ import '../../features/teacher/screens/splash_screen.dart';
 import '../../features/teacher/screens/student_detail_screen.dart';
 import '../../features/teacher/screens/teacher_messages_screen.dart';
 import '../../features/teacher/screens/teacher_settings_screen.dart';
+import '../../features/authentication/screens/oauth_consent/oauth_consent_screen.dart';
 import '../../navigation_menu.dart';
 import 'package:get/get.dart';
 
@@ -58,6 +59,7 @@ class AppRoutes {
   static const String biometricVerification = '/biometric-verification';
   static const String createClass = '/create-class';
   static const String privacyPolicy = '/privacy-policy';
+  static const String oauthConsent = '/oauth/consent';
 
   // Get all application routes
   static List<GetPage> routes = [
@@ -174,7 +176,7 @@ class AppRoutes {
       name: message,
       page: () {
         //print('Navigating to Messages Screen');
-        return const TeacherMessagesScreen();
+        return TeacherMessagesScreen();
       },
       binding: MessagesBinding(),
       transition: Transition.rightToLeft,
@@ -270,6 +272,11 @@ class AppRoutes {
         return AllSessionsScreen();
       },
       binding: AllSessionsBinding(),
+    ),
+    GetPage(
+      name: oauthConsent,
+      page: () => const OAuthConsentScreen(),
+      transition: Transition.fadeIn,
     ),
   ];
 

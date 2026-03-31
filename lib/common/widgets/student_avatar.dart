@@ -1,25 +1,24 @@
-import 'package:attedance__/common/utils/helpers/helper_function.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:shimmer/shimmer.dart';
-import '../utils/constants/colors.dart';
+import '../utils/constants/api_constants.dart';
 
 class StudentAvatar extends StatelessWidget {
   final String? imageUrl;
   final String name;
   final double size;
-  final bool isDarkMode;
   final VoidCallback? onTap;
   final bool showEditIcon;
   final bool isLoading;
 
+  // Made isDarkMode optional for backward compatibility but internal logic uses Theme.of(context)
   const StudentAvatar({
     super.key,
     this.imageUrl,
     required this.name,
     this.size = 50,
-    required this.isDarkMode,
+    bool? isDarkMode,
     this.onTap,
     this.showEditIcon = false,
     this.isLoading = false,
@@ -27,9 +26,9 @@ class StudentAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dark = THelperFunction.isDarkMode(context);
+    final colorScheme = Theme.of(context).colorScheme;
     final hasImage = imageUrl != null && imageUrl!.isNotEmpty;
-
+    
     return GestureDetector(
       onTap: onTap,
       child: Stack(
@@ -38,39 +37,29 @@ class StudentAvatar extends StatelessWidget {
             width: size,
             height: size,
             decoration: BoxDecoration(
-              color: isDarkMode ? TColors.darkerGrey : Colors.grey[200],
+              color: colorScheme.surfaceContainerHighest,
               shape: BoxShape.circle,
               border: Border.all(
-                color: isDarkMode ? TColors.yellow : TColors.primary,
-                width: 2,
+                color: colorScheme.primary,
+                width: 1.5,
               ),
+              boxShadow: [
+                BoxShadow(
+                  color: colorScheme.primary.withValues(alpha: 0.1),
+                  blurRadius: 4,
+                  spreadRadius: 1,
+                ),
+              ],
             ),
             child: ClipOval(
               child: hasImage
                   ? CachedNetworkImage(
-                      imageUrl: imageUrl!,
+                      imageUrl: ApiConstants.optimizeImageUrl(imageUrl!, width: size.toInt() * 2, height: size.toInt() * 2),
                       fit: BoxFit.cover,
-                      placeholder: (context, url) => Shimmer.fromColors(
-                        baseColor:
-                            dark ? TColors.darkerGrey : Colors.grey.shade300,
-                        highlightColor: dark ? TColors.yellow : TColors.primary,
-                        child: Container(
-                          color: Colors.grey,
-                          width: size,
-                          height: size,
-                        ),
-                      ),
-                      errorWidget: (context, url, error) => Icon(
-                        Iconsax.user,
-                        size: size * 0.5,
-                        color: isDarkMode ? TColors.yellow : TColors.primary,
-                      ),
+                      placeholder: (context, url) => _buildShimmer(context),
+                      errorWidget: (context, url, error) => _buildPlaceholder(context),
                     )
-                  : Icon(
-                      Iconsax.user,
-                      size: size * 0.5,
-                      color: isDarkMode ? TColors.yellow : TColors.primary,
-                    ),
+                  : _buildPlaceholder(context),
             ),
           ),
 
@@ -82,42 +71,69 @@ class StudentAvatar extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.all(4),
                 decoration: BoxDecoration(
-                  color: isDarkMode ? TColors.yellow : TColors.primary,
+                  color: colorScheme.primary,
                   shape: BoxShape.circle,
+                  border: Border.all(color: colorScheme.surface, width: 2),
                 ),
                 child: Icon(
                   Iconsax.camera,
-                  size: size * 0.2,
-                  color: isDarkMode ? TColors.dark : Colors.white,
+                  size: size * 0.25,
+                  color: colorScheme.onPrimary,
                 ),
               ),
             ),
 
-          // Loading indicator when uploading
+          // Loading indicator
           if (isLoading)
             Positioned.fill(
               child: Container(
                 decoration: BoxDecoration(
-                  color: TColors.dark.withAlpha((0.5 * 255).toInt()),
+                  color: Colors.black.withValues(alpha: 0.4),
                   shape: BoxShape.circle,
                 ),
                 child: Center(
-                  child: Shimmer.fromColors(
-                    baseColor: dark ? TColors.darkerGrey : Colors.grey.shade300,
-                    highlightColor: dark ? TColors.yellow : TColors.primary,
-                    child: FadeTransition(
-                      opacity: AlwaysStoppedAnimation(0.5),
-                      child: Icon(
-                        Icons.cloud_upload,
-                        color: Colors.white,
-                        size: 24,
-                      ),
+                  child: SizedBox(
+                    width: size * 0.5,
+                    height: size * 0.5,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: colorScheme.primary,
                     ),
                   ),
                 ),
               ),
             ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildPlaceholder(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Container(
+      color: colorScheme.surfaceContainerHighest,
+      child: Center(
+        child: Text(
+          name.isNotEmpty ? name.substring(0, 1).toUpperCase() : "?",
+          style: TextStyle(
+            fontSize: size * 0.4,
+            fontWeight: FontWeight.bold,
+            color: colorScheme.primary,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildShimmer(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Shimmer.fromColors(
+      baseColor: colorScheme.surfaceContainerHighest,
+      highlightColor: colorScheme.surface,
+      child: Container(
+        color: Colors.white,
+        width: size,
+        height: size,
       ),
     );
   }

@@ -7,91 +7,47 @@ import '../../../common/utils/constants/text_strings.dart';
 import '../../../common/utils/device/device_utility.dart';
 import '../../../common/widgets/student_avatar.dart';
 import '../controllers/attendance_controller.dart';
-import '../../../common/utils/constants/colors.dart';
 import '../../../common/utils/constants/sized.dart';
-import '../../../common/utils/helpers/helper_function.dart';
 import '../../../common/utils/helpers/snackbar_helper.dart';
 
 class MarkAttendanceScreen extends StatelessWidget {
   final attendanceController = Get.find<AttendanceController>();
 
   MarkAttendanceScreen({super.key}) {
-    //print('MarkAttendanceScreen initialized');
-
-    // Check if the session is running when the screen is initialized
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _checkSessionStatus();
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) => _checkSessionStatus());
   }
 
-  // Method to check if the session is running
   void _checkSessionStatus() {
     if (attendanceController.currentSessionId.value.isNotEmpty &&
-        !attendanceController
-            .isSessionRunning(attendanceController.currentSessionId.value)) {
-      // Show a message that the session is closed
+        !attendanceController.isSessionRunning(attendanceController.currentSessionId.value)) {
       TSnackBar.showInfo(
-        message:
-            'This session is currently closed. You can view but not modify attendance.',
+        message: 'This session is currently closed. You can view but not modify attendance.',
         title: 'Session Closed',
       );
-
-      // Optionally, you could navigate back or disable editing
-      // For now, we'll just show a warning and keep the screen in read-only mode
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    //print('Building MarkAttendanceScreen');
-    final dark = THelperFunction.isDarkMode(context);
-    //print('Dark mode: $dark');
-
     final screenSize = MediaQuery.of(context).size;
-    //print('Screen size: $screenSize');
     final isMobile = screenSize.width <= 500;
     final isLandscape = DeviceUtility.isLandscapeOrientation(context);
-    //print(
-    // 'Device type - isTablet: $isTablet, isMobile: $isMobile, isLandscape: $isLandscape');
+    final cardPadding = isMobile ? (isLandscape ? TSizes.xs : TSizes.sm) : (isLandscape ? TSizes.sm : TSizes.md);
 
-    final cardPadding = isMobile
-        ? (isLandscape ? TSizes.xs : TSizes.sm)
-        : (isLandscape ? TSizes.sm : TSizes.md);
-    //print('Card padding: $cardPadding');
-
-    // Check if session is running
-    final isSessionRunning =
-        attendanceController.currentSessionId.value.isNotEmpty &&
-            attendanceController
-                .isSessionRunning(attendanceController.currentSessionId.value);
+    final isSessionRunning = attendanceController.currentSessionId.value.isNotEmpty &&
+        attendanceController.isSessionRunning(attendanceController.currentSessionId.value);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Mark Attendance',
-          style: Theme.of(context).textTheme.headlineSmall,
-        ),
+        title: Text('Mark Attendance', style: Theme.of(context).textTheme.headlineSmall),
         actions: [
+          IconButton(onPressed: () => attendanceController.loadStudentsForSession(), icon: const Icon(Iconsax.refresh), tooltip: 'Refresh'),
           IconButton(
             onPressed: () {
-              //print('Refresh button pressed');
-              attendanceController.loadStudentsForSession();
-            },
-            icon: const Icon(Iconsax.refresh),
-          ),
-          IconButton(
-            onPressed: () {
-              //print('Carousel View button pressed');
-
-              // Check if session is running before allowing access to carousel view
               if (!isSessionRunning) {
-                TSnackBar.showInfo(
-                  message: 'This session is currently closed',
-                  title: 'Session Closed',
-                );
+                TSnackBar.showInfo(message: 'This session is currently closed', title: 'Session Closed');
                 return;
               }
-
               Get.toNamed(AppRoutes.carouselAttendance);
             },
             icon: const Icon(Iconsax.slider_horizontal_1),
@@ -99,235 +55,39 @@ class MarkAttendanceScreen extends StatelessWidget {
           ),
         ],
       ),
-      floatingActionButton: Obx(
-        () {
-          //print('FloatingActionButton state updated');
-          return attendanceController.isStudentsLoaded.value
-              ? FloatingActionButton.extended(
-                  onPressed: () {
-                    //print('Submit Attendance button pressed');
-
-                    // Check if session is running before allowing submission
-                    if (!isSessionRunning) {
-                      TSnackBar.showInfo(
-                        message:
-                            'Cannot submit attendance for a closed session',
-                        title: 'Session Closed',
-                      );
-                      return;
-                    }
-
-                    _showSubmitConfirmation(context);
-                  },
-                  backgroundColor: dark ? TColors.blue : TColors.yellow,
-                  icon: const Icon(Iconsax.tick_square),
-                  label: const Text('Submit Attendance'),
-                )
-              : const SizedBox.shrink();
-        },
-      ),
+      floatingActionButton: Obx(() => attendanceController.isStudentsLoaded.value
+          ? FloatingActionButton.extended(
+              onPressed: () {
+                if (!isSessionRunning) {
+                  TSnackBar.showInfo(message: 'Cannot submit attendance for a closed session', title: 'Session Closed');
+                  return;
+                }
+                _showSubmitConfirmation(context);
+              },
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              foregroundColor: Theme.of(context).colorScheme.onPrimary,
+              icon: const Icon(Iconsax.tick_square),
+              label: const Text('Submit Attendance'),
+              elevation: 4,
+            )
+          : const SizedBox.shrink()),
       body: Obx(() {
-        //print('Body state updated');
-        if (attendanceController.isLoading.value) {
-          //print('Loading students...');
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: 100,
-                  height: 100,
-                  child: Shimmer.fromColors(
-                    baseColor: dark ? TColors.darkerGrey : Colors.grey.shade300,
-                    highlightColor: dark ? TColors.yellow : TColors.primary,
-                    child: const Icon(
-                      Iconsax.user,
-                      size: 100,
-                      color: TColors.primary,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: TSizes.spaceBtwItems),
-                Shimmer.fromColors(
-                  baseColor:
-                      dark ? Colors.blueGrey[800]! : Colors.blueGrey[300]!,
-                  highlightColor: dark ? TColors.turquoise : TColors.twitter,
-                  child: Container(
-                    width: 180,
-                    height: 20,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: TSizes.spaceBtwItems / 2),
-                Shimmer.fromColors(
-                  baseColor: dark ? Colors.teal[800]! : Colors.teal[300]!,
-                  highlightColor: dark ? Colors.teal[600]! : Colors.teal[100]!,
-                  child: Container(
-                    width: 120,
-                    height: 15,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        }
+        if (attendanceController.isLoading.value) return _buildLoadingState(context);
+        if (attendanceController.currentSessionId.value.isEmpty) return _buildEmptyState(context, Iconsax.calendar_1, 'No Session Selected', 'Please select an attendance session');
+        if (attendanceController.students.isEmpty) return _buildEmptyState(context, Iconsax.people, 'No Students Found', 'Add students to this class to take attendance');
 
-        if (attendanceController.currentSessionId.value.isEmpty) {
-          //print('No session selected');
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Iconsax.calendar_1,
-                  size: 64,
-                  color: dark ? TColors.yellow : TColors.primary,
-                ),
-                const SizedBox(height: TSizes.spaceBtwItems),
-                Text(
-                  'No Session Selected',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                const SizedBox(height: TSizes.spaceBtwItems / 2),
-                Text(
-                  'Please select an attendance session',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-          );
-        }
-
-        if (attendanceController.students.isEmpty) {
-          //print('No students found');
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Iconsax.people,
-                  size: 64,
-                  color: dark ? TColors.yellow : TColors.primary,
-                ),
-                const SizedBox(height: TSizes.spaceBtwItems),
-                Text(
-                  'No Students Found',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                const SizedBox(height: TSizes.spaceBtwItems / 2),
-                Text(
-                  'Add students to this class to take attendance',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-          );
-        }
-
-        //print('Displaying student list');
         return RefreshIndicator(
-          onRefresh: () async {
-            //print('Refreshing student list');
-            await attendanceController.loadStudentsForSession();
-          },
-          color: dark ? TColors.yellow : TColors.primary,
-          backgroundColor: dark ? TColors.darkerGrey : Colors.white,
-          displacement: 40.0,
-          strokeWidth: 3.0,
-          triggerMode: RefreshIndicatorTriggerMode.onEdge,
+          onRefresh: () => attendanceController.loadStudentsForSession(),
+          color: Theme.of(context).colorScheme.primary,
+          backgroundColor: Theme.of(context).cardTheme.color,
           child: ListView.builder(
             padding: EdgeInsets.all(isMobile ? TSizes.sm : TSizes.defaultSpace),
-            itemCount: attendanceController.students.length,
+            itemCount: attendanceController.students.length + (attendanceController.hasMoreStudents.value ? 1 : 0),
             itemBuilder: (context, index) {
+              if (index >= attendanceController.students.length) return _buildLoadMoreFooter(context);
+
               final student = attendanceController.students[index];
-              //print('Rendering student: ${student.name}');
-              return Card(
-                margin: EdgeInsets.only(
-                  bottom: isMobile ? TSizes.xs : TSizes.spaceBtwItems,
-                ),
-                elevation: 2,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
-                ),
-                child: ListTile(
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: cardPadding,
-                    vertical: isMobile ? TSizes.xs : TSizes.sm,
-                  ),
-                  // Use StudentAvatar widget instead of CircleAvatar
-                  leading: StudentAvatar(
-                    imageUrl: student.imageUrl,
-                    name: student.name,
-                    size: 40,
-                    isDarkMode: dark,
-                  ),
-                  title: Text(
-                    student.name,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          fontSize: isMobile
-                              ? (isLandscape ? 14.0 : 16.0)
-                              : (isLandscape ? 16.0 : 18.0),
-                        ),
-                    maxLines: index > 0 ? 1 : 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height:
-                            isMobile ? TSizes.xs / 2 : TSizes.spaceBtwItems / 2,
-                      ),
-                      Text(
-                        'Roll Number: ${student.rollNumber}',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              fontSize: isMobile ? 10.0 : 12.0,
-                            ),
-                      ),
-                    ],
-                  ),
-                  trailing: DropdownButton<String>(
-                    value: student.attendanceStatus ?? 'absent',
-                    isDense: true,
-                    underline: Container(
-                      height: 1,
-                      color: _getStatusColor(student.attendanceStatus, dark),
-                    ),
-                    onChanged: isSessionRunning
-                        ? (value) {
-                            //print(
-                            // 'Updating attendance status for ${student.name} to $value');
-                            attendanceController.updateStudentStatus(
-                              student.id,
-                              value!,
-                            );
-                          }
-                        : null, // Disable dropdown if session is not running
-                    items: const [
-                      DropdownMenuItem(
-                        value: 'present',
-                        child: Text('Present'),
-                      ),
-                      DropdownMenuItem(value: 'absent', child: Text('Absent')),
-                      DropdownMenuItem(value: 'late', child: Text('Late')),
-                      DropdownMenuItem(
-                        value: 'excused',
-                        child: Text('Excused'),
-                      ),
-                    ],
-                  ),
-                ),
-              );
+              return _buildStudentCard(context, student, cardPadding, isMobile, isLandscape, isSessionRunning);
             },
           ),
         );
@@ -335,54 +95,122 @@ class MarkAttendanceScreen extends StatelessWidget {
     );
   }
 
-  Color _getStatusColor(String? status, bool dark) {
-    //print('Getting status color for status: $status');
+  Widget _buildLoadingState(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Shimmer.fromColors(
+            baseColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+            highlightColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+            child: const Icon(Iconsax.user, size: 80),
+          ),
+          const SizedBox(height: TSizes.md),
+          Shimmer.fromColors(
+            baseColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+            highlightColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+            child: Container(width: 140, height: 16, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8))),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEmptyState(BuildContext context, IconData icon, String title, String subtitle) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, size: 64, color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5)),
+          const SizedBox(height: TSizes.md),
+          Text(title, style: Theme.of(context).textTheme.titleMedium),
+          Text(subtitle, style: Theme.of(context).textTheme.bodySmall, textAlign: TextAlign.center),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStudentCard(BuildContext context, dynamic student, double padding, bool isMobile, bool isLandscape, bool isSessionRunning) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: TSizes.spaceBtwItems / 2),
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
+        side: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
+      ),
+      child: ListTile(
+        contentPadding: EdgeInsets.symmetric(horizontal: padding, vertical: TSizes.xs),
+        leading: StudentAvatar(
+          imageUrl: student.imageUrl,
+          name: student.name,
+          size: 44,
+          isDarkMode: Theme.of(context).brightness == Brightness.dark,
+        ),
+        title: Text(
+          student.name,
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, fontSize: isMobile ? 15 : 17),
+          overflow: TextOverflow.ellipsis,
+        ),
+        subtitle: Text('Roll: ${student.rollNumber}', style: Theme.of(context).textTheme.labelSmall),
+        trailing: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 4),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(TSizes.borderRadiusSm),
+            color: Theme.of(context).colorScheme.surfaceContainer,
+          ),
+          child: DropdownButton<String>(
+            value: student.attendanceStatus ?? 'absent',
+            isDense: true,
+            dropdownColor: Theme.of(context).colorScheme.surface,
+            style: Theme.of(context).textTheme.labelLarge?.copyWith(fontWeight: FontWeight.bold, color: _getStatusColor(student.attendanceStatus, context)),
+            underline: const SizedBox(),
+            icon: Icon(Icons.arrow_drop_down, color: Theme.of(context).colorScheme.onSurfaceVariant),
+            onChanged: isSessionRunning ? (value) => attendanceController.updateStudentStatus(student.id, value!) : null,
+            items: const [
+              DropdownMenuItem(value: 'present', child: Text('Present')),
+              DropdownMenuItem(value: 'absent', child: Text('Absent')),
+              DropdownMenuItem(value: 'late', child: Text('Late')),
+              DropdownMenuItem(value: 'excused', child: Text('Excused')),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLoadMoreFooter(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: TSizes.md),
+      child: Center(
+        child: attendanceController.isLoadingMoreStudents.value
+            ? const CircularProgressIndicator()
+            : OutlinedButton(onPressed: attendanceController.loadMoreStudents, child: const Text('Load More')),
+      ),
+    );
+  }
+
+  Color _getStatusColor(String? status, BuildContext context) {
     switch (status) {
-      case 'present':
-        return Colors.green;
-      case 'absent':
-        return Colors.red;
-      case 'late':
-        return Colors.orange;
-      case 'excused':
-        return Colors.blue;
-      default:
-        return dark ? TColors.yellow : TColors.primary;
+      case 'present': return Colors.green;
+      case 'absent': return Colors.red;
+      case 'late': return Colors.orange;
+      case 'excused': return Colors.blue;
+      default: return Theme.of(context).colorScheme.primary;
     }
   }
 
   void _showSubmitConfirmation(BuildContext context) {
-    //print('Showing submit confirmation dialog');
-    final dark = THelperFunction.isDarkMode(context);
-
-    Get.dialog(
-      AlertDialog(
-        title: const Text('Submit Attendance'),
-        content: const Text(
-          'Are you sure you want to submit the attendance for this session?',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              //print('Cancel button pressed in dialog');
-              Get.back();
-            },
-            child: const Text(TTexts.cancel),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              //print('Submit button pressed in dialog');
-              Get.back();
-              attendanceController.submitAttendance();
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: dark ? TColors.green : TColors.primary,
-              foregroundColor: dark ? TColors.dark : Colors.white,
-            ),
-            child: const Text('Submit'),
-          ),
-        ],
-      ),
+    Get.defaultDialog(
+      title: 'Submit Attendance',
+      middleText: 'Are you sure you want to finalize the attendance for this session?',
+      textConfirm: 'Submit',
+      textCancel: 'Cancel',
+      confirmTextColor: Colors.white,
+      buttonColor: Theme.of(context).colorScheme.primary,
+      onConfirm: () {
+        Get.back();
+        attendanceController.submitAttendance();
+      },
     );
   }
 }

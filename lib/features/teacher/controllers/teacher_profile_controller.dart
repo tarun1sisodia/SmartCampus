@@ -1,12 +1,13 @@
 import 'dart:io';
 
-import 'package:attedance__/common/utils/constants/text_strings.dart';
+import 'package:smart_campus/common/utils/constants/text_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '../../../app/routes/app_routes.dart';
 import '../../../common/utils/helpers/snackbar_helper.dart';
@@ -94,7 +95,8 @@ class TeacherProfileController extends GetxController {
               .eq('class_id', classModel.id);
 
           totalStudents += response.length;
-        } catch (e) {
+        } catch (e, stackTrace) {
+          await Sentry.captureException(e, stackTrace: stackTrace);
           // Handle errors while fetching students
         }
 
@@ -107,7 +109,8 @@ class TeacherProfileController extends GetxController {
             totalAttendancePercentage += stats['averageAttendance'] as double;
             classesWithAttendance++;
           }
-        } catch (e) {
+        } catch (e, stackTrace) {
+          await Sentry.captureException(e, stackTrace: stackTrace);
           // Handle errors while fetching attendance stats
         }
       }
@@ -122,7 +125,8 @@ class TeacherProfileController extends GetxController {
       } else {
         averageAttendance.value = 0.0;
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       // Handle errors during statistics loading
     } finally {
       isStatsLoading.value = false;
@@ -189,7 +193,8 @@ class TeacherProfileController extends GetxController {
 
           user.value = UserModel.fromJson(newUserData);
         }
-      } catch (e) {
+      } catch (e, stackTrace) {
+        await Sentry.captureException(e, stackTrace: stackTrace);
         // Fallback to basic user data from authentication
         user.value = UserModel(
           id: currentUser.id,
@@ -202,7 +207,8 @@ class TeacherProfileController extends GetxController {
       // Set form controllers with current user data
       nameController.text = user.value?.name ?? '';
       phoneController.text = user.value?.phone ?? '';
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       errorMessage.value = e.toString();
     } finally {
       isLoading.value = false;
@@ -261,7 +267,8 @@ class TeacherProfileController extends GetxController {
           message: '$biometricType authentication has been disabled',
         );
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       TSnackBar.showError(
         message: 'Failed to update biometric settings: ${e.toString()}',
       );
@@ -292,7 +299,8 @@ class TeacherProfileController extends GetxController {
       isEditMode.value = false;
 
       TSnackBar.showSuccess(message: 'Profile updated successfully');
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       errorMessage.value = e.toString();
       TSnackBar.showServerError(
         message: 'Failed to update profile: ${e.toString()}',
@@ -312,7 +320,8 @@ class TeacherProfileController extends GetxController {
       Get.offAllNamed(AppRoutes.login);
 
       TSnackBar.showInfo(message: 'You have been signed out');
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       TSnackBar.showError(message: 'Failed to sign out: ${e.toString()}');
     } finally {
       isLoading.value = false;
@@ -411,7 +420,8 @@ class TeacherProfileController extends GetxController {
       await loadUserData();
 
       TSnackBar.showSuccess(message: 'Profile image updated successfully');
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       TSnackBar.showError(message: 'Failed to upload image: ${e.toString()}');
     } finally {
       isUploadingImage.value = false;
@@ -442,7 +452,8 @@ class TeacherProfileController extends GetxController {
           final filePath =
               '${currentUser.id}/${currentUser.id}${path.extension(user.value!.profileImageUrl!)}';
           await supabase.storage.from('profile_images').remove([filePath]);
-        } catch (e) {
+        } catch (e, stackTrace) {
+          await Sentry.captureException(e, stackTrace: stackTrace);
           Get.snackbar('Delete Account can be only run by', 'Admin');
         }
       }
@@ -462,7 +473,8 @@ class TeacherProfileController extends GetxController {
 
           await supabase.from('classes').delete().eq('id', classModel.id);
         }
-      } catch (e) {
+      } catch (e, stackTrace) {
+        await Sentry.captureException(e, stackTrace: stackTrace);
         Get.snackbar('Delete Account can be only run by', 'Admin');
       }
 
@@ -477,7 +489,8 @@ class TeacherProfileController extends GetxController {
       TSnackBar.showSuccess(
         message: 'Your account has been deleted successfully',
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       if (Get.isDialogOpen ?? false) {
         Get.back();
       }

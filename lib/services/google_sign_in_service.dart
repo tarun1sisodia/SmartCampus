@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 class GoogleSignInService extends GetxService {
   final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
@@ -28,7 +29,8 @@ class GoogleSignInService extends GetxService {
       );
 
       return res.user;
-    } catch (error) {
+    } catch (error, stackTrace) {
+      await Sentry.captureException(error, stackTrace: stackTrace);
       // print('Error signing in with Google: $error');
       return null;
     }

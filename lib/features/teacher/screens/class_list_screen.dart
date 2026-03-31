@@ -8,12 +8,10 @@ import '../../../common/utils/constants/text_strings.dart';
 import '../../../models/class_model.dart';
 import '../../../models/subject_model.dart';
 import '../controllers/class_controller.dart';
-import '../../../common/utils/constants/colors.dart';
 import '../../../common/utils/constants/sized.dart';
-import '../../../common/utils/helpers/helper_function.dart';
 import 'add_student_screen.dart';
 import 'attendance_screen.dart';
-import 'create_class_screen.dart'; // Ensure this import points to the correct file
+import 'create_class_screen.dart';
 
 class ClassListScreen extends StatelessWidget {
   final classController = Get.put(ClassController());
@@ -22,11 +20,8 @@ class ClassListScreen extends StatelessWidget {
 
   ClassListScreen({super.key});
 
-  // Modify your Scaffold in the build method to use a conditional FAB
   @override
   Widget build(BuildContext context) {
-    final dark = THelperFunction.isDarkMode(context);
-
     return Obx(() {
       return Scaffold(
         appBar: AppBar(
@@ -45,7 +40,6 @@ class ClassListScreen extends StatelessWidget {
                 )
               : null,
           actions: [
-            // Show select all button in selection mode
             if (classController.isSelectionMode.value)
               IconButton(
                 onPressed: () {
@@ -57,7 +51,6 @@ class ClassListScreen extends StatelessWidget {
                       : Icons.select_all_outlined,
                 ),
               ),
-            // Show normal actions when not in selection mode
             if (!classController.isSelectionMode.value) ...[
               IconButton(
                 onPressed: () {
@@ -77,209 +70,42 @@ class ClassListScreen extends StatelessWidget {
             ],
           ],
         ),
-        // Only show FAB when not in selection mode AND not loading
-        floatingActionButton: (!classController.isSelectionMode.value &&
-                !classController.isLoading.value)
-            ? AnimatedOpacity(
-                opacity: classController.isLoading.value ? 0.0 : 1.0,
-                duration: const Duration(milliseconds: 300),
-                child: FloatingActionButton.extended(
-                  onPressed: () {
-                    Get.to(() => CreateClassScreen());
-                  },
-                  backgroundColor: dark ? TColors.blue : TColors.yellow,
-                  icon: const Icon(Iconsax.book_square),
-                  label: const Text('Create Class'),
-                ),
+        floatingActionButton: (!classController.isSelectionMode.value && !classController.isLoading.value)
+            ? FloatingActionButton.extended(
+                onPressed: () => Get.to(() => CreateClassScreen()),
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                icon: const Icon(Iconsax.book_square),
+                label: const Text('Create Class'),
+                elevation: 4,
               )
             : null,
-        body: _buildBody(context, dark),
-        bottomNavigationBar: classController.isSelectionMode.value
-            ? _buildSelectionActionBar(context, dark)
-            : null,
+        body: _buildBody(context),
+        bottomNavigationBar: classController.isSelectionMode.value ? _buildSelectionActionBar(context) : null,
       );
     });
   }
 
-  // Inside the _buildBody method:
-
-  Widget _buildBody(BuildContext context, bool dark) {
+  Widget _buildBody(BuildContext context) {
     if (classController.isLoading.value) {
-      return Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: 6, // Number of shimmer items to display
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: TSizes.defaultSpace,
-                    vertical: TSizes.spaceBtwItems / 2,
-                  ),
-                  child: Shimmer.fromColors(
-                    baseColor: dark ? TColors.darkerGrey : Colors.grey.shade300,
-                    highlightColor: dark ? TColors.yellow : TColors.primary,
-                    child: Card(
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(TSizes.cardRadiusMd),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(TSizes.md),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                // Circle avatar shimmer
-                                Container(
-                                  width: 48,
-                                  height: 48,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    shape: BoxShape.circle,
-                                  ),
-                                ),
-                                const SizedBox(width: TSizes.spaceBtwItems),
-                                // Class title and subtitle shimmer
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        height: 16,
-                                        width: double.infinity,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(4),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 8),
-                                      Container(
-                                        height: 14,
-                                        width: 150,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(4),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                // Options button shimmer
-                                Container(
-                                  width: 40,
-                                  height: 40,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    shape: BoxShape.circle,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: TSizes.spaceBtwItems),
-                            // Divider shimmer
-                            Container(
-                              height: 1,
-                              width: double.infinity,
-                              color: Colors.white,
-                            ),
-                            const SizedBox(height: TSizes.spaceBtwItems),
-                            // Action buttons shimmer
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Container(
-                                  height: 40,
-                                  width: 80,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(
-                                        TSizes.buttonRadius),
-                                  ),
-                                ),
-                                Container(
-                                  height: 40,
-                                  width: 80,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(
-                                        TSizes.buttonRadius),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-
-          // Floating action button shimmer
-          Padding(
-            padding: const EdgeInsets.all(TSizes.defaultSpace),
-            child: Align(
-              alignment: Alignment.bottomRight,
-              child: Shimmer.fromColors(
-                baseColor: dark ? TColors.darkerGrey : Colors.grey.shade300,
-                highlightColor: dark ? TColors.yellow : TColors.primary,
-                child: Container(
-                  width: 180,
-                  height: 56,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(28),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      );
+      return _buildShimmerLoading(context);
     }
 
     if (classController.classes.isEmpty) {
-      ///print('No classes found');
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Iconsax.book_1,
-              size: 64,
-              color: dark ? TColors.yellow : TColors.primary,
-            ),
+            Icon(Iconsax.book_1, size: 64, color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5)),
             const SizedBox(height: TSizes.spaceBtwItems),
-            Text(
-              'No Classes Yet',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
+            Text('No Classes Yet', style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: TSizes.spaceBtwItems / 2),
-            Text(
-              'Create your first class to get started',
-              style: Theme.of(context).textTheme.bodyMedium,
-              textAlign: TextAlign.center,
-            ),
+            Text('Create your first class to get started', style: Theme.of(context).textTheme.bodyMedium, textAlign: TextAlign.center),
             const SizedBox(height: TSizes.spaceBtwItems),
             ElevatedButton.icon(
-              onPressed: () {
-                ///print('Opening create class screen from empty state');
-                Get.to(() => CreateClassScreen());
-              },
+              onPressed: () => Get.to(() => CreateClassScreen()),
               icon: const Icon(Iconsax.add),
               label: const Text('Create Class'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: dark ? TColors.yellow : TColors.primary,
-                foregroundColor: dark ? TColors.dark : Colors.white,
-              ),
             ),
           ],
         ),
@@ -287,173 +113,155 @@ class ClassListScreen extends StatelessWidget {
     }
 
     return RefreshIndicator(
-      onRefresh: () {
-        ///print('Refreshing classes via pull-to-refresh');
-        return classController.loadClasses();
-      },
-      color: dark ? TColors.yellow : TColors.primary,
-      backgroundColor: dark ? TColors.darkerGrey : Colors.white,
+      onRefresh: () => classController.loadClasses(),
+      color: Theme.of(context).colorScheme.primary,
+      backgroundColor: Theme.of(context).cardTheme.color ?? Colors.white,
       child: ListView.builder(
         physics: const AlwaysScrollableScrollPhysics(),
         padding: const EdgeInsets.all(TSizes.defaultSpace),
-        itemCount: classController.classes.length,
+        itemCount: classController.filteredClasses.length + ((classController.hasMoreClasses.value || classController.isLoadingMore.value) ? 1 : 0),
         itemBuilder: (context, index) {
-          ///print('Building class item at index $index');
-          final classItem = classController.classes[index];
+          if (index >= classController.filteredClasses.length) {
+            return _buildLoadMoreButton();
+          }
 
-          // Check if this class is selected
-          final isSelected =
-              classController.selectedClassIds.contains(classItem.id);
+          final classItem = classController.filteredClasses[index];
+          final isSelected = classController.selectedClassIds.contains(classItem.id);
 
-          return GestureDetector(
-            onLongPress: () {
-              // Enter selection mode on long press
-              if (!classController.isSelectionMode.value) {
-                classController.toggleSelectionMode(classItem.id);
-              }
-            },
-            child: Card(
-              margin: const EdgeInsets.only(bottom: TSizes.spaceBtwItems),
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
-                // border when selected
-                side: isSelected
-                    ? BorderSide(
-                        color: dark ? TColors.yellow : TColors.primary,
-                        width: 2,
-                      )
-                    : BorderSide(
-                        color: dark ? TColors.darkerGrey : TColors.primary,
-                        width: 2,
-                      ),
-              ),
-              child: InkWell(
-                onTap: () {
-                  // Toggle selection if in selection mode, otherwise do nothing
-                  if (classController.isSelectionMode.value) {
-                    classController.toggleClassSelection(classItem.id);
-                  }
-                },
-                borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
-                child: Padding(
-                  padding: const EdgeInsets.all(TSizes.md),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          CircleAvatar(
-                            backgroundColor:
-                                dark ? TColors.yellow : TColors.primary,
-                            child: Text(
-                              classItem.subjectName?.substring(0, 1) ?? 'C',
-                              style: TextStyle(
-                                color: dark ? TColors.dark : Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: TSizes.spaceBtwItems),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  classItem.subjectName ?? 'Unknown Subject',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleMedium
-                                      ?.copyWith(fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  '${classItem.courseName} - Semester ${classItem.semester}${classItem.section != null ? ' (${classItem.section})' : ''}',
-                                  style: Theme.of(context).textTheme.bodyMedium,
-                                ),
-                              ],
-                            ),
-                          ),
-                          // Only show options button when not in selection mode
-                          if (!classController.isSelectionMode.value)
-                            IconButton(
-                              icon: const Icon(Iconsax.more),
-                              onPressed: () {
-                                ///print(
-                                // 'Opening options for class ${classItem.id}');
-                                _showClassOptions(context, classItem);
-                              },
-                            ),
-                        ],
-                      ),
-                      const SizedBox(height: TSizes.spaceBtwItems),
-                      const Divider(),
-                      // Only show action buttons when not in selection mode
-                      if (!classController.isSelectionMode.value)
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            _buildActionButton(
-                              context,
-                              icon: Iconsax.people,
-                              label: 'Students',
-                              onTap: () {
-                                ///print(
-                                // 'Opening students for class ${classItem.id}');
-                                Get.to(() =>
-                                    AddStudentScreen(classModel: classItem));
-                              },
-                              dark: dark, // Pass the dark parameter here
-                            ),
-                            _buildActionButton(
-                              context,
-                              icon: Iconsax.calendar_1,
-                              label: 'Attendance',
-                              onTap: () {
-                                ///print(
-                                // 'Opening attendance for class ${classItem.id}');
-                                Get.to(() =>
-                                    AttendanceScreen(classModel: classItem));
-                              },
-                              dark: dark, // Pass the dark parameter here
-                            ),
-                          ],
-                        ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          );
+          return _buildClassCard(context, classItem, isSelected);
         },
       ),
     );
   }
 
-  // bottom action bar for selection mode
-  Widget _buildSelectionActionBar(BuildContext context, bool dark) {
+  Widget _buildShimmerLoading(BuildContext context) {
+    final baseColor = Theme.of(context).colorScheme.surfaceContainerHighest;
+    final highlightColor = Theme.of(context).colorScheme.surface.withValues(alpha: 0.5);
+
+    return ListView.builder(
+      itemCount: 6,
+      padding: const EdgeInsets.all(TSizes.defaultSpace),
+      itemBuilder: (context, index) {
+        return Shimmer.fromColors(
+          baseColor: baseColor,
+          highlightColor: highlightColor,
+          child: Card(
+            margin: const EdgeInsets.only(bottom: TSizes.spaceBtwItems),
+            child: Container(height: 150, width: double.infinity, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(TSizes.cardRadiusMd))),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildLoadMoreButton() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: TSizes.spaceBtwItems),
+      child: Center(
+        child: classController.isLoadingMore.value
+            ? const CircularProgressIndicator()
+            : OutlinedButton(onPressed: classController.loadMoreClasses, child: const Text('Load More')),
+      ),
+    );
+  }
+
+  Widget _buildClassCard(BuildContext context, ClassModel classItem, bool isSelected) {
+    return GestureDetector(
+      onLongPress: () {
+        if (!classController.isSelectionMode.value) {
+          classController.toggleSelectionMode(classItem.id);
+        }
+      },
+      child: Card(
+        margin: const EdgeInsets.only(bottom: TSizes.spaceBtwItems),
+        elevation: isSelected ? 4 : 2,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
+          side: BorderSide(
+            color: isSelected ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.outlineVariant,
+            width: isSelected ? 2 : 1,
+          ),
+        ),
+        child: InkWell(
+          onTap: () {
+            if (classController.isSelectionMode.value) {
+              classController.toggleClassSelection(classItem.id);
+            }
+          },
+          borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
+          child: Padding(
+            padding: const EdgeInsets.all(TSizes.md),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    CircleAvatar(
+                      backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                      child: Text(
+                        classItem.subjectName?.substring(0, 1) ?? 'C',
+                        style: TextStyle(color: Theme.of(context).colorScheme.onPrimaryContainer, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    const SizedBox(width: TSizes.spaceBtwItems),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(classItem.subjectName ?? 'Unknown Subject', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+                          Text('${classItem.courseName} - Semester ${classItem.semester}', style: Theme.of(context).textTheme.bodyMedium),
+                        ],
+                      ),
+                    ),
+                    if (!classController.isSelectionMode.value)
+                      IconButton(
+                        icon: const Icon(Iconsax.more),
+                        onPressed: () => _showClassOptions(context, classItem),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: TSizes.spaceBtwItems),
+                const Divider(),
+                if (!classController.isSelectionMode.value)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      _buildActionButton(
+                        context,
+                        icon: Iconsax.people,
+                        label: 'Students',
+                        onTap: () => Get.to(() => AddStudentScreen(classModel: classItem)),
+                      ),
+                      _buildActionButton(
+                        context,
+                        icon: Iconsax.calendar_1,
+                        label: 'Attendance',
+                        onTap: () => Get.to(() => AttendanceScreen(classModel: classItem)),
+                      ),
+                    ],
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSelectionActionBar(BuildContext context) {
     return BottomAppBar(
-      color: dark ? TColors.darkerGrey : Colors.white,
+      elevation: 8,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 1.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              '${classController.selectedClassIds.length} selected',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
+            Text('${classController.selectedClassIds.length} Selected', style: Theme.of(context).textTheme.titleMedium),
             ElevatedButton.icon(
-              onPressed: classController.selectedClassIds.isEmpty
-                  ? null
-                  : () {
-                      _showDeleteSelectedConfirmation(context);
-                    },
-              icon: const Icon(Iconsax.trash),
+              onPressed: classController.selectedClassIds.isEmpty ? null : () => _showDeleteSelectedConfirmation(context),
+              icon: const Icon(Iconsax.trash, size: 18),
               label: const Text('Delete'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                foregroundColor: Colors.white,
-              ),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white, elevation: 0),
             ),
           ],
         ),
@@ -461,31 +269,18 @@ class ClassListScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildActionButton(
-    BuildContext context, {
-    required IconData icon,
-    required String label,
-    required VoidCallback onTap,
-    required bool dark, // this parameter
-  }) {
+  Widget _buildActionButton(BuildContext context, {required IconData icon, required String label, required VoidCallback onTap}) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(TSizes.borderRadiusSm),
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: TSizes.md,
-          vertical: TSizes.sm,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: TSizes.md, vertical: TSizes.sm),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              icon,
-              size: 24,
-              color: dark ? TColors.yellow : TColors.primary,
-            ),
+            Icon(icon, size: 22, color: Theme.of(context).colorScheme.primary),
             const SizedBox(height: 4),
-            Text(label),
+            Text(label, style: Theme.of(context).textTheme.labelMedium?.copyWith(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.bold)),
           ],
         ),
       ),
@@ -493,58 +288,35 @@ class ClassListScreen extends StatelessWidget {
   }
 
   void _showClassOptions(BuildContext context, ClassModel classItem) {
-    final dark = THelperFunction.isDarkMode(context);
     showModalBottomSheet(
       context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(TSizes.cardRadiusLg),
-        ),
-      ),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(TSizes.cardRadiusLg))),
       builder: (context) {
         return Padding(
           padding: const EdgeInsets.all(TSizes.defaultSpace),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                'Class Options',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
+              Container(width: 40, height: 4, decoration: BoxDecoration(color: Theme.of(context).colorScheme.outlineVariant, borderRadius: BorderRadius.circular(2)), margin: const EdgeInsets.only(bottom: 20)),
+              Text('Class Options', style: Theme.of(context).textTheme.titleLarge),
               const SizedBox(height: TSizes.spaceBtwItems),
               ListTile(
-                leading: const Icon(Iconsax.edit, color: TColors.primaryDark),
-                title: const Text('Edit Class',
-                    style: TextStyle(color: TColors.primaryDark)),
+                leading: Icon(Iconsax.edit, color: Theme.of(context).colorScheme.primary),
+                title: const Text('Edit Class'),
                 onTap: () {
-                  Navigator.pop(context); // Close the bottom sheet
-                  ///print('Edit class ${classItem.id}');
+                  Get.back();
                   _showEditClassDialog(context, classItem);
                 },
               ),
               ListTile(
                 leading: const Icon(Iconsax.trash, color: Colors.red),
-                title: const Text('Delete Class',
-                    style: TextStyle(color: Colors.red)),
+                title: const Text('Delete Class', style: TextStyle(color: Colors.red)),
                 onTap: () {
-                  Navigator.pop(context);
-
-                  ///print('Delete class ${classItem.id}');
+                  Get.back();
                   _showDeleteConfirmation(context, classItem);
                 },
               ),
               const SizedBox(height: TSizes.spaceBtwItems),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () => Navigator.pop(context),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: dark ? TColors.indigo : TColors.coral,
-                    foregroundColor: dark ? Colors.white : TColors.dark,
-                  ),
-                  child: const Text(TTexts.cancel),
-                ),
-              ),
             ],
           ),
         );
@@ -553,200 +325,90 @@ class ClassListScreen extends StatelessWidget {
   }
 
   void _showDeleteConfirmation(BuildContext context, ClassModel classItem) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Delete Class'),
-          content: Text(
-              'Are you sure you want to delete "${classItem.subjectName}"? This will also delete all attendance sessions and records for this class.'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text(TTexts.cancel),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                classController.deleteClass(classItem.id);
-              },
-              child: const Text('Delete', style: TextStyle(color: Colors.red)),
-            ),
-          ],
-        );
+    Get.defaultDialog(
+      title: 'Delete Class',
+      middleText: 'Are you sure you want to delete "${classItem.subjectName}"? This action cannot be undone.',
+      textConfirm: 'Delete',
+      textCancel: 'Cancel',
+      confirmTextColor: Colors.white,
+      buttonColor: Colors.red,
+      onConfirm: () {
+        Get.back();
+        classController.deleteClass(classItem.id);
       },
     );
   }
 
-  //confirming deletion of multiple classes
   void _showDeleteSelectedConfirmation(BuildContext context) {
     final count = classController.selectedClassIds.length;
-
-    ///print('Showing delete confirmation for $count selected classes');
-
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Delete Selected Classes'),
-          content: Text(
-              'Are you sure you want to delete $count selected ${count == 1 ? 'class' : 'classes'}? This will also delete all attendance sessions and records for ${count == 1 ? 'this class' : 'these classes'}.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text(TTexts.cancel),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                classController.deleteSelectedClasses();
-              },
-              child: const Text(
-                'Delete',
-                style: TextStyle(color: Colors.red),
-              ),
-            ),
-          ],
-        );
+    Get.defaultDialog(
+      title: 'Delete Selected',
+      middleText: 'Are you sure you want to delete $count selected classes? This action cannot be undone.',
+      textConfirm: 'Delete',
+      textCancel: 'Cancel',
+      confirmTextColor: Colors.white,
+      buttonColor: Colors.red,
+      onConfirm: () {
+        Get.back();
+        classController.deleteSelectedClasses();
       },
     );
   }
 
   void _showEditClassDialog(BuildContext context, ClassModel classItem) {
-    final dark = THelperFunction.isDarkMode(context);
-
-    // Load the class data into the controller
     classController.loadClassForEditing(classItem);
-
     showDialog(
       context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Edit Class'),
-          content: SingleChildScrollView(
-            child: Obx(() {
-              return Column(
+      builder: (context) => AlertDialog(
+        title: const Text('Edit Class'),
+        content: SingleChildScrollView(
+          child: Obx(() => Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Subject Dropdown
-                  DropdownButtonFormField(
-                    decoration: InputDecoration(
-                      labelText: 'Subject',
-                      border: OutlineInputBorder(
-                        borderRadius:
-                            BorderRadius.circular(TSizes.inputFieldRadius),
-                      ),
-                    ),
-                    isExpanded: true,
-                    initialValue: classController.selectedSubject.value,
-                    items: classController.subjects.map((subject) {
-                      return DropdownMenuItem(
-                        value: subject,
-                        child: Text(
-                          subject.name,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        ),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      classController.selectedSubject.value = value;
-                      if (value != null) {
-                        classController.selectedSubjectId.value =
-                            (value as SubjectModel).id;
-                      }
+                  DropdownButtonFormField<SubjectModel>(
+                    decoration: const InputDecoration(labelText: 'Subject'),
+                    value: classController.selectedSubject.value,
+                    items: classController.subjects.map((s) => DropdownMenuItem(value: s, child: Text(s.name))).toList(),
+                    onChanged: (v) {
+                      classController.selectedSubject.value = v;
+                      if (v != null) classController.selectedSubjectId.value = v.id;
                     },
                   ),
                   const SizedBox(height: TSizes.spaceBtwInputFields),
-
-                  // Course Dropdown
-                  DropdownButtonFormField(
-                    decoration: InputDecoration(
-                      labelText: 'Course',
-                      border: OutlineInputBorder(
-                        borderRadius:
-                            BorderRadius.circular(TSizes.inputFieldRadius),
-                      ),
-                    ),
-                    isExpanded: true,
-                    initialValue: classController.selectedCourse.value,
-                    items: classController.courses.map((course) {
-                      return DropdownMenuItem(
-                        value: course,
-                        child: Text(
-                          course.name,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        ),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      classController.selectedCourse.value =
-                          value;
-                      if (value != null) {
-                        classController.selectedCourseId.value = value.id;
-                      }
+                  DropdownButtonFormField<dynamic>(
+                    decoration: const InputDecoration(labelText: 'Course'),
+                    value: classController.selectedCourse.value,
+                    items: classController.courses.map((c) => DropdownMenuItem(value: c, child: Text(c.name))).toList(),
+                    onChanged: (v) {
+                      classController.selectedCourse.value = v;
+                      if (v != null) classController.selectedCourseId.value = v.id;
                     },
                   ),
                   const SizedBox(height: TSizes.spaceBtwInputFields),
-
-                  // Semester TextField
                   TextFormField(
                     controller: classController.semesterController,
-                    decoration: InputDecoration(
-                      labelText: 'Semester',
-                      hintText: 'Enter semester (1-6)',
-                      border: OutlineInputBorder(
-                        borderRadius:
-                            BorderRadius.circular(TSizes.inputFieldRadius),
-                      ),
-                    ),
+                    decoration: const InputDecoration(labelText: 'Semester'),
                     keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                      FilteringTextInputFormatter.allow(RegExp(r'^[1-6]')),
-                    ],
                   ),
                   const SizedBox(height: TSizes.spaceBtwInputFields),
-
-                  // Section TextField
                   TextFormField(
                     controller: classController.sectionController,
-                    decoration: InputDecoration(
-                      labelText: 'Section (Optional)',
-                      hintText: 'Enter section (e.g., A, B, C)',
-                      border: OutlineInputBorder(
-                        borderRadius:
-                            BorderRadius.circular(TSizes.inputFieldRadius),
-                      ),
-                    ),
+                    decoration: const InputDecoration(labelText: 'Section (Optional)'),
                   ),
                 ],
-              );
-            }),
+              )),
+        ),
+        actions: [
+          TextButton(onPressed: () => Get.back(), child: const Text(TTexts.cancel)),
+          ElevatedButton(
+            onPressed: () {
+              classController.updateClass(classItem.id);
+              Get.back();
+            },
+            child: const Text('Update Class'),
           ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text(TTexts.cancel),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                // the class
-                classController.updateClass(classItem.id);
-                Navigator.pop(context);
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: dark ? TColors.yellow : TColors.primary,
-                foregroundColor: dark ? TColors.dark : Colors.white,
-              ),
-              child: Text('Update Class'),
-            ),
-          ],
-        );
-      },
+        ],
+      ),
     );
   }
 }
