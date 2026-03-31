@@ -2,8 +2,7 @@ import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart';
-import 'local_db_service.dart';
-import 'attendance_service.dart';
+import 'sync_service.dart';
 
 class ConnectivityService extends GetxService {
   final Connectivity _connectivity = Connectivity();
@@ -44,36 +43,14 @@ class ConnectivityService extends GetxService {
   }
 
   Future<void> _triggerAutoSync() async {
-    debugPrint('Auto-sync triggered...');
-    final localDb = LocalDbService();
-    final attendanceService = AttendanceService();
-    
-    final pending = await localDb.getPendingAttendance();
-    if (pending.isEmpty) {
-      debugPrint('No pending attendance to sync.');
-      return;
+    debugPrint('Auto-sync triggered via ConnectivityService...');
+    try {
+      final syncService = Get.find<SyncService>();
+      await syncService.syncAllData();
+    } catch (e) {
+      debugPrint('SyncService not yet initialized/found: $e');
+      // If SyncService isn't ready, the periodic sync will eventually catch it
     }
-
-    debugPrint('Syncing ${pending.length} pending records to Supabase...');
-    
-    for (var record in pending) {
-      try {
-        await attendanceService.submitAttendance(
-          sessionId: record['session_id'],
-          studentId: record['student_id'],
-          status: record['status'],
-          remarks: record['remarks'],
-        );
-        
-        await localDb.markAsSynced(record['id']);
-        debugPrint('Synced record ${record['id']} successfully.');
-      } catch (e) {
-        debugPrint('Failed to sync record ${record['id']}: $e');
-        // If it fails, we keep it in pending for the next try
-      }
-    }
-    
-    debugPrint('Auto-sync completed.');
   }
 
   // Force a manual sync

@@ -5,11 +5,9 @@ import 'package:iconsax/iconsax.dart';
 import '../../../../../common/utils/constants/colors.dart';
 import '../../../../../common/utils/constants/sized.dart';
 import '../../../../../common/utils/constants/text_strings.dart';
-import '../../../../../common/utils/helpers/helper_function.dart';
 import '../../../controllers/login_controller.dart';
 import '../../../controllers/signup_controller.dart';
 import '../../../controllers/supabase_auth_controller.dart';
-import '../../signup/signup.dart';
 import '../../signup/singup_widgets/textfields.dart';
 import 'remember_checkbox.dart';
 

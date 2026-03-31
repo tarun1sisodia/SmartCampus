@@ -64,6 +64,9 @@ class LocalStorageService extends GetxService {
       if (DatabaseHelper.isSupported) {
         await _initializeDatabase();
         debugPrint('SQLite Database initialized successfully');
+        
+        // MIGRATION: Check for data in old smart_campus_local.db (Zero Data Loss)
+        await _migrateFromOldDatabase();
       } else {
         debugPrint(
             'SQLite not supported on this platform, using SharedPreferences only');
@@ -612,6 +615,22 @@ class LocalStorageService extends GetxService {
     } catch (e) {
       debugPrint('Error inserting record into $table: $e');
       rethrow;
+    }
+  }
+
+  Future<Map<String, dynamic>?> getRecord(
+      String table, String where, List<dynamic> whereArgs) async {
+    try {
+      final results = await getRecords(
+        table,
+        where: where,
+        whereArgs: whereArgs,
+        limit: 1,
+      );
+      return results.isNotEmpty ? results.first : null;
+    } catch (e) {
+      debugPrint('Error getting single record from $table: $e');
+      return null;
     }
   }
 
@@ -1369,6 +1388,50 @@ class LocalStorageService extends GetxService {
     } catch (e) {
       debugPrint('Error getting offline attendance stats: $e');
       return {};
+    }
+  }
+
+  // ==================== Migration & Sync Helpers ====================
+
+  Future<void> _migrateFromOldDatabase() async {
+    try {
+      final dbPath = await getDatabasesPath();
+      final oldDbPath = join(dbPath, 'smart_campus_local.db');
+      
+      if (!await File(oldDbPath).exists()) return;
+
+      debugPrint('Found old database at $oldDbPath. Starting migration...');
+      final oldDb = await openDatabase(oldDbPath);
+      
+      // Migrate pending_attendance
+      final List<Map<String, dynamic>> pending = await oldDb.query('pending_attendance', where: 'synced = 0');
+      
+      if (pending.isNotEmpty) {
+        debugPrint('Migrating ${pending.length} unsynced attendance records...');
+        final batch = _database.batch();
+        for (var record in pending) {
+          // Map old schema to new schema
+          batch.insert('attendance_records', {
+            'id': 'migrate_${DateTime.now().millisecondsSinceEpoch}_${record['student_id']}',
+            'session_id': record['session_id'],
+            'student_id': record['student_id'],
+            'status': record['status'],
+            'remarks': record['remarks'],
+            'created_at': record['created_at'],
+            'updated_at': DateTime.now().toIso8601String(),
+            'is_synced': 0,
+          });
+        }
+        await batch.commit();
+      }
+
+      await oldDb.close();
+      // Rename old database to prevent re-migration
+      await File(oldDbPath).rename(join(dbPath, 'smart_campus_local.db.migrated'));
+      debugPrint('Migration from old database successfully completed.');
+    } catch (e) {
+      debugPrint('Migration error: $e');
+      // Non-critical: allow app to continue
     }
   }
 }

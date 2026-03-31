@@ -4,7 +4,6 @@ import 'package:iconsax/iconsax.dart';
 import '../../../models/student_model.dart';
 import '../../../common/utils/constants/api_constants.dart';
 import '../../../common/utils/constants/colors.dart';
-import '../../../common/utils/constants/sized.dart';
 import '../../../common/utils/device/device_utility.dart';
 
 class SwipeableStudentCard extends StatelessWidget {

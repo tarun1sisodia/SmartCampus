@@ -4,7 +4,6 @@ import '../../../../../common/utils/helpers/helper_function.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../forgot_password/forgot_password_2.dart';
 
 class RememberAndForget extends StatelessWidget {
   final ValueChanged<bool> onRememberChanged;
