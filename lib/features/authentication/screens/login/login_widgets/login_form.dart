@@ -6,6 +6,7 @@ import '../../../../../common/utils/constants/colors.dart';
 import '../../../../../common/utils/constants/sized.dart';
 import '../../../../../common/utils/constants/text_strings.dart';
 import '../../../../../common/utils/helpers/helper_function.dart';
+import '../../../controllers/login_controller.dart';
 import '../../../controllers/signup_controller.dart';
 import '../../../controllers/supabase_auth_controller.dart';
 import '../../signup/signup.dart';
@@ -16,15 +17,14 @@ class LoginForm extends StatelessWidget {
   LoginForm({super.key});
 
   final controller = Get.put(SupabaseAuthController());
-  final _formKey = GlobalKey<FormState>();
-  final _passwordVisible = false.obs;
+  final loginController = Get.find<LoginController>();
 
   @override
   Widget build(BuildContext context) {
     final dark = THelperFunction.isDarkMode(context);
 
     return Form(
-      key: _formKey,
+      key: loginController.formKey,
       child: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: TSizes.spaceBtwSections,
@@ -58,13 +58,14 @@ class LoginForm extends StatelessWidget {
                 iconColor: dark ? TColors.yellow : TColors.primary,
                 prefixIcon: const Icon(Iconsax.password_check),
                 labelText: TTexts.password,
-                obscureText: !_passwordVisible.value,
+                obscureText: !loginController.passwordVisible.value,
                 suffixIcon: IconButton(
                   icon: Icon(
-                    _passwordVisible.value ? Iconsax.eye : Iconsax.eye_slash,
+                    loginController.passwordVisible.value
+                        ? Iconsax.eye
+                        : Iconsax.eye_slash,
                   ),
-                  onPressed: () =>
-                      _passwordVisible.value = !_passwordVisible.value,
+                  onPressed: loginController.togglePasswordVisibility,
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -79,9 +80,11 @@ class LoginForm extends StatelessWidget {
             ),
 
             SizedBox(height: TSizes.spaceBtwInputFields / 2),
-            RememberAndForget(
-              initialValue: controller.rememberMe.value,
-              onRememberChanged: controller.setRememberMe,
+            Obx(
+              () => RememberAndForget(
+                value: controller.rememberMe.value,
+                onRememberChanged: controller.setRememberMe,
+              ),
             ),
 
             const SizedBox(height: TSizes.appBarHeight),
@@ -99,11 +102,11 @@ class LoginForm extends StatelessWidget {
                         TSizes.borderRadiusMd,
                       ),
                     ),
-                  ),
+                      ),
                   onPressed: controller.isLoading.value
                       ? null
                       : () {
-                          if (_formKey.currentState!.validate()) {
+                          if (loginController.formKey.currentState!.validate()) {
                             if (controller.emailController.text.isNotEmpty &&
                                 controller.passwordController.text.isNotEmpty) {
                               controller.signInWithEmail();

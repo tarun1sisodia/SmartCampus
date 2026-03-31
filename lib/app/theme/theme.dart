@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../common/utils/constants/colors.dart';
 import 'custom_themes/appbar_theme.dart';
 import 'custom_themes/bottom_sheet_theme.dart';
 import 'custom_themes/checkbox_theme.dart';
@@ -9,79 +8,57 @@ import 'custom_themes/elevated_button_theme.dart';
 import 'custom_themes/searchbar_theme.dart';
 import 'custom_themes/text_field_theme.dart';
 import 'custom_themes/text_theme.dart';
+import 'custom_themes/card_theme.dart';
+import 'theme_configs.dart';
 
-// TAppTheme implements several UX laws:
-// - Aesthetic-Usability Effect: Consistent, pleasing visual design
-// - Law of Similarity: Consistent styling across components
-// - Hick's Law: Limited color palette to reduce decision complexity
-// - Jakob's Law: Following platform conventions users already know
 class TAppTheme {
   TAppTheme._();
 
-  // Implementing Doherty Threshold - ensure UI responds quickly
-  // by using lightweight theme definitions
-  static ThemeData lightTheme = ThemeData(
-    useMaterial3: true,
-    fontFamily: 'Poppins',
-    brightness: Brightness.light,
-    primaryColor: TColors.blue,
-    scaffoldBackgroundColor: TColors.white,
+  static ThemeData createTheme(ThemeConfig config) {
+    final brightness = config.isDark ? Brightness.dark : Brightness.light;
+    
+    return ThemeData(
+      useMaterial3: true,
+      fontFamily: 'Poppins',
+      brightness: brightness,
+      primaryColor: config.primary,
+      scaffoldBackgroundColor: config.background,
+      visualDensity: VisualDensity.adaptivePlatformDensity,
+      
+      // Component themes using refactored methods
+      textTheme: TtextTheme.createTextTheme(config.textPrimary, config.textSecondary),
+      inputDecorationTheme: TTextFieldTheme.createInputDecorationTheme(
+        config.primary, config.surface, config.textPrimary, config.error, brightness
+      ),
+      appBarTheme: TAppbarTheme.createAppBarTheme(brightness),
+      bottomSheetTheme: TBottomSheetTheme.createBottomSheetTheme(config.surface, brightness),
+      checkboxTheme: TCheckboxTheme.createCheckboxTheme(config.primary, config.background, brightness),
+      chipTheme: TChipTheme.createChipTheme(config.primary, config.surface, config.textPrimary, brightness),
+      elevatedButtonTheme: TElevatedButtonTheme.createElevatedButtonTheme(config.primary, Colors.white, brightness),
+      searchBarTheme: TSearchbarTheme.createSearchBarTheme(config.surface, config.textPrimary, config.textSecondary, brightness),
+      cardTheme: TCardTheme.createCardTheme(config.surface, brightness),
+      
+      iconTheme: IconThemeData(color: config.textPrimary),
+      
+      materialTapTargetSize: MaterialTapTargetSize.padded,
+      
+      colorScheme: ColorScheme(
+        brightness: brightness,
+        primary: config.primary,
+        onPrimary: config.isDark ? Colors.black : Colors.white,
+        secondary: config.accent,
+        onSecondary: config.isDark ? Colors.black : Colors.white,
+        surface: config.surface,
+        onSurface: config.textPrimary,
+        error: config.error,
+        onError: Colors.white,
+        surfaceContainerHighest: config.surface, // Extra surface for cards
+      ),
+    );
+  }
 
-    // Implementing Law of Proximity with consistent spacing
-    visualDensity: VisualDensity.adaptivePlatformDensity,
-
-    // Component themes
-    textTheme: TtextTheme.lighttextTheme,
-    inputDecorationTheme: TTextFieldTheme.lightInputDecoration,
-    appBarTheme: TAppbarTheme.lightAppBarTheme,
-    bottomSheetTheme: TBottomSheetTheme.lightBottomSheetTheme,
-    checkboxTheme: TCheckboxTheme.lightCheckBoxTheme,
-    chipTheme: TChipTheme.lightChipThemeData,
-    elevatedButtonTheme: TElevatedButtonTheme.lightElevatedButton,
-    searchBarTheme: TSearchbarTheme.lightSearchBar,
-    // cardTheme: TCardTheme.lightCardTheme,
-    iconTheme: IconThemeData(color: TColors.dark),
-
-    // Implementing Fitts's Law with appropriate sizing
-    materialTapTargetSize: MaterialTapTargetSize.padded,
-
-    // Implementing Law of Common Region with consistent surface treatments
-    colorScheme: ColorScheme.light(
-      primary: TColors.blue,
-      secondary: TColors.blue.withAlpha(204),
-      surface: TColors.white,
-      error: Colors.red.shade700,
-    ),
-  );
-
-  static ThemeData darkTheme = ThemeData(
-    useMaterial3: true,
-    fontFamily: 'Poppins',
-    brightness: Brightness.dark,
-    primaryColor: Colors.blue,
-    scaffoldBackgroundColor: TColors.backgroundDark,
-
-    visualDensity: VisualDensity.adaptivePlatformDensity,
-
-    // Component themes
-    textTheme: TtextTheme.darktextTheme,
-    inputDecorationTheme: TTextFieldTheme.darkInputDecoration,
-    appBarTheme: TAppbarTheme.darkAppBarTheme,
-    bottomSheetTheme: TBottomSheetTheme.darkBottomSheetTheme,
-    checkboxTheme: TCheckboxTheme.darkCheckBoxTheme,
-    chipTheme: TChipTheme.darkChipThemeData,
-    elevatedButtonTheme: TElevatedButtonTheme.darkElevatedButton,
-    searchBarTheme: TSearchbarTheme.darkSearchBar,
-    // cardTheme: TCardTheme.darkCardTheme, // New theme to add
-    iconTheme: IconThemeData(color: Colors.white),
-
-    materialTapTargetSize: MaterialTapTargetSize.padded,
-
-    colorScheme: ColorScheme.dark(
-      primary: Colors.blue,
-      secondary: Colors.blue.shade300,
-      surface: Colors.grey.shade900,
-      error: Colors.red.shade300,
-    ),
-  );
+  // Default themes for backward compatibility
+  // Using themes[7] (Executive Navy) and themes[1] (Onyx Brutalist) as defaults
+  static ThemeData lightTheme = createTheme(AppThemes.themes[7]); 
+  static ThemeData darkTheme = createTheme(AppThemes.themes[1]);
 }

@@ -1,6 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../common/utils/constants/api_constants.dart';
 import '../../../common/utils/constants/colors.dart';
 import '../../../common/utils/helpers/helper_function.dart';
 
@@ -49,12 +51,26 @@ class ProfileImageViewScreen extends StatelessWidget {
                     spreadRadius: 5,
                   ),
                 ],
-                image: DecorationImage(
-                  image: NetworkImage(imageUrl),
+              ),
+              child: ClipOval(
+                child: CachedNetworkImage(
+                  imageUrl: ApiConstants.optimizeImageUrl(
+                    imageUrl,
+                    width: imageSize.toInt() * 2,
+                    height: imageSize.toInt() * 2,
+                  ),
                   fit: BoxFit.cover,
-                  onError: (exception, stackTrace) {
-                    //print('Error loading profile image: $exception');
-                  },
+                  memCacheWidth: imageSize.toInt() * 2,
+                  memCacheHeight: imageSize.toInt() * 2,
+                  filterQuality: FilterQuality.medium,
+                  placeholder: (context, url) => const Center(
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                  errorWidget: (context, url, error) => const Icon(
+                    Icons.person,
+                    color: Colors.white,
+                    size: 64,
+                  ),
                 ),
               ),
             ),

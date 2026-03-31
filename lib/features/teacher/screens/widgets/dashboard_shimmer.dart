@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
-import '../../../../common/utils/constants/colors.dart';
 import '../../../../common/utils/constants/sized.dart';
 
 class DashboardShimmer extends StatelessWidget {
-  const DashboardShimmer({super.key, required this.dark});
+  const DashboardShimmer({super.key, required this.context});
 
-  final bool dark;
+  final BuildContext context;
 
   @override
   Widget build(BuildContext context) {
+    final baseColor = Theme.of(context).colorScheme.surfaceContainerHighest;
+    final highlightColor = Theme.of(context).colorScheme.surface.withValues(alpha: 0.5);
+
     return SafeArea(
       child: SingleChildScrollView(
         physics: const NeverScrollableScrollPhysics(),
@@ -20,13 +22,10 @@ class DashboardShimmer extends StatelessWidget {
             children: [
               // App Bar shimmer
               Shimmer.fromColors(
-                baseColor: dark ? TColors.darkerGrey : Colors.grey.shade300,
-                highlightColor: dark
-                    ? TColors.yellow.withAlpha(128)
-                    : TColors.primary.withAlpha(128),
+                baseColor: baseColor,
+                highlightColor: highlightColor,
                 child: Row(
                   children: [
-                    // Profile image shimmer
                     Container(
                       width: 40,
                       height: 40,
@@ -36,50 +35,19 @@ class DashboardShimmer extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 12),
-                    // Title shimmer
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Container(
-                            height: 16,
-                            width: 150,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                          ),
+                          Container(height: 16, width: 150, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(4))),
                           const SizedBox(height: 4),
-                          Container(
-                            height: 12,
-                            width: 100,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                          ),
+                          Container(height: 12, width: 100, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(4))),
                         ],
                       ),
                     ),
-                    // Action buttons shimmer
-                    Container(
-                      width: 40,
-                      height: 40,
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                      ),
-                    ),
+                    Container(width: 40, height: 40, decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle)),
                     const SizedBox(width: 8),
-                    Container(
-                      width: 40,
-                      height: 40,
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                      ),
-                    ),
+                    Container(width: 40, height: 40, decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle)),
                   ],
                 ),
               ),
@@ -88,10 +56,8 @@ class DashboardShimmer extends StatelessWidget {
 
               // Search bar shimmer
               Shimmer.fromColors(
-                baseColor: dark ? TColors.darkerGrey : Colors.grey.shade300,
-                highlightColor: dark
-                    ? TColors.yellow.withAlpha(128)
-                    : TColors.primary.withAlpha(128),
+                baseColor: baseColor,
+                highlightColor: highlightColor,
                 child: Container(
                   height: 50,
                   decoration: BoxDecoration(
@@ -105,33 +71,13 @@ class DashboardShimmer extends StatelessWidget {
 
               // Stats cards shimmer
               Shimmer.fromColors(
-                baseColor: dark ? TColors.darkerGrey : Colors.grey.shade300,
-                highlightColor: dark
-                    ? TColors.yellow.withAlpha(128)
-                    : TColors.primary.withAlpha(128),
+                baseColor: baseColor,
+                highlightColor: highlightColor,
                 child: Row(
                   children: [
-                    Expanded(
-                      child: Container(
-                        height: 120,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius:
-                              BorderRadius.circular(TSizes.cardRadiusMd),
-                        ),
-                      ),
-                    ),
+                    Expanded(child: Container(height: 120, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(TSizes.cardRadiusMd)))),
                     const SizedBox(width: TSizes.spaceBtwItems),
-                    Expanded(
-                      child: Container(
-                        height: 120,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius:
-                              BorderRadius.circular(TSizes.cardRadiusMd),
-                        ),
-                      ),
-                    ),
+                    Expanded(child: Container(height: 120, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(TSizes.cardRadiusMd)))),
                   ],
                 ),
               ),
@@ -140,10 +86,8 @@ class DashboardShimmer extends StatelessWidget {
 
               // Attendance chart shimmer
               Shimmer.fromColors(
-                baseColor: dark ? TColors.darkerGrey : Colors.grey.shade300,
-                highlightColor: dark
-                    ? TColors.yellow.withAlpha(128)
-                    : TColors.primary.withAlpha(128),
+                baseColor: baseColor,
+                highlightColor: highlightColor,
                 child: Container(
                   height: 270,
                   width: double.infinity,
@@ -158,30 +102,13 @@ class DashboardShimmer extends StatelessWidget {
 
               // Recent classes header shimmer
               Shimmer.fromColors(
-                baseColor: dark ? TColors.darkerGrey : Colors.grey.shade300,
-                highlightColor: dark
-                    ? TColors.yellow.withAlpha(128)
-                    : TColors.primary.withAlpha(128),
+                baseColor: baseColor,
+                highlightColor: highlightColor,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
-                      height: 20,
-                      width: 120,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                    ),
-                    Container(
-                      height: 36,
-                      width: 80,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius:
-                            BorderRadius.circular(TSizes.buttonRadius),
-                      ),
-                    ),
+                    Container(height: 20, width: 120, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(4))),
+                    Container(height: 36, width: 80, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(TSizes.buttonRadius))),
                   ],
                 ),
               ),
@@ -190,10 +117,8 @@ class DashboardShimmer extends StatelessWidget {
 
               // Recent classes list shimmer
               Shimmer.fromColors(
-                baseColor: dark ? TColors.darkerGrey : Colors.grey.shade300,
-                highlightColor: dark
-                    ? TColors.yellow.withAlpha(128)
-                    : TColors.primary.withAlpha(128),
+                baseColor: baseColor,
+                highlightColor: highlightColor,
                 child: ListView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
@@ -201,13 +126,10 @@ class DashboardShimmer extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return Container(
                       height: 100,
-                      margin: const EdgeInsets.only(
-                        bottom: TSizes.spaceBtwItems,
-                      ),
+                      margin: const EdgeInsets.only(bottom: TSizes.spaceBtwItems),
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius:
-                            BorderRadius.circular(TSizes.cardRadiusMd),
+                        borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
                       ),
                     );
                   },

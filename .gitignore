@@ -10,7 +10,7 @@
 .svn/
 .swiftpm/
 migrate_working_dir/
-
+react_native_app/
 # IntelliJ related  
 *.iml
 *.ipr
@@ -50,12 +50,14 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
-
+prod-ca-2021.crt
 # Environment variables
 .env
-
+.env copy
 # Signing
 android/key.properties
+android/*.properties
+!android/key.properties.example
 **/*.jks
 **/*.keystore
 
@@ -68,3 +70,34 @@ android/key.properties
 .kiro/steering/byterover-rules.md
 .qoder/rules/byterover-rules.md
 .augment/rules/byterover-rules.md
+
+# Large/Unnecessary project artifacts
+bundletool.jar
+sentry-wizard
+
+# Shorebird related
+.shorebird/
+
+# Project Analysis and Generated Documentation
+implementation_planAPP.md
+scaling_app.md
+flutter_build_guide.md
+packages_and_requirements.md
+
+# Platform-specific Ephemeral Build Files
+linux/flutter/ephemeral/
+windows/flutter/ephemeral/
+macos/Flutter/ephemeral/
+
+# Supabase CLI Temporary Files
+supabase/.temp/
+# Sentry native symbols
+.sentry-native
+
+# Flutter/IntelliJ metadata
+.metadata
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# Analysis docs
+packages_and_requirements.md

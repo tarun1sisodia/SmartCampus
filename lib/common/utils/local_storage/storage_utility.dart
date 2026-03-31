@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:crypto/crypto.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 // TStorageUtility: An advanced singleton class for local storage operations
 // using GetStorage as the underlying storage mechanism with extended capabilities
@@ -79,7 +80,8 @@ class TStorageUtility {
     try {
       final jsonString = jsonEncode(object);
       await _storage.write(key, jsonString);
-    } catch (e) {
+    } catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
       //printnt('Error saving object to storage: $e');
       rethrow;
     }
@@ -94,7 +96,8 @@ class TStorageUtility {
 
       final jsonMap = jsonDecode(jsonString) as Map<String, dynamic>;
       return fromJson(jsonMap);
-    } catch (e) {
+    } catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
       //printnt('Error reading object from storage: $e');
       return null;
     }
@@ -106,7 +109,8 @@ class TStorageUtility {
     try {
       final jsonString = jsonEncode(objects);
       await _storage.write(key, jsonString);
-    } catch (e) {
+    } catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
       //printnt('Error saving object list to storage: $e');
       rethrow;
     }
@@ -124,7 +128,8 @@ class TStorageUtility {
       return jsonList
           .map((item) => fromJson(item as Map<String, dynamic>))
           .toList();
-    } catch (e) {
+    } catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
       //printnt('Error reading object list from storage: $e');
       return null;
     }
@@ -148,7 +153,8 @@ class TStorageUtility {
       await saveData('image_paths', imagePathsMap);
 
       return filePath;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
       //printnt('Error saving image: $e');
       return null;
     }
@@ -169,7 +175,8 @@ class TStorageUtility {
         return file;
       }
       return null;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
       //printnt('Error retrieving image: $e');
       return null;
     }
@@ -195,7 +202,8 @@ class TStorageUtility {
         return true;
       }
       return false;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
       //printnt('Error deleting image: $e');
       return false;
     }
@@ -303,7 +311,8 @@ class TStorageUtility {
 
       // Convert bytes to MB
       return totalSize / (1024 * 1024);
-    } catch (e) {
+    } catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
       //printnt('Error calculating cache size: $e');
       return 0.0;
     }
@@ -359,7 +368,8 @@ class TStorageUtility {
         await directory.delete(recursive: true);
         await directory.create(recursive: true);
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
       //printnt('Error clearing cache directory: $e');
     }
   }
@@ -390,7 +400,8 @@ class TStorageUtility {
       await saveData('document_paths', docPathsMap);
 
       return filePath;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
       //printnt('Error saving document: $e');
       return null;
     }
@@ -411,7 +422,8 @@ class TStorageUtility {
         return file;
       }
       return null;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
       //printnt('Error retrieving document: $e');
       return null;
     }
@@ -437,7 +449,8 @@ class TStorageUtility {
         return true;
       }
       return false;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
       //printnt('Error deleting document: $e');
       return false;
     }
@@ -450,7 +463,8 @@ class TStorageUtility {
       // Simple encryption - in a real app, use a proper encryption library
       final encrypted = _encryptString(value);
       await saveData('secure_$key', encrypted);
-    } catch (e) {
+    } catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
       //printnt('Error saving secure data: $e');
       rethrow;
     }
@@ -464,7 +478,8 @@ class TStorageUtility {
       if (encrypted == null) return null;
 
       return _decryptString(encrypted);
-    } catch (e) {
+    } catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
       //printnt('Error retrieving secure data: $e');
       return null;
     }
@@ -510,7 +525,8 @@ class TStorageUtility {
       existingData.addAll(data);
 
       await saveData('offline_$key', jsonEncode(existingData));
-    } catch (e) {
+    } catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
       //printnt('Error saving offline data: $e');
       rethrow;
     }
@@ -525,7 +541,8 @@ class TStorageUtility {
 
       final jsonList = jsonDecode(jsonString) as List;
       return jsonList.cast<Map<String, dynamic>>();
-    } catch (e) {
+    } catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
       //printnt('Error retrieving offline data: $e');
       return null;
     }
@@ -555,7 +572,8 @@ class TStorageUtility {
 
       // Save teacher data
       await saveData('teacher_profile', jsonEncode(teacherData));
-    } catch (e) {
+    } catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
       //printnt('Error saving teacher profile: $e');
       rethrow;
     }
@@ -584,7 +602,8 @@ class TStorageUtility {
       }
 
       return profileData;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
       //printnt('Error retrieving teacher profile: $e');
       return null;
     }
@@ -605,7 +624,8 @@ class TStorageUtility {
         return imageFile;
       }
       return null;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
       //printnt('Error retrieving teacher profile image: $e');
       return null;
     }
@@ -634,7 +654,8 @@ class TStorageUtility {
 
       // Save updated profile
       await saveData('teacher_profile', jsonEncode(currentProfile));
-    } catch (e) {
+    } catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
       //printnt('Error updating teacher profile: $e');
       rethrow;
     }
@@ -657,7 +678,8 @@ class TStorageUtility {
           'timestamp': DateTime.now().toIso8601String(),
         }
       ]);
-    } catch (e) {
+    } catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
       //printnt('Error saving attendance data: $e');
       rethrow;
     }
@@ -674,7 +696,8 @@ class TStorageUtility {
 
       final jsonList = jsonDecode(jsonString) as List;
       return jsonList.cast<Map<String, dynamic>>();
-    } catch (e) {
+    } catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
       //printnt('Error retrieving attendance data: $e');
       return null;
     }
@@ -700,7 +723,8 @@ class TStorageUtility {
         await saveData(
             'offline_pending_attendance', jsonEncode(updatedPendingData));
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
       //printnt('Error marking attendance as synced: $e');
       rethrow;
     }

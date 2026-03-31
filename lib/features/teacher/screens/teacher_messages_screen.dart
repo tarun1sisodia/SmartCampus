@@ -5,8 +5,68 @@ import '../../../common/utils/constants/colors.dart';
 import '../../../common/utils/constants/sized.dart';
 import '../../../common/utils/helpers/helper_function.dart';
 
+class _TeacherMessagesController extends GetxController {
+  final selectedCategory = 0.obs;
+
+  final messages = const [
+    _MessagePreview(
+      name: 'John Smith',
+      message: 'Hello, I have a question about the homework.',
+      time: '10:30 AM',
+      isUnread: true,
+      avatarText: 'JS',
+    ),
+    _MessagePreview(
+      name: 'Sarah Johnson',
+      message: 'Thank you for the feedback on my project.',
+      time: 'Yesterday',
+      isUnread: false,
+      avatarText: 'SJ',
+    ),
+    _MessagePreview(
+      name: 'Michael Brown',
+      message: 'When is the next class meeting?',
+      time: 'Yesterday',
+      isUnread: true,
+      avatarText: 'MB',
+    ),
+    _MessagePreview(
+      name: 'Emily Davis',
+      message: 'I\'ve submitted my assignment.',
+      time: 'Monday',
+      isUnread: false,
+      avatarText: 'ED',
+    ),
+    _MessagePreview(
+      name: 'David Wilson',
+      message: 'Can we schedule a meeting to discuss my grades?',
+      time: 'Sunday',
+      isUnread: false,
+      avatarText: 'DW',
+    ),
+  ];
+}
+
+class _MessagePreview {
+  final String name;
+  final String message;
+  final String time;
+  final bool isUnread;
+  final String avatarText;
+
+  const _MessagePreview({
+    required this.name,
+    required this.message,
+    required this.time,
+    required this.isUnread,
+    required this.avatarText,
+  });
+}
+
 class TeacherMessagesScreen extends StatelessWidget {
-  const TeacherMessagesScreen({super.key});
+  TeacherMessagesScreen({super.key});
+
+  final controller = Get.put(_TeacherMessagesController());
 
   @override
   Widget build(BuildContext context) {
@@ -35,72 +95,37 @@ class TeacherMessagesScreen extends StatelessWidget {
       ),
       body: Stack(
         children: [
-          ListView(
+          ListView.builder(
             padding: const EdgeInsets.all(TSizes.defaultSpace),
-            children: [
-              // Message categories
-              _buildCategorySelector(context, dark),
+            itemCount: controller.messages.length + 3,
+            itemBuilder: (context, index) {
+              if (index == 0) {
+                return _buildCategorySelector(context, dark);
+              }
+              if (index == 1) {
+                return const SizedBox(height: TSizes.spaceBtwSections);
+              }
+              if (index == 2) {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: TSizes.spaceBtwItems),
+                  child: Text(
+                    'Recent Messages',
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                );
+              }
 
-              const SizedBox(height: TSizes.spaceBtwSections),
-
-              // Recent messages
-              Text(
-                'Recent Messages',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              const SizedBox(height: TSizes.spaceBtwItems),
-
-              // Message list
-              _buildMessageItem(
+              final message = controller.messages[index - 3];
+              return _buildMessageItem(
                 context: context,
-                name: 'John Smith',
-                message: 'Hello, I have a question about the homework.',
-                time: '10:30 AM',
-                isUnread: true,
-                avatarText: 'JS',
+                name: message.name,
+                message: message.message,
+                time: message.time,
+                isUnread: message.isUnread,
+                avatarText: message.avatarText,
                 dark: dark,
-              ),
-
-              _buildMessageItem(
-                context: context,
-                name: 'Sarah Johnson',
-                message: 'Thank you for the feedback on my project.',
-                time: 'Yesterday',
-                isUnread: false,
-                avatarText: 'SJ',
-                dark: dark,
-              ),
-
-              _buildMessageItem(
-                context: context,
-                name: 'Michael Brown',
-                message: 'When is the next class meeting?',
-                time: 'Yesterday',
-                isUnread: true,
-                avatarText: 'MB',
-                dark: dark,
-              ),
-
-              _buildMessageItem(
-                context: context,
-                name: 'Emily Davis',
-                message: 'I\'ve submitted my assignment.',
-                time: 'Monday',
-                isUnread: false,
-                avatarText: 'ED',
-                dark: dark,
-              ),
-
-              _buildMessageItem(
-                context: context,
-                name: 'David Wilson',
-                message: 'Can we schedule a meeting to discuss my grades?',
-                time: 'Sunday',
-                isUnread: false,
-                avatarText: 'DW',
-                dark: dark,
-              ),
-            ],
+              );
+            },
           ),
           Positioned(
             bottom: 16,
@@ -119,8 +144,6 @@ class TeacherMessagesScreen extends StatelessWidget {
 
   // Build category selector (All, Unread, Important)
   Widget _buildCategorySelector(BuildContext context, bool dark) {
-    final selectedCategory = 0.obs;
-
     return Obx(
       () => Row(
         children: [
@@ -128,8 +151,8 @@ class TeacherMessagesScreen extends StatelessWidget {
             context: context,
             label: 'All',
             index: 0,
-            selectedIndex: selectedCategory.value,
-            onTap: () => selectedCategory.value = 0,
+            selectedIndex: controller.selectedCategory.value,
+            onTap: () => controller.selectedCategory.value = 0,
             dark: dark,
           ),
           const SizedBox(width: TSizes.spaceBtwItems),
@@ -137,8 +160,8 @@ class TeacherMessagesScreen extends StatelessWidget {
             context: context,
             label: 'Unread',
             index: 1,
-            selectedIndex: selectedCategory.value,
-            onTap: () => selectedCategory.value = 1,
+            selectedIndex: controller.selectedCategory.value,
+            onTap: () => controller.selectedCategory.value = 1,
             dark: dark,
           ),
           const SizedBox(width: TSizes.spaceBtwItems),
@@ -146,8 +169,8 @@ class TeacherMessagesScreen extends StatelessWidget {
             context: context,
             label: 'Important',
             index: 2,
-            selectedIndex: selectedCategory.value,
-            onTap: () => selectedCategory.value = 2,
+            selectedIndex: controller.selectedCategory.value,
+            onTap: () => controller.selectedCategory.value = 2,
             dark: dark,
           ),
         ],
@@ -328,47 +351,59 @@ class _MessageDetailScreen extends StatelessWidget {
         children: [
           // Message history
           Expanded(
-            child: ListView(
+            child: ListView.builder(
               padding: const EdgeInsets.all(TSizes.defaultSpace),
               reverse: true, // Start from bottom
-              children: [
-                _buildReceivedMessage(
-                  context,
-                  'Hello, I have a question about the homework.',
-                  '10:30 AM',
-                  dark,
-                ),
-                _buildSentMessage(
-                  context,
-                  'Sure, what\'s your question?',
-                  '10:32 AM',
-                  dark,
-                ),
-                _buildReceivedMessage(
-                  context,
-                  'For problem #3, I\'m not sure how to approach it. Could you provide a hint?',
-                  '10:35 AM',
-                  dark,
-                ),
-                _buildSentMessage(
-                  context,
-                  'Try using the formula we discussed in class yesterday. Remember to consider the boundary conditions.',
-                  '10:40 AM',
-                  dark,
-                ),
-                _buildReceivedMessage(
-                  context,
-                  'That makes sense! Thank you for the help.',
-                  '10:42 AM',
-                  dark,
-                ),
-                _buildSentMessage(
-                  context,
-                  'You\'re welcome! Let me know if you have any other questions.',
-                  '10:45 AM',
-                  dark,
-                ),
-              ],
+              itemCount: 6, // Hardcoded for now based on static UI
+              itemBuilder: (context, index) {
+                // Return static messages in reverse order (0 is the newest at bottom)
+                switch (index) {
+                  case 0:
+                    return _buildSentMessage(
+                      context,
+                      'You\'re welcome! Let me know if you have any other questions.',
+                      '10:45 AM',
+                      dark,
+                    );
+                  case 1:
+                    return _buildReceivedMessage(
+                      context,
+                      'That makes sense! Thank you for the help.',
+                      '10:42 AM',
+                      dark,
+                    );
+                  case 2:
+                    return _buildSentMessage(
+                      context,
+                      'Try using the formula we discussed in class yesterday. Remember to consider the boundary conditions.',
+                      '10:40 AM',
+                      dark,
+                    );
+                  case 3:
+                    return _buildReceivedMessage(
+                      context,
+                      'For problem #3, I\'m not sure how to approach it. Could you provide a hint?',
+                      '10:35 AM',
+                      dark,
+                    );
+                  case 4:
+                    return _buildSentMessage(
+                      context,
+                      'Sure, what\'s your question?',
+                      '10:32 AM',
+                      dark,
+                    );
+                  case 5:
+                    return _buildReceivedMessage(
+                      context,
+                      'Hello, I have a question about the homework.',
+                      '10:30 AM',
+                      dark,
+                    );
+                  default:
+                    return const SizedBox.shrink();
+                }
+              },
             ),
           ),
 

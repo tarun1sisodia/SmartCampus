@@ -5,14 +5,14 @@ allprojects {
     }
 }
 
-val newBuildDir: Directory = rootProject.layout.buildDirectory.dir("../../build").get()
-rootProject.layout.buildDirectory.value(newBuildDir)
+// Fixed: Base the build directory on projectDirectory to avoid circular references
+rootProject.layout.buildDirectory.value(rootProject.layout.projectDirectory.dir("../build"))
 
 subprojects {
-    val newSubprojectBuildDir: Directory = newBuildDir.dir(project.name)
-    project.layout.buildDirectory.value(newSubprojectBuildDir)
-}
-subprojects {
+    // Each subproject (like :app) gets its own folder inside the shared build directory
+    project.layout.buildDirectory.value(rootProject.layout.buildDirectory.dir(project.name))
+    
+    // Ensure all subprojects wait for :app evaluation
     project.evaluationDependsOn(":app")
 }
 

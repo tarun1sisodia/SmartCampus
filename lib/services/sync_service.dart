@@ -1,7 +1,9 @@
 import 'dart:io';
-import 'package:flutter/foundation.dart';
+
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import '../models/student_model.dart';
 import '../models/attendance_record_model.dart';
 import '../models/attendance_session_model.dart';
@@ -11,7 +13,6 @@ import 'class_service.dart';
 import 'subject_service.dart';
 import 'course_service.dart';
 import 'student_service.dart';
-import 'teacher_service.dart';
 import 'attendance_service.dart';
 
 class SyncService extends GetxService {
@@ -25,7 +26,6 @@ class SyncService extends GetxService {
   final _subjectService = SubjectService();
   final _courseService = CourseService();
   final _studentService = StudentService();
-  final _teacherService = TeacherService();
   final _attendanceService = AttendanceService();
 
   final RxBool isSyncing = false.obs;
@@ -45,7 +45,8 @@ class SyncService extends GetxService {
     try {
       final result = await InternetAddress.lookup('google.com');
       isOnline.value = result.isNotEmpty && result[0].rawAddress.isNotEmpty;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       isOnline.value = false;
     }
   }
@@ -99,7 +100,8 @@ class SyncService extends GetxService {
       await _localStorage.saveLastSyncTime(DateTime.now());
 
       return true;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       syncStatus.value = 'Sync failed: ${e.toString()}';
       debugPrint('Sync error: $e');
       return false;
@@ -154,7 +156,8 @@ class SyncService extends GetxService {
           }
         }
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error downloading data from server: $e');
       rethrow;
     }
@@ -174,7 +177,8 @@ class SyncService extends GetxService {
 
       // Upload attendance records
       await _uploadUnsyncedAttendanceRecords();
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error uploading pending changes: $e');
       rethrow;
     }
@@ -213,7 +217,8 @@ class SyncService extends GetxService {
 
         // Mark as synced
         await _localStorage.markAsSynced('classes', classModel.id);
-      } catch (e) {
+      } catch (e, stackTrace) {
+        await Sentry.captureException(e, stackTrace: stackTrace);
         debugPrint('Error uploading class ${classData['id']}: $e');
         // Add to retry queue or mark for manual resolution
         await _localStorage.addToSyncQueue(
@@ -238,7 +243,8 @@ class SyncService extends GetxService {
 
         // Mark as synced
         await _localStorage.markAsSynced('students', student.id);
-      } catch (e) {
+      } catch (e, stackTrace) {
+        await Sentry.captureException(e, stackTrace: stackTrace);
         debugPrint('Error uploading student ${studentData['id']}: $e');
         // Add to retry queue
         await _localStorage.addToSyncQueue(
@@ -266,7 +272,8 @@ class SyncService extends GetxService {
 
         // Mark as synced
         await _localStorage.markAsSynced('attendance_sessions', session.id);
-      } catch (e) {
+      } catch (e, stackTrace) {
+        await Sentry.captureException(e, stackTrace: stackTrace);
         debugPrint(
             'Error uploading attendance session ${sessionData['id']}: $e');
         // Add to retry queue
@@ -294,7 +301,8 @@ class SyncService extends GetxService {
 
         // Mark as synced
         await _localStorage.markAsSynced('attendance_records', record.id);
-      } catch (e) {
+      } catch (e, stackTrace) {
+        await Sentry.captureException(e, stackTrace: stackTrace);
         debugPrint('Error uploading attendance record ${recordData['id']}: $e');
         // Add to retry queue
         await _localStorage.addToSyncQueue(
@@ -369,13 +377,15 @@ class SyncService extends GetxService {
                 }
                 break;
             }
-          } catch (e) {
+          } catch (e, stackTrace) {
+            await Sentry.captureException(e, stackTrace: stackTrace);
             debugPrint(
                 'Error resolving conflict for $table record ${recordData['id']}: $e');
           }
         }
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error resolving conflicts: $e');
     }
   }
@@ -393,7 +403,8 @@ class SyncService extends GetxService {
       for (final item in oldSyncItems) {
         await _localStorage.removeSyncQueueItem(item['id']);
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error cleaning up sync data: $e');
     }
   }
@@ -414,7 +425,8 @@ class SyncService extends GetxService {
 
       syncStatus.value = 'Classes synced successfully';
       return true;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       syncStatus.value = 'Failed to sync classes: ${e.toString()}';
       return false;
     }
@@ -437,7 +449,8 @@ class SyncService extends GetxService {
 
       syncStatus.value = 'Students synced successfully';
       return true;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       syncStatus.value = 'Failed to sync students: ${e.toString()}';
       return false;
     }
@@ -467,7 +480,8 @@ class SyncService extends GetxService {
 
       syncStatus.value = 'Attendance synced successfully';
       return true;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       syncStatus.value = 'Failed to sync attendance: ${e.toString()}';
       return false;
     }
@@ -508,7 +522,8 @@ class SyncService extends GetxService {
           pendingStudents.length +
           pendingSessions.length +
           pendingRecords.length;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error getting pending sync count: $e');
       return 0;
     }

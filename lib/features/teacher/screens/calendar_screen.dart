@@ -3,217 +3,89 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:table_calendar/table_calendar.dart';
-import '../../../common/utils/constants/colors.dart';
-import '../../../common/utils/helpers/helper_function.dart';
+import 'package:smart_campus/common/utils/helpers/snackbar_helper.dart';
 import '../controllers/calendar_controller.dart';
 import '../../../models/attendance_session_model.dart';
+import '../../../common/utils/constants/sized.dart';
 
 class CalendarScreen extends StatelessWidget {
   final CalendarController controller = Get.put(CalendarController());
 
-  CalendarScreen({super.key}) {
-    //printnt('CalendarScreen constructor called');
-  }
+  CalendarScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    //printnt('Building CalendarScreen');
     return Scaffold(
       appBar: AppBar(
-        title: Text('Calendar'),
+        title: const Text('Academic Calendar'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.filter_list),
-            onPressed: () {
-              //printnt('Filter button pressed');
-              _showFilterBottomSheet(context);
-            },
-          ),
-          IconButton(
-            icon: const Icon(Iconsax.refresh),
-            onPressed: () {
-              //printnt('Refresh button pressed');
-              controller.refreshData();
-            },
-          ),
+          IconButton(icon: const Icon(Icons.filter_list), onPressed: () => _showFilterBottomSheet(context)),
+          IconButton(icon: const Icon(Iconsax.refresh), onPressed: () => controller.refreshData()),
         ],
       ),
       body: Obx(() {
-        //printnt('Building body with Obx');
-        // In the build method, update the loading section:
-
-        if (controller.isLoading.value) {
-          THelperFunction.isDarkMode(context);
-          return Column(
-            children: [
-              _buildShimmerActiveSessionsIndicator(),
-              _buildShimmerCalendar(),
-              Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.all(8.0),
-                  itemCount: 5, // Simulate 5 shimmer items
-                  itemBuilder: (context, index) {
-                    return _buildShimmerSessionCard();
-                  },
-                ),
-              ),
-            ],
-          );
-        }
+        if (controller.isLoading.value) return _buildLoadingState(context);
 
         return Column(
           children: [
-            _buildActiveSessionsIndicator(),
-            _buildCalendar(),
-            _buildSessionsList(),
+            _buildActiveSessionsIndicator(context),
+            _buildCalendar(context),
+            const Divider(height: 1),
+            _buildSessionsList(context),
           ],
         );
       }),
     );
   }
 
-  Widget _buildShimmerSessionCard() {
-    final dark = THelperFunction.isDarkMode(Get.context!);
-
-    return Shimmer.fromColors(
-      baseColor: dark ? TColors.darkerGrey : Colors.grey.shade300,
-      highlightColor:
-          dark ? TColors.yellow.withAlpha(128) : TColors.primary.withAlpha(128),
-      child: Card(
-        margin: const EdgeInsets.symmetric(vertical: 4.0),
-        child: Container(
-          height: 80.0,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(8.0),
+  Widget _buildLoadingState(BuildContext context) {
+    return Column(
+      children: [
+        _buildShimmerItem(context, height: 40, margin: 8),
+        _buildShimmerItem(context, height: 300, margin: 8),
+        Expanded(
+          child: ListView.builder(
+            padding: const EdgeInsets.all(8),
+            itemCount: 4,
+            itemBuilder: (context, index) => _buildShimmerItem(context, height: 100, margin: 4),
           ),
         ),
-      ),
+      ],
     );
   }
 
-  Widget _buildShimmerActiveSessionsIndicator() {
-    final dark = THelperFunction.isDarkMode(Get.context!);
-
+  Widget _buildShimmerItem(BuildContext context, {required double height, double margin = 0}) {
     return Shimmer.fromColors(
-      baseColor: dark ? TColors.darkerGrey : Colors.grey.shade300,
-      highlightColor:
-          dark ? TColors.yellow.withAlpha(128) : TColors.primary.withAlpha(128),
+      baseColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+      highlightColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
       child: Container(
-        margin: const EdgeInsets.all(8.0),
-        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(8.0),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 12,
-              height: 12,
-              decoration: BoxDecoration(
-                color: Colors.white.withAlpha(128),
-                shape: BoxShape.circle,
-              ),
-            ),
-            const SizedBox(width: 8),
-            Container(
-              width: 150,
-              height: 12,
-              color: Colors.white.withAlpha(128),
-            ),
-          ],
-        ),
+        margin: EdgeInsets.all(margin),
+        height: height,
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(TSizes.borderRadiusMd)),
       ),
     );
   }
 
-  Widget _buildShimmerCalendar() {
-    final dark = THelperFunction.isDarkMode(Get.context!);
-
-    return Shimmer.fromColors(
-      baseColor: dark ? TColors.darkerGrey : Colors.grey.shade300,
-      highlightColor:
-          dark ? TColors.yellow.withAlpha(128) : TColors.primary.withAlpha(128),
-      child: Container(
-        margin: const EdgeInsets.all(8.0),
-        height: 300.0,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(8.0),
-        ),
-        // some internal structure to make it look more like a calendar
-        child: Column(
-          children: [
-            // Calendar header
-            Container(
-              height: 50,
-              margin: const EdgeInsets.all(8.0),
-              decoration: BoxDecoration(
-                color: Colors.white.withAlpha(128),
-                borderRadius: BorderRadius.circular(4.0),
-              ),
-            ),
-            // Calendar grid
-            Expanded(
-              child: GridView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 7,
-                  childAspectRatio: 1.0,
-                ),
-                itemCount: 35, // 5 weeks of 7 days
-                itemBuilder: (context, index) {
-                  return Container(
-                    margin: const EdgeInsets.all(4.0),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withAlpha(128),
-                      borderRadius: BorderRadius.circular(4.0),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildActiveSessionsIndicator() {
-    //printnt('Building active sessions indicator');cecream_outli
+  Widget _buildActiveSessionsIndicator(BuildContext context) {
     return Obx(() {
       final activeCount = controller.activeSessionsCount.value;
-      //printnt('Active sessions count: $activeCount');
-
-      if (activeCount == 0) {
-        return const SizedBox.shrink();
-      }
+      if (activeCount == 0) return const SizedBox.shrink();
 
       return Container(
         margin: const EdgeInsets.all(8.0),
-        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
         decoration: BoxDecoration(
-          color: TColors.primary.withAlpha(26),
-          borderRadius: BorderRadius.circular(8.0),
+          color: Colors.green.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(TSizes.borderRadiusMd),
+          border: Border.all(color: Colors.green.withValues(alpha: 0.3)),
         ),
         child: Row(
           children: [
-            Container(
-              width: 12,
-              height: 12,
-              decoration: BoxDecoration(
-                color: Colors.green,
-                shape: BoxShape.circle,
-              ),
-            ),
-            const SizedBox(width: 8),
+            const CircleAvatar(radius: 4, backgroundColor: Colors.green),
+            const SizedBox(width: 10),
             Text(
-              '$activeCount active ${activeCount == 1 ? 'session' : 'sessions'} right now',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: TColors.primary,
-              ),
+              '$activeCount Live ${activeCount == 1 ? 'Session' : 'Sessions'}',
+              style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.green),
             ),
           ],
         ),
@@ -221,418 +93,180 @@ class CalendarScreen extends StatelessWidget {
     });
   }
 
-  Widget _buildCalendar() {
-    //printnt('Building calendar');
-    return Obx(() {
-      //printnt('Calendar focused day: ${controller.focusedDay.value}');
-      return TableCalendar(
-        firstDay: DateTime.utc(2020, 1, 1),
-        lastDay: DateTime.utc(2030, 12, 31),
-        focusedDay: controller.focusedDay.value,
-        calendarFormat: controller.calendarFormat.value,
-        selectedDayPredicate: (day) {
-          return isSameDay(controller.selectedDay.value, day);
-        },
-        onDaySelected: (selectedDay, focusedDay) {
-          //printnt('Day selected: $selectedDay');
-          controller.selectedDay.value = selectedDay;
-          controller.focusedDay.value = focusedDay;
-        },
-        onFormatChanged: (format) {
-          //printnt('Calendar format changed: $format');
-          controller.calendarFormat.value = format;
-        },
-        onPageChanged: (focusedDay) {
-          //printnt('Calendar page changed: $focusedDay');
-          controller.focusedDay.value = focusedDay;
-        },
-        eventLoader: (day) {
-          final sessions = controller.getSessionsForDay(day);
-          //printnt('Loading events for day: $day, count: ${sessions.length}');
-          return sessions;
-        },
-        calendarStyle: CalendarStyle(
-          markerDecoration: BoxDecoration(
-            color: TColors.primary,
-            shape: BoxShape.circle,
+  Widget _buildCalendar(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Obx(() => TableCalendar(
+          firstDay: DateTime.utc(2020, 1, 1),
+          lastDay: DateTime.utc(2030, 12, 31),
+          focusedDay: controller.focusedDay.value,
+          calendarFormat: controller.calendarFormat.value,
+          selectedDayPredicate: (day) => isSameDay(controller.selectedDay.value, day),
+          onDaySelected: (sel, foc) {
+            controller.selectedDay.value = sel;
+            controller.focusedDay.value = foc;
+          },
+          onFormatChanged: (f) => controller.calendarFormat.value = f,
+          onPageChanged: (f) => controller.focusedDay.value = f,
+          eventLoader: (day) => controller.getSessionsForDay(day),
+          calendarStyle: CalendarStyle(
+            markerDecoration: BoxDecoration(color: colorScheme.primary, shape: BoxShape.circle),
+            todayDecoration: BoxDecoration(color: colorScheme.primary.withValues(alpha: 0.2), shape: BoxShape.circle),
+            selectedDecoration: BoxDecoration(color: colorScheme.primary, shape: BoxShape.circle),
+            todayTextStyle: TextStyle(color: colorScheme.primary, fontWeight: FontWeight.bold),
           ),
-          todayDecoration: BoxDecoration(
-            color: TColors.primary.withAlpha(128),
-            shape: BoxShape.circle,
-          ),
-          selectedDecoration: BoxDecoration(
-            color: TColors.primary,
-            shape: BoxShape.circle,
-          ),
-        ),
-        //customize the format button text
-        availableCalendarFormats: const {
-          CalendarFormat.month: 'Week',
-          CalendarFormat.twoWeeks: 'Month',
-          CalendarFormat.week: '2 Week',
-        },
-        // Optional: You can also customize the header style
-        headerStyle: HeaderStyle(
-            formatButtonTextStyle: TextStyle(
-              color: TColors.primary,
-              fontSize: 14.0,
-            ),
+          headerStyle: HeaderStyle(
+            formatButtonTextStyle: TextStyle(color: colorScheme.primary, fontWeight: FontWeight.bold),
             formatButtonDecoration: BoxDecoration(
-              border: Border.all(color: TColors.primary),
-              borderRadius: BorderRadius.circular(12.0),
+              border: Border.all(color: colorScheme.primary),
+              borderRadius: BorderRadius.circular(12),
             ),
-            rightChevronIcon: Icon(Icons.arrow_forward_ios),
-            leftChevronIcon: Icon(Icons.arrow_back_ios)),
-      );
-    });
+          ),
+        ));
   }
 
-  Widget _buildSessionsList() {
-    //printnt('Building sessions list');
+  Widget _buildSessionsList(BuildContext context) {
     return Obx(() {
-      final sessionsForSelectedDay = controller.getSessionsForDay(
-        controller.selectedDay.value,
-      );
-      //printnt('Sessions for selected day: ${sessionsForSelectedDay.length}');
-
-      if (sessionsForSelectedDay.isEmpty) {
-        return Expanded(
-          child: Center(
-            child: Text(
-              'No sessions scheduled for this day',
-              style: TextStyle(color: Colors.grey),
-            ),
-          ),
-        );
+      final sessions = controller.getSessionsForDay(controller.selectedDay.value);
+      if (sessions.isEmpty) {
+        return const Expanded(child: Center(child: Text('No sessions for this day', style: TextStyle(color: Colors.grey))));
       }
 
       return Expanded(
         child: ListView.builder(
-          padding: const EdgeInsets.all(8.0),
-          itemCount: sessionsForSelectedDay.length,
-          itemBuilder: (context, index) {
-            //printnt('Building session card at index: $index');
-            return _buildSessionCard(sessionsForSelectedDay[index]);
-          },
+          padding: const EdgeInsets.all(8),
+          itemCount: sessions.length,
+          itemBuilder: (context, index) => _buildSessionCard(context, sessions[index]),
         ),
       );
     });
   }
 
-  Widget _buildSessionCard(AttendanceSessionModel session) {
-    //printnt('Building session card for session ID: ${session.id}');
+  Widget _buildSessionCard(BuildContext context, AttendanceSessionModel session) {
+    final colorScheme = Theme.of(context).colorScheme;
     final isActive = controller.isSessionActive(session);
-    //printnt('Session active status: $isActive');
-
-    // Check if this is the current user's session
-    final isMySession =
-        controller.userClasses.any((cls) => cls.id == session.classId);
+    final isMySession = controller.userClasses.any((cls) => cls.id == session.classId);
 
     return Card(
-      margin: const EdgeInsets.symmetric(vertical: 4.0),
-      elevation: 2.0,
+      margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+      elevation: 0,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8.0),
-        side: isActive
-            ? BorderSide(color: Colors.green, width: 2.0)
-            : isMySession
-                ? BorderSide(color: TColors.primary, width: 1.0)
-                : BorderSide.none,
+        borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
+        side: BorderSide(
+          color: isActive ? Colors.green : (isMySession ? colorScheme.primary : colorScheme.outlineVariant),
+          width: isActive ? 2 : 1,
+        ),
       ),
       child: ListTile(
-        contentPadding: const EdgeInsets.all(16.0),
-        title: Row(
-          children: [
-            if (isActive)
-              Container(
-                width: 12,
-                height: 12,
-                margin: const EdgeInsets.only(right: 8.0),
-                decoration: BoxDecoration(
-                  color: Colors.green,
-                  shape: BoxShape.circle,
-                ),
-              ),
-            Expanded(
-              child: Text(
-                session.subjectName ?? 'Unknown Subject',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: isMySession ? TColors.primary : Colors.grey[700],
-                ),
-              ),
-            ),
-          ],
+        contentPadding: const EdgeInsets.all(16),
+        title: Text(
+          session.subjectName ?? 'Subject',
+          style: TextStyle(fontWeight: FontWeight.bold, color: isMySession ? colorScheme.primary : colorScheme.onSurface),
         ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 8.0),
-            if (session.courseName != null)
-              Text('Course: ${session.courseName}'),
-            if (session.semester != null) Text('Semester: ${session.semester}'),
-            if (session.section != null) Text('Section: ${session.section}'),
-            const SizedBox(height: 4.0),
+            const SizedBox(height: 8),
+            Text('${session.courseName ?? ""} | Semester ${session.semester ?? "?"} | Section ${session.section ?? "?"}', style: Theme.of(context).textTheme.labelMedium),
+            const SizedBox(height: 6),
             Row(
               children: [
-                Icon(Icons.access_time, size: 16.0, color: Colors.grey),
-                const SizedBox(width: 4.0),
-                Text(
-                  session.startTime != null && session.endTime != null
-                      ? '${session.startTime} - ${session.endTime}'
-                      : 'Time not specified',
-                  style: TextStyle(color: Colors.grey[700]),
-                ),
+                Icon(Iconsax.clock, size: 14, color: colorScheme.onSurfaceVariant),
+                const SizedBox(width: 4),
+                Text('${session.startTime} - ${session.endTime}', style: Theme.of(context).textTheme.labelSmall),
               ],
             ),
-            if (isActive)
-              Container(
-                margin: const EdgeInsets.only(top: 8.0),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8.0,
-                  vertical: 4.0,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.green.withAlpha(26),
-                  borderRadius: BorderRadius.circular(4.0),
-                ),
-                child: Text(
-                  'ACTIVE NOW',
-                  style: TextStyle(
-                    color: Colors.green,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12.0,
-                  ),
-                ),
-              ),
-            // Modified section to show teacher name for non-user sessions
-            Container(
-              margin: const EdgeInsets.only(top: 8.0),
-              padding: const EdgeInsets.symmetric(
-                horizontal: 8.0,
-                vertical: 4.0,
-              ),
-              decoration: BoxDecoration(
-                color: isMySession
-                    ? TColors.primary.withAlpha(26)
-                    : Colors.grey.withAlpha(26),
-                borderRadius: BorderRadius.circular(4.0),
-              ),
-              child: Text(
-                isMySession
-                    ? 'MY CLASS'
-                    : 'Teacher: ${controller.getTeacherNameForSession(session)}',
-                style: TextStyle(
-                  color: isMySession ? TColors.primary : Colors.grey[700],
-                  fontWeight: FontWeight.bold,
-                  fontSize: 12.0,
-                ),
-              ),
-            ),
+            const SizedBox(height: 8),
+            _buildBadge(context, isMySession ? 'MY CLASS' : controller.getTeacherNameForSession(session).toUpperCase(), isMySession ? colorScheme.primary : colorScheme.secondary),
           ],
         ),
-        trailing: Icon(Icons.arrow_forward_ios, size: 16.0),
-        onTap: () {
-          //printnt('Session card tapped, navigating to details. Session ID: ${session.id}');
-          // Use Get.toNamed with proper arguments
-          // Get.toNamed(
-          //   '/sessiondetails', // Make sure this matches exactly with the route name in app_routes.dart
-          //   arguments: {
-          //     'sessionId': session.id,
-          //     'classDetails': {
-          //       'subjectName': session.subjectName ?? 'Unknown Subject',
-          //       'courseName': session.courseName ?? 'Unknown Course',
-          //       'semester': session.semester ?? 0,
-          //       'section': session.section ?? 'Unknown',
-          //     },
-          //   },
-          // );
-          Get.snackbar('Still in Development', 'Contact your Developer',
-              snackPosition: SnackPosition.BOTTOM);
-        },
+        trailing: const Icon(Iconsax.arrow_right_3, size: 16),
+        onTap: () => TSnackBar.showInfo(message: 'Session details coming soon!'),
       ),
     );
   }
 
+  Widget _buildBadge(BuildContext context, String label, Color color) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(4)),
+      child: Text(label, style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.bold)),
+    );
+  }
+
   void _showFilterBottomSheet(BuildContext context) {
-    //printnt('Showing filter bottom sheet');
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16.0)),
-      ),
-      builder: (context) {
-        return Padding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
-            left: 16.0,
-            right: 16.0,
-            top: 16.0,
-          ),
+    final colorScheme = Theme.of(context).colorScheme;
+
+    Get.bottomSheet(
+      Container(
+        padding: const EdgeInsets.all(TSizes.defaultSpace),
+        decoration: BoxDecoration(
+          color: colorScheme.surface,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(TSizes.cardRadiusLg)),
+        ),
+        child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Filter Sessions',
-                    style: TextStyle(
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.close),
-                    onPressed: () {
-                      //printnt('Closing filter bottom sheet');
-                      Navigator.pop(context);
-                    },
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16.0),
-
-              // this new toggle for showing all sessions
+              Text('Filter Schedule', style: Theme.of(context).textTheme.headlineSmall),
+              const SizedBox(height: TSizes.lg),
               Obx(() => SwitchListTile(
-                    title: Text('Show all teachers\' sessions'),
+                    title: const Text('Show All Teachers'),
                     value: controller.showAllSessions.value,
-                    onChanged: (value) {
-                      //printnt('Show all sessions changed: $value');
-                      controller.showAllSessions.value = value;
-                      // If showing all sessions, disable "show only my classes"
-                      if (value) {
-                        controller.showOnlyMyClasses.value = false;
-                      }
+                    onChanged: (v) {
+                      controller.showAllSessions.value = v;
+                      if (v) controller.showOnlyMyClasses.value = false;
                     },
                   )),
-
               Obx(() => SwitchListTile(
-                    title: Text('Show only my classes'),
+                    title: const Text('Show Only My Classes'),
                     value: controller.showOnlyMyClasses.value,
-                    onChanged: controller.showAllSessions.value
-                        ? null // Disable if showing all sessions
-                        : (value) {
-                            //printnt('Show only my classes changed: $value');
-                            controller.showOnlyMyClasses.value = value;
-                          },
+                    onChanged: controller.showAllSessions.value ? null : (v) => controller.showOnlyMyClasses.value = v,
                   )),
-              const SizedBox(height: 8.0),
-              Text(
-                'Course',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              Obx(() => DropdownButton<String>(
-                    isExpanded: true,
-                    hint: Text('Select Course'),
-                    value: controller.selectedCourse.value,
-                    items: [
-                      DropdownMenuItem<String>(
-                        value: null,
-                        child: Text('All Courses'),
-                      ),
-                      ...controller.availableCourses.map((course) {
-                        return DropdownMenuItem<String>(
-                          value: course,
-                          child: Text(course),
-                        );
-                      }),
-                    ],
-                    onChanged: controller.showAllSessions.value
-                        ? null // Disable if showing all sessions
-                        : (value) {
-                            //printnt('Course filter changed: $value');
-                            controller.selectedCourse.value = value;
-                          },
-                  )),
-              const SizedBox(height: 8.0),
-              Text(
-                'Semester', // Changed from 'Year'
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              Obx(() => DropdownButton<int>(
-                    isExpanded: true,
-                    hint: Text('Select Semester'), // Changed from 'Select Year'
-                    value: controller
-                        .selectedSemester.value, // Changed from selectedYear
-                    items: [
-                      DropdownMenuItem<int>(
-                        value: null,
-                        child:
-                            Text('All Semesters'), // Changed from 'All Years'
-                      ),
-                      ...controller.availableSemesters.map((semester) {
-                        // Changed from availableYears
-                        return DropdownMenuItem<int>(
-                          value: semester,
-                          child: Text(
-                              'Semester $semester'), // Changed from 'Year $year'
-                        );
-                      }),
-                    ],
-                    onChanged: controller.showAllSessions.value
-                        ? null // Disable if showing all sessions
-                        : (value) {
-                            //print('Semester filter changed: $value'); // Changed from 'Year filter'
-                            controller.selectedSemester.value =
-                                value; // Changed from selectedYear
-                          },
-                  )),
-              const SizedBox(height: 8.0),
-              Text(
-                'Section',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              Obx(() => DropdownButton<String>(
-                    isExpanded: true,
-                    hint: Text('Select Section'),
-                    value: controller.selectedSection.value,
-                    items: [
-                      DropdownMenuItem<String>(
-                        value: null,
-                        child: Text('All Sections'),
-                      ),
-                      ...controller.availableSections.map((section) {
-                        return DropdownMenuItem<String>(
-                          value: section,
-                          child: Text('Section $section'),
-                        );
-                      }),
-                    ],
-                    onChanged: controller.showAllSessions.value
-                        ? null // Disable if showing all sessions
-                        : (value) {
-                            //printnt('Section filter changed: $value');
-                            controller.selectedSection.value = value;
-                          },
-                  )),
-              const SizedBox(height: 16.0),
+              const Divider(),
+              _buildDropdownFilter(context, 'Course', controller.selectedCourse, controller.availableCourses),
+              _buildDropdownFilter(context, 'Semester', controller.selectedSemester, controller.availableSemesters.map((s) => s.toString()).toList(), isInt: true),
+              const SizedBox(height: TSizes.lg),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    //printnt('Resetting all filters');
                     controller.showAllSessions.value = false;
                     controller.showOnlyMyClasses.value = false;
                     controller.selectedCourse.value = null;
-                    controller.selectedSemester.value =
-                        null; // Changed from selectedYear
-                    controller.selectedSection.value = null;
+                    controller.selectedSemester.value = null;
+                    Get.back();
                   },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.grey[300],
-                    foregroundColor: TColors.dark,
-                  ),
-                  child: Text('Reset Filters'),
+                  child: const Text('Reset Filters'),
                 ),
               ),
-              const SizedBox(height: 16.0),
+              const SizedBox(height: TSizes.md),
             ],
           ),
-        );
-      },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDropdownFilter(BuildContext context, String label, Rx<dynamic> selected, List<String> items, {bool isInt = false}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
+          Obx(() => DropdownButton<dynamic>(
+                isExpanded: true,
+                value: selected.value,
+                onChanged: controller.showAllSessions.value ? null : (v) => selected.value = v,
+                items: [
+                  DropdownMenuItem(value: null, child: Text('All ${label}s')),
+                  ...items.map((item) => DropdownMenuItem(value: isInt ? int.parse(item) : item, child: Text(isInt ? 'Semester $item' : item))),
+                ],
+              )),
+        ],
+      ),
     );
   }
 }

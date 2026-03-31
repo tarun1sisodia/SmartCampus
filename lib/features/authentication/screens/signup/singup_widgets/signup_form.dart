@@ -10,7 +10,6 @@ import '../../../../../common/utils/constants/sized.dart';
 import '../../../../../common/utils/constants/text_strings.dart';
 import '../../../../../common/utils/helpers/helper_function.dart';
 import '../../../../../common/utils/helpers/snackbar_helper.dart';
-import '../../../../../services/google_sign_in_service.dart';
 import '../../../controllers/signup_controller.dart';
 import 'textfields.dart';
 
@@ -22,10 +21,9 @@ class SignupForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dark = THelperFunction.isDarkMode(context);
-    final formKey = GlobalKey<FormState>();
 
     return Form(
-      key: formKey,
+      key: controller.formKey,
       child: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: TSizes.spaceBtwSections,
@@ -155,7 +153,7 @@ class SignupForm extends StatelessWidget {
                   onPressed: controller.isLoading.value
                       ? null
                       : () async {
-                          if (formKey.currentState!.validate()) {
+                          if (controller.formKey.currentState!.validate()) {
                             try {
                               await controller.signUpWithEmail();
 
@@ -199,38 +197,39 @@ class SignupForm extends StatelessWidget {
               ],
             ),
             const SizedBox(height: TSizes.spaceBtwItems),
-            SizedBox(
-              width: double.infinity,
-              height: TSizes.appBarHeight,
-              child: OutlinedButton.icon(
-                icon: Image.network(
-                  TImageStrings.google,
-                  height: TSizes.iconLg,
-                  width: TSizes.iconLg,
-                  cacheWidth: TSizes.iconLg.toInt(),
-                  cacheHeight: TSizes.iconLg.toInt(),
+            Obx(
+              () => SizedBox(
+                width: double.infinity,
+                height: TSizes.appBarHeight,
+                child: OutlinedButton.icon(
+                  icon: controller.isLoading.value
+                      ? const SizedBox(
+                          width: TSizes.iconMd,
+                          height: TSizes.iconMd,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : Image.network(
+                          TImageStrings.google,
+                          height: TSizes.iconLg,
+                          width: TSizes.iconLg,
+                          cacheWidth: TSizes.iconLg.toInt(),
+                          cacheHeight: TSizes.iconLg.toInt(),
+                          errorBuilder: (context, error, stackTrace) {
+                            return const Icon(
+                              Icons.g_mobiledata,
+                              size: TSizes.iconLg,
+                            );
+                          },
+                        ),
+                  label: Text(
+                    controller.isLoading.value
+                        ? 'Signing in...'
+                        : TTexts.orSignInWithGoogle,
+                  ),
+                  onPressed: controller.isLoading.value
+                      ? null
+                      : controller.signUpWithGoogle,
                 ),
-                label: Text(TTexts.orSignInWithGoogle),
-                onPressed: () async {
-                  try {
-                    final googleSignInService = Get.find<GoogleSignInService>();
-                    final user = await googleSignInService.signInWithGoogle();
-                    if (user != null) {
-                      // Navigate to dashboard or home screen
-                      Get.offAllNamed('/dashboard');
-                    } else {
-                      TSnackBar.showError(
-                        message: TTexts.googleError,
-                        title: TTexts.error,
-                      );
-                    }
-                  } catch (e) {
-                    TSnackBar.showError(
-                      message: TTexts.errorOccured + e.toString(),
-                      title: TTexts.error,
-                    );
-                  }
-                },
               ),
             ),
           ],

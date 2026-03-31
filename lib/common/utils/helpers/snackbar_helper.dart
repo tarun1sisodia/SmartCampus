@@ -1,4 +1,4 @@
-import 'package:attedance__/common/utils/constants/colors.dart';
+import 'package:smart_campus/common/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -30,6 +30,8 @@ class TSnackBar {
     MessageSource source = MessageSource.app,
     SnackPosition position = SnackPosition.BOTTOM,
     Duration duration = const Duration(seconds: 3),
+    VoidCallback? onActionPressed,
+    String? actionLabel,
   }) {
     // Determine icon and colors based on message type
     IconData icon;
@@ -69,31 +71,61 @@ class TSnackBar {
         break;
     }
 
-    // Check if Overlay is available
-    if (Get.overlayContext == null) {
+    // Check if Overlay/Context is available
+    final context = Get.context;
+    if (context == null) {
       debugPrint(
-          'Skipping snackbar: No Overlay widget found. Title: $title, Message: $message');
+          'Skipping snackbar: No context found. Title: $title, Message: $message');
       return;
     }
 
-    // Show the snackbar
-    Get.snackbar(
-      sourcePrefix + title,
-      message,
-      snackPosition: position,
-      backgroundColor: backgroundColor,
-      colorText: textColor,
-      duration: duration,
-      borderRadius: 10,
-      margin: const EdgeInsets.all(10),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      icon: Icon(icon, color: textColor),
-      isDismissible: true,
-      forwardAnimationCurve: Curves.easeOutCirc,
-      reverseAnimationCurve: Curves.easeInCirc,
-      overlayBlur: 0,
-      overlayColor: TColors.dark.withAlpha(20),
-    );
+    // Use addPostFrameCallback to ensure we don't show snackbar during a build/navigator transition
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Ensure the navigator is ready
+      if (Get.key.currentState == null) {
+        debugPrint('Skipping snackbar: Get.key.currentState is null');
+        return;
+      }
+
+      try {
+        if (!context.mounted) return;
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                Icon(icon, color: textColor),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(sourcePrefix + title, style: TextStyle(fontWeight: FontWeight.bold, color: textColor)),
+                      Text(message, style: TextStyle(color: textColor)),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            backgroundColor: backgroundColor,
+            behavior: SnackBarBehavior.floating,
+            action: onActionPressed != null && actionLabel != null
+                ? SnackBarAction(
+                    label: actionLabel,
+                    textColor: textColor,
+                    onPressed: onActionPressed,
+                  )
+                : null,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            margin: const EdgeInsets.all(10),
+            duration: duration,
+          ),
+        );
+      } catch (e) {
+        debugPrint('Failed to show snackbar via ScaffoldMessenger: $e');
+      }
+    });
   }
 
   //Convenience method for showing success messages
@@ -101,12 +133,18 @@ class TSnackBar {
     required String message,
     String title = 'Success',
     MessageSource source = MessageSource.app,
+    VoidCallback? onActionPressed,
+    String? actionLabel,
+    Duration duration = const Duration(seconds: 3),
   }) {
     show(
       title: title,
       message: message,
       type: MessageType.success,
       source: source,
+      onActionPressed: onActionPressed,
+      actionLabel: actionLabel,
+      duration: duration,
     );
   }
 

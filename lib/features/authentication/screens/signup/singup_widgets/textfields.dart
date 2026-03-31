@@ -1,5 +1,5 @@
-import 'package:attedance__/common/utils/constants/colors.dart';
-import 'package:attedance__/common/utils/helpers/helper_function.dart';
+import 'package:smart_campus/common/utils/constants/colors.dart';
+import 'package:smart_campus/common/utils/helpers/helper_function.dart';
 import 'package:flutter/material.dart';
 
 class Textfields extends StatelessWidget {

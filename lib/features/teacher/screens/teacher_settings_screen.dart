@@ -1,18 +1,17 @@
-import './../controllers/teacher_profile_controller.dart';
-import '/../services/language_service.dart';
-import '/../services/storage_service.dart';
-import '../../../common/utils/constants/colors.dart';
-import '../../../common/utils/constants/sized.dart';
-import '../../../common/utils/constants/text_strings.dart';
-import '../../../common/utils/helpers/helper_function.dart';
-import '../../../common/utils/helpers/snackbar_helper.dart';
-import '../../../app/routes/app_routes.dart';
-import '../../../services/auth_service.dart';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
+import '../../../app/routes/app_routes.dart';
+import '../../../app/theme/theme_configs.dart';
+import '../../../app/theme/theme_controller.dart';
+import '../../../common/utils/constants/sized.dart';
+import '../../../common/utils/constants/text_strings.dart';
+import '../../../common/utils/helpers/snackbar_helper.dart';
+import '../../../services/auth_service.dart';
+import '../../../services/storage_service.dart';
+import '../controllers/teacher_profile_controller.dart';
+import '/../services/language_service.dart';
 import 'teacher_profile_screen.dart';
 
 class TeacherSettingsScreen extends StatelessWidget {
@@ -20,576 +19,293 @@ class TeacherSettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //print('TeacherSettingsScreen build method called');
-    final dark = THelperFunction.isDarkMode(context);
-    final controller = Get.put(
-      TeacherProfileController(),
-    ); // Ensure initialization
+    final controller = Get.put(TeacherProfileController());
     final languageService = Get.find<LanguageService>();
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Settings',
-          style: Theme.of(context).textTheme.headlineSmall,
-        ),
+        title: Text('Settings', style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
+        centerTitle: true,
+        elevation: 0,
+        backgroundColor: Colors.transparent,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(TSizes.defaultSpace),
+        padding: const EdgeInsets.symmetric(horizontal: TSizes.defaultSpace, vertical: TSizes.spaceBtwItems),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Profile section
+            _buildProfileCard(context, controller),
+            const SizedBox(height: TSizes.spaceBtwSections),
             _buildSection(
               context: context,
-              title: 'Account',
+              title: 'Preferences',
               items: [
                 _buildProfileMenuItem(
-                  title: 'My Profile',
-                  icon: Iconsax.user,
-                  dark: dark,
-                  onTap: () {
-                    //print('Navigating to TeacherProfileScreen');
-                    Get.to(() => TeacherProfileScreen());
-                  },
-                ),
-                _buildProfileMenuItem(
-                  title: 'Change Password',
-                  icon: Iconsax.password_check,
-                  dark: dark,
-                  onTap: () {
-                    //print('Navigating to Change Password');
-                    Get.toNamed(AppRoutes.changePassword);
-                  },
-                ),
-                _buildProfileMenuItem(
-                  title: 'Email Notifications',
-                  icon: Iconsax.notification,
-                  dark: dark,
-                  trailing: Obx(() {
-                    //print('Email Notifications switch updated');
-                    return Switch(
-                      value: controller.emailNotifications.value,
-                      onChanged: controller.toggleEmailNotifications,
-                      activeThumbColor: dark ? TColors.yellow : TColors.primary,
-                    );
-                  }),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: TSizes.spaceBtwItems),
-
-            // App Settings section
-            _buildSection(
-              context: context,
-              title: 'App Settings',
-              items: [
-                _buildProfileMenuItem(
-                  title: 'Dark Mode',
-                  icon: dark ? Iconsax.moon : Iconsax.sun_1,
-                  dark: dark,
-                  trailing: Switch(
-                    value: dark,
-                    onChanged: (_) {
-                      //print('Dark Mode toggled');
-                      controller.toggleTheme();
-                    },
-                    activeThumbColor: dark ? TColors.yellow : TColors.primary,
-                  ),
-                ),
-                _buildProfileMenuItem(
-                  title: 'language'.tr,
+                  context: context,
+                  title: 'Language',
                   icon: Iconsax.language_square,
-                  dark: dark,
-                  trailing: Obx(() {
-                    //print('Language updated');
-                    return Text(languageService.getCurrentLanguageName());
-                  }),
-                  onTap: () {
-                    //print('Opening Language Selection Dialog');
-                    _showLanguageSelectionDialog(context, languageService);
-                  },
+                  trailing: Obx(() => Text(languageService.getCurrentLanguageName(), style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: colorScheme.primary, fontWeight: FontWeight.bold))),
+                  onTap: () => _showLanguageSelectionDialog(context, languageService),
                 ),
                 _buildProfileMenuItem(
-                  title: 'Notifications',
-                  icon: Iconsax.notification,
-                  dark: dark,
-                  onTap: () {
-                    //print('Navigating to Notifications');
-                    Get.toNamed(AppRoutes.notifications);
-                  },
-                ),
-                _buildProfileMenuItem(
-                  title: 'Data Import',
-                  icon: Iconsax.import_1, // Updated icon for Data Import
-                  dark: dark,
-                  onTap: () {
-                    //print('Navigating to Data Import');
-                    Get.toNamed(AppRoutes.import);
-                  },
-                ),
-                _buildProfileMenuItem(
-                  title: 'Data Export',
-                  icon: Iconsax.export_3, // Updated icon for Data Export
-                  dark: dark,
-                  onTap: () {
-                    //print('Navigating to Data Export');
-                    Get.toNamed(AppRoutes.export);
-                  },
-                ),
-                _buildProfileMenuItem(
-                  title: 'Biometric Authentication',
+                  context: context,
+                  title: 'Biometric Login',
                   icon: Icons.fingerprint,
-                  dark: dark,
                   trailing: Obx(() {
                     final biometricService = Get.find<BiometricAuthService>();
-
-                    if (!biometricService.isAvailable.value) {
-                      return const SizedBox.shrink();
-                    }
-
-                    return Switch(
+                    if (!biometricService.isAvailable.value) return const SizedBox.shrink();
+                    return Switch.adaptive(
                       value: biometricService.isBiometricEnabled.value,
                       onChanged: (value) => controller.toggleBiometric(value),
-                      activeThumbColor: dark ? TColors.yellow : TColors.primary,
+                      activeColor: colorScheme.primary,
                     );
                   }),
                 ),
                 _buildProfileMenuItem(
-                  title: 'Storage & Data',
-                  icon: Iconsax.cloud,
-                  dark: dark,
-                  onTap: () async {
-                    //print('Opening Storage & Data Dialog');
-                    // Get the storage service
-                    final storageService = Get.find<StorageService>();
-
-                    // Get cache size
-                    final cacheSize = await storageService.getCacheSize();
-                    final cacheSizeText = '${cacheSize.toStringAsFixed(2)} MB';
-
-                    // Show a dialog with storage and data options
-                    Get.dialog(
-                      AlertDialog(
-                        title: Text(
-                          'Storage & Data',
-                          style: TextStyle(
-                              fontFamily: 'Poppins', fontSize: cacheSize),
-                        ),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            ListTile(
-                              leading: Icon(
-                                Iconsax.document_1,
-                                color: dark ? TColors.yellow : TColors.primary,
-                              ),
-                              title: const Text('Cache Size'),
-                              subtitle: Text(cacheSizeText),
-                              trailing: TextButton(
-                                onPressed: () {
-                                  //print('Clearing Cache');
-                                  // Clear cache implementation
-                                  Get.back();
-                                  Get.dialog(
-                                    AlertDialog(
-                                      title: const Text('Clear Cache'),
-                                      content: const Text(
-                                        'Are you sure you want to clear the app cache? This will not delete any of your data.',
-                                      ),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () => Get.back(),
-                                          child: const Text(TTexts.cancel),
-                                        ),
-                                        ElevatedButton(
-                                          onPressed: () async {
-                                            try {
-                                              //print('Clearing Cache Confirmed');
-                                              // Show loading indicator
-                                              Get.back();
-                                              Get.dialog(
-                                                const Center(
-                                                  child:
-                                                      CircularProgressIndicator(),
-                                                ),
-                                                barrierDismissible: false,
-                                              );
-
-                                              // Clear cache
-                                              await storageService.clearCache();
-
-                                              // Dismiss loading dialog
-                                              Get.back();
-
-                                              // Show success message
-                                              TSnackBar.showSuccess(
-                                                message:
-                                                    'Cache cleared successfully',
-                                              );
-                                            } catch (e) {
-                                              //print(
-                                              // 'Failed to clear cache: ${e.toString()}');
-                                              // Dismiss loading dialog
-                                              Get.back();
-
-                                              // Show error message
-                                              TSnackBar.showError(
-                                                message:
-                                                    'Failed to clear cache: ${e.toString()}',
-                                              );
-                                            }
-                                          },
-                                          child: const Text('Clear'),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                                child: const Text('Clear'),
-                              ),
-                            ),
-                            const Divider(),
-                            ListTile(
-                              leading: Icon(
-                                Iconsax.trash,
-                                color: dark ? TColors.yellow : TColors.primary,
-                              ),
-                              title: const Text('Clear All Data'),
-                              subtitle: const Text(
-                                'Reset app to default state',
-                              ),
-                              onTap: () {
-                                //print('Clearing All Data');
-                                // Show confirmation dialog for clearing all data
-                                Get.back();
-                                Get.dialog(
-                                  AlertDialog(
-                                    title: const Text('Clear All Data'),
-                                    content: const Text(
-                                      'This will reset the app to its default state and delete all your data including saved preferences, cached files, and local data. This action cannot be undone.\n\nAre you sure you want to continue?',
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () => Get.back(),
-                                        child: const Text(TTexts.cancel),
-                                      ),
-                                      ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.red,
-                                          foregroundColor: Colors.white,
-                                        ),
-                                        onPressed: () async {
-                                          try {
-                                            //print(
-                                            // 'Clearing All Data Confirmed');
-                                            // Show loading indicator
-                                            Get.back();
-                                            Get.dialog(
-                                              const Center(
-                                                child:
-                                                    CircularProgressIndicator(),
-                                              ),
-                                              barrierDismissible: false,
-                                            );
-
-                                            // Clear all local storage
-                                            await storageService.clearAllData();
-
-                                            // Dismiss loading dialog
-                                            Get.back();
-
-                                            // Show success message
-                                            TSnackBar.showSuccess(
-                                              message:
-                                                  'All data cleared successfully',
-                                            );
-
-                                            // Navigate to login screen
-                                            Get.offAllNamed(
-                                              AppRoutes.onboarding,
-                                            );
-                                          } catch (e) {
-                                            //print(
-                                            // 'Failed to clear all data: ${e.toString()}');
-                                            // Dismiss loading dialog
-                                            Get.back();
-
-                                            // Show error message
-                                            TSnackBar.showError(
-                                              message:
-                                                  'Failed to clear data: ${e.toString()}',
-                                            );
-                                          }
-                                        },
-                                        child: const Text('Clear All Data'),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            ),
-                            const Divider(),
-                            ListTile(
-                              leading: Icon(
-                                Iconsax.export,
-                                color: dark ? TColors.yellow : TColors.primary,
-                              ),
-                              title: const Text('Export Data'),
-                              subtitle: const Text(
-                                'Download your data as a file',
-                              ),
-                              onTap: () async {
-                                try {
-                                  //print('Exporting Data');
-                                  // Close the dialog
-                                  Get.back();
-
-                                  // Show loading indicator
-                                  Get.dialog(
-                                    const Center(
-                                      child: CircularProgressIndicator(),
-                                    ),
-                                    barrierDismissible: false,
-                                  );
-
-                                  // Export data
-                                  await storageService.exportUserData();
-
-                                  // Dismiss loading dialog
-                                  Get.back();
-
-                                  // Show success message
-                                  TSnackBar.showSuccess(
-                                    message: 'Data exported successfully',
-                                  );
-                                } catch (e) {
-                                  //print(
-                                  // 'Failed to export data: ${e.toString()}');
-                                  // Dismiss loading dialog
-                                  Get.back();
-
-                                  // Show error message
-                                  TSnackBar.showError(
-                                    message:
-                                        'Failed to export data: ${e.toString()}',
-                                  );
-                                }
-                              },
-                            ),
-
-                            //to your existing settings screen
-                          ],
-                        ),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Get.back(),
-                            child: const Text('Close'),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
+                  context: context,
+                  title: 'Email Alerts',
+                  icon: Iconsax.notification,
+                  trailing: Obx(() => Switch.adaptive(
+                    value: controller.emailNotifications.value,
+                    onChanged: controller.toggleEmailNotifications,
+                    activeColor: colorScheme.primary,
+                  )),
                 ),
               ],
             ),
-
             const SizedBox(height: TSizes.spaceBtwItems),
-
-            // Support section
+            _buildSection(
+              context: context,
+              title: 'Appearance',
+              items: [_buildThemeSelector(context)],
+            ),
+            const SizedBox(height: TSizes.spaceBtwItems),
+            _buildSection(
+              context: context,
+              title: 'Data & Maintenance',
+              items: [
+                _buildProfileMenuItem(context: context, title: 'Import Data', icon: Iconsax.import_1, onTap: () => Get.toNamed(AppRoutes.import)),
+                _buildProfileMenuItem(context: context, title: 'Export History', icon: Iconsax.export_3, onTap: () => Get.toNamed(AppRoutes.export)),
+                _buildProfileMenuItem(context: context, title: 'Storage Management', icon: Iconsax.cloud, onTap: () => _showStorageDataDialog(context)),
+              ],
+            ),
+            const SizedBox(height: TSizes.spaceBtwItems),
             _buildSection(
               context: context,
               title: 'Support',
               items: [
-                _buildProfileMenuItem(
-                  title: 'Help & Support',
-                  icon: Iconsax.support,
-                  dark: dark,
-                  onTap: () {
-                    //print('Navigating to Help & Support');
-                    Get.toNamed(AppRoutes.help);
-                  },
-                ),
-                _buildProfileMenuItem(
-                  title: 'Feedback',
-                  icon: Iconsax.message_question,
-                  dark: dark,
-                  onTap: () {
-                    //print('Navigating to Feedback');
-                    Get.toNamed(AppRoutes.feedback);
-                  },
-                ),
-                _buildProfileMenuItem(
-                  title: 'Privacy Policy',
-                  icon: Iconsax.security_safe,
-                  dark: dark,
-                  onTap: () {
-                    //print('Navigating to Privacy Policy');
-                    Get.toNamed(AppRoutes.privacyPolicy);
-                  },
-                ),
-                _buildProfileMenuItem(
-                  title: 'About',
-                  icon: Iconsax.info_circle,
-                  dark: dark,
-                  onTap: () {
-                    //print('Navigating to About');
-                    Get.toNamed(AppRoutes.about);
-                  },
-                ),
+                _buildProfileMenuItem(context: context, title: 'Help Center', icon: Iconsax.support, onTap: () => Get.toNamed(AppRoutes.help)),
+                _buildProfileMenuItem(context: context, title: 'Privacy & Security', icon: Iconsax.security_safe, onTap: () => Get.toNamed(AppRoutes.privacyPolicy)),
+                _buildProfileMenuItem(context: context, title: 'App Feedback', icon: Iconsax.message_question, onTap: () => Get.toNamed(AppRoutes.feedback)),
               ],
             ),
-
             const SizedBox(height: TSizes.spaceBtwSections),
-
-            // Sign Out Button
-            SizedBox(
-              width: double.infinity,
-              height: 55,
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  //print('Sign Out button pressed');
-                  Get.defaultDialog(
-                    title: 'Sign Out',
-                    middleText: 'Are you sure you want to sign out?',
-                    textConfirm: 'Yes',
-                    textCancel: 'No',
-                    confirmTextColor: Colors.white,
-                    onConfirm: () {
-                      //print('Sign Out confirmed');
-                      Get.back();
-                      controller.logout();
-                    },
-                  );
-                },
-                icon: const Icon(Iconsax.logout),
-                label: const Text('Sign Out'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  foregroundColor: Colors.white,
-                ),
-              ),
-            ),
-
-            // App version
+            _buildSignOutButton(context, controller),
             const SizedBox(height: TSizes.spaceBtwSections),
-            Center(
-              child: Text(
-                'App Version 1.0.0',
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
-            ),
+            Text('Version 1.2.4 (Build 1205)', style: Theme.of(context).textTheme.labelSmall?.copyWith(color: colorScheme.outline)),
+            const SizedBox(height: TSizes.spaceBtwSections),
           ],
         ),
       ),
     );
   }
 
-  void _showLanguageSelectionDialog(
-    BuildContext context,
-    LanguageService languageService,
-  ) {
-    //print('Language Selection Dialog opened');
-    final dark = THelperFunction.isDarkMode(context);
-
-    Get.dialog(
-      AlertDialog(
-        title: Text('select_language'.tr),
-        content: SizedBox(
-          width: double.maxFinite,
-          child: ListView.builder(
-            shrinkWrap: true,
-            itemCount: languageService.languages.length,
-            itemBuilder: (context, index) {
-              final language = languageService.languages[index];
-              final isSelected =
-                  languageService.currentLocale.value.toString() ==
-                      language['locale'].toString();
-
-              return ListTile(
-                title: Text(language['name']),
-                trailing: isSelected
-                    ? Icon(
-                        Icons.check_circle,
-                        color: dark ? TColors.yellow : TColors.primary,
-                      )
-                    : null,
-                onTap: () {
-                  //print('Language changed to ${language['name']}');
-                  languageService.changeLanguage(language['code']);
-                  Get.back();
-                  TSnackBar.showSuccess(message: 'language_changed'.tr);
-                },
-              );
-            },
-          ),
+  Widget _buildProfileCard(BuildContext context, TeacherProfileController controller) {
+    return Obx(() {
+      final user = controller.user.value;
+      return Container(
+        padding: const EdgeInsets.all(TSizes.md),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.05),
+          borderRadius: BorderRadius.circular(TSizes.cardRadiusLg),
+          border: Border.all(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2)),
         ),
-        actions: [
-          TextButton(onPressed: () => Get.back(), child: Text('no'.tr)),
-        ],
-      ),
-    );
+        child: Row(
+          children: [
+            CircleAvatar(radius: 30, backgroundColor: Theme.of(context).colorScheme.primaryContainer, child: const Icon(Iconsax.user, size: 30)),
+            const SizedBox(width: TSizes.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(user?.name ?? 'Teacher Name', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+                  Text(user?.email ?? 'email@campus.com', style: Theme.of(context).textTheme.bodySmall),
+                ],
+              ),
+            ),
+            IconButton(onPressed: () => Get.to(() => TeacherProfileScreen()), icon: const Icon(Iconsax.edit, size: 20)),
+          ],
+        ),
+      );
+    });
   }
 
-  Widget _buildSection({
-    required BuildContext context,
-    required String title,
-    required List<Widget> items,
-  }) {
-    //print('Building section: $title');
+  Widget _buildSection({required BuildContext context, required String title, required List<Widget> items}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: Theme.of(
-            context,
-          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: TSizes.spaceBtwItems / 2),
+        Padding(padding: const EdgeInsets.only(left: 4, bottom: 8), child: Text(title.toUpperCase(), style: Theme.of(context).textTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold, letterSpacing: 1.1, color: Theme.of(context).colorScheme.onSurfaceVariant))),
         Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
-            color: Theme.of(context).cardColor,
-            border: Border.all(color: Colors.grey.withAlpha(26)),
-          ),
-          child: ListView.separated(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: items.length,
-            separatorBuilder: (_, __) => Divider(
-              height: 1,
-              color: Colors.grey.withAlpha(26),
-              indent: 70,
-            ),
-            itemBuilder: (_, index) => items[index],
-          ),
+          decoration: BoxDecoration(color: Theme.of(context).colorScheme.surface, borderRadius: BorderRadius.circular(TSizes.cardRadiusLg), border: Border.all(color: Theme.of(context).colorScheme.outlineVariant)),
+          child: Column(children: items),
         ),
       ],
     );
   }
 
-  Widget _buildProfileMenuItem({
-    required String title,
-    required IconData icon,
-    Widget? trailing,
-    VoidCallback? onTap,
-    required bool dark,
-  }) {
-    //print('Building profile menu item: $title');
+  Widget _buildThemeSelector(BuildContext context) {
+    final themeController = ThemeController.instance;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(padding: const EdgeInsets.only(left: 16, top: 16, bottom: 8), child: Text('Interface Theme', style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold))),
+        SizedBox(
+          height: 140,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            itemCount: AppThemes.themes.length,
+            itemBuilder: (context, index) {
+              final theme = AppThemes.themes[index];
+              return Obx(() {
+                final isSelected = themeController.currentThemeIndex.value == index;
+                return GestureDetector(
+                  onTap: () => themeController.setTheme(index),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+                    width: 100,
+                    margin: const EdgeInsets.only(right: 12),
+                    decoration: BoxDecoration(
+                      color: theme.background,
+                      borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
+                      border: Border.all(color: isSelected ? theme.primary : Theme.of(context).colorScheme.outlineVariant, width: isSelected ? 3 : 1),
+                      boxShadow: isSelected ? [BoxShadow(color: theme.primary.withValues(alpha: 0.2), blurRadius: 8)] : [],
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Row(mainAxisAlignment: MainAxisAlignment.center, children: [_buildColorCircle(theme.primary), const SizedBox(width: 4), _buildColorCircle(theme.accent)]),
+                        const SizedBox(height: 8),
+                        Text(theme.name, style: TextStyle(color: theme.textPrimary, fontSize: 10, fontWeight: isSelected ? FontWeight.bold : FontWeight.normal)),
+                        if (isSelected) Icon(Icons.check_circle, color: theme.primary, size: 14),
+                      ],
+                    ),
+                  ),
+                );
+              });
+            },
+          ),
+        ),
+        const SizedBox(height: 16),
+      ],
+    );
+  }
+
+  Widget _buildColorCircle(Color color) {
+    return Container(width: 20, height: 20, decoration: BoxDecoration(color: color, shape: BoxShape.circle, border: Border.all(color: Colors.white.withValues(alpha: 0.3))));
+  }
+
+  Widget _buildProfileMenuItem({required BuildContext context, required String title, required IconData icon, Widget? trailing, VoidCallback? onTap}) {
     return ListTile(
       onTap: onTap,
-      leading: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: (dark ? TColors.yellow : TColors.primary).withAlpha(26),
-          shape: BoxShape.circle,
+      leading: Container(padding: const EdgeInsets.all(10), decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1), shape: BoxShape.circle), child: Icon(icon, color: Theme.of(context).colorScheme.primary, size: 18)),
+      title: Text(title, style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w500)),
+      trailing: trailing ?? const Icon(Iconsax.arrow_right_3, size: 14),
+    );
+  }
+
+  Widget _buildSignOutButton(BuildContext context, TeacherProfileController controller) {
+    return SizedBox(
+      width: double.infinity,
+      child: OutlinedButton.icon(
+        onPressed: () => _confirmSignOut(context, controller),
+        icon: const Icon(Iconsax.logout, size: 18),
+        label: const Text('Sign Out'),
+        style: OutlinedButton.styleFrom(
+          foregroundColor: Colors.red,
+          side: const BorderSide(color: Colors.red),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(TSizes.cardRadiusLg)),
+          padding: const EdgeInsets.symmetric(vertical: 16),
         ),
-        child: Icon(icon, color: dark ? TColors.yellow : TColors.primary),
       ),
-      title: Text(title),
-      trailing: trailing ?? const Icon(Iconsax.arrow_right_3, size: 18),
+    );
+  }
+
+  void _confirmSignOut(BuildContext context, TeacherProfileController controller) {
+    Get.bottomSheet(
+      Container(
+        padding: const EdgeInsets.all(TSizes.defaultSpace),
+        decoration: BoxDecoration(color: Theme.of(context).scaffoldBackgroundColor, borderRadius: const BorderRadius.vertical(top: Radius.circular(20))),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.grey.withValues(alpha: 0.3), borderRadius: BorderRadius.circular(2))),
+            const SizedBox(height: TSizes.spaceBtwSections),
+            const Icon(Iconsax.logout, size: 48, color: Colors.red),
+            const SizedBox(height: TSizes.spaceBtwItems),
+            Text('Sign Out?', style: Theme.of(context).textTheme.headlineSmall),
+            const SizedBox(height: TSizes.sm),
+            const Text('Are you sure you want to exit? Attendance data is safe.', textAlign: TextAlign.center),
+            const SizedBox(height: TSizes.spaceBtwSections),
+            Row(children: [
+              Expanded(child: TextButton(onPressed: () => Get.back(), child: const Text('Stay'))),
+              Expanded(child: ElevatedButton(onPressed: () => controller.logout(), style: ElevatedButton.styleFrom(backgroundColor: Colors.red), child: const Text('Sign Out'))),
+            ])
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showStorageDataDialog(BuildContext context) async {
+    final storageService = Get.find<StorageService>();
+    final cacheSize = await storageService.getCacheSize();
+    Get.dialog(AlertDialog(
+      title: const Text('Storage Safety'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListTile(title: const Text('Cache Data'), subtitle: Text('${cacheSize.toStringAsFixed(2)} MB'), trailing: TextButton(onPressed: () => _confirmClearCache(context, storageService), child: const Text('Clear'))),
+          const Divider(),
+          ListTile(leading: const Icon(Iconsax.danger, color: Colors.red), title: const Text('Hard Reset'), subtitle: const Text('Wipe all local data'), onTap: () => _confirmClearAllData(context, storageService)),
+        ],
+      ),
+      actions: [TextButton(onPressed: () => Get.back(), child: const Text('Done'))],
+    ));
+  }
+
+  void _confirmClearCache(BuildContext context, StorageService service) {
+    Get.back();
+    service.clearCache();
+    TSnackBar.showSuccess(message: 'Cache freed!');
+  }
+
+  void _confirmClearAllData(BuildContext context, StorageService service) {
+    Get.back();
+    service.clearAllData().then((_) => Get.offAllNamed(AppRoutes.onboarding));
+  }
+
+  void _showLanguageSelectionDialog(BuildContext context, LanguageService languageService) {
+    Get.bottomSheet(
+      Container(
+        padding: const EdgeInsets.all(TSizes.defaultSpace),
+        decoration: BoxDecoration(color: Theme.of(context).scaffoldBackgroundColor, borderRadius: const BorderRadius.vertical(top: Radius.circular(20))),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('Select Language', style: Theme.of(context).textTheme.titleLarge),
+            const SizedBox(height: TSizes.spaceBtwItems),
+            ...languageService.languages.map((lang) => ListTile(
+                  title: Text(lang['name']),
+                  trailing: languageService.currentLocale.value.toString() == lang['locale'].toString() ? Icon(Icons.check_circle, color: Theme.of(context).colorScheme.primary) : null,
+                  onTap: () {
+                    languageService.changeLanguage(lang['code']);
+                    Get.back();
+                  },
+                )),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter/foundation.dart';
+
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import '../models/student_model.dart';
 import '../models/attendance_record_model.dart';
 import '../models/attendance_session_model.dart';
@@ -37,13 +39,13 @@ class LocalStorageService extends GetxService {
   static const String _keyOnboarding = 'onboarding_completed';
   static const String _keyRememberUser = 'remember_user';
   static const String _keyUserEmail = 'user_email';
-  static const String _keyUserPassword = 'user_password';
-  static const String _keyOfflineData = 'offline_data';
+  static const String _legacyKeyUserPassword = 'user_password';
+  static const String _legacyKeyOfflineData = 'offline_data';
   static const String _keyLastSync = 'last_sync';
 
   // Database info
   static const String _databaseName = 'smartcampus.db';
-  static const int _databaseVersion = 1;
+  static const int _databaseVersion = 3;
 
   @override
   Future<void> onInit() async {
@@ -55,6 +57,7 @@ class LocalStorageService extends GetxService {
     try {
       // Initialize SharedPreferences
       _prefs = await SharedPreferences.getInstance();
+      await _clearLegacyPreferenceData();
       debugPrint('SharedPreferences initialized successfully');
 
       // Initialize SQLite Database only if supported
@@ -68,7 +71,8 @@ class LocalStorageService extends GetxService {
 
       _isInitialized = true;
       debugPrint('Local Storage Service initialized successfully');
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error initializing Local Storage Service: $e');
       // Don't rethrow - allow app to continue with limited functionality
       _isInitialized = true; // Mark as initialized to prevent retry loops
@@ -84,6 +88,11 @@ class LocalStorageService extends GetxService {
     return this;
   }
 
+  Future<void> _clearLegacyPreferenceData() async {
+    await _prefs.remove(_legacyKeyUserPassword);
+    await _prefs.remove(_legacyKeyOfflineData);
+  }
+
 // Get unsynced records
   Future<List<Map<String, dynamic>>> getUnsyncedRecords(
       String tableName) async {
@@ -94,7 +103,8 @@ class LocalStorageService extends GetxService {
         whereArgs: [0],
         orderBy: 'created_at ASC',
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error getting unsynced records from $tableName: $e');
       Get.snackbar('Error getting unsynced records from ', '$tableName: $e');
       return [];
@@ -114,7 +124,8 @@ class LocalStorageService extends GetxService {
         [recordId],
       );
       return result > 0;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error marking record as synced in $tableName: $e');
       Get.snackbar('Error marking record as synced in', '$tableName: $e');
       return false;
@@ -139,7 +150,8 @@ class LocalStorageService extends GetxService {
       }
       await batch.commit();
       return true;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error marking multiple records as synced in $tableName: $e');
       Get.snackbar(
           'Error marking multiple records as synced in', '$tableName: $e');
@@ -159,7 +171,8 @@ class LocalStorageService extends GetxService {
           DateTime.now().subtract(const Duration(hours: 1)).toIso8601String()
         ],
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error getting conflicted records from $tableName: $e');
       Get.snackbar('Error getting conflicted records from', '$tableName: $e');
       return [];
@@ -184,7 +197,8 @@ class LocalStorageService extends GetxService {
       await _database.delete('sync_queue');
 
       return true;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error clearing unsynced data: $e');
       Get.snackbar('Error clearing unsynced data', '$e');
       return false;
@@ -216,7 +230,8 @@ class LocalStorageService extends GetxService {
       stats['queue_items'] = queueItems.length;
 
       return stats;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error getting sync stats: $e');
       return {};
     }
@@ -242,7 +257,8 @@ class LocalStorageService extends GetxService {
       }
 
       return true;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error cleaning up old synced records: $e');
       return false;
     }
@@ -261,7 +277,8 @@ class LocalStorageService extends GetxService {
         [recordId],
       );
       return result > 0;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error marking record as unsynced in $tableName: $e');
       return false;
     }
@@ -277,7 +294,8 @@ class LocalStorageService extends GetxService {
         limit: 1,
       );
       return records.isNotEmpty;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error checking if record exists in $tableName: $e');
       return false;
     }
@@ -294,7 +312,8 @@ class LocalStorageService extends GetxService {
         limit: 1,
       );
       return records.isNotEmpty ? records.first : null;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error getting record by ID from $tableName: $e');
       return null;
     }
@@ -316,7 +335,8 @@ class LocalStorageService extends GetxService {
         final result = await insertRecord(tableName, data);
         return result > 0;
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error upserting record in $tableName: $e');
       return false;
     }
@@ -347,7 +367,7 @@ class LocalStorageService extends GetxService {
   }
 
   // Check if database is available
-  bool get isDatabaseAvailable => _database != null;
+  bool get isDatabaseAvailable => _isInitialized && DatabaseHelper.isSupported;
 
   /* Future<void> _createDatabase(Database db, int version) async {
     // Create tables for offline data storage
@@ -421,10 +441,26 @@ class LocalStorageService extends GetxService {
 
   Future<void> _upgradeDatabase(
       Database db, int oldVersion, int newVersion) async {
-    // Handle database upgrades here
-    if (oldVersion < newVersion) {
-      // Add migration logic here
-      debugPrint('Upgrading database from version $oldVersion to $newVersion');
+    debugPrint('Upgrading database from version $oldVersion to $newVersion');
+    if (oldVersion < 2) {
+      try {
+        await db.execute('ALTER TABLE students ADD COLUMN class_id TEXT');
+        debugPrint('Added class_id column to students table');
+      } catch (e) {
+        debugPrint('Migration error (version 2): $e');
+      }
+    }
+    if (oldVersion < 3) {
+      try {
+        await db.execute('ALTER TABLE attendance_sessions ADD COLUMN subject_name TEXT');
+        await db.execute('ALTER TABLE attendance_sessions ADD COLUMN course_name TEXT');
+        await db.execute('ALTER TABLE attendance_sessions ADD COLUMN semester INTEGER');
+        await db.execute('ALTER TABLE attendance_sessions ADD COLUMN section TEXT');
+        await db.execute('ALTER TABLE attendance_sessions ADD COLUMN closed_at TEXT');
+        debugPrint('Added migration for denormalized attendance_sessions columns');
+      } catch (e) {
+        debugPrint('Migration error (version 3): $e');
+      }
     }
   }
 
@@ -524,10 +560,9 @@ class LocalStorageService extends GetxService {
   }
 
   // User Credentials (for remember me functionality)
-  Future<bool> saveUserCredentials(String email, String password) async {
+  Future<bool> saveUserCredentials(String email) async {
     try {
       await _prefs.setString(_keyUserEmail, email);
-      await _prefs.setString(_keyUserPassword, password);
       return true;
     } catch (e) {
       debugPrint('Error saving user credentials: $e');
@@ -538,14 +573,12 @@ class LocalStorageService extends GetxService {
   Map<String, String?> getUserCredentials() {
     return {
       'email': _prefs.getString(_keyUserEmail),
-      'password': _prefs.getString(_keyUserPassword),
     };
   }
 
   Future<bool> clearUserCredentials() async {
     try {
       await _prefs.remove(_keyUserEmail);
-      await _prefs.remove(_keyUserPassword);
       return true;
     } catch (e) {
       debugPrint('Error clearing user credentials: $e');
@@ -569,9 +602,13 @@ class LocalStorageService extends GetxService {
   // ==================== SQLite Database Methods ====================
 
   // Generic database operations
-  Future<int> insertRecord(String table, Map<String, dynamic> data) async {
+  Future<int> insertRecord(
+    String table,
+    Map<String, dynamic> data, {
+    ConflictAlgorithm conflictAlgorithm = ConflictAlgorithm.replace,
+  }) async {
     try {
-      return await _database.insert(table, data);
+      return await _database.insert(table, data, conflictAlgorithm: conflictAlgorithm);
     } catch (e) {
       debugPrint('Error inserting record into $table: $e');
       rethrow;
@@ -823,10 +860,12 @@ class LocalStorageService extends GetxService {
       id TEXT PRIMARY KEY,
       name TEXT NOT NULL,
       roll_number TEXT NOT NULL UNIQUE,
+      class_id TEXT,
       image_url TEXT,
       created_at TEXT,
       updated_at TEXT,
       is_synced INTEGER DEFAULT 0
+
     )
   ''');
 
@@ -854,6 +893,11 @@ class LocalStorageService extends GetxService {
       end_time TEXT,
       status TEXT DEFAULT 'open',
       created_by TEXT NOT NULL,
+      subject_name TEXT,
+      course_name TEXT,
+      semester INTEGER,
+      section TEXT,
+      closed_at TEXT,
       created_at TEXT,
       updated_at TEXT,
       is_synced INTEGER DEFAULT 0,
@@ -1255,7 +1299,7 @@ class LocalStorageService extends GetxService {
       for (final student in students) {
         final studentData = student.toJson();
         studentData['is_synced'] = 0;
-        batch.insert('students', studentData);
+        batch.insert('students', studentData, conflictAlgorithm: ConflictAlgorithm.replace);
       }
       await batch.commit();
       return true;
@@ -1272,7 +1316,7 @@ class LocalStorageService extends GetxService {
       for (final record in records) {
         final recordData = record.toJson();
         recordData['is_synced'] = 0;
-        batch.insert('attendance_records', recordData);
+        batch.insert('attendance_records', recordData, conflictAlgorithm: ConflictAlgorithm.replace);
       }
       await batch.commit();
       return true;

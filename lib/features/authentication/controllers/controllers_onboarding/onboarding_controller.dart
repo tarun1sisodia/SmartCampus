@@ -1,9 +1,9 @@
-import 'package:attedance__/app/routes/app_routes.dart';
-import 'package:attedance__/common/utils/constants/text_strings.dart';
+import 'package:smart_campus/app/routes/app_routes.dart';
+import 'package:smart_campus/common/utils/constants/text_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../services/storage_service.dart';
-import 'package:attedance__/common/utils/helpers/snackbar_helper.dart';
+import 'package:smart_campus/common/utils/helpers/snackbar_helper.dart';
 
 class OnboardingController extends GetxController {
   static OnboardingController get instance => Get.find();

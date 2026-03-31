@@ -81,6 +81,8 @@ CREATE TABLE IF NOT EXISTS attendance_sessions (
     created_by UUID NOT NULL REFERENCES users(id),
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ,
+    status TEXT NOT NULL DEFAULT 'open' CHECK (status IN ('open', 'closed')),
+    closed_at TIMESTAMPTZ,
     UNIQUE(class_id, date)
 );
 
@@ -105,6 +107,18 @@ CREATE TABLE IF NOT EXISTS user_feedback (
     feedback TEXT,
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- =============================================
+-- STEP 1.5: Create Indices for Scaling
+-- =============================================
+
+-- Sparesly queried foreign keys and date-based columns
+CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+CREATE INDEX IF NOT EXISTS idx_classes_teacher_id ON classes(teacher_id);
+CREATE INDEX IF NOT EXISTS idx_class_students_student_id ON class_students(student_id);
+CREATE INDEX IF NOT EXISTS idx_attendance_sessions_class_id_date ON attendance_sessions(class_id, date DESC);
+CREATE INDEX IF NOT EXISTS idx_attendance_records_student_id ON attendance_records(student_id);
+CREATE INDEX IF NOT EXISTS idx_attendance_records_session_id ON attendance_records(session_id);
 
 -- =============================================
 -- STEP 2: Create Views
@@ -1366,11 +1380,6 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- =============================================
--- STEP 12: Commit all changes
--- =============================================
-COMMIT;
-
--- =============================================
 -- STEP 6: Performance Optimization (Indexes)
 -- =============================================
 
@@ -1389,3 +1398,17 @@ CREATE INDEX IF NOT EXISTS idx_attendance_sessions_date ON attendance_sessions(d
 CREATE INDEX IF NOT EXISTS idx_attendance_records_session_id ON attendance_records(session_id);
 CREATE INDEX IF NOT EXISTS idx_attendance_records_student_id ON attendance_records(student_id);
 CREATE INDEX IF NOT EXISTS idx_attendance_records_status ON attendance_records(status);
+
+CREATE INDEX IF NOT EXISTS idx_attendance_sessions_class_date
+    ON attendance_sessions (class_id, date DESC);
+
+CREATE INDEX IF NOT EXISTS idx_attendance_records_session_student
+    ON attendance_records (session_id, student_id);
+
+CREATE INDEX IF NOT EXISTS idx_students_roll_number
+    ON students (roll_number);
+
+-- =============================================
+-- STEP 12: Commit all changes
+-- =============================================
+COMMIT;

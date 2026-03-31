@@ -45,7 +45,7 @@ RUN yes | sdkmanager --licenses
 
 # Install Android Platform Tools and SDKs
 # Adjust versions as needed for your project
-RUN sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
+RUN sdkmanager "platform-tools" "platforms;android-36" "build-tools;36.0.0"
 
 # Set working directory for the app
 WORKDIR /workspace

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BiometricAuthService extends GetxController {
@@ -15,7 +16,8 @@ class BiometricAuthService extends GetxController {
   bool get isLinux {
     try {
       return Platform.isLinux;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
       // print("Error checking platform: $e");
       return false;
     }
@@ -39,8 +41,9 @@ class BiometricAuthService extends GetxController {
     try {
       final prefs = await SharedPreferences.getInstance();
       isBiometricEnabled.value = prefs.getBool('biometric_enabled') ?? false;
-    } catch (e) {
-      print("Error loading biometric settings: $e");
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
+      debugPrint('Error loading biometric settings: $e');
       isBiometricEnabled.value = false;
     }
   }
@@ -52,8 +55,9 @@ class BiometricAuthService extends GetxController {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('biometric_enabled', enabled);
       isBiometricEnabled.value = enabled;
-    } catch (e) {
-      print("Error saving biometric settings: $e");
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
+      debugPrint('Error saving biometric settings: $e');
     }
   }
 
@@ -64,8 +68,9 @@ class BiometricAuthService extends GetxController {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('biometric_enabled', false);
       isBiometricEnabled.value = false;
-    } catch (e) {
-      print("Error disabling biometrics: $e");
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
+      debugPrint('Error disabling biometrics: $e');
     }
   }
 
@@ -86,7 +91,8 @@ class BiometricAuthService extends GetxController {
         final biometrics = await _auth.getAvailableBiometrics();
         availableBiometrics.assignAll(biometrics);
       }
-    } on PlatformException catch (e) {
+    } on PlatformException catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error checking biometric availability: ${e.message}');
       isAvailable.value = false;
     }
@@ -117,7 +123,7 @@ class BiometricAuthService extends GetxController {
           'Biometric authentication is not available on this device',
           snackPosition: SnackPosition.BOTTOM,
         );
-        return true; // Return true to allow access even if biometrics aren't available
+        return false;
       }
     }
 
@@ -135,28 +141,10 @@ class BiometricAuthService extends GetxController {
       );
 
       return didAuthenticate;
-    } on PlatformException catch (e) {
-      String errorMessage = 'Authentication failed';
-
-      if (e.code == 'NotAvailable') {
-        errorMessage = 'Biometric authentication is not available';
-      } else if (e.code == 'NotEnrolled') {
-        errorMessage = 'No biometrics enrolled on this device';
-      } else if (e.code == 'LockedOut') {
-        errorMessage =
-            'Biometric authentication is temporarily locked (too many attempts)';
-      } else if (e.code == 'PermanentlyLockedOut') {
-        errorMessage = 'Biometric authentication is permanently locked';
-      }
-
-      Get.snackbar(
-        'Authentication Error',
-        errorMessage,
-        snackPosition: SnackPosition.BOTTOM,
-      );
-
-      // Return true on error to allow access rather than blocking
-      return true;
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
+      debugPrint('Unexpected error during biometrics: $e');
+      return false;
     } finally {
       isAuthenticating.value = false;
     }
@@ -168,8 +156,12 @@ class BiometricAuthService extends GetxController {
     try {
       await _auth.stopAuthentication();
       isAuthenticating.value = false;
-    } on PlatformException catch (e) {
+    } on PlatformException catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       debugPrint('Error cancelling authentication: ${e.message}');
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
+      debugPrint('Unexpected error cancelling authentication: $e');
     }
   }
 }

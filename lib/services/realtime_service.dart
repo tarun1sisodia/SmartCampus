@@ -1,6 +1,9 @@
 import 'dart:async';
+
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 class RealtimeService extends GetxService {
   final supabase = Supabase.instance.client;
@@ -56,13 +59,13 @@ class RealtimeService extends GetxService {
   @override
   Future<void> onInit() async {
     super.onInit();
-    print('RealtimeService initializing...');
+    debugPrint('RealtimeService initializing...');
     await initializeRealtimeSubscriptions();
   }
 
   @override
   void onClose() {
-    print('RealtimeService closing...');
+    debugPrint('RealtimeService closing...');
 
     // Cancel retry timer
     _retryTimer?.cancel();
@@ -87,11 +90,11 @@ class RealtimeService extends GetxService {
     try {
       final currentUser = supabase.auth.currentUser;
       if (currentUser == null) {
-        print('No user authenticated, skipping real-time subscriptions');
+        debugPrint('No user authenticated, skipping real-time subscriptions');
         return;
       }
 
-      print('Initializing real-time subscriptions for user: ${currentUser.id}');
+      debugPrint('Initializing real-time subscriptions for user: ${currentUser.id}');
 
       // Clear existing subscriptions
       await _clearSubscriptions();
@@ -100,13 +103,13 @@ class RealtimeService extends GetxService {
       final classesSubscription =
           supabase.from('classes').stream(primaryKey: ['id']).listen(
         (data) {
-          print('Classes real-time update: ${data.length} items');
+          debugPrint('Classes real-time update: ${data.length} items');
           classes.assignAll(data);
           _classesController.add(data);
           _updateConnectionStatus(true);
         },
         onError: (error) {
-          print('Error in classes stream: $error');
+          debugPrint('Error in classes stream: $error');
           _handleStreamError('classes', error);
         },
       );
@@ -115,13 +118,13 @@ class RealtimeService extends GetxService {
       final studentsSubscription =
           supabase.from('class_students').stream(primaryKey: ['id']).listen(
         (data) {
-          print('Students real-time update: ${data.length} items');
+          debugPrint('Students real-time update: ${data.length} items');
           students.assignAll(data);
           _studentsController.add(data);
           _updateConnectionStatus(true);
         },
         onError: (error) {
-          print('Error in students stream: $error');
+          debugPrint('Error in students stream: $error');
           _handleStreamError('students', error);
         },
       );
@@ -131,13 +134,13 @@ class RealtimeService extends GetxService {
           .from('attendance_sessions')
           .stream(primaryKey: ['id']).listen(
         (data) {
-          print('Attendance sessions real-time update: ${data.length} items');
-          attendanceRecords.assignAll(data);
+          debugPrint('Attendance sessions real-time update: ${data.length} items');
+          attendanceSessionRecords.assignAll(data);
           _attendanceController.add(data);
           _updateConnectionStatus(true);
         },
         onError: (error) {
-          print('Error in attendance sessions stream: $error');
+          debugPrint('Error in attendance sessions stream: $error');
           _handleStreamError('attendance_sessions', error);
         },
       );
@@ -146,13 +149,13 @@ class RealtimeService extends GetxService {
       final attendanceRecordsSubscription =
           supabase.from('attendance_records').stream(primaryKey: ['id']).listen(
         (data) {
-          print('Attendance records real-time update: ${data.length} items');
-          attendanceSessionRecords.assignAll(data);
+          debugPrint('Attendance records real-time update: ${data.length} items');
+          attendanceRecords.assignAll(data);
           _attendanceRecordsController.add(data);
           _updateConnectionStatus(true);
         },
         onError: (error) {
-          print('Error in attendance records stream: $error');
+          debugPrint('Error in attendance records stream: $error');
           _handleStreamError('attendance_records', error);
         },
       );
@@ -161,13 +164,13 @@ class RealtimeService extends GetxService {
       final subjectsSubscription =
           supabase.from('subjects').stream(primaryKey: ['id']).listen(
         (data) {
-          print('Subjects real-time update: ${data.length} items');
+          debugPrint('Subjects real-time update: ${data.length} items');
           subjects.assignAll(data);
           _subjectsController.add(data);
           _updateConnectionStatus(true);
         },
         onError: (error) {
-          print('Error in subjects stream: $error');
+          debugPrint('Error in subjects stream: $error');
           _handleStreamError('subjects', error);
         },
       );
@@ -176,13 +179,13 @@ class RealtimeService extends GetxService {
       final coursesSubscription =
           supabase.from('courses').stream(primaryKey: ['id']).listen(
         (data) {
-          print('Courses real-time update: ${data.length} items');
+          debugPrint('Courses real-time update: ${data.length} items');
           courses.assignAll(data);
           _coursesController.add(data);
           _updateConnectionStatus(true);
         },
         onError: (error) {
-          print('Error in courses stream: $error');
+          debugPrint('Error in courses stream: $error');
           _handleStreamError('courses', error);
         },
       );
@@ -202,9 +205,10 @@ class RealtimeService extends GetxService {
       _updateConnectionStatus(true);
       lastError.value = null;
 
-      print('Real-time subscriptions initialized successfully');
-    } catch (e) {
-      print('Error initializing real-time subscriptions: $e');
+      debugPrint('Real-time subscriptions initialized successfully');
+    } catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
+      debugPrint('Error initializing real-time subscriptions: $e');
       _updateConnectionStatus(false);
       lastError.value = e.toString();
       _scheduleRetry();
@@ -213,7 +217,7 @@ class RealtimeService extends GetxService {
 
   // Handle stream errors
   void _handleStreamError(String streamName, dynamic error) {
-    print('Stream error in $streamName: $error');
+    debugPrint('Stream error in $streamName: $error');
     _updateConnectionStatus(false);
     lastError.value = 'Error in $streamName: $error';
     _scheduleRetry();
@@ -231,18 +235,18 @@ class RealtimeService extends GetxService {
   // Schedule retry attempt
   void _scheduleRetry() {
     if (connectionAttempts.value >= maxRetryAttempts) {
-      print('Max retry attempts reached. Stopping retries.');
+      debugPrint('Max retry attempts reached. Stopping retries.');
       return;
     }
 
     _retryTimer?.cancel();
 
     final retryDelay = Duration(seconds: (connectionAttempts.value + 1) * 2);
-    print('Scheduling retry in ${retryDelay.inSeconds} seconds...');
+    debugPrint('Scheduling retry in ${retryDelay.inSeconds} seconds...');
 
     _retryTimer = Timer(retryDelay, () {
       connectionAttempts.value++;
-      print('Retry attempt ${connectionAttempts.value}/$maxRetryAttempts');
+      debugPrint('Retry attempt ${connectionAttempts.value}/$maxRetryAttempts');
       initializeRealtimeSubscriptions();
     });
   }
@@ -260,11 +264,11 @@ class RealtimeService extends GetxService {
     try {
       final currentUser = supabase.auth.currentUser;
       if (currentUser == null) {
-        print('No user authenticated for data refresh');
+        debugPrint('No user authenticated for data refresh');
         return;
       }
 
-      print('Refreshing all data...');
+      debugPrint('Refreshing all data...');
 
       // Fetch fresh data for all tables
       final classesData = await supabase
@@ -301,16 +305,17 @@ class RealtimeService extends GetxService {
       _subjectsController.add(subjectsData);
       _coursesController.add(coursesData);
 
-      print('All data refreshed successfully');
-    } catch (e) {
-      print('Error refreshing data: $e');
+      debugPrint('All data refreshed successfully');
+    } catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
+      debugPrint('Error refreshing data: $e');
       lastError.value = 'Failed to refresh data: $e';
     }
   }
 
   // Method to force reconnect
   Future<void> forceReconnect() async {
-    print('Force reconnecting real-time service...');
+    debugPrint('Force reconnecting real-time service...');
     connectionAttempts.value = 0;
     _retryTimer?.cancel();
     await initializeRealtimeSubscriptions();
@@ -404,8 +409,9 @@ class RealtimeService extends GetxService {
         onData,
         onError: onError ?? (error) => _handleStreamError(tableName, error),
       );
-    } catch (e) {
-      print('Error subscribing to table $tableName: $e');
+    } catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
+      debugPrint('Error subscribing to table $tableName: $e');
       return null;
     }
   }
@@ -465,8 +471,9 @@ class RealtimeService extends GetxService {
           final sessionDate = DateTime.parse(session['date']);
           return sessionDate.isAfter(startDate.subtract(const Duration(days: 1))) &&
                  sessionDate.isBefore(endDate.add(const Duration(days: 1)));
-        } catch (e) {
-          print('Error parsing session date: $e');
+        } catch (e, stackTrace) {
+          Sentry.captureException(e, stackTrace: stackTrace);
+          debugPrint('Error parsing session date: $e');
           return false;
         }
       }).toList();
@@ -628,8 +635,9 @@ class RealtimeService extends GetxService {
       results['no_recent_errors'] = lastError.value == null;
       
       return results;
-    } catch (e) {
-      print('Error validating data integrity: $e');
+    } catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
+      debugPrint('Error validating data integrity: $e');
       return {'validation_failed': false};
     }
   }
@@ -671,9 +679,10 @@ class RealtimeService extends GetxService {
         _subscriptions.remove(subscription);
       }
       
-      print('Cleaned up subscriptions for table: $tableName');
-    } catch (e) {
-      print('Error cleaning up subscriptions for $tableName: $e');
+      debugPrint('Cleaned up subscriptions for table: $tableName');
+    } catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
+      debugPrint('Error cleaning up subscriptions for $tableName: $e');
     }
   }
 
@@ -682,14 +691,14 @@ class RealtimeService extends GetxService {
     for (var subscription in _subscriptions) {
       subscription.pause();
     }
-    print('Real-time updates paused');
+    debugPrint('Real-time updates paused');
   }
 
   void resumeRealtimeUpdates() {
     for (var subscription in _subscriptions) {
       subscription.resume();
     }
-    print('Real-time updates resumed');
+    debugPrint('Real-time updates resumed');
   }
 
   // Method to get stream status

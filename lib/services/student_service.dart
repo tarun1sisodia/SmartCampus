@@ -1,20 +1,52 @@
 import 'dart:io';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:path/path.dart' as path;
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '../models/student_model.dart';
 
 class StudentService {
   final supabase = Supabase.instance.client;
+  static const int defaultStudentsPerClassLimit = 200;
+
+  // Get student counts for multiple classes (Batched)
+  Future<Map<String, int>> getStudentCountsForClasses(List<String> classIds) async {
+    try {
+      if (classIds.isEmpty) return {};
+
+      final counts = <String, int>{};
+      await Future.wait<void>(classIds.map((id) async {
+        final res = await supabase
+            .from('class_students')
+            .select()
+            .eq('class_id', id)
+            .count(CountOption.exact);
+        counts[id] = res.count;
+      }));
+
+      return counts;
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
+      throw 'Failed to get student counts: $e';
+    }
+  }
 
   // Get all students for a class
-  Future<List<StudentModel>> getStudentsForClass(String classId) async {
+  Future<List<StudentModel>> getStudentsForClass(
+    String classId, {
+    int limit = defaultStudentsPerClassLimit,
+    int offset = 0,
+  }) async {
     try {
       //print('Fetching students for class: $classId');
       final response = await supabase
           .from('class_students')
-          .select('*, students(*)')
+          .select(
+            'class_id, created_at, students(id, name, roll_number, image_url, created_at, updated_at)',
+          )
           .eq('class_id', classId)
+          .range(offset, offset + limit - 1)
           .order('created_at');
 
       //print('Fetched students successfully: $response');
@@ -35,13 +67,14 @@ class StudentService {
               : null,
         );
       }).toList();
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Failed to get students for class: $e');
       throw 'Failed to get students: $e';
     }
   }
 
-  // a student to a class
+  // add student to a class
   Future<void> addStudentToClass({
     required String name,
     required String rollNumber,
@@ -131,7 +164,8 @@ class StudentService {
         });
         //print('Added student to class: $classId');
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Failed to add student to class: $e');
       throw 'Failed to add student to class: $e';
     }
@@ -168,7 +202,8 @@ class StudentService {
         return imageUrl;
       }
       return null;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Failed to update student image: $e');
       throw 'Failed to update student image: $e';
     }
@@ -202,7 +237,8 @@ class StudentService {
       } else {
         throw 'Invalid image URL format';
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Failed to delete student image: $e');
       throw 'Failed to delete student image: $e';
     }
@@ -222,7 +258,8 @@ class StudentService {
           .eq('student_id', studentId);
 
       //print('Removed student from class successfully');
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Failed to remove student from class: $e');
       throw 'Failed to remove student from class: $e';
     }
@@ -248,7 +285,8 @@ class StudentService {
             ? DateTime.parse(response['updated_at'])
             : null,
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Failed to get student: $e');
       throw 'Failed to get student: $e';
     }
@@ -275,7 +313,8 @@ class StudentService {
               : null,
         );
       }).toList();
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       //print('Failed to get all students: $e');
       throw 'Failed to get all students: $e';
     }

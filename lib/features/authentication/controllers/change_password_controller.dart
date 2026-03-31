@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../common/utils/helpers/snackbar_helper.dart';
 
@@ -189,7 +190,8 @@ class ChangePasswordController extends GetxController {
           TSnackBar.showError(message: 'Current password is incorrect');
           return;
         }
-      } catch (e) {
+      } catch (e, stackTrace) {
+        await Sentry.captureException(e, stackTrace: stackTrace);
         TSnackBar.showError(message: 'Current password is incorrect');
         return;
       }
@@ -217,7 +219,8 @@ class ChangePasswordController extends GetxController {
 
       // Navigate back
       Get.back();
-    } catch (e) {
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
       TSnackBar.showError(
         message: 'Failed to change password: ${e.toString()}',
       );
