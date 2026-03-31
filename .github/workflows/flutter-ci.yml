@@ -166,13 +166,17 @@ jobs:
 
       - name: Verify keystore (fail fast)
         shell: bash
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
           set -euo pipefail
           
-          # Explicitly check for missing secrets to provide clear error messages
-          [ -n "${{ secrets.KEYSTORE_PASSWORD }}" ] || { echo "ERROR: KEYSTORE_PASSWORD secret is missing or empty"; exit 1; }
-          [ -n "${{ secrets.KEY_ALIAS }}" ] || { echo "ERROR: KEY_ALIAS secret is missing or empty"; exit 1; }
-          [ -n "${{ secrets.KEY_PASSWORD }}" ] || { echo "ERROR: KEY_PASSWORD secret is missing or empty"; exit 1; }
+          # Use Environment Variables instead of direct interpolation to handle special characters safely
+          [ -n "$KEYSTORE_PASSWORD" ] || { echo "ERROR: KEYSTORE_PASSWORD secret is missing or empty"; exit 1; }
+          [ -n "$KEY_ALIAS" ] || { echo "ERROR: KEY_ALIAS secret is missing or empty"; exit 1; }
+          [ -n "$KEY_PASSWORD" ] || { echo "ERROR: KEY_PASSWORD secret is missing or empty"; exit 1; }
 
           echo "Checking if keystore file exists..."
           ls -lah android/app/smartcampus.jks
@@ -180,14 +184,14 @@ jobs:
           echo "Listing aliases in keystore to verify store password..."
           keytool -list -v \
             -keystore android/app/smartcampus.jks \
-            -storepass "${{ secrets.KEYSTORE_PASSWORD }}" | sed -n '1,120p'
+            -storepass "$KEYSTORE_PASSWORD" | sed -n '1,120p'
 
           echo "Verifying specific alias and key password..."
           keytool -list \
             -keystore android/app/smartcampus.jks \
-            -storepass "${{ secrets.KEYSTORE_PASSWORD }}" \
-            -alias "${{ secrets.KEY_ALIAS }}" \
-            -keypass "${{ secrets.KEY_PASSWORD }}"
+            -storepass "$KEYSTORE_PASSWORD" \
+            -alias "$KEY_ALIAS" \
+            -keypass "$KEY_PASSWORD"
 
       - name: Build APK
         run: flutter build apk --release
