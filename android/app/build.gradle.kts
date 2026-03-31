@@ -73,6 +73,10 @@ android {
 dependencies {
     // Flutter's Android embedding can reference Play Feature Delivery classes
     // during release shrinking. Use the current split Play Core artifact.
+    // Needed for com.google.android.play.core.tasks.* referenced by Flutter deferred components
+    implementation("com.google.android.play:core:1.10.3")
+
+    // If you are using Play Feature Delivery APIs, keep this too
     implementation("com.google.android.play:feature-delivery:2.1.0")
 }
 
