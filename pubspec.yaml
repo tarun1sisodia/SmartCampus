@@ -104,8 +104,8 @@ flutter:
     - assets/images/emailsuccess.json
     - assets/images/images.png
     - assets/images/searchi.json
-    - assets/logos/applogo.png
-    - assets/logos/logo-transparent.png
+    - assets/logos/applogo.webp
+    - assets/logos/logo-transparent.webp
     - assets/animations/hello_robo.json
     - assets/images/onboarding_images/
     - shorebird.yaml

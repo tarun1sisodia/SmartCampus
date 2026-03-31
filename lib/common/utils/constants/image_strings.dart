@@ -2,9 +2,9 @@ class TImageStrings {
   TImageStrings._() {
     //print('TImageStrings initialized');
   }
-  static const String appLogo = "assets/logos/applogo.png";
+  static const String appLogo = "assets/logos/applogo.webp";
   static const String applogoTransparentPNG =
-      "assets/logos/logo-transparent.png";
+      "assets/logos/logo-transparent.webp";
   static const String applogoTransparentSVG =
       "assets/logos/logo-transparent.svg";
 
@@ -29,9 +29,9 @@ class TImageStrings {
 
   static const String onboardingImage1 = "assets/animations/hello_robo.json";
   static const String onboardingImage2 =
-      "assets/images/onboarding_images/tap.gif";
+      "assets/images/onboarding_images/tap.webp";
   static const String onboardingImage3 =
-      "assets/images/onboarding_images/activity-feed.gif";
+      "assets/images/onboarding_images/activity-feed.webp";
 
   static const String verifyemail = "https://imgs.search.brave.com/eNXrEWLFRnL0r5tbUZ25uPMbT2gEG6qLzKCMmLNeIl0/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9lbWFp/bHZlcmlmaWNhdGlv/bi53aG9pc3htbGFw/aS5jb20vcHJvZHVj/dHMtdnVlLWFzc2V0/cy9wdWJsaWMvaW1h/Z2VzL2VtYWlsLXZl/cmlmaWNhdGlvbi9s/b29rdXAucG5n";
   static const String successemail = "https://imgs.search.brave.com/Kp3P6ntUCnM3QLdOsXms1insWoP6Z6AvBVaSC6t6Mb0/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly8xNTEw/MzEwMjYudjIucHJl/c3NhYmxlY2RuLmNv/bS93cC1jb250ZW50/L3VwbG9hZHMvMjAy/NS8wNC9lbWFpbC1y/ZXNwb25zZS10aW1l/LXRyYWNraW5nLndl/YnA";
