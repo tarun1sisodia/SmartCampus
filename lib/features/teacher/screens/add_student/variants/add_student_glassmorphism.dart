@@ -5,9 +5,9 @@ import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../../../common/ui_patterns/pattern_tokens.dart';
 import '../../../../../common/ui_patterns/ui_style.dart';
-import '../../controllers/student_controller.dart';
+import '../../../controllers/student_controller.dart';
 import '../../../../../common/widgets/student_avatar.dart';
-import '../../../../models/class_model.dart';
+import '../../../../../models/class_model.dart';
 
 class AddStudentGlassmorphism extends StatelessWidget {
   final StudentController controller;
@@ -156,7 +156,7 @@ class AddStudentGlassmorphism extends StatelessWidget {
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
           child: AlertDialog(
              backgroundColor: Colors.white.withValues(alpha: 0.1),
-             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32), border: Border.all(color: Colors.white.withValues(alpha: 0.2))),
+             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32), side: BorderSide(color: Colors.white.withValues(alpha: 0.2))),
              title: const Text('ENROLLMENT_UPLINK', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18, color: Colors.white, letterSpacing: 1)),
              content: SingleChildScrollView(
                 child: Column(
@@ -188,7 +188,7 @@ class AddStudentGlassmorphism extends StatelessWidget {
                          Get.back();
                       }
                    },
-                   style: ElevatedButton.styleFrom(backgroundColor: Colors.white.withValues(alpha: 0.15), foregroundColor: Colors.white, elevation: 0, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16), border: Border.all(color: Colors.white30))),
+                   style: ElevatedButton.styleFrom(backgroundColor: Colors.white.withValues(alpha: 0.15), foregroundColor: Colors.white, elevation: 0, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16), side: BorderSide(color: Colors.white30))),
                    child: const Text('COMMIT_NODE'),
                 ),
              ],

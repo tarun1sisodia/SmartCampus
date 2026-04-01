@@ -134,7 +134,7 @@ class HelpCyberpunk extends StatelessWidget {
             controller: scrollController,
             padding: const EdgeInsets.all(32),
             children: [
-              const Text('KNOWLEDGE_UPLINK_X01', style: TextStyle(color: cyan, fontWeight: FontWeight.w900, fontSize: 18, letterSpacing: 2, fontFamily: 'Courier')),
+              const Text('KNOWLEDGE_UPLINK_X01', style: TextStyle(color: Colors.cyan, fontWeight: FontWeight.w900, fontSize: 18, letterSpacing: 2, fontFamily: 'Courier')),
               const Divider(height: 32, thickness: 1, color: Color(0xFF00F5FF)),
               _buildCyberFAQItem(question: 'How do I create a new class?', answer: 'To create a new class, go to the Classes tab and tap the "+" button in the bottom right corner...', color: cyan),
               _buildCyberFAQItem(question: 'How do I edit a student\'s information?', answer: 'To edit a student\'s information, go to the Classes tab...', color: magenta),
@@ -157,7 +157,7 @@ class HelpCyberpunk extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('CONNECT_UPLINK_X01', style: TextStyle(color: magenta, fontWeight: FontWeight.w900, fontSize: 18, letterSpacing: 2, fontFamily: 'Courier')),
+            const Text('CONNECT_UPLINK_X01', style: TextStyle(color: Colors.brown, fontWeight: FontWeight.w900, fontSize: 18, letterSpacing: 2, fontFamily: 'Courier')),
             const Divider(height: 32, thickness: 1, color: Color(0xFFFF00CC)),
             _buildContactTile(icon: Iconsax.message, title: 'EMAIL', subtitle: 'support@smartcampus.com', color: cyan),
             _buildContactTile(icon: Iconsax.call, title: 'VOICE', subtitle: '+1 (123) 456-7890', color: magenta),
@@ -168,7 +168,7 @@ class HelpCyberpunk extends StatelessWidget {
               child: Container(
                 height: 60,
                 decoration: BoxDecoration(color: magenta.withValues(alpha: 0.1), border: Border.all(color: magenta, width: 2)),
-                child: const Center(child: Text('DISMISS_OVERLAY', style: TextStyle(color: magenta, fontWeight: FontWeight.w900, fontSize: 11, letterSpacing: 2, fontFamily: 'Courier'))),
+                child: const Center(child: Text('DISMISS_OVERLAY', style: TextStyle(color: Colors.brown, fontWeight: FontWeight.w900, fontSize: 11, letterSpacing: 2, fontFamily: 'Courier'))),
               ),
             ),
           ],

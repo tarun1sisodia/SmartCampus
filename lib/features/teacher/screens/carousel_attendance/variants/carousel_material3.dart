@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import '../../../controllers/carousel_attendance_controller.dart';
-import '../widgets/session_timer_widget.dart';
+import '../../../widgets/session_timer_widget.dart';
 
 class CarouselMaterial3 extends StatelessWidget {
   const CarouselMaterial3({super.key});
@@ -89,7 +89,7 @@ class CarouselMaterial3 extends StatelessWidget {
           const SizedBox(height: 12),
           Obx(() {
             final status = attendanceController.getStudentStatus(student.id);
-            return Text(status.toUpperCase(), style: theme.textTheme.labelLarge?.copyWith(color: theme.colorScheme.primary, fontWeight: FontWeight.black, letterSpacing: 1.5));
+            return Text(status.toUpperCase(), style: theme.textTheme.labelLarge?.copyWith(color: theme.colorScheme.primary, fontWeight: FontWeight.bold, letterSpacing: 1.5));
           }),
         ],
       ),

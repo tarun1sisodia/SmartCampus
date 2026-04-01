@@ -6,7 +6,6 @@ import 'package:smart_campus/common/ui_patterns/pattern_tokens.dart';
 import 'package:smart_campus/common/ui_patterns/ui_style.dart';
 import 'package:smart_campus/features/teacher/controllers/calendar_controller.dart';
 import 'package:smart_campus/models/attendance_session_model.dart';
-import 'package:smart_campus/common/utils/constants/sized.dart';
 
 class CalendarMinimalist extends StatelessWidget {
   final CalendarController controller;

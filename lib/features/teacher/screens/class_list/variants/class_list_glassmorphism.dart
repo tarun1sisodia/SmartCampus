@@ -6,8 +6,8 @@ import '../../../../../common/ui_patterns/pattern_tokens.dart';
 import '../../../../../common/ui_patterns/ui_style.dart';
 import '../../../../../models/class_model.dart';
 import '../../../controllers/class_controller.dart';
-import '../../add_student_screen.dart';
-import '../../attendance_screen.dart';
+import 'package:smart_campus/features/teacher/screens/add_student/add_student_screen.dart';
+import 'package:smart_campus/features/teacher/screens/attendance/attendance_screen.dart';
 
 class ClassListGlassmorphism extends StatelessWidget {
   final ClassController controller;
@@ -75,7 +75,7 @@ class ClassListGlassmorphism extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(Map<String, dynamic> tokens) {
+  Widget _buildHeader(PatternTokens tokens) {
     return Container(
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
       decoration: BoxDecoration(
@@ -112,7 +112,7 @@ class ClassListGlassmorphism extends StatelessWidget {
     );
   }
 
-  Widget _buildSearchBar(Map<String, dynamic> tokens) {
+  Widget _buildSearchBar(PatternTokens tokens) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(16),
       child: BackdropFilter(
@@ -139,7 +139,7 @@ class ClassListGlassmorphism extends StatelessWidget {
     );
   }
 
-  Widget _buildClassCard(BuildContext context, ClassModel classItem, bool isSelected, Map<String, dynamic> tokens) {
+  Widget _buildClassCard(BuildContext context, ClassModel classItem, bool isSelected, PatternTokens tokens) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       child: ClipRRect(
@@ -216,7 +216,7 @@ class ClassListGlassmorphism extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         _buildGlassChip(Iconsax.user, 'STUDENTS', () => Get.to(() => AddStudentScreen(classModel: classItem))),
-                        _buildGlassChip(Iconsax.calendar, 'ATTENDANCE', () => Get.to(() => AttendanceScreen(classModel: classModel))),
+                        _buildGlassChip(Iconsax.calendar, 'ATTENDANCE', () => Get.to(() => AttendanceScreen(classModel: classItem))),
                       ],
                     ),
                   ],
@@ -250,7 +250,7 @@ class ClassListGlassmorphism extends StatelessWidget {
     );
   }
 
-  Widget _buildEmptyState(Map<String, dynamic> tokens) {
+  Widget _buildEmptyState(PatternTokens tokens) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -264,7 +264,7 @@ class ClassListGlassmorphism extends StatelessWidget {
     );
   }
 
-  Widget _buildLoadMore(Map<String, dynamic> tokens) {
+  Widget _buildLoadMore(PatternTokens tokens) {
     return Padding(
       padding: const EdgeInsets.all(24.0),
       child: Center(

@@ -4,10 +4,10 @@ import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 import '../../../../../common/ui_patterns/pattern_tokens.dart';
 import '../../../../../common/ui_patterns/ui_style.dart';
-import '../../controllers/all_sessions_controller.dart';
-import '../../controllers/attendance_controller.dart';
-import '../carousel_attendance_screen.dart';
-import '../../../app/bindings/app_bindings.dart';
+import '../../../controllers/all_sessions_controller.dart';
+import '../../../controllers/attendance_controller.dart';
+import '../../carousel_attendance/carousel_attendance_screen.dart';
+import '../../../../../app/bindings/app_bindings.dart';
 import '../../../../../common/utils/constants/colors.dart';
 
 class AllSessionsMinimalist extends StatelessWidget {

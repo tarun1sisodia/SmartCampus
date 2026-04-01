@@ -1,15 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart' show Colors, Divider, Icons, InkWell, Color, ColorScheme, Theme, ThemeData, CircleAvatar, TextButton, FontWeight, TextStyle, BorderRadius, Radius, Offset, BoxShape, BoxShadow, BoxDecoration, Border, BorderSide, Widget, EdgeInsets, Column, Row, Expanded, SizedBox, BuildContext, StatelessWidget, Center, ListView, Stack, Positioned, Obx, Get, IconData, Icon, MainAxisAlignment, CrossAxisAlignment, MainAxisSize, VoidCallback, Spacer, Badge, CircleAvatar, TextSelectionTheme, TextSelectionThemeData, TextFormField, InputDecoration, InputBorder, OutlineInputBorder, FileImage, Chip;
+import 'package:flutter/material.dart' show Colors, Divider, InkWell, Color, CircleAvatar, FontWeight, TextStyle, BorderRadius, Radius, BoxShape, BoxDecoration, Border, Widget, EdgeInsets, Column, Row, Expanded, SizedBox, BuildContext, StatelessWidget, Center, ListView, Stack, Positioned, IconData, Icon, MainAxisAlignment, CrossAxisAlignment, MainAxisSize, VoidCallback;
 import 'package:get/get.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
-import '../../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../../common/ui_patterns/ui_style.dart';
-import '../../controllers/student_detail_controller.dart';
-import '../../../../models/student_model.dart';
+import '../../../controllers/student_detail_controller.dart';
+import '../../../../../models/student_model.dart';
 import '../../../../../common/utils/constants/api_constants.dart';
 
 class StudentDetailCupertino extends StatelessWidget {

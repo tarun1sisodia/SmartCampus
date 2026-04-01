@@ -8,8 +8,8 @@ import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import '../../../../../common/ui_patterns/pattern_tokens.dart';
 import '../../../../../common/ui_patterns/ui_style.dart';
-import '../../controllers/student_detail_controller.dart';
-import '../../../../models/student_model.dart';
+import '../../../controllers/student_detail_controller.dart';
+import '../../../../../models/student_model.dart';
 import '../../../../../common/utils/constants/api_constants.dart';
 
 class StudentDetailMinimalist extends StatelessWidget {

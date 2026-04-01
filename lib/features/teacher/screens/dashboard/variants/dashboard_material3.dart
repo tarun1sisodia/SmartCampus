@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../../../../common/utils/constants/colors.dart';
-import '../../controllers/dashboard_controller.dart';
-import '../../controllers/teacher_profile_controller.dart';
-import '../teacher_settings_screen.dart';
+import '../../../controllers/dashboard_controller.dart';
+import '../../../controllers/teacher_profile_controller.dart';
+import '../../teacher_settings/teacher_settings_screen.dart';
 import '../../../../../common/ui_patterns/pattern_tokens.dart';
 import '../../../../../common/ui_patterns/ui_style.dart';
 

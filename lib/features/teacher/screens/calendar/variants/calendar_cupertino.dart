@@ -1,11 +1,12 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart' show Colors, Divider, Icons, InkWell, Color, ColorScheme, Theme, ThemeData, CircleAvatar, TextButton, FontWeight, TextStyle, BorderRadius, Radius, Offset, BoxShape, BoxShadow, BoxDecoration, Border, BorderSide, Widget, EdgeInsets, Column, Row, Expanded, SizedBox, BuildContext, StatelessWidget, Center, ListView, Stack, Positioned, Obx, Get, IconData, Icon, MainAxisAlignment, CrossAxisAlignment, MainAxisSize, VoidCallback, Spacer, DateTimeRange, showDateRangePicker;
+import 'package:flutter/material.dart' show Colors, Divider, Color, FontWeight, TextStyle, BorderRadius, Radius, BoxShape, BoxShadow, BoxDecoration, Widget, EdgeInsets, Column, Row, SizedBox, BuildContext, StatelessWidget, Center, ListView, Icon, CrossAxisAlignment, ListTile;
+import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../../../../../common/ui_patterns/pattern_tokens.dart';
 import '../../../../../common/ui_patterns/ui_style.dart';
-import '../../controllers/calendar_controller.dart';
-import '../../../../models/attendance_session_model.dart';
+import '../../../controllers/calendar_controller.dart';
+import '../../../../../models/attendance_session_model.dart';
 
 class CalendarCupertino extends StatelessWidget {
   final CalendarController controller;
@@ -83,7 +84,7 @@ class CalendarCupertino extends StatelessWidget {
     });
   }
 
-  Widget _buildIosCalendar(Map<String, dynamic> tokens) {
+  Widget _buildIosCalendar(PatternTokens tokens) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
@@ -124,7 +125,7 @@ class CalendarCupertino extends StatelessWidget {
     );
   }
 
-  Widget _buildSessionList(Map<String, dynamic> tokens) {
+  Widget _buildSessionList(PatternTokens tokens) {
     final sessions = controller.getSessionsForDay(controller.selectedDay.value);
     if (sessions.isEmpty) {
       return const Center(
@@ -148,7 +149,7 @@ class CalendarCupertino extends StatelessWidget {
     );
   }
 
-  Widget _buildIosSessionRow(AttendanceSessionModel session, Map<String, dynamic> tokens) {
+  Widget _buildIosSessionRow(AttendanceSessionModel session, PatternTokens tokens) {
     final isMySession = controller.userClasses.any((cls) => cls.id == session.classId);
     final isActive = controller.isSessionActive(session);
 

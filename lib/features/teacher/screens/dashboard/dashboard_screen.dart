@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:smart_campus/features/teacher/screens/dashboard/variants/dashboard_academic.dart';
+import 'package:smart_campus/features/teacher/screens/dashboard/variants/dashboard_cyberpunk.dart';
+import 'package:smart_campus/features/teacher/screens/dashboard/variants/dashboard_material3.dart';
 import '../../controllers/dashboard_controller.dart';
 import '../../controllers/teacher_profile_controller.dart';
+import 'variants/dashboard_corporate.dart';
+import 'variants/dashboard_glassmorphism.dart';
 import 'widgets/biometric_overlay.dart';
 import 'widgets/dashboard_shimmer.dart';
 import '../../../../common/ui_patterns/ui_style.dart';
@@ -50,7 +55,7 @@ class DashboardScreen extends StatelessWidget {
 
   Widget _buildSwitchboard(BuildContext context) {
     return Obx(() {
-      if (dashboardController.isLoading.value) return DashboardShimmer(context: context);
+      if (dashboardController.isLoading.value) return const DashboardShimmer();
 
       switch (uiController.currentStyle.value) {
         case UIStyle.industrialCorporate:

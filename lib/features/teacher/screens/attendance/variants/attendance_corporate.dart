@@ -7,7 +7,6 @@ import 'package:smart_campus/models/class_model.dart';
 import 'package:smart_campus/features/teacher/controllers/attendance_controller.dart';
 import 'package:smart_campus/features/teacher/screens/mark_attendance/mark_attendance_screen.dart';
 import 'package:smart_campus/features/teacher/screens/carousel_attendance/carousel_attendance_screen.dart';
-import 'package:smart_campus/app/bindings/app_bindings.dart';
 import 'package:smart_campus/common/ui_patterns/pattern_tokens.dart';
 import 'package:smart_campus/common/ui_patterns/ui_style.dart';
 

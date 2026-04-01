@@ -5,10 +5,8 @@ import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
-import '../../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../../common/ui_patterns/ui_style.dart';
-import '../../controllers/student_detail_controller.dart';
-import '../../../../models/student_model.dart';
+import '../../../controllers/student_detail_controller.dart';
+import '../../../../../models/student_model.dart';
 import '../../../../../common/utils/constants/api_constants.dart';
 
 class StudentDetailAcademic extends StatelessWidget {
@@ -141,7 +139,7 @@ class StudentDetailAcademic extends StatelessWidget {
      final t = TextEditingController(text: rem);
      Get.dialog(AlertDialog(
         backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero, border: Border.all(color: accent, width: 2)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero, side: BorderSide(color: accent, width: 2)),
         title: Text('Amend Enrollment Receipt', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16, color: ink, fontFamily: 'Serif')),
         content: Column(mainAxisSize: MainAxisSize.min, children: [
            Obx(() => Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [

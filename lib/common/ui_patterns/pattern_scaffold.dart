@@ -14,6 +14,8 @@ class PatternScaffold extends StatelessWidget {
   final Widget? floatingActionButton;
   final FloatingActionButtonLocation? floatingActionButtonLocation;
   final bool resizeToAvoidBottomInset;
+  final bool showBackButton;
+  final VoidCallback? onBackTap;
   final Color? backgroundColor;
 
   const PatternScaffold({
@@ -27,6 +29,8 @@ class PatternScaffold extends StatelessWidget {
     this.floatingActionButton,
     this.floatingActionButtonLocation,
     this.resizeToAvoidBottomInset = true,
+    this.showBackButton = false,
+    this.onBackTap,
     this.backgroundColor,
   });
 

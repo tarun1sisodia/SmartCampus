@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../../../../app/routes/app_routes.dart';
-import '../../../../app/theme/theme_configs.dart';
-import '../../../../app/theme/theme_controller.dart';
+import '../../../../../app/routes/app_routes.dart';
+import '../../../../../app/theme/theme_configs.dart';
+import '../../../../../app/theme/theme_controller.dart';
 import '../../../../../common/ui_patterns/ui_style.dart';
 import '../../../../../common/ui_patterns/ui_style_controller.dart';
-import '../../../../services/auth_service.dart';
-import '../../../../services/storage_service.dart';
-import '../../controllers/teacher_profile_controller.dart';
-import '../../../../services/language_service.dart';
-import '../teacher_profile_screen.dart';
+import '../../../../../services/auth_service.dart';
+import '../../../../../services/storage_service.dart';
+import '../../../controllers/teacher_profile_controller.dart';
+import '../../../../../services/language_service.dart';
+import '../../teacher_profile/teacher_profile_screen.dart';
 
 class SettingsBrutalist extends StatelessWidget {
   final TeacherProfileController controller;

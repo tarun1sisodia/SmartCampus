@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../../common/ui_patterns/ui_style.dart';
-import '../../controllers/student_controller.dart';
+import '../../../controllers/student_controller.dart';
 import '../../../../../common/widgets/student_avatar.dart';
-import '../../../../models/class_model.dart';
+import '../../../../../models/class_model.dart';
 
 class AddStudentCyberpunk extends StatelessWidget {
   final StudentController controller;
@@ -144,7 +142,7 @@ class AddStudentCyberpunk extends StatelessWidget {
      Get.dialog(
         AlertDialog(
            backgroundColor: Colors.black,
-           shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero, border: Border.all(color: cyan, width: 2)),
+           shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero, side: BorderSide(color: cyan, width: 2)),
            title: Text('ENROLLMENT_TERMINAL_V1', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16, color: cyan, letterSpacing: 1, fontFamily: 'Courier')),
            content: SingleChildScrollView(
               child: Column(

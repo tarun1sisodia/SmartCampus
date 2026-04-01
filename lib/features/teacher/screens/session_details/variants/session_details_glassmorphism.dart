@@ -4,8 +4,7 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../../../../common/ui_patterns/pattern_tokens.dart';
 import '../../../../../common/ui_patterns/ui_style.dart';
-import '../../controllers/session_details_controller.dart';
-import '../../../common/utils/constants/sized.dart';
+import '../../../controllers/session_details_controller.dart';
 
 class SessionDetailsGlassmorphism extends StatelessWidget {
   final SessionDetailsController controller;
@@ -70,7 +69,7 @@ class SessionDetailsGlassmorphism extends StatelessWidget {
     );
   }
 
-  Widget _buildGlassHeader(Map<String, dynamic> tokens) {
+  Widget _buildGlassHeader(PatternTokens tokens) {
     final session = controller.session.value!;
     final isActive = controller.isSessionActive();
 
@@ -120,7 +119,7 @@ class SessionDetailsGlassmorphism extends StatelessWidget {
     );
   }
 
-  Widget _buildGlassStatsHUD(Map<String, dynamic> tokens) {
+  Widget _buildGlassStatsHUD(PatternTokens tokens) {
     final stats = controller.attendanceStats.value;
     return Container(
       padding: const EdgeInsets.all(20),
@@ -166,7 +165,7 @@ class SessionDetailsGlassmorphism extends StatelessWidget {
     );
   }
 
-  Widget _buildGlassActionRow(Map<String, dynamic> tokens) {
+  Widget _buildGlassActionRow(PatternTokens tokens) {
     final isActive = controller.isSessionActive();
     return Row(
       children: [
@@ -195,7 +194,7 @@ class SessionDetailsGlassmorphism extends StatelessWidget {
     );
   }
 
-  Widget _buildGlassStudentManifest(Map<String, dynamic> tokens) {
+  Widget _buildGlassStudentManifest(PatternTokens tokens) {
     final records = controller.attendanceRecords;
     if (records.isEmpty) {
       return Container(

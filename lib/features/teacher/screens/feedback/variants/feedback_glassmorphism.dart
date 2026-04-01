@@ -126,7 +126,7 @@ class FeedbackGlassmorphism extends StatelessWidget {
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
           child: InkWell(
-            onPressed: () => controller.submitFeedback(),
+            onTap: () => controller.submitFeedback(),
             child: Container(
               height: 64,
               decoration: BoxDecoration(

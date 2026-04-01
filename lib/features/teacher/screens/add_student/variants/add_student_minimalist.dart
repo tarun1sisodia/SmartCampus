@@ -5,10 +5,9 @@ import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../../../common/ui_patterns/pattern_tokens.dart';
 import '../../../../../common/ui_patterns/ui_style.dart';
-import '../../controllers/student_controller.dart';
+import '../../../controllers/student_controller.dart';
 import '../../../../../common/widgets/student_avatar.dart';
-import '../../../../models/class_model.dart';
-import '../../../../../common/utils/constants/sized.dart';
+import '../../../../../models/class_model.dart';
 
 class AddStudentMinimalist extends StatelessWidget {
   final StudentController controller;

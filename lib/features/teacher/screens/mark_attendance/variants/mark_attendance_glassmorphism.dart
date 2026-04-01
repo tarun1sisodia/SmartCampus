@@ -8,7 +8,6 @@ import 'package:smart_campus/features/teacher/controllers/attendance_controller.
 import 'package:smart_campus/common/ui_patterns/pattern_tokens.dart';
 import 'package:smart_campus/common/ui_patterns/ui_style.dart';
 import 'package:smart_campus/common/widgets/student_avatar.dart';
-import 'package:smart_campus/common/utils/helpers/snackbar_helper.dart';
 
 class MarkAttendanceGlassmorphism extends StatelessWidget {
   final AttendanceController controller;

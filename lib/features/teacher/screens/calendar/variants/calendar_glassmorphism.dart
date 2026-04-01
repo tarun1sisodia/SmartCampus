@@ -5,8 +5,8 @@ import 'package:iconsax/iconsax.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../../../../../common/ui_patterns/pattern_tokens.dart';
 import '../../../../../common/ui_patterns/ui_style.dart';
-import '../../controllers/calendar_controller.dart';
-import '../../../../models/attendance_session_model.dart';
+import '../../../controllers/calendar_controller.dart';
+import '../../../../../models/attendance_session_model.dart';
 
 class CalendarGlassmorphism extends StatelessWidget {
   final CalendarController controller;
@@ -72,7 +72,7 @@ class CalendarGlassmorphism extends StatelessWidget {
     );
   }
 
-  Widget _buildLiveMonitor(Map<String, dynamic> tokens) {
+  Widget _buildLiveMonitor(PatternTokens tokens) {
     return Obx(() {
       final activeCount = controller.activeSessionsCount.value;
       if (activeCount == 0) return const SizedBox.shrink();
@@ -99,7 +99,7 @@ class CalendarGlassmorphism extends StatelessWidget {
     });
   }
 
-  Widget _buildGlassCalendar(Map<String, dynamic> tokens) {
+  Widget _buildGlassCalendar(PatternTokens tokens) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -145,7 +145,7 @@ class CalendarGlassmorphism extends StatelessWidget {
     );
   }
 
-  Widget _buildSessionList(Map<String, dynamic> tokens) {
+  Widget _buildSessionList(PatternTokens tokens) {
     final sessions = controller.getSessionsForDay(controller.selectedDay.value);
     if (sessions.isEmpty) {
       return Container(
@@ -163,7 +163,7 @@ class CalendarGlassmorphism extends StatelessWidget {
     );
   }
 
-  Widget _buildGlassSessionRow(AttendanceSessionModel session, Map<String, dynamic> tokens) {
+  Widget _buildGlassSessionRow(AttendanceSessionModel session, PatternTokens tokens) {
     final isMySession = controller.userClasses.any((cls) => cls.id == session.classId);
     final isActive = controller.isSessionActive(session);
 

@@ -1,0 +1,231 @@
+Analyzing SmartCampus...                                        
+
+   info • 'confirmedAt' is deprecated and shouldn't be used. Use emailConfirmedAt instead • lib/features/authentication/controllers/signup_controller.dart:218:43 • deprecated_member_use
+warning • The value of the local variable 'blue' isn't used • lib/features/authentication/screens/forgot_password/variants/forgot_password_brutalist.dart:14:11 • unused_local_variable
+warning • The value of the local variable 'tokens' isn't used • lib/features/teacher/screens/add_student/variants/add_student_academic.dart:22:11 • unused_local_variable
+warning • The value of the local variable 'tokens' isn't used • lib/features/teacher/screens/add_student/variants/add_student_corporate.dart:19:11 • unused_local_variable
+warning • The value of the local variable 'tokens' isn't used • lib/features/teacher/screens/add_student/variants/add_student_cupertino.dart:19:11 • unused_local_variable
+warning • The value of the local variable 'tokens' isn't used • lib/features/teacher/screens/add_student/variants/add_student_glassmorphism.dart:20:11 • unused_local_variable
+warning • The value of the local variable 'tokens' isn't used • lib/features/teacher/screens/add_student/variants/add_student_material3.dart:20:11 • unused_local_variable
+warning • The value of the local variable 'tokens' isn't used • lib/features/teacher/screens/add_student/variants/add_student_neumorphic.dart:21:11 • unused_local_variable
+warning • The value of the local variable 'tokens' isn't used • lib/features/teacher/screens/all_sessions/variants/all_sessions_academic.dart:23:11 • unused_local_variable
+  error • The argument type 'PatternTokens' can't be assigned to the parameter type 'Map<String, dynamic>'.  • lib/features/teacher/screens/all_sessions/variants/all_sessions_glassmorphism.dart:70:62 • argument_type_not_assignable
+  error • The argument type 'PatternTokens' can't be assigned to the parameter type 'Map<String, dynamic>'.  • lib/features/teacher/screens/all_sessions/variants/all_sessions_material3.dart:49:62 • argument_type_not_assignable
+  error • The argument type 'PatternTokens' can't be assigned to the parameter type 'Map<String, dynamic>'.  • lib/features/teacher/screens/all_sessions/variants/all_sessions_neumorphic.dart:28:40 • argument_type_not_assignable
+  error • The argument type 'PatternTokens' can't be assigned to the parameter type 'Map<String, dynamic>'.  • lib/features/teacher/screens/all_sessions/variants/all_sessions_neumorphic.dart:50:69 • argument_type_not_assignable
+  error • The named parameter 'strokeWidth' isn't defined • lib/features/teacher/screens/attendance/variants/attendance_brutalist.dart:42:49 • undefined_named_parameter
+warning • The value of the local variable 'bgColor' isn't used • lib/features/teacher/screens/attendance/variants/attendance_neumorphic.dart:23:11 • unused_local_variable
+warning • The name Icons is shown, but isn't used • lib/features/teacher/screens/attendance_reports/variants/attendance_reports_cupertino.dart:2:62 • unused_shown_name
+warning • The name ColorScheme is shown, but isn't used • lib/features/teacher/screens/attendance_reports/variants/attendance_reports_cupertino.dart:2:85 • unused_shown_name
+warning • The name Theme is shown, but isn't used • lib/features/teacher/screens/attendance_reports/variants/attendance_reports_cupertino.dart:2:98 • unused_shown_name
+warning • The name ThemeData is shown, but isn't used • lib/features/teacher/screens/attendance_reports/variants/attendance_reports_cupertino.dart:2:105 • unused_shown_name
+warning • The name CircleAvatar is shown, but isn't used • lib/features/teacher/screens/attendance_reports/variants/attendance_reports_cupertino.dart:2:116 • unused_shown_name
+warning • The name TextButton is shown, but isn't used • lib/features/teacher/screens/attendance_reports/variants/attendance_reports_cupertino.dart:2:130 • unused_shown_name
+warning • The name Radius is shown, but isn't used • lib/features/teacher/screens/attendance_reports/variants/attendance_reports_cupertino.dart:2:179 • unused_shown_name
+warning • The name Offset is shown, but isn't used • lib/features/teacher/screens/attendance_reports/variants/attendance_reports_cupertino.dart:2:187 • unused_shown_name
+warning • The name Border is shown, but isn't used • lib/features/teacher/screens/attendance_reports/variants/attendance_reports_cupertino.dart:2:221 • unused_shown_name
+warning • The name BorderSide is shown, but isn't used • lib/features/teacher/screens/attendance_reports/variants/attendance_reports_cupertino.dart:2:229 • unused_shown_name
+warning • The name Stack is shown, but isn't used • lib/features/teacher/screens/attendance_reports/variants/attendance_reports_cupertino.dart:2:343 • unused_shown_name
+warning • The name Positioned is shown, but isn't used • lib/features/teacher/screens/attendance_reports/variants/attendance_reports_cupertino.dart:2:350 • unused_shown_name
+warning • The name IconData is shown, but isn't used • lib/features/teacher/screens/attendance_reports/variants/attendance_reports_cupertino.dart:2:362 • unused_shown_name
+warning • The name Spacer is shown, but isn't used • lib/features/teacher/screens/attendance_reports/variants/attendance_reports_cupertino.dart:2:445 • unused_shown_name
+warning • Unused import: 'package:intl/intl.dart' • lib/features/teacher/screens/attendance_reports/variants/attendance_reports_cupertino.dart:5:8 • unused_import
+warning • Unused import: 'package:smart_campus/common/utils/constants/colors.dart' • lib/features/teacher/screens/attendance_reports/variants/attendance_reports_cupertino.dart:9:8 • unused_import
+warning • The value of the local variable 'tokens' isn't used • lib/features/teacher/screens/attendance_reports/variants/attendance_reports_cupertino.dart:18:11 • unused_local_variable
+warning • The value of the local variable 'tokens' isn't used • lib/features/teacher/screens/attendance_reports/variants/attendance_reports_material3.dart:15:11 • unused_local_variable
+warning • The value of the local variable 'tokens' isn't used • lib/features/teacher/screens/attendance_reports/variants/attendance_reports_neumorphic.dart:16:11 • unused_local_variable
+warning • The value of the local variable 'tokens' isn't used • lib/features/teacher/screens/calendar/variants/calendar_academic.dart:20:11 • unused_local_variable
+warning • The value of the local variable 'isActive' isn't used • lib/features/teacher/screens/calendar/variants/calendar_academic.dart:142:11 • unused_local_variable
+warning • The value of the local variable 'isActive' isn't used • lib/features/teacher/screens/calendar/variants/calendar_brutalist.dart:139:11 • unused_local_variable
+warning • The value of the local variable 'isActive' isn't used • lib/features/teacher/screens/calendar/variants/calendar_fluent.dart:142:11 • unused_local_variable
+warning • The value of the local variable 'tokens' isn't used • lib/features/teacher/screens/calendar/variants/calendar_material3.dart:18:11 • unused_local_variable
+warning • The value of the local variable 'isActive' isn't used • lib/features/teacher/screens/calendar/variants/calendar_neumorphic.dart:159:11 • unused_local_variable
+warning • The name Divider is shown, but isn't used • lib/features/teacher/screens/carousel_attendance/variants/carousel_cupertino.dart:2:53 • unused_shown_name
+warning • The name Icons is shown, but isn't used • lib/features/teacher/screens/carousel_attendance/variants/carousel_cupertino.dart:2:62 • unused_shown_name
+warning • The name InkWell is shown, but isn't used • lib/features/teacher/screens/carousel_attendance/variants/carousel_cupertino.dart:2:69 • unused_shown_name
+warning • The name ColorScheme is shown, but isn't used • lib/features/teacher/screens/carousel_attendance/variants/carousel_cupertino.dart:2:85 • unused_shown_name
+warning • The name Theme is shown, but isn't used • lib/features/teacher/screens/carousel_attendance/variants/carousel_cupertino.dart:2:98 • unused_shown_name
+warning • The name ThemeData is shown, but isn't used • lib/features/teacher/screens/carousel_attendance/variants/carousel_cupertino.dart:2:105 • unused_shown_name
+warning • The name TextButton is shown, but isn't used • lib/features/teacher/screens/carousel_attendance/variants/carousel_cupertino.dart:2:130 • unused_shown_name
+warning • The name Radius is shown, but isn't used • lib/features/teacher/screens/carousel_attendance/variants/carousel_cupertino.dart:2:179 • unused_shown_name
+warning • The name BoxShape is shown, but isn't used • lib/features/teacher/screens/carousel_attendance/variants/carousel_cupertino.dart:2:195 • unused_shown_name
+warning • The name Border is shown, but isn't used • lib/features/teacher/screens/carousel_attendance/variants/carousel_cupertino.dart:2:231 • unused_shown_name
+warning • The name BorderSide is shown, but isn't used • lib/features/teacher/screens/carousel_attendance/variants/carousel_cupertino.dart:2:239 • unused_shown_name
+warning • The name ListView is shown, but isn't used • lib/features/teacher/screens/carousel_attendance/variants/carousel_cupertino.dart:2:343 • unused_shown_name
+warning • The name Stack is shown, but isn't used • lib/features/teacher/screens/carousel_attendance/variants/carousel_cupertino.dart:2:353 • unused_shown_name
+warning • The name Positioned is shown, but isn't used • lib/features/teacher/screens/carousel_attendance/variants/carousel_cupertino.dart:2:360 • unused_shown_name
+warning • The name CrossAxisAlignment is shown, but isn't used • lib/features/teacher/screens/carousel_attendance/variants/carousel_cupertino.dart:2:407 • unused_shown_name
+warning • The name MainAxisSize is shown, but isn't used • lib/features/teacher/screens/carousel_attendance/variants/carousel_cupertino.dart:2:427 • unused_shown_name
+warning • The name Spacer is shown, but isn't used • lib/features/teacher/screens/carousel_attendance/variants/carousel_cupertino.dart:2:455 • unused_shown_name
+warning • The name Badge is shown, but isn't used • lib/features/teacher/screens/carousel_attendance/variants/carousel_cupertino.dart:2:463 • unused_shown_name
+warning • The name TextSelectionTheme is shown, but isn't used • lib/features/teacher/screens/carousel_attendance/variants/carousel_cupertino.dart:2:470 • unused_shown_name
+warning • The name TextSelectionThemeData is shown, but isn't used • lib/features/teacher/screens/carousel_attendance/variants/carousel_cupertino.dart:2:490 • unused_shown_name
+warning • The name TextFormField is shown, but isn't used • lib/features/teacher/screens/carousel_attendance/variants/carousel_cupertino.dart:2:514 • unused_shown_name
+warning • The name InputDecoration is shown, but isn't used • lib/features/teacher/screens/carousel_attendance/variants/carousel_cupertino.dart:2:529 • unused_shown_name
+warning • The name InputBorder is shown, but isn't used • lib/features/teacher/screens/carousel_attendance/variants/carousel_cupertino.dart:2:546 • unused_shown_name
+warning • The name OutlineInputBorder is shown, but isn't used • lib/features/teacher/screens/carousel_attendance/variants/carousel_cupertino.dart:2:559 • unused_shown_name
+warning • The name FileImage is shown, but isn't used • lib/features/teacher/screens/carousel_attendance/variants/carousel_cupertino.dart:2:579 • unused_shown_name
+warning • The name Chip is shown, but isn't used • lib/features/teacher/screens/carousel_attendance/variants/carousel_cupertino.dart:2:590 • unused_shown_name
+warning • Unused import: 'package:iconsax/iconsax.dart' • lib/features/teacher/screens/carousel_attendance/variants/carousel_cupertino.dart:4:8 • unused_import
+warning • The value of the local variable 'tokens' isn't used • lib/features/teacher/screens/class_list/variants/class_list_academic.dart:18:11 • unused_local_variable
+warning • The value of the local variable 'tokens' isn't used • lib/features/teacher/screens/class_list/variants/class_list_brutalist.dart:18:11 • unused_local_variable
+warning • The value of the local variable 'tokens' isn't used • lib/features/teacher/screens/class_list/variants/class_list_cupertino.dart:19:11 • unused_local_variable
+warning • The value of the local variable 'tokens' isn't used • lib/features/teacher/screens/class_list/variants/class_list_cyberpunk.dart:18:11 • unused_local_variable
+warning • The value of the local variable 'tokens' isn't used • lib/features/teacher/screens/class_list/variants/class_list_fluent.dart:18:11 • unused_local_variable
+warning • The value of the local variable 'tokens' isn't used • lib/features/teacher/screens/class_list/variants/class_list_neumorphic.dart:19:11 • unused_local_variable
+  error • The named parameter 'dashboardController' isn't defined • lib/features/teacher/screens/dashboard/dashboard_screen.dart:40:17 • undefined_named_parameter
+  error • The named parameter 'dark' isn't defined • lib/features/teacher/screens/dashboard/dashboard_screen.dart:41:17 • undefined_named_parameter
+  error • The named parameter 'context' isn't defined • lib/features/teacher/screens/dashboard/dashboard_screen.dart:53:72 • undefined_named_parameter
+  error • The method 'DashboardCorporate' isn't defined for the type 'DashboardScreen' • lib/features/teacher/screens/dashboard/dashboard_screen.dart:57:18 • undefined_method
+  error • The method 'DashboardGlassmorphism' isn't defined for the type 'DashboardScreen' • lib/features/teacher/screens/dashboard/dashboard_screen.dart:69:18 • undefined_method
+  error • The method 'DashboardMaterial3' isn't defined for the type 'DashboardScreen' • lib/features/teacher/screens/dashboard/dashboard_screen.dart:81:18 • undefined_method
+  error • The method 'DashboardCyberpunk' isn't defined for the type 'DashboardScreen' • lib/features/teacher/screens/dashboard/dashboard_screen.dart:93:18 • undefined_method
+  error • The method 'DashboardAcademic' isn't defined for the type 'DashboardScreen' • lib/features/teacher/screens/dashboard/dashboard_screen.dart:105:18 • undefined_method
+warning • This default clause is covered by the previous cases • lib/features/teacher/screens/dashboard/dashboard_screen.dart:116:9 • unreachable_switch_default
+  error • The method 'DashboardCorporate' isn't defined for the type 'DashboardScreen' • lib/features/teacher/screens/dashboard/dashboard_screen.dart:117:18 • undefined_method
+   info • Unnecessary use of 'toList' in a spread • lib/features/teacher/screens/dashboard/variants/dashboard_academic.dart:50:18 • unnecessary_to_list_in_spreads
+warning • The receiver can't be 'null' because of short-circuiting, so the null-aware operator '?.' can't be used • lib/features/teacher/screens/dashboard/variants/dashboard_academic.dart:64:24 • invalid_null_aware_operator
+   info • Unnecessary use of 'toList' in a spread • lib/features/teacher/screens/dashboard/variants/dashboard_brutalist.dart:69:16 • unnecessary_to_list_in_spreads
+warning • The receiver can't be 'null' because of short-circuiting, so the null-aware operator '?.' can't be used • lib/features/teacher/screens/dashboard/variants/dashboard_brutalist.dart:105:42 • invalid_null_aware_operator
+   info • Unnecessary use of 'toList' in a spread • lib/features/teacher/screens/dashboard/variants/dashboard_corporate.dart:102:16 • unnecessary_to_list_in_spreads
+   info • Unnecessary use of 'toList' in a spread • lib/features/teacher/screens/dashboard/variants/dashboard_cupertino.dart:96:22 • unnecessary_to_list_in_spreads
+   info • Unnecessary use of 'toList' in a spread • lib/features/teacher/screens/dashboard/variants/dashboard_cyberpunk.dart:60:18 • unnecessary_to_list_in_spreads
+warning • The receiver can't be 'null' because of short-circuiting, so the null-aware operator '?.' can't be used • lib/features/teacher/screens/dashboard/variants/dashboard_cyberpunk.dart:76:41 • invalid_null_aware_operator
+   info • Unnecessary use of 'toList' in a spread • lib/features/teacher/screens/dashboard/variants/dashboard_fluent.dart:70:20 • unnecessary_to_list_in_spreads
+warning • The receiver can't be 'null' because of short-circuiting, so the null-aware operator '?.' can't be used • lib/features/teacher/screens/dashboard/variants/dashboard_fluent.dart:103:35 • invalid_null_aware_operator
+   info • Unnecessary use of 'toList' in a spread • lib/features/teacher/screens/dashboard/variants/dashboard_glassmorphism.dart:124:20 • unnecessary_to_list_in_spreads
+   info • Unnecessary use of 'toList' in a spread • lib/features/teacher/screens/dashboard/variants/dashboard_material3.dart:60:16 • unnecessary_to_list_in_spreads
+warning • The receiver can't be 'null' because of short-circuiting, so the null-aware operator '?.' can't be used • lib/features/teacher/screens/dashboard/variants/dashboard_material3.dart:80:35 • invalid_null_aware_operator
+   info • Unnecessary use of 'toList' in a spread • lib/features/teacher/screens/dashboard/variants/dashboard_minimalist.dart:103:16 • unnecessary_to_list_in_spreads
+   info • Unnecessary use of 'toList' in a spread • lib/features/teacher/screens/dashboard/variants/dashboard_neumorphic.dart:88:16 • unnecessary_to_list_in_spreads
+warning • The receiver can't be 'null' because of short-circuiting, so the null-aware operator '?.' can't be used • lib/features/teacher/screens/dashboard/variants/dashboard_neumorphic.dart:126:35 • invalid_null_aware_operator
+  error • The method 'Obx' isn't defined for the type 'FeedbackCupertino' • lib/features/teacher/screens/feedback/variants/feedback_cupertino.dart:25:14 • undefined_method
+  error • The named parameter 'onPressed' isn't defined • lib/features/teacher/screens/feedback/variants/feedback_glassmorphism.dart:129:13 • undefined_named_parameter
+  error • Invalid constant value • lib/features/teacher/screens/help/variants/help_cyberpunk.dart:137:74 • invalid_constant
+  error • Invalid constant value • lib/features/teacher/screens/help/variants/help_cyberpunk.dart:160:70 • invalid_constant
+  error • Invalid constant value • lib/features/teacher/screens/help/variants/help_cyberpunk.dart:171:92 • invalid_constant
+  error • Undefined class 'RxBool' • lib/features/teacher/screens/import_data/variants/import_cupertino.dart:10:11 • undefined_class
+  error • The getter 'obs' isn't defined for the type 'bool' • lib/features/teacher/screens/import_data/variants/import_cupertino.dart:10:38 • undefined_getter
+  error • Undefined class 'RxString' • lib/features/teacher/screens/import_data/variants/import_cupertino.dart:11:11 • undefined_class
+  error • The getter 'obs' isn't defined for the type 'String' • lib/features/teacher/screens/import_data/variants/import_cupertino.dart:11:47 • undefined_getter
+  error • Undefined class 'RxBool' • lib/features/teacher/screens/import_data/variants/import_cupertino.dart:12:11 • undefined_class
+  error • The getter 'obs' isn't defined for the type 'bool' • lib/features/teacher/screens/import_data/variants/import_cupertino.dart:12:39 • undefined_getter
+  error • Undefined class 'RxString' • lib/features/teacher/screens/import_data/variants/import_cupertino.dart:13:11 • undefined_class
+  error • The getter 'obs' isn't defined for the type 'String' • lib/features/teacher/screens/import_data/variants/import_cupertino.dart:13:34 • undefined_getter
+  error • Undefined class 'RxBool' • lib/features/teacher/screens/import_data/variants/import_cupertino.dart:14:11 • undefined_class
+  error • The getter 'obs' isn't defined for the type 'bool' • lib/features/teacher/screens/import_data/variants/import_cupertino.dart:14:38 • undefined_getter
+  error • Undefined class 'RxBool' • lib/features/teacher/screens/import_data/variants/import_cupertino.dart:15:11 • undefined_class
+  error • The getter 'obs' isn't defined for the type 'bool' • lib/features/teacher/screens/import_data/variants/import_cupertino.dart:15:36 • undefined_getter
+  error • The method 'Obx' isn't defined for the type 'ImportCupertino' • lib/features/teacher/screens/import_data/variants/import_cupertino.dart:31:13 • undefined_method
+  error • The method 'Obx' isn't defined for the type 'ImportCupertino' • lib/features/teacher/screens/import_data/variants/import_cupertino.dart:47:11 • undefined_method
+  error • Undefined name 'Get' • lib/features/teacher/screens/import_data/variants/import_cupertino.dart:52:17 • undefined_identifier
+  error • Undefined class 'RxString' • lib/features/teacher/screens/import_data/variants/import_cupertino.dart:91:24 • undefined_class
+  error • Undefined class 'RxBool' • lib/features/teacher/screens/import_data/variants/import_cupertino.dart:118:25 • undefined_class
+  error • Undefined class 'RxString' • lib/features/teacher/screens/import_data/variants/import_cupertino.dart:118:46 • undefined_class
+  error • Undefined class 'RxString' • lib/features/teacher/screens/import_data/variants/import_cupertino.dart:118:65 • undefined_class
+  error • The method 'Obx' isn't defined for the type 'ImportCupertino' • lib/features/teacher/screens/import_data/variants/import_cupertino.dart:119:12 • undefined_method
+  error • Undefined class 'RxBool' • lib/features/teacher/screens/import_data/variants/import_cupertino.dart:150:35 • undefined_class
+  error • The method 'Obx' isn't defined for the type 'ImportCupertino' • lib/features/teacher/screens/import_data/variants/import_cupertino.dart:157:11 • undefined_method
+warning • The value of the local variable 'tokens' isn't used • lib/features/teacher/screens/mark_attendance/variants/mark_attendance_academic.dart:19:11 • unused_local_variable
+warning • The left operand can't be null, so the right operand is never executed • lib/features/teacher/screens/mark_attendance/variants/mark_attendance_academic.dart:93:44 • dead_null_aware_expression
+warning • The left operand can't be null, so the right operand is never executed • lib/features/teacher/screens/mark_attendance/variants/mark_attendance_academic.dart:99:33 • dead_null_aware_expression
+warning • The value of the local variable 'tokens' isn't used • lib/features/teacher/screens/mark_attendance/variants/mark_attendance_brutalist.dart:19:11 • unused_local_variable
+  error • The constructor being called isn't a const constructor • lib/features/teacher/screens/mark_attendance/variants/mark_attendance_brutalist.dart:91:17 • const_with_non_const
+warning • The left operand can't be null, so the right operand is never executed • lib/features/teacher/screens/mark_attendance/variants/mark_attendance_brutalist.dart:108:58 • dead_null_aware_expression
+warning • The left operand can't be null, so the right operand is never executed • lib/features/teacher/screens/mark_attendance/variants/mark_attendance_brutalist.dart:110:56 • dead_null_aware_expression
+warning • The left operand can't be null, so the right operand is never executed • lib/features/teacher/screens/mark_attendance/variants/mark_attendance_corporate.dart:100:54 • dead_null_aware_expression
+warning • The left operand can't be null, so the right operand is never executed • lib/features/teacher/screens/mark_attendance/variants/mark_attendance_corporate.dart:101:57 • dead_null_aware_expression
+  error • Undefined name 'FloatingActionButtonLocation' • lib/features/teacher/screens/mark_attendance/variants/mark_attendance_cupertino.dart:89:37 • undefined_identifier
+warning • The left operand can't be null, so the right operand is never executed • lib/features/teacher/screens/mark_attendance/variants/mark_attendance_cupertino.dart:104:37 • dead_null_aware_expression
+warning • The left operand can't be null, so the right operand is never executed • lib/features/teacher/screens/mark_attendance/variants/mark_attendance_cupertino.dart:105:53 • dead_null_aware_expression
+warning • The left operand can't be null, so the right operand is never executed • lib/features/teacher/screens/mark_attendance/variants/mark_attendance_cyberpunk.dart:116:52 • dead_null_aware_expression
+warning • The left operand can't be null, so the right operand is never executed • lib/features/teacher/screens/mark_attendance/variants/mark_attendance_cyberpunk.dart:117:55 • dead_null_aware_expression
+warning • The left operand can't be null, so the right operand is never executed • lib/features/teacher/screens/mark_attendance/variants/mark_attendance_fluent.dart:97:39 • dead_null_aware_expression
+warning • The left operand can't be null, so the right operand is never executed • lib/features/teacher/screens/mark_attendance/variants/mark_attendance_fluent.dart:98:65 • dead_null_aware_expression
+warning • The left operand can't be null, so the right operand is never executed • lib/features/teacher/screens/mark_attendance/variants/mark_attendance_glassmorphism.dart:141:62 • dead_null_aware_expression
+warning • The left operand can't be null, so the right operand is never executed • lib/features/teacher/screens/mark_attendance/variants/mark_attendance_glassmorphism.dart:142:61 • dead_null_aware_expression
+warning • The left operand can't be null, so the right operand is never executed • lib/features/teacher/screens/mark_attendance/variants/mark_attendance_material3.dart:80:35 • dead_null_aware_expression
+warning • The left operand can't be null, so the right operand is never executed • lib/features/teacher/screens/mark_attendance/variants/mark_attendance_material3.dart:81:51 • dead_null_aware_expression
+warning • The left operand can't be null, so the right operand is never executed • lib/features/teacher/screens/mark_attendance/variants/mark_attendance_minimalist.dart:107:44 • dead_null_aware_expression
+warning • The left operand can't be null, so the right operand is never executed • lib/features/teacher/screens/mark_attendance/variants/mark_attendance_minimalist.dart:108:59 • dead_null_aware_expression
+warning • The left operand can't be null, so the right operand is never executed • lib/features/teacher/screens/mark_attendance/variants/mark_attendance_neumorphic.dart:119:42 • dead_null_aware_expression
+warning • The left operand can't be null, so the right operand is never executed • lib/features/teacher/screens/mark_attendance/variants/mark_attendance_neumorphic.dart:120:57 • dead_null_aware_expression
+  error • Undefined name 'Get' • lib/features/teacher/screens/reports/variants/reports_cupertino.dart:11:24 • undefined_identifier
+  error • Undefined name 'Get' • lib/features/teacher/screens/reports/variants/reports_cupertino.dart:28:30 • undefined_identifier
+warning • The value of the local variable 'yellow' isn't used • lib/features/teacher/screens/reports/variants/reports_cyberpunk.dart:14:11 • unused_local_variable
+warning • The value of the local variable 'tokens' isn't used • lib/features/teacher/screens/session_details/variants/session_details_academic.dart:19:11 • unused_local_variable
+  error • Functions must have an explicit list of parameters • lib/features/teacher/screens/session_details/variants/session_details_cupertino.dart:6:1 • missing_function_parameters
+  error • A function body must be provided • lib/features/teacher/screens/session_details/variants/session_details_cupertino.dart:6:7 • missing_function_body
+  error • Expected a method, getter, setter or operator declaration • lib/features/teacher/screens/session_details/variants/session_details_cupertino.dart:6:7 • expected_executable
+   info • An uninitialized variable should have an explicit type annotation • lib/features/teacher/screens/session_details/variants/session_details_cupertino.dart:6:8 • prefer_typing_uninitialized_variables
+  error • Expected to find ';' • lib/features/teacher/screens/session_details/variants/session_details_cupertino.dart:6:8 • expected_token
+  error • Variables must be declared using the keywords 'const', 'final', 'var' or a type name • lib/features/teacher/screens/session_details/variants/session_details_cupertino.dart:6:8 • missing_const_final_var_or_type
+  error • Expected a method, getter, setter or operator declaration • lib/features/teacher/screens/session_details/variants/session_details_cupertino.dart:6:12 • expected_executable
+  error • Unterminated string literal • lib/features/teacher/screens/session_details/variants/session_details_cupertino.dart:6:15 • unterminated_string_literal
+  error • The method 'Obx' isn't defined for the type 'SessionDetailsCupertino' • lib/features/teacher/screens/session_details/variants/session_details_cupertino.dart:20:14 • undefined_method
+  error • The method 'ListTile' isn't defined for the type 'SessionDetailsCupertino' • lib/features/teacher/screens/session_details/variants/session_details_cupertino.dart:178:18 • undefined_method
+  error • Expected to find ';' • lib/features/teacher/screens/session_details/variants/session_details_cupertino.dart:189:11 • expected_token
+warning • Dead code • lib/features/teacher/screens/session_details/variants/session_details_cupertino.dart:189:12 • dead_code
+  error • Expected an identifier • lib/features/teacher/screens/session_details/variants/session_details_cupertino.dart:189:12 • missing_identifier
+  error • Expected to find ';' • lib/features/teacher/screens/session_details/variants/session_details_cupertino.dart:189:12 • expected_token
+  error • Unexpected text ';' • lib/features/teacher/screens/session_details/variants/session_details_cupertino.dart:189:12 • unexpected_token
+  error • Expected an identifier • lib/features/teacher/screens/session_details/variants/session_details_cupertino.dart:190:9 • missing_identifier
+  error • Unexpected text ';' • lib/features/teacher/screens/session_details/variants/session_details_cupertino.dart:190:9 • unexpected_token
+  error • Expected to find ')' • lib/features/teacher/screens/session_details/variants/session_details_cupertino.dart:192:6 • expected_token
+  error • Expected to find ';' • lib/features/teacher/screens/session_details/variants/session_details_fluent.dart:188:11 • expected_token
+warning • Dead code • lib/features/teacher/screens/session_details/variants/session_details_fluent.dart:188:12 • dead_code
+  error • Expected an identifier • lib/features/teacher/screens/session_details/variants/session_details_fluent.dart:188:12 • missing_identifier
+  error • Expected to find ';' • lib/features/teacher/screens/session_details/variants/session_details_fluent.dart:188:12 • expected_token
+  error • Unexpected text ';' • lib/features/teacher/screens/session_details/variants/session_details_fluent.dart:188:12 • unexpected_token
+  error • Expected an identifier • lib/features/teacher/screens/session_details/variants/session_details_fluent.dart:189:9 • missing_identifier
+  error • Unexpected text ';' • lib/features/teacher/screens/session_details/variants/session_details_fluent.dart:189:9 • unexpected_token
+  error • Expected to find ')' • lib/features/teacher/screens/session_details/variants/session_details_fluent.dart:191:6 • expected_token
+warning • The value of the local variable 'tokens' isn't used • lib/features/teacher/screens/session_details/variants/session_details_material3.dart:17:11 • unused_local_variable
+warning • The value of the local variable 'tokens' isn't used • lib/features/teacher/screens/session_details/variants/session_details_neumorphic.dart:18:11 • unused_local_variable
+warning • The '!' will have no effect because the receiver can't be null • lib/features/teacher/screens/student_detail/variants/student_detail_academic.dart:60:84 • unnecessary_non_null_assertion
+  error • The named parameter 'border' isn't defined • lib/features/teacher/screens/student_detail/variants/student_detail_academic.dart:142:72 • undefined_named_parameter
+warning • The '!' will have no effect because the receiver can't be null • lib/features/teacher/screens/student_detail/variants/student_detail_brutalist.dart:63:117 • unnecessary_non_null_assertion
+  error • The named parameter 'border' isn't defined • lib/features/teacher/screens/student_detail/variants/student_detail_brutalist.dart:145:77 • undefined_named_parameter
+  error • The constructor being called isn't a const constructor • lib/features/teacher/screens/student_detail/variants/student_detail_brutalist.dart:145:85 • const_with_non_const
+warning • The value of the local variable 'tokens' isn't used • lib/features/teacher/screens/student_detail/variants/student_detail_corporate.dart:21:11 • unused_local_variable
+warning • The '!' will have no effect because the receiver can't be null • lib/features/teacher/screens/student_detail/variants/student_detail_corporate.dart:67:99 • unnecessary_non_null_assertion
+  error • Functions must have an explicit list of parameters • lib/features/teacher/screens/student_detail/variants/student_detail_cupertino.dart:11:1 • missing_function_parameters
+  error • A function body must be provided • lib/features/teacher/screens/student_detail/variants/student_detail_cupertino.dart:11:7 • missing_function_body
+  error • Expected a method, getter, setter or operator declaration • lib/features/teacher/screens/student_detail/variants/student_detail_cupertino.dart:11:7 • expected_executable
+   info • An uninitialized variable should have an explicit type annotation • lib/features/teacher/screens/student_detail/variants/student_detail_cupertino.dart:11:8 • prefer_typing_uninitialized_variables
+  error • Expected to find ';' • lib/features/teacher/screens/student_detail/variants/student_detail_cupertino.dart:11:8 • expected_token
+  error • Variables must be declared using the keywords 'const', 'final', 'var' or a type name • lib/features/teacher/screens/student_detail/variants/student_detail_cupertino.dart:11:8 • missing_const_final_var_or_type
+  error • Expected a method, getter, setter or operator declaration • lib/features/teacher/screens/student_detail/variants/student_detail_cupertino.dart:11:12 • expected_executable
+  error • Unterminated string literal • lib/features/teacher/screens/student_detail/variants/student_detail_cupertino.dart:11:15 • unterminated_string_literal
+warning • The '!' will have no effect because the receiver can't be null • lib/features/teacher/screens/student_detail/variants/student_detail_cupertino.dart:58:89 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/teacher/screens/student_detail/variants/student_detail_cyberpunk.dart:70:117 • unnecessary_non_null_assertion
+  error • The named parameter 'border' isn't defined • lib/features/teacher/screens/student_detail/variants/student_detail_cyberpunk.dart:152:71 • undefined_named_parameter
+warning • The '!' will have no effect because the receiver can't be null • lib/features/teacher/screens/student_detail/variants/student_detail_fluent.dart:62:133 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/teacher/screens/student_detail/variants/student_detail_glassmorphism.dart:72:104 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/teacher/screens/student_detail/variants/student_detail_material3.dart:60:110 • unnecessary_non_null_assertion
+  error • The getter 'calendar_none' isn't defined for the type 'Iconsax' • lib/features/teacher/screens/student_detail/variants/student_detail_material3.dart:115:149 • undefined_getter
+warning • The '!' will have no effect because the receiver can't be null • lib/features/teacher/screens/student_detail/variants/student_detail_minimalist.dart:63:100 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/teacher/screens/student_detail/variants/student_detail_neumorphic.dart:60:86 • unnecessary_non_null_assertion
+  error • The getter 'obs' isn't defined for the type 'int' • lib/features/teacher/screens/teacher_messages/variants/messages_cupertino.dart:10:32 • undefined_getter
+  error • Methods can't be invoked in constant expressions • lib/features/teacher/screens/teacher_messages/variants/messages_cupertino.dart:43:14 • const_eval_method_invocation
+  error • Undefined class 'RxInt' • lib/features/teacher/screens/teacher_messages/variants/messages_cupertino.dart:48:27 • undefined_class
+  error • The method 'Obx' isn't defined for the type 'MessagesCupertino' • lib/features/teacher/screens/teacher_messages/variants/messages_cupertino.dart:49:12 • undefined_method
+   info • 'activeColor' is deprecated and shouldn't be used. Use activeThumbColor or activeTrackColor instead. This feature was deprecated after v3.31.0-2.0.pre • lib/features/teacher/screens/teacher_settings/variants/settings_academic.dart:43:123 • deprecated_member_use
+   info • 'activeColor' is deprecated and shouldn't be used. Use activeThumbColor or activeTrackColor instead. This feature was deprecated after v3.31.0-2.0.pre • lib/features/teacher/screens/teacher_settings/variants/settings_academic.dart:48:153 • deprecated_member_use
+   info • 'activeColor' is deprecated and shouldn't be used. Use activeThumbColor or activeTrackColor instead. This feature was deprecated after v3.31.0-2.0.pre • lib/features/teacher/screens/teacher_settings/variants/settings_corporate.dart:112:55 • deprecated_member_use
+  error • The named parameter 'border' isn't defined • lib/features/teacher/screens/teacher_settings/variants/settings_corporate.dart:220:78 • undefined_named_parameter
+  error • The constructor being called isn't a const constructor • lib/features/teacher/screens/teacher_settings/variants/settings_corporate.dart:220:86 • const_with_non_const
+  error • The getter 'icloud_and_arrow_down' isn't defined for the type 'CupertinoIcons' • lib/features/teacher/screens/teacher_settings/variants/settings_cupertino.dart:54:57 • undefined_getter
+  error • The getter 'icloud_and_arrow_up' isn't defined for the type 'CupertinoIcons' • lib/features/teacher/screens/teacher_settings/variants/settings_cupertino.dart:55:60 • undefined_getter
+  error • The getter 'square_on_square_fill' isn't defined for the type 'CupertinoIcons' • lib/features/teacher/screens/teacher_settings/variants/settings_cupertino.dart:226:57 • undefined_getter
+   info • Don't use 'BuildContext's across async gaps • lib/features/teacher/screens/teacher_settings/variants/settings_cupertino.dart:257:7 • use_build_context_synchronously
+   info • 'activeColor' is deprecated and shouldn't be used. Use activeThumbColor or activeTrackColor instead. This feature was deprecated after v3.31.0-2.0.pre • lib/features/teacher/screens/teacher_settings/variants/settings_fluent.dart:41:123 • deprecated_member_use
+   info • 'activeColor' is deprecated and shouldn't be used. Use activeThumbColor or activeTrackColor instead. This feature was deprecated after v3.31.0-2.0.pre • lib/features/teacher/screens/teacher_settings/variants/settings_fluent.dart:46:153 • deprecated_member_use
+   info • 'activeColor' is deprecated and shouldn't be used. Use activeThumbColor or activeTrackColor instead. This feature was deprecated after v3.31.0-2.0.pre • lib/features/teacher/screens/teacher_settings/variants/settings_glassmorphism.dart:48:125 • deprecated_member_use
+   info • 'activeColor' is deprecated and shouldn't be used. Use activeThumbColor or activeTrackColor instead. This feature was deprecated after v3.31.0-2.0.pre • lib/features/teacher/screens/teacher_settings/variants/settings_glassmorphism.dart:53:155 • deprecated_member_use
+   info • 'activeColor' is deprecated and shouldn't be used. Use activeThumbColor or activeTrackColor instead. This feature was deprecated after v3.31.0-2.0.pre • lib/features/teacher/screens/teacher_settings/variants/settings_minimalist.dart:36:150 • deprecated_member_use
+   info • 'activeColor' is deprecated and shouldn't be used. Use activeThumbColor or activeTrackColor instead. This feature was deprecated after v3.31.0-2.0.pre • lib/features/teacher/screens/teacher_settings/variants/settings_minimalist.dart:38:208 • deprecated_member_use
+warning • The left operand can't be null, so the right operand is never executed • lib/features/teacher/widgets/swipeable_student_card.dart:104:38 • dead_null_aware_expression
+warning • The left operand can't be null, so the right operand is never executed • lib/features/teacher/widgets/swipeable_student_card.dart:110:52 • dead_null_aware_expression
+warning • The left operand can't be null, so the right operand is never executed • lib/features/teacher/widgets/swipeable_student_card.dart:131:30 • dead_null_aware_expression
+

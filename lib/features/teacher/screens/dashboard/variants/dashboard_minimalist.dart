@@ -4,10 +4,10 @@ import 'package:iconsax/iconsax.dart';
 import '../../../../../common/ui_patterns/pattern_tokens.dart';
 import '../../../../../common/ui_patterns/ui_style.dart';
 import '../../../../../common/utils/constants/colors.dart';
-import '../../controllers/dashboard_controller.dart';
-import '../../controllers/teacher_profile_controller.dart';
-import '../teacher_profile_screen.dart';
-import '../teacher_settings_screen.dart';
+import '../../../controllers/dashboard_controller.dart';
+import '../../../controllers/teacher_profile_controller.dart';
+import '../../teacher_profile/teacher_profile_screen.dart';
+import '../../teacher_settings/teacher_settings_screen.dart';
 
 class DashboardMinimalist extends StatelessWidget {
   const DashboardMinimalist({
