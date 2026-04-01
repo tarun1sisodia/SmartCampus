@@ -5,8 +5,8 @@ import '../../../../../common/ui_patterns/pattern_tokens.dart';
 import '../../../../../common/ui_patterns/ui_style.dart';
 import '../../../../../models/class_model.dart';
 import '../../../controllers/class_controller.dart';
-import '../../add_student_screen.dart';
-import '../../attendance_screen.dart';
+import '../../add_student/add_student_screen.dart';
+import '../../attendance/attendance_screen.dart';
 
 class ClassListFluent extends StatelessWidget {
   final ClassController controller;

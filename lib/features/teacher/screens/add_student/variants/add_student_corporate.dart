@@ -7,7 +7,6 @@ import '../../../../../common/ui_patterns/ui_style.dart';
 import '../../../controllers/student_controller.dart';
 import '../../../../../common/widgets/student_avatar.dart';
 import '../../../../../models/class_model.dart';
-import '../../../../../common/utils/constants/colors.dart';
 
 class AddStudentCorporate extends StatelessWidget {
   final StudentController controller;

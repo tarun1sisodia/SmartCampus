@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../../common/ui_patterns/ui_style.dart';
-import '../../controllers/student_controller.dart';
+import '../../../controllers/student_controller.dart';
 import '../../../../../common/widgets/student_avatar.dart';
-import '../../../../models/class_model.dart';
+import '../../../../../models/class_model.dart';
 
 class AddStudentFluent extends StatelessWidget {
   final StudentController controller;

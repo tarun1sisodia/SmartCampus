@@ -5,10 +5,10 @@ import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 import '../../../../../common/ui_patterns/pattern_tokens.dart';
 import '../../../../../common/ui_patterns/ui_style.dart';
-import '../../controllers/all_sessions_controller.dart';
-import '../../controllers/attendance_controller.dart';
-import '../carousel_attendance_screen.dart';
-import '../../../app/bindings/app_bindings.dart';
+import '../../../controllers/all_sessions_controller.dart';
+import '../../../controllers/attendance_controller.dart';
+import '../../carousel_attendance/carousel_attendance_screen.dart';
+import '../../../../../app/bindings/app_bindings.dart';
 
 class AllSessionsGlassmorphism extends StatelessWidget {
   final AllSessionsController controller;
@@ -79,7 +79,7 @@ class AllSessionsGlassmorphism extends StatelessWidget {
     );
   }
 
-  Widget _buildGlassSearchHUD(Map<String, dynamic> tokens) {
+  Widget _buildGlassSearchHUD(PatternTokens tokens) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.1), border: Border(bottom: BorderSide(color: Colors.white.withValues(alpha: 0.2)))),
@@ -122,7 +122,7 @@ class AllSessionsGlassmorphism extends StatelessWidget {
     );
   }
 
-  Widget _buildGlassSessionCard(dynamic session, Map<String, dynamic> tokens) {
+  Widget _buildGlassSessionCard(dynamic session, PatternTokens tokens) {
     final isSelected = controller.selectedSessionIds.contains(session.id);
     final isRunning = controller.isSessionRunning(session);
 

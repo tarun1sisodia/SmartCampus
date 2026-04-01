@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../../../../app/routes/app_routes.dart';
-import '../../../../app/theme/theme_configs.dart';
-import '../../../../app/theme/theme_controller.dart';
+import '../../../../../app/routes/app_routes.dart';
+import '../../../../../app/theme/theme_configs.dart';
+import '../../../../../app/theme/theme_controller.dart';
 import '../../../../../common/ui_patterns/ui_style.dart';
 import '../../../../../common/ui_patterns/ui_style_controller.dart';
-import '../../../../../common/utils/constants/colors.dart';
-import '../../../../services/auth_service.dart';
-import '../../../../services/storage_service.dart';
-import '../../controllers/teacher_profile_controller.dart';
-import '../../../../services/language_service.dart';
-import '../teacher_profile_screen.dart';
+import '../../../../../services/auth_service.dart';
+import '../../../../../services/storage_service.dart';
+import '../../../controllers/teacher_profile_controller.dart';
+import '../../../../../services/language_service.dart';
+import '../../teacher_profile/teacher_profile_screen.dart';
 
 class SettingsCorporate extends StatelessWidget {
   final TeacherProfileController controller;
@@ -110,7 +109,7 @@ class SettingsCorporate extends StatelessWidget {
   }
 
   Widget _corpSwitch(bool val, ValueChanged<bool> on) {
-    return Switch.adaptive(value: val, onChanged: on, activeColor: const Color(0xFF0F172A));
+    return Switch.adaptive(value: val, onChanged: on, activeTrackColor: const Color(0xFF0F172A));
   }
 
   Widget _buildThemeSelector(BuildContext context) {
@@ -218,7 +217,7 @@ class SettingsCorporate extends StatelessWidget {
      final storage = Get.find<StorageService>();
      final size = await storage.getCacheSize();
      Get.dialog(AlertDialog(
-        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero, border: Border.all(color: Color(0xFF0F172A), width: 2.5)),
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero, side: BorderSide(color: Color(0xFF0F172A), width: 2.5)),
         title: const Text('STORAGE_MGMT_V1', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16)),
         content: Column(mainAxisSize: MainAxisSize.min, children: [
            ListTile(title: const Text('CLEAR_CACHE', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 12)), subtitle: Text('${size.toStringAsFixed(2)}MB_FLUSH', style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 10)), onTap: () { storage.clearCache(); Get.back(); }),

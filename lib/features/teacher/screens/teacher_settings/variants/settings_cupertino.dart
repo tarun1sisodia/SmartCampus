@@ -1,17 +1,16 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart' show Colors, Divider, Icons, InkWell, Color, ColorScheme, Theme, ThemeData, CircleAvatar, TextButton, FontWeight, TextStyle, BorderRadius, Radius, Offset, BoxShape, BoxShadow, BoxDecoration, Border, BorderSide, Widget, EdgeInsets, Column, Row, Expanded, SizedBox, BuildContext, StatelessWidget, Center, ListView, Stack, Positioned, Obx, Get, IconData, Icon, MainAxisAlignment, CrossAxisAlignment, MainAxisSize, VoidCallback, Spacer, Badge, CircleAvatar, TextSelectionTheme, TextSelectionThemeData, TextFormField, InputDecoration, InputBorder, OutlineInputBorder, FileImage, Chip;
+import 'package:flutter/material.dart' show Colors, Divider, Color, FontWeight, TextStyle, BorderRadius, BoxShape, BoxDecoration, Border, Widget, EdgeInsets, Column, Row, Expanded, SizedBox, BuildContext, StatelessWidget, Center, ListView, IconData, Icon, MainAxisAlignment, CrossAxisAlignment, VoidCallback;
 import 'package:get/get.dart';
-import 'package:iconsax/iconsax.dart';
-import '../../../../app/routes/app_routes.dart';
-import '../../../../app/theme/theme_configs.dart';
-import '../../../../app/theme/theme_controller.dart';
+import '../../../../../app/routes/app_routes.dart';
+import '../../../../../app/theme/theme_configs.dart';
+import '../../../../../app/theme/theme_controller.dart';
 import '../../../../../common/ui_patterns/ui_style.dart';
 import '../../../../../common/ui_patterns/ui_style_controller.dart';
-import '../../../../services/auth_service.dart';
-import '../../../../services/storage_service.dart';
-import '../../controllers/teacher_profile_controller.dart';
-import '../../../../services/language_service.dart';
-import '../teacher_profile_screen.dart';
+import '../../../../../services/auth_service.dart';
+import '../../../../../services/storage_service.dart';
+import '../../../controllers/teacher_profile_controller.dart';
+import '../../../../../services/language_service.dart';
+import '../../teacher_profile/teacher_profile_screen.dart';
 
 class SettingsCupertino extends StatelessWidget {
   final TeacherProfileController controller;
@@ -52,9 +51,9 @@ class SettingsCupertino extends StatelessWidget {
           ]),
           const SizedBox(height: 24),
           _buildIosSection('DATA & TOOLS', [
-            _buildIosItem('Import Data', CupertinoIcons.icloud_and_arrow_down, onTap: () => Get.toNamed(AppRoutes.import)),
-            _buildIosItem('Export History', CupertinoIcons.icloud_and_arrow_up, onTap: () => Get.toNamed(AppRoutes.export)),
-            _buildIosItem('Storage Management', CupertinoIcons.cube_box, onTap: () => _showStorageDataDialog(context)),
+            _buildIosItem('IMPORT_DATA_STREAM', CupertinoIcons.cloud_download, onTap: () => Get.toNamed(AppRoutes.import)),
+            _buildIosItem('EXPORT_HISTORICAL_LOGS', CupertinoIcons.cloud_upload, onTap: () => Get.toNamed(AppRoutes.export)),
+            _buildIosItem('STORAGE_CLEANUP_SCRIPT', CupertinoIcons.cube_box, onTap: () => _showStorageDataDialog(context)),
           ]),
           const SizedBox(height: 48),
           _buildSignOutButton(context),
@@ -224,7 +223,7 @@ class SettingsCupertino extends StatelessWidget {
       case UIStyle.material3: return CupertinoIcons.fullscreen;
       case UIStyle.cupertinoPro: return CupertinoIcons.device_phone_portrait;
       case UIStyle.cyberpunkNeon: return CupertinoIcons.bolt_fill;
-      case UIStyle.brutalistBold: return CupertinoIcons.square_on_square_fill;
+      case UIStyle.brutalistBold: return CupertinoIcons.square_on_square;
       case UIStyle.academicClassic: return CupertinoIcons.book_fill;
       case UIStyle.fluentLayered: return CupertinoIcons.layers_fill;
     }

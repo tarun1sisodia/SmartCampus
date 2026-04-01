@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import '../../../controllers/carousel_attendance_controller.dart';
-import '../widgets/session_timer_widget.dart';
+import '../../../widgets/session_timer_widget.dart';
 
 class CarouselBrutalist extends StatelessWidget {
   const CarouselBrutalist({super.key});

@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../../common/ui_patterns/ui_style.dart';
-import '../../controllers/student_controller.dart';
+import '../../../controllers/student_controller.dart';
 import '../../../../../common/widgets/student_avatar.dart';
-import '../../../../models/class_model.dart';
+import '../../../../../models/class_model.dart';
 
 class AddStudentBrutalist extends StatelessWidget {
   final StudentController controller;
@@ -121,7 +119,7 @@ class AddStudentBrutalist extends StatelessWidget {
      Get.dialog(
         AlertDialog(
            backgroundColor: Colors.white,
-           shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero, border: Border.all(color: Colors.black, width: 3)),
+           shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero, side: BorderSide(color: Colors.black, width: 3)),
            title: const Text('ENROLL_STUDENT_DATA', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16, color: Colors.black)),
            content: SingleChildScrollView(
               child: Column(

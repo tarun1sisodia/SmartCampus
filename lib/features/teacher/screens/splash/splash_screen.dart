@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:smart_campus/app/bindings/app_bindings.dart';
 import 'package:smart_campus/common/utils/constants/image_strings.dart';
-import 'package:smart_campus/common/utils/constants/text_strings.dart';
 import 'package:smart_campus/app/routes/app_routes.dart';
 import 'package:smart_campus/navigation_menu.dart';
 import 'package:smart_campus/services/auth_service.dart';

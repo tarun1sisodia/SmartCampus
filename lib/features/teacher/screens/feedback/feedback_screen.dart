@@ -6,9 +6,6 @@ import '../../../../common/ui_patterns/ui_style_controller.dart';
 import '../../controllers/feedback_controller.dart';
 import 'variants/feedback_corporate.dart';
 import 'variants/feedback_minimalist.dart';
-import 'feedback_variants_import.dart'; // Placeholder for other imports to keep it clean
-
-// Note: I will list all imports directly here for clarity as per previous pattern
 import 'variants/feedback_glassmorphism.dart';
 import 'variants/feedback_neumorphism.dart';
 import 'variants/feedback_material3.dart';

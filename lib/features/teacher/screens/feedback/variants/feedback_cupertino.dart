@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart' show Colors, Divider, Icons, InkWell, Color, ColorScheme, Theme, ThemeData, CircleAvatar, TextButton, FontWeight, TextStyle, BorderRadius, Radius, Offset, BoxShape, BoxShadow, BoxDecoration, Border, BorderSide, Widget, EdgeInsets, Column, Row, Expanded, SizedBox, BuildContext, StatelessWidget, Center, ListView, Stack, Positioned, Obx, Get, IconData, Icon, MainAxisAlignment, CrossAxisAlignment, MainAxisSize, VoidCallback, Spacer, Badge, CircleAvatar, TextSelectionTheme, TextSelectionThemeData, TextFormField, InputDecoration, InputBorder, OutlineInputBorder, FileImage, Chip;
+import 'package:flutter/material.dart' show Colors, Color, FontWeight, TextStyle, BorderRadius, BoxDecoration, Widget, EdgeInsets, Column, Row, SizedBox, BuildContext, StatelessWidget, Center, ListView, Icon, MainAxisAlignment, CrossAxisAlignment;
+import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../../controllers/feedback_controller.dart';
 

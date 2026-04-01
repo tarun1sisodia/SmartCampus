@@ -4,10 +4,10 @@ import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 import '../../../../../common/ui_patterns/pattern_tokens.dart';
 import '../../../../../common/ui_patterns/ui_style.dart';
-import '../../controllers/all_sessions_controller.dart';
-import '../../controllers/attendance_controller.dart';
-import '../carousel_attendance_screen.dart';
-import '../../../app/bindings/app_bindings.dart';
+import '../../../controllers/all_sessions_controller.dart';
+import '../../../controllers/attendance_controller.dart';
+import '../../carousel_attendance/carousel_attendance_screen.dart';
+import '../../../../../app/bindings/app_bindings.dart';
 
 class AllSessionsMaterial3 extends StatelessWidget {
   final AllSessionsController controller;
@@ -75,7 +75,7 @@ class AllSessionsMaterial3 extends StatelessWidget {
     );
   }
 
-  Widget _buildM3SessionCard(dynamic session, ThemeData theme, Map<String, dynamic> tokens) {
+  Widget _buildM3SessionCard(dynamic session, ThemeData theme, PatternTokens tokens) {
     final isSelected = controller.selectedSessionIds.contains(session.id);
     final isRunning = controller.isSessionRunning(session);
 

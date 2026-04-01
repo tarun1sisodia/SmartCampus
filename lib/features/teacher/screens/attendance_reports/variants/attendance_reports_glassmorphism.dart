@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../../../../common/ui_patterns/pattern_tokens.dart';
 import '../../../../../common/ui_patterns/ui_style.dart';
-import '../../controllers/attendance_reports_controller.dart';
+import '../../../controllers/attendance_reports_controller.dart';
 
 class AttendanceReportsGlassmorphism extends StatelessWidget {
   final AttendanceReportsController controller;
@@ -70,7 +70,7 @@ class AttendanceReportsGlassmorphism extends StatelessWidget {
     );
   }
 
-  Widget _buildModernHeader(Map<String, dynamic> tokens) {
+  Widget _buildModernHeader(PatternTokens tokens) {
     return Container(
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
       decoration: BoxDecoration(
@@ -91,7 +91,7 @@ class AttendanceReportsGlassmorphism extends StatelessWidget {
     );
   }
 
-  Widget _buildGlassDropdown(Map<String, dynamic> tokens) {
+  Widget _buildGlassDropdown(PatternTokens tokens) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
@@ -123,7 +123,7 @@ class AttendanceReportsGlassmorphism extends StatelessWidget {
     );
   }
 
-  Widget _buildDateTrigger(Map<String, dynamic> tokens) {
+  Widget _buildDateTrigger(PatternTokens tokens) {
     return InkWell(
       onTap: () => _showDateRangePicker(),
       child: Container(
@@ -139,7 +139,7 @@ class AttendanceReportsGlassmorphism extends StatelessWidget {
     );
   }
 
-  Widget _buildSummaryAnalytics(Map<String, dynamic> tokens) {
+  Widget _buildSummaryAnalytics(PatternTokens tokens) {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
@@ -193,7 +193,7 @@ class AttendanceReportsGlassmorphism extends StatelessWidget {
     );
   }
 
-  Widget _buildStudentList(Map<String, dynamic> tokens) {
+  Widget _buildStudentList(PatternTokens tokens) {
     final filteredStudents = controller.displayStudents;
     return ListView.builder(
       shrinkWrap: true,
@@ -208,7 +208,7 @@ class AttendanceReportsGlassmorphism extends StatelessWidget {
     );
   }
 
-  Widget _buildGlassRow(dynamic student, Map<String, dynamic> stats, Map<String, dynamic> tokens) {
+  Widget _buildGlassRow(dynamic student, Map<String, dynamic> stats, PatternTokens tokens) {
     final percentage = stats['attendancePercentage'] ?? 0.0;
     return Container(
       margin: const EdgeInsets.only(bottom: 12),

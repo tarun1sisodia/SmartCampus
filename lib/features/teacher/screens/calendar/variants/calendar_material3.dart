@@ -4,8 +4,8 @@ import 'package:iconsax/iconsax.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../../../../../common/ui_patterns/pattern_tokens.dart';
 import '../../../../../common/ui_patterns/ui_style.dart';
-import '../../controllers/calendar_controller.dart';
-import '../../../../models/attendance_session_model.dart';
+import '../../../controllers/calendar_controller.dart';
+import '../../../../../models/attendance_session_model.dart';
 
 class CalendarMaterial3 extends StatelessWidget {
   final CalendarController controller;

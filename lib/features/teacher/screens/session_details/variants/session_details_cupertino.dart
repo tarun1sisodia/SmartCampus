@@ -1,10 +1,9 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart' show Colors, Divider, Icons, InkWell, Color, ColorScheme, Theme, ThemeData, CircleAvatar, TextButton, FontWeight, TextStyle, BorderRadius, Radius, Offset, BoxShape, BoxShadow, BoxDecoration, Border, BorderSide, Widget, EdgeInsets, Column, Row, Expanded, SizedBox, BuildContext, StatelessWidget, Center, ListView, Stack, Positioned, Obx, Get, IconData, Icon, MainAxisAlignment, CrossAxisAlignment, MainAxisSize, VoidCallback, Spacer, Badge, CircleAvatar, Switch;
-import 'package:iconsax/iconsax.dart';
+import 'package:flutter/material.dart' show Colors, Divider, Color, CircleAvatar, FontWeight, TextStyle, BorderRadius, BoxDecoration, Widget, EdgeInsets, Column, Row, Expanded, SizedBox, BuildContext, StatelessWidget, Center, ListView, IconData, Icon, MainAxisAlignment, CrossAxisAlignment, ListTile;
+import 'package:get/get.dart';
 import '../../../../../common/ui_patterns/pattern_tokens.dart';
 import '../../../../../common/ui_patterns/ui_style.dart';
-import '../../controllers/session_details_controller.dart';
-import '../../../common/utils/constants/sized.dart';
+import '../../../controllers/session_details_controller.dart';
 
 class SessionDetailsCupertino extends StatelessWidget {
   final SessionDetailsController controller;
@@ -49,7 +48,7 @@ class SessionDetailsCupertino extends StatelessWidget {
     );
   }
 
-  Widget _buildIosHeader(Map<String, dynamic> tokens) {
+  Widget _buildIosHeader(PatternTokens tokens) {
     final session = controller.session.value!;
     final isActive = controller.isSessionActive();
 
@@ -96,7 +95,7 @@ class SessionDetailsCupertino extends StatelessWidget {
     );
   }
 
-  Widget _buildIosStatsContainer(Map<String, dynamic> tokens) {
+  Widget _buildIosStatsContainer(PatternTokens tokens) {
     final stats = controller.attendanceStats.value;
     return Container(
       padding: const EdgeInsets.all(20),
@@ -136,7 +135,7 @@ class SessionDetailsCupertino extends StatelessWidget {
     );
   }
 
-  Widget _buildIosActions(Map<String, dynamic> tokens) {
+  Widget _buildIosActions(PatternTokens tokens) {
     final isActive = controller.isSessionActive();
     return Row(
       children: [
@@ -161,7 +160,7 @@ class SessionDetailsCupertino extends StatelessWidget {
     );
   }
 
-  Widget _buildIosRoster(Map<String, dynamic> tokens) {
+  Widget _buildIosRoster(PatternTokens tokens) {
     final records = controller.attendanceRecords;
     if (records.isEmpty) {
       return const Center(child: Text('LOG_VOID', style: TextStyle(color: Color(0xFF8E8E93))));
@@ -187,9 +186,9 @@ class SessionDetailsCupertino extends StatelessWidget {
              trailing: controller.isSessionActive() 
                 ? CupertinoSwitch(value: record.isPresent, onChanged: (v) => controller.toggleAttendance(record.id, v), activeTrackColor: const Color(0xFF34C759))
                 : null,
-          ),
-        )
-      },
+          );
+        }
+      ),
     );
   }
 }

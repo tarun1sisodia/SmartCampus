@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../../../../models/class_model.dart';
 import '../../../controllers/class_controller.dart';
-import '../../add_student_screen.dart';
-import '../../attendance_screen.dart';
+import '../../add_student/add_student_screen.dart';
+import '../../attendance/attendance_screen.dart';
 class ClassListMaterial3 extends StatelessWidget {
   final ClassController controller;
 

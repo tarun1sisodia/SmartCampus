@@ -4,10 +4,8 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import '../../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../../common/ui_patterns/ui_style.dart';
-import '../../controllers/student_detail_controller.dart';
-import '../../../../models/student_model.dart';
+import '../../../controllers/student_detail_controller.dart';
+import '../../../../../models/student_model.dart';
 import '../../../../../common/utils/constants/api_constants.dart';
 
 class StudentDetailMaterial3 extends StatelessWidget {
@@ -114,7 +112,7 @@ class StudentDetailMaterial3 extends StatelessWidget {
   }
 
   Widget _buildM3HistoryList(ThemeData theme) {
-    if (controller.attendanceHistory.isEmpty) return Center(child: Padding(padding: const EdgeInsets.all(48), child: Column(children: [Icon(Iconsax.calendar_none, size: 48, color: theme.colorScheme.surfaceContainerHighest), const SizedBox(height: 16), Text('Registry clear', style: TextStyle(color: theme.colorScheme.onSurfaceVariant))])));
+    if (controller.attendanceHistory.isEmpty) return Center(child: Padding(padding: const EdgeInsets.all(48), child: Column(children: [Icon(Iconsax.calendar_1, size: 48, color: theme.colorScheme.surfaceContainerHighest), const SizedBox(height: 16), Text('Registry clear', style: TextStyle(color: theme.colorScheme.onSurfaceVariant))])));
 
     return Column(
        crossAxisAlignment: CrossAxisAlignment.start,

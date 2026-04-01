@@ -5,8 +5,8 @@ import 'package:iconsax/iconsax.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../../../../../common/ui_patterns/pattern_tokens.dart';
 import '../../../../../common/ui_patterns/ui_style.dart';
-import '../../controllers/calendar_controller.dart';
-import '../../../../models/attendance_session_model.dart';
+import '../../../controllers/calendar_controller.dart';
+import '../../../../../models/attendance_session_model.dart';
 
 class CalendarNeumorphism extends StatelessWidget {
   final CalendarController controller;
@@ -47,7 +47,7 @@ class CalendarNeumorphism extends StatelessWidget {
     );
   }
 
-  Widget _buildLiveStatus(Color bgColor, Map<String, dynamic> tokens) {
+  Widget _buildLiveStatus(Color bgColor, PatternTokens tokens) {
     return Obx(() {
       final activeCount = controller.activeSessionsCount.value;
       if (activeCount == 0) return const SizedBox.shrink();
@@ -77,7 +77,7 @@ class CalendarNeumorphism extends StatelessWidget {
     });
   }
 
-  Widget _buildTactileCalendar(Color bgColor, Map<String, dynamic> tokens) {
+  Widget _buildTactileCalendar(Color bgColor, PatternTokens tokens) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -135,7 +135,7 @@ class CalendarNeumorphism extends StatelessWidget {
     );
   }
 
-  Widget _buildSessionList(Color bgColor, Map<String, dynamic> tokens) {
+  Widget _buildSessionList(Color bgColor, PatternTokens tokens) {
     final sessions = controller.getSessionsForDay(controller.selectedDay.value);
     if (sessions.isEmpty) {
       return Center(
@@ -154,7 +154,7 @@ class CalendarNeumorphism extends StatelessWidget {
     );
   }
 
-  Widget _buildTactileSessionCard(AttendanceSessionModel session, Color bgColor, Map<String, dynamic> tokens) {
+  Widget _buildTactileSessionCard(AttendanceSessionModel session, Color bgColor, PatternTokens tokens) {
     final isMySession = controller.userClasses.any((cls) => cls.id == session.classId);
     final isActive = controller.isSessionActive(session);
 

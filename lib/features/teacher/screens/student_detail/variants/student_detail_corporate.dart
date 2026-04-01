@@ -6,8 +6,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import '../../../../../common/ui_patterns/pattern_tokens.dart';
 import '../../../../../common/ui_patterns/ui_style.dart';
-import '../../controllers/student_detail_controller.dart';
-import '../../../../models/student_model.dart';
+import '../../../controllers/student_detail_controller.dart';
+import '../../../../../models/student_model.dart';
 import '../../../../../common/utils/constants/api_constants.dart';
 
 class StudentDetailCorporate extends StatelessWidget {

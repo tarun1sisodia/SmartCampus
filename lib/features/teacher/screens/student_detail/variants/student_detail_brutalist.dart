@@ -4,10 +4,8 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import '../../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../../common/ui_patterns/ui_style.dart';
-import '../../controllers/student_detail_controller.dart';
-import '../../../../models/student_model.dart';
+import '../../../controllers/student_detail_controller.dart';
+import '../../../../../models/student_model.dart';
 import '../../../../../common/utils/constants/api_constants.dart';
 
 class StudentDetailBrutalist extends StatelessWidget {
@@ -144,7 +142,7 @@ class StudentDetailBrutalist extends StatelessWidget {
 
     Get.dialog(AlertDialog(
        backgroundColor: Colors.white,
-       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero, border: Border.all(color: Colors.black, width: 3)),
+       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero, side: BorderSide(color: Colors.black, width: 3)),
        title: const Text('MODIFY_RECORD_01', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16)),
        content: Column(mainAxisSize: MainAxisSize.min, children: [
           Obx(() => Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [

@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart' show Colors, Divider, Icons, InkWell, Color, ColorScheme, Theme, ThemeData, CircleAvatar, TextButton, FontWeight, TextStyle, BorderRadius, Radius, Offset, BoxShape, BoxShadow, BoxDecoration, Border, BorderSide, Widget, EdgeInsets, Column, Row, Expanded, SizedBox, BuildContext, StatelessWidget, Center, ListView, Stack, Positioned, Obx, Get, IconData, Icon, MainAxisAlignment, CrossAxisAlignment, MainAxisSize, VoidCallback, Spacer, Badge, CircleAvatar, TextSelectionTheme, TextSelectionThemeData, TextFormField, InputDecoration, InputBorder, OutlineInputBorder, FileImage;
-import 'package:iconsax/iconsax.dart';
+import 'package:flutter/material.dart' show Colors, InkWell, Color, CircleAvatar, FontWeight, TextStyle, BorderRadius, BoxDecoration, Border, Widget, EdgeInsets, Column, Row, Expanded, SizedBox, BuildContext, StatelessWidget, Center, ListView, Icon, MainAxisAlignment, CrossAxisAlignment, VoidCallback, FileImage, RefreshIndicator;
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../../../common/ui_patterns/pattern_tokens.dart';
 import '../../../../../common/ui_patterns/ui_style.dart';
-import '../../controllers/student_controller.dart';
+import '../../../controllers/student_controller.dart';
 import '../../../../../common/widgets/student_avatar.dart';
-import '../../../../models/class_model.dart';
+import '../../../../../models/class_model.dart';
 
 class AddStudentCupertino extends StatelessWidget {
   final StudentController controller;
@@ -183,7 +183,7 @@ class _ListTile extends StatelessWidget {
   final VoidCallback? onLongPress;
   final EdgeInsetsGeometry contentPadding;
 
-  const _ListTile({super.key, this.leading, required this.title, this.subtitle, this.trailing, this.onTap, this.onLongPress, required this.contentPadding});
+  const _ListTile({this.leading, required this.title, this.subtitle, this.trailing, this.onTap, this.onLongPress, required this.contentPadding});
 
   @override
   Widget build(BuildContext context) {
@@ -207,7 +207,7 @@ class _ListTile extends StatelessWidget {
 class _IconButton extends StatelessWidget {
   final Widget icon;
   final VoidCallback onPressed;
-  const _IconButton({super.key, required this.icon, required this.onPressed});
+  const _IconButton({required this.icon, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {

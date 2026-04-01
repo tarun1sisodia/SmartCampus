@@ -86,7 +86,7 @@ class MarkAttendanceBrutalist extends StatelessWidget {
   Widget _buildBrutalistStudentRow(BuildContext context, StudentModel student, bool isSessionRunning) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: Colors.white,
         border: Border.all(color: Colors.black, width: 4),
       ),

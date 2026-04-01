@@ -4,9 +4,9 @@ import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../../../common/ui_patterns/pattern_tokens.dart';
 import '../../../../../common/ui_patterns/ui_style.dart';
-import '../../controllers/student_controller.dart';
+import '../../../controllers/student_controller.dart';
 import '../../../../../common/widgets/student_avatar.dart';
-import '../../../../models/class_model.dart';
+import '../../../../../models/class_model.dart';
 
 class AddStudentAcademic extends StatelessWidget {
   final StudentController controller;
@@ -122,7 +122,7 @@ class AddStudentAcademic extends StatelessWidget {
      Get.dialog(
         AlertDialog(
            backgroundColor: Colors.white,
-           shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero, border: Border.all(color: accent, width: 2)),
+           shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero, side: BorderSide(color: accent, width: 2)),
            title: Text('Scholarly Enrollment', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18, color: ink, fontFamily: 'Serif')),
            content: SingleChildScrollView(
               child: Column(

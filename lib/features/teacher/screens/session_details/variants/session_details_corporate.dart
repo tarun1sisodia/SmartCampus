@@ -3,8 +3,7 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../../../../common/ui_patterns/pattern_tokens.dart';
 import '../../../../../common/ui_patterns/ui_style.dart';
-import '../../controllers/session_details_controller.dart';
-import '../../../common/utils/constants/colors.dart';
+import '../../../controllers/session_details_controller.dart';
 
 class SessionDetailsCorporate extends StatelessWidget {
   final SessionDetailsController controller;
@@ -43,7 +42,7 @@ class SessionDetailsCorporate extends StatelessWidget {
     });
   }
 
-  Widget _buildCorporateHeader(Map<String, dynamic> tokens) {
+  Widget _buildCorporateHeader(PatternTokens tokens) {
     final session = controller.session.value!;
     final isActive = controller.isSessionActive();
 
@@ -87,7 +86,7 @@ class SessionDetailsCorporate extends StatelessWidget {
     );
   }
 
-  Widget _buildAnalyticsHUD(Map<String, dynamic> tokens) {
+  Widget _buildAnalyticsHUD(PatternTokens tokens) {
     final stats = controller.attendanceStats.value;
     return Container(
       padding: const EdgeInsets.all(20),
@@ -125,7 +124,7 @@ class SessionDetailsCorporate extends StatelessWidget {
     );
   }
 
-  Widget _buildActionPanel(Map<String, dynamic> tokens) {
+  Widget _buildActionPanel(PatternTokens tokens) {
     final isActive = controller.isSessionActive();
     return Row(
       children: [
@@ -154,7 +153,7 @@ class SessionDetailsCorporate extends StatelessWidget {
     );
   }
 
-  Widget _buildStudentManifest(Map<String, dynamic> tokens) {
+  Widget _buildStudentManifest(PatternTokens tokens) {
     final records = controller.attendanceRecords;
     if (records.isEmpty) {
       return Container(

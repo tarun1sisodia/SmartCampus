@@ -5,10 +5,10 @@ import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 import '../../../../../common/ui_patterns/pattern_tokens.dart';
 import '../../../../../common/ui_patterns/ui_style.dart';
-import '../../controllers/all_sessions_controller.dart';
-import '../../controllers/attendance_controller.dart';
-import '../carousel_attendance_screen.dart';
-import '../../../app/bindings/app_bindings.dart';
+import '../../../controllers/all_sessions_controller.dart';
+import '../../../controllers/attendance_controller.dart';
+import '../../carousel_attendance/carousel_attendance_screen.dart';
+import '../../../../../app/bindings/app_bindings.dart';
 
 class AllSessionsNeumorphism extends StatelessWidget {
   final AllSessionsController controller;
@@ -57,7 +57,7 @@ class AllSessionsNeumorphism extends StatelessWidget {
     );
   }
 
-  Widget _buildTactileSearch(Color bgColor, Map<String, dynamic> tokens) {
+  Widget _buildTactileSearch(Color bgColor, PatternTokens tokens) {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(color: bgColor),
@@ -114,7 +114,7 @@ class AllSessionsNeumorphism extends StatelessWidget {
     );
   }
 
-  Widget _buildTactileSessionCard(dynamic session, Color bgColor, Map<String, dynamic> tokens) {
+  Widget _buildTactileSessionCard(dynamic session, Color bgColor, PatternTokens tokens) {
     final isSelected = controller.selectedSessionIds.contains(session.id);
     final isRunning = controller.isSessionRunning(session);
 

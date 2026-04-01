@@ -4,8 +4,7 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../../../../common/ui_patterns/pattern_tokens.dart';
 import '../../../../../common/ui_patterns/ui_style.dart';
-import '../../controllers/session_details_controller.dart';
-import '../../../common/utils/constants/sized.dart';
+import '../../../controllers/session_details_controller.dart';
 
 class SessionDetailsNeumorphism extends StatelessWidget {
   final SessionDetailsController controller;
