@@ -92,7 +92,7 @@ class ImportGlassmorphism extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text('Import', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 36, letterSpacing: -1)),
-        Text('DATA_UPLINK_PROTOCOL_V1', style: TextStyle(color: Colors.white.withOpacity(0.5), fontWeight: FontWeight.w900, fontSize: 12, letterSpacing: 2)),
+        Text('DATA_UPLINK_PROTOCOL_V1', style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontWeight: FontWeight.w900, fontSize: 12, letterSpacing: 2)),
       ],
     );
   }
@@ -113,7 +113,7 @@ class ImportGlassmorphism extends StatelessWidget {
   Widget _buildFormatBtn({required String label, required IconData icon, required bool isSelected, required VoidCallback onTap}) {
     return Expanded(
       child: _glassContainer(
-        color: isSelected ? Colors.white.withOpacity(0.2) : Colors.white.withOpacity(0.1),
+        color: isSelected ? Colors.white.withValues(alpha: 0.2) : Colors.white.withValues(alpha: 0.1),
         child: Material(
           color: Colors.transparent,
           child: InkWell(
@@ -146,9 +146,9 @@ class ImportGlassmorphism extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 48),
             child: Column(
               children: [
-                Icon(Iconsax.import, size: 32, color: Colors.white.withOpacity(0.3)),
+                Icon(Iconsax.import, size: 32, color: Colors.white.withValues(alpha: 0.3)),
                 const SizedBox(height: 12),
-                Text('UPLINK $format', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 12, color: Colors.white.withOpacity(0.5), letterSpacing: 1)),
+                Text('UPLINK $format', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 12, color: Colors.white.withValues(alpha: 0.5), letterSpacing: 1)),
               ],
             ),
           ),
@@ -159,7 +159,7 @@ class ImportGlassmorphism extends StatelessWidget {
 
   Widget _buildFileIdentity(String name, VoidCallback onClear) {
     return _glassContainer(
-      color: Colors.white.withOpacity(0.2),
+      color: Colors.white.withValues(alpha: 0.2),
       padding: const EdgeInsets.all(20),
       child: Row(
         children: [
@@ -193,9 +193,9 @@ class ImportGlassmorphism extends StatelessWidget {
         child: Container(
           padding: padding,
           decoration: BoxDecoration(
-            color: color ?? Colors.white.withOpacity(0.1),
+            color: color ?? Colors.white.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: Colors.white.withOpacity(0.2)),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
           ),
           child: child,
         ),

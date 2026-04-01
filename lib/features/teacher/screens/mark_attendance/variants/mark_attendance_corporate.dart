@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:smart_campus/common/utils/constants/colors.dart';
 import 'package:smart_campus/models/student_model.dart';
 import 'package:smart_campus/features/teacher/controllers/attendance_controller.dart';
 import 'package:smart_campus/common/ui_patterns/pattern_tokens.dart';

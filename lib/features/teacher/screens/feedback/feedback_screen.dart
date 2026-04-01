@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../common/ui_patterns/pattern_scaffold.dart';
-import '../../../common/ui_patterns/ui_style.dart';
-import '../../../common/ui_patterns/ui_style_controller.dart';
-import '../controllers/feedback_controller.dart';
-import 'variants/feedback/feedback_corporate.dart';
-import 'variants/feedback/feedback_minimalist.dart';
+import '../../../../common/ui_patterns/pattern_scaffold.dart';
+import '../../../../common/ui_patterns/ui_style.dart';
+import '../../../../common/ui_patterns/ui_style_controller.dart';
+import '../../controllers/feedback_controller.dart';
+import 'variants/feedback_corporate.dart';
+import 'variants/feedback_minimalist.dart';
 import 'feedback_variants_import.dart'; // Placeholder for other imports to keep it clean
 
 // Note: I will list all imports directly here for clarity as per previous pattern
-import 'variants/feedback/feedback_glassmorphism.dart';
-import 'variants/feedback/feedback_neumorphism.dart';
-import 'variants/feedback/feedback_material3.dart';
-import 'variants/feedback/feedback_cupertino.dart';
-import 'variants/feedback/feedback_cyberpunk.dart';
-import 'variants/feedback/feedback_brutalist.dart';
-import 'variants/feedback/feedback_academic.dart';
-import 'variants/feedback/feedback_fluent.dart';
+import 'variants/feedback_glassmorphism.dart';
+import 'variants/feedback_neumorphism.dart';
+import 'variants/feedback_material3.dart';
+import 'variants/feedback_cupertino.dart';
+import 'variants/feedback_cyberpunk.dart';
+import 'variants/feedback_brutalist.dart';
+import 'variants/feedback_academic.dart';
+import 'variants/feedback_fluent.dart';
 
 class FeedbackScreen extends StatelessWidget {
   const FeedbackScreen({super.key});

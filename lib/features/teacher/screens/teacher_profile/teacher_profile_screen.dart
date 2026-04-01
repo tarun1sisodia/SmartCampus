@@ -3,15 +3,15 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
-import '../../../app/routes/app_routes.dart';
-import '../../../common/utils/constants/image_strings.dart';
-import '../../../common/utils/constants/text_strings.dart';
-import '../controllers/teacher_profile_controller.dart';
-import '../../../common/utils/constants/colors.dart';
-import '../../../common/utils/constants/sized.dart';
-import '../../../common/ui_patterns/pattern_scaffold.dart';
-import '../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../common/ui_patterns/ui_style_controller.dart';
+import '../../../../app/routes/app_routes.dart';
+import '../../../../common/utils/constants/image_strings.dart';
+import '../../../../common/utils/constants/text_strings.dart';
+import '../../controllers/teacher_profile_controller.dart';
+import '../../../../common/utils/constants/colors.dart';
+import '../../../../common/utils/constants/sized.dart';
+import '../../../../common/ui_patterns/pattern_scaffold.dart';
+import '../../../../common/ui_patterns/pattern_tokens.dart';
+import '../../../../common/ui_patterns/ui_style_controller.dart';
 
 class TeacherProfileScreen extends StatelessWidget {
   const TeacherProfileScreen({super.key});

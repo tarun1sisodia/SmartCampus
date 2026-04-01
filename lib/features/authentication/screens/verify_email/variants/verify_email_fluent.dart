@@ -40,7 +40,7 @@ class VerifyEmailFluent extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
-            boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 40, offset: const Offset(0, 20))],
+            boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 40, offset: const Offset(0, 20))],
           ),
           child: Icon(Iconsax.direct_send, color: color, size: 48),
         ),
@@ -59,7 +59,7 @@ class VerifyEmailFluent extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 40, offset: const Offset(0, 10))],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 40, offset: const Offset(0, 10))],
       ),
       child: Column(
         children: [
@@ -98,7 +98,7 @@ class VerifyEmailFluent extends StatelessWidget {
         const SizedBox(height: 32),
         TextButton(
           onPressed: () => controller.sendEmailVerification(),
-          child: Text('Resend Verification', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: color.withOpacity(0.5))),
+          child: Text('Resend Verification', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: color.withValues(alpha: 0.5))),
         ),
       ],
     );

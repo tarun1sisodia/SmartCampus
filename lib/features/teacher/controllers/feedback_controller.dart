@@ -7,7 +7,7 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 import '../../../common/utils/helpers/snackbar_helper.dart';
 import '../../../services/feedback_service.dart';
 import '../../../services/storage_service.dart';
-import '../screens/feedback_screen.dart';
+import '../screens/feedback/feedback_screen.dart';
 
 class FeedbackController extends GetxController {
   final FeedbackService _feedbackService = Get.find<FeedbackService>();

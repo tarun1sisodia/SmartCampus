@@ -59,7 +59,7 @@ class MessagesAcademic extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('Messages', style: TextStyle(color: ink, fontWeight: FontWeight.bold, fontSize: 36, fontFamily: 'Serif')),
-        Text('INSTITUTIONAL_LOG_HUB', style: TextStyle(color: accent.withOpacity(0.6), fontWeight: FontWeight.w900, fontSize: 11, letterSpacing: 2, fontFamily: 'Serif')),
+        Text('INSTITUTIONAL_LOG_HUB', style: TextStyle(color: accent.withValues(alpha: 0.6), fontWeight: FontWeight.w900, fontSize: 11, letterSpacing: 2, fontFamily: 'Serif')),
       ],
     );
   }
@@ -68,7 +68,7 @@ class MessagesAcademic extends StatelessWidget {
     final isSelected = index == selected;
     return GestureDetector(
       onTap: onTap,
-      child: Text(label, style: TextStyle(color: isSelected ? ink : ink.withOpacity(0.3), fontWeight: isSelected ? FontWeight.bold : FontWeight.normal, fontSize: 11, letterSpacing: 1.5, fontFamily: 'Serif')),
+      child: Text(label, style: TextStyle(color: isSelected ? ink : ink.withValues(alpha: 0.3), fontWeight: isSelected ? FontWeight.bold : FontWeight.normal, fontSize: 11, letterSpacing: 1.5, fontFamily: 'Serif')),
     );
   }
 
@@ -77,10 +77,10 @@ class MessagesAcademic extends StatelessWidget {
       children: [
         Container(
           padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(color: Colors.white, border: Border.all(color: ink.withOpacity(0.05)), boxShadow: [BoxShadow(color: ink.withOpacity(0.02), blurRadius: 15, offset: const Offset(0, 4))]),
+          decoration: BoxDecoration(color: Colors.white, border: Border.all(color: ink.withValues(alpha: 0.05)), boxShadow: [BoxShadow(color: ink.withValues(alpha: 0.02), blurRadius: 15, offset: const Offset(0, 4))]),
           child: Row(
             children: [
-              Container(width: 52, height: 52, decoration: BoxDecoration(color: ink.withOpacity(0.05), shape: BoxShape.circle), child: Center(child: Text(data.avatar, style: TextStyle(color: ink, fontWeight: FontWeight.bold, fontFamily: 'Serif')))),
+              Container(width: 52, height: 52, decoration: BoxDecoration(color: ink.withValues(alpha: 0.05), shape: BoxShape.circle), child: Center(child: Text(data.avatar, style: TextStyle(color: ink, fontWeight: FontWeight.bold, fontFamily: 'Serif')))),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(
@@ -90,11 +90,11 @@ class MessagesAcademic extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(data.name.toUpperCase(), style: TextStyle(color: ink, fontWeight: FontWeight.bold, fontSize: 14, fontFamily: 'Serif')),
-                        Text(data.time, style: TextStyle(color: ink.withOpacity(0.3), fontSize: 10, fontFamily: 'Serif')),
+                        Text(data.time, style: TextStyle(color: ink.withValues(alpha: 0.3), fontSize: 10, fontFamily: 'Serif')),
                       ],
                     ),
                     const SizedBox(height: 4),
-                    Text(data.message, style: TextStyle(color: ink.withOpacity(0.5), fontSize: 13, height: 1.4, fontFamily: 'Serif'), maxLines: 1, overflow: TextOverflow.ellipsis),
+                    Text(data.message, style: TextStyle(color: ink.withValues(alpha: 0.5), fontSize: 13, height: 1.4, fontFamily: 'Serif'), maxLines: 1, overflow: TextOverflow.ellipsis),
                   ],
                 ),
               ),

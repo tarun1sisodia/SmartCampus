@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' show Colors, Divider, Icons, InkWell, Color, ColorScheme, Theme, ThemeData, CircleAvatar, TextButton, FontWeight, TextStyle, BorderRadius, Radius, Offset, BoxShape, BoxShadow, BoxDecoration, Border, BorderSide, Widget, EdgeInsets, Column, Row, Expanded, SizedBox, BuildContext, StatelessWidget, Center, ListView, Stack, Positioned, Obx, Get, IconData, Icon, MainAxisAlignment, CrossAxisAlignment, MainAxisSize, VoidCallback, Spacer, Badge, CircleAxis, CircleAvatar, TextSelectionTheme, TextSelectionThemeData, TextFormField, InputDecoration, InputBorder, OutlineInputBorder, FileImage, Chip;
 import 'package:iconsax/iconsax.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import '../controllers/carousel_attendance_controller.dart';
+import '../../../controllers/carousel_attendance_controller.dart';
 import '../widgets/session_timer_widget.dart';
 
 class CarouselCupertino extends StatelessWidget {
@@ -83,11 +83,11 @@ class CarouselCupertino extends StatelessWidget {
 
   Widget _buildIosStudentCard(dynamic student, dynamic attendanceController) {
     return Container(
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(24), boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 20, offset: const Offset(0, 10))]),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(24), boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 20, offset: const Offset(0, 10))]),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CircleAvatar(radius: 60, backgroundColor: const Color(0xFF007AFF).withOpacity(0.1), child: const Icon(CupertinoIcons.person_fill, size: 56, color: Color(0xFF007AFF))),
+          CircleAvatar(radius: 60, backgroundColor: const Color(0xFF007AFF).withValues(alpha: 0.1), child: const Icon(CupertinoIcons.person_fill, size: 56, color: Color(0xFF007AFF))),
           const SizedBox(height: 24),
           Text(student.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 22, color: Color(0xFF000000), letterSpacing: -0.5)),
           const SizedBox(height: 12),

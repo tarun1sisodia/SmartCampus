@@ -93,7 +93,7 @@ class ImportCorporate extends StatelessWidget {
         onTap: onTap,
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 16),
-          decoration: BoxDecoration(color: isSelected ? color.withOpacity(0.05) : Colors.transparent, border: Border.all(color: isSelected ? color : const Color(0xFFE2E8F0), width: 2)),
+          decoration: BoxDecoration(color: isSelected ? color.withValues(alpha: 0.05) : Colors.transparent, border: Border.all(color: isSelected ? color : const Color(0xFFE2E8F0), width: 2)),
           child: Column(
             children: [
               Icon(icon, color: isSelected ? color : const Color(0xFF94A3B8), size: 24),
@@ -128,7 +128,7 @@ class ImportCorporate extends StatelessWidget {
   Widget _buildFileIdentity(String name, String format, VoidCallback onClear) {
     return Row(
       children: [
-        Container(padding: const EdgeInsets.all(12), decoration: BoxDecoration(color: const Color(0xFF0F172A).withOpacity(0.05), border: Border.all(color: const Color(0xFF0F172A).withOpacity(0.1))), child: Icon(format == 'Excel' ? Iconsax.document_text : Iconsax.document_text_1, color: const Color(0xFF0F172A), size: 28)),
+        Container(padding: const EdgeInsets.all(12), decoration: BoxDecoration(color: const Color(0xFF0F172A).withValues(alpha: 0.05), border: Border.all(color: const Color(0xFF0F172A).withValues(alpha: 0.1))), child: Icon(format == 'Excel' ? Iconsax.document_text : Iconsax.document_text_1, color: const Color(0xFF0F172A), size: 28)),
         const SizedBox(width: 16),
         Expanded(
           child: Column(

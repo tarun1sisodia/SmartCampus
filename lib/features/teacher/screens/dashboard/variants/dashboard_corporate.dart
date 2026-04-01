@@ -2,7 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../../../../common/utils/constants/colors.dart';
+import '../../../../../common/utils/constants/colors.dart';
 import '../../controllers/dashboard_controller.dart';
 import '../../controllers/teacher_profile_controller.dart';
 import '../teacher_profile_screen.dart';

@@ -36,7 +36,7 @@ class AboutGlassmorphism extends StatelessWidget {
               _buildSocialGrid(),
             ]),
             const SizedBox(height: 64),
-            Center(child: Text('© 2025 SMART_CAMPUS_SYSTEM_CORE', style: TextStyle(color: Colors.white.withOpacity(0.3), fontWeight: FontWeight.w900, fontSize: 10, letterSpacing: 1))),
+            Center(child: Text('© 2025 SMART_CAMPUS_SYSTEM_CORE', style: TextStyle(color: Colors.white.withValues(alpha: 0.3), fontWeight: FontWeight.w900, fontSize: 10, letterSpacing: 1))),
             const SizedBox(height: 100),
           ],
         ),
@@ -49,7 +49,7 @@ class AboutGlassmorphism extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text('About', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 36, letterSpacing: -1)),
-        Text('CENTRAL_IDENTITY_UPLINK', style: TextStyle(color: Colors.white.withOpacity(0.5), fontWeight: FontWeight.w900, fontSize: 12, letterSpacing: 2)),
+        Text('CENTRAL_IDENTITY_UPLINK', style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontWeight: FontWeight.w900, fontSize: 12, letterSpacing: 2)),
       ],
     );
   }
@@ -78,9 +78,9 @@ class AboutGlassmorphism extends StatelessWidget {
         child: Container(
           padding: padding,
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.1),
+            color: Colors.white.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: Colors.white.withOpacity(0.2)),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
           ),
           child: child,
         ),
@@ -97,7 +97,7 @@ class AboutGlassmorphism extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text('Smart Campus', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18)),
-            Text('Version 0.0.1', style: TextStyle(color: Colors.white.withOpacity(0.4), fontWeight: FontWeight.w900, fontSize: 10, letterSpacing: 1)),
+            Text('Version 0.0.1', style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontWeight: FontWeight.w900, fontSize: 10, letterSpacing: 1)),
           ],
         ),
       ],
@@ -107,13 +107,13 @@ class AboutGlassmorphism extends StatelessWidget {
   Widget _buildDeveloperTile({required String name, required String role, required IconData icon, required Color color}) {
     return Row(
       children: [
-        Container(padding: const EdgeInsets.all(12), decoration: BoxDecoration(color: Colors.white.withOpacity(0.1), borderRadius: BorderRadius.circular(12)), child: Icon(icon, color: color, size: 24)),
+        Container(padding: const EdgeInsets.all(12), decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)), child: Icon(icon, color: color, size: 24)),
         const SizedBox(width: 16),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(name, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
-            Text(role, style: TextStyle(color: Colors.white.withOpacity(0.4), fontWeight: FontWeight.w900, fontSize: 10, letterSpacing: 1)),
+            Text(role, style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontWeight: FontWeight.w900, fontSize: 10, letterSpacing: 1)),
           ],
         ),
       ],
@@ -137,7 +137,7 @@ class AboutGlassmorphism extends StatelessWidget {
       onTap: () async => await launchUrl(Uri.parse(url)),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(color: Colors.white.withOpacity(0.05), borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.white.withOpacity(0.1))),
+        decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.05), borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.white.withValues(alpha: 0.1))),
         child: Text(label, style: const TextStyle(color: Colors.white70, fontWeight: FontWeight.w900, fontSize: 10, letterSpacing: 1)),
       ),
     );

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import '../controllers/carousel_attendance_controller.dart';
+import '../../../controllers/carousel_attendance_controller.dart';
 import '../widgets/session_timer_widget.dart';
 
 class CarouselAcademic extends StatelessWidget {
@@ -58,9 +58,9 @@ class CarouselAcademic extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Iconsax.people, size: 64, color: ink.withOpacity(0.1)),
+          Icon(Iconsax.people, size: 64, color: ink.withValues(alpha: 0.1)),
           const SizedBox(height: 16),
-          Text('No Records Found', style: TextStyle(color: ink.withOpacity(0.3), fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Serif')),
+          Text('No Records Found', style: TextStyle(color: ink.withValues(alpha: 0.3), fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Serif')),
         ],
       ),
     );
@@ -72,7 +72,7 @@ class CarouselAcademic extends StatelessWidget {
       return Container(
         margin: const EdgeInsets.all(24),
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-        decoration: BoxDecoration(color: Colors.white, border: Border.all(color: ink.withOpacity(0.1))),
+        decoration: BoxDecoration(color: Colors.white, border: Border.all(color: ink.withValues(alpha: 0.1))),
         child: SessionTimerWidget(remainingTime: controller.remainingTime.value, isSessionActive: true, isCountdownMode: true),
       );
     });
@@ -80,17 +80,17 @@ class CarouselAcademic extends StatelessWidget {
 
   Widget _buildScholarStudentCard(dynamic student, dynamic attendanceController, Color ink, Color accent) {
     return Container(
-      decoration: BoxDecoration(color: Colors.white, border: Border.all(color: ink.withOpacity(0.05)), boxShadow: [BoxShadow(color: ink.withOpacity(0.02), blurRadius: 20, offset: const Offset(0, 10))]),
+      decoration: BoxDecoration(color: Colors.white, border: Border.all(color: ink.withValues(alpha: 0.05)), boxShadow: [BoxShadow(color: ink.withValues(alpha: 0.02), blurRadius: 20, offset: const Offset(0, 10))]),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(width: 120, height: 120, decoration: BoxDecoration(color: ink.withOpacity(0.05), shape: BoxShape.circle), child: Center(child: Icon(Iconsax.user, size: 64, color: ink.withOpacity(0.2)))),
+          Container(width: 120, height: 120, decoration: BoxDecoration(color: ink.withValues(alpha: 0.05), shape: BoxShape.circle), child: Center(child: Icon(Iconsax.user, size: 64, color: ink.withValues(alpha: 0.2)))),
           const SizedBox(height: 32),
           Text(student.name.toUpperCase(), style: TextStyle(color: ink, fontWeight: FontWeight.bold, fontSize: 22, letterSpacing: 1, fontFamily: 'Serif')),
           const SizedBox(height: 16),
           Obx(() {
             final status = attendanceController.getStudentStatus(student.id);
-            return Text('REGISTERED: ${status.toUpperCase()}', style: TextStyle(color: accent.withOpacity(0.6), fontWeight: FontWeight.bold, fontSize: 11, letterSpacing: 1.5, fontFamily: 'Serif'));
+            return Text('REGISTERED: ${status.toUpperCase()}', style: TextStyle(color: accent.withValues(alpha: 0.6), fontWeight: FontWeight.bold, fontSize: 11, letterSpacing: 1.5, fontFamily: 'Serif'));
           }),
         ],
       ),
@@ -100,7 +100,7 @@ class CarouselAcademic extends StatelessWidget {
   Widget _buildNavScholar(CarouselAttendanceController controller, int total, Color ink) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 24),
-      child: Obx(() => Text('FOLIO: ${controller.currentIndex.value + 1} / $total', style: TextStyle(color: ink.withOpacity(0.3), fontWeight: FontWeight.bold, fontSize: 13, letterSpacing: 1.5, fontFamily: 'Serif'))),
+      child: Obx(() => Text('FOLIO: ${controller.currentIndex.value + 1} / $total', style: TextStyle(color: ink.withValues(alpha: 0.3), fontWeight: FontWeight.bold, fontSize: 13, letterSpacing: 1.5, fontFamily: 'Serif'))),
     );
   }
 
@@ -108,9 +108,9 @@ class CarouselAcademic extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _scholarActionBtn('ABS', ink.withOpacity(0.4), () => _mark(controller, attendanceController, carousel, 'absent')),
+        _scholarActionBtn('ABS', ink.withValues(alpha: 0.4), () => _mark(controller, attendanceController, carousel, 'absent')),
         const SizedBox(width: 24),
-        _scholarActionBtn('LAT', ink.withOpacity(0.6), () => _mark(controller, attendanceController, carousel, 'late')),
+        _scholarActionBtn('LAT', ink.withValues(alpha: 0.6), () => _mark(controller, attendanceController, carousel, 'late')),
         const SizedBox(width: 24),
         _scholarActionBtn('PRE', ink, () => _mark(controller, attendanceController, carousel, 'present')),
       ],

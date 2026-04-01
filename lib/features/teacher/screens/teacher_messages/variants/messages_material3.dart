@@ -64,7 +64,7 @@ class MessagesMaterial3 extends StatelessWidget {
       children: [
         Card(
           elevation: 0,
-          color: data.isUnread ? theme.colorScheme.primaryContainer.withOpacity(0.3) : theme.colorScheme.surfaceContainerLow,
+          color: data.isUnread ? theme.colorScheme.primaryContainer.withValues(alpha: 0.3) : theme.colorScheme.surfaceContainerLow,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
           child: ListTile(
             contentPadding: const EdgeInsets.all(16),

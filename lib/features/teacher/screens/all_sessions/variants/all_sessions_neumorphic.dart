@@ -3,8 +3,8 @@ import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
-import '../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
+import '../../../../../common/ui_patterns/pattern_tokens.dart';
+import '../../../../../common/ui_patterns/ui_style.dart';
 import '../../controllers/all_sessions_controller.dart';
 import '../../controllers/attendance_controller.dart';
 import '../carousel_attendance_screen.dart';
@@ -72,7 +72,7 @@ class AllSessionsNeumorphism extends StatelessWidget {
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   const BoxShadow(color: Colors.white, offset: Offset(-3, -3), blurRadius: 6, inset: true),
-                  BoxShadow(color: const Color(0xFF94A3B8).withOpacity(0.5), offset: const Offset(3, 3), blurRadius: 6, inset: true),
+                  BoxShadow(color: const Color(0xFF94A3B8).withValues(alpha: 0.5), offset: const Offset(3, 3), blurRadius: 6, inset: true),
                 ],
               ),
               child: TextField(
@@ -106,7 +106,7 @@ class AllSessionsNeumorphism extends StatelessWidget {
            borderRadius: BorderRadius.circular(16),
            boxShadow: [
               const BoxShadow(color: Colors.white, offset: Offset(-3, -3), blurRadius: 6),
-              BoxShadow(color: const Color(0xFF94A3B8).withOpacity(0.5), offset: const Offset(3, 3), blurRadius: 6),
+              BoxShadow(color: const Color(0xFF94A3B8).withValues(alpha: 0.5), offset: const Offset(3, 3), blurRadius: 6),
            ],
         ),
         child: Center(child: Icon(icon, color: const Color(0xFF1E293B), size: 20)),
@@ -125,7 +125,7 @@ class AllSessionsNeumorphism extends StatelessWidget {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           const BoxShadow(color: Colors.white, offset: Offset(-8, -8), blurRadius: 16),
-          BoxShadow(color: const Color(0xFF94A3B8).withOpacity(0.4), offset: const Offset(8, 8), blurRadius: 16),
+          BoxShadow(color: const Color(0xFF94A3B8).withValues(alpha: 0.4), offset: const Offset(8, 8), blurRadius: 16),
         ],
         border: isSelected ? Border.all(color: const Color(0xFF1E293B), width: 2) : null,
       ),
@@ -141,7 +141,7 @@ class AllSessionsNeumorphism extends StatelessWidget {
                borderRadius: BorderRadius.circular(16),
                boxShadow: [
                   BoxShadow(color: Colors.white, offset: const Offset(-2, -2), blurRadius: 4, inset: true),
-                  BoxShadow(color: const Color(0xFF94A3B8).withOpacity(0.5), offset: const Offset(2, 2), blurRadius: 4, inset: true),
+                  BoxShadow(color: const Color(0xFF94A3B8).withValues(alpha: 0.5), offset: const Offset(2, 2), blurRadius: 4, inset: true),
                ],
              ),
              child: Center(
@@ -163,7 +163,7 @@ class AllSessionsNeumorphism extends StatelessWidget {
             width: 10,
             height: 10,
             decoration: BoxDecoration(
-              color: isRunning ? const Color(0xFF10B981) : Colors.red.withOpacity(0.4),
+              color: isRunning ? const Color(0xFF10B981) : Colors.red.withValues(alpha: 0.4),
               shape: BoxShape.circle,
               boxShadow: isRunning ? [const BoxShadow(color: Color(0xFF10B981), blurRadius: 8)] : null,
             ),
@@ -188,7 +188,7 @@ class AllSessionsNeumorphism extends StatelessWidget {
                                      borderRadius: BorderRadius.circular(16),
                                      boxShadow: [
                                         const BoxShadow(color: Colors.white, offset: Offset(-3, -3), blurRadius: 6),
-                                        BoxShadow(color: const Color(0xFF94A3B8).withOpacity(0.5), offset: const Offset(3, 3), blurRadius: 6),
+                                        BoxShadow(color: const Color(0xFF94A3B8).withValues(alpha: 0.5), offset: const Offset(3, 3), blurRadius: 6),
                                      ],
                                   ),
                                   child: const Center(child: Text('LOG_ATTENDANCE', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 10, color: Color(0xFF1E293B)))),
@@ -232,7 +232,7 @@ class AllSessionsNeumorphism extends StatelessWidget {
            shape: BoxShape.circle,
            boxShadow: [
               const BoxShadow(color: Colors.white, offset: Offset(-3, -3), blurRadius: 6),
-              BoxShadow(color: const Color(0xFF94A3B8).withOpacity(0.4), offset: const Offset(3, 3), blurRadius: 6),
+              BoxShadow(color: const Color(0xFF94A3B8).withValues(alpha: 0.4), offset: const Offset(3, 3), blurRadius: 6),
            ],
         ),
         child: Center(child: Icon(icon, color: color, size: 18)),

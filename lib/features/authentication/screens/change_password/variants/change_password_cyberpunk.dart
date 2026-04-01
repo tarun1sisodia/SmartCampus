@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../change_password_controller.dart';
+import '../../../controllers/change_password_controller.dart';
 
 class ChangePasswordCyberpunk extends StatelessWidget {
   const ChangePasswordCyberpunk({super.key});
@@ -38,7 +38,7 @@ class ChangePasswordCyberpunk extends StatelessWidget {
   Widget _buildGridOverlay(Color color) {
     return Positioned.fill(
       child: CustomPaint(
-        painter: _GridPainter(color: color.withOpacity(0.05)),
+        painter: _GridPainter(color: color.withValues(alpha: 0.05)),
       ),
     );
   }
@@ -51,7 +51,7 @@ class ChangePasswordCyberpunk extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.black,
             border: Border.all(color: cyan, width: 2),
-            boxShadow: [BoxShadow(color: cyan.withOpacity(0.2), blurRadius: 20)],
+            boxShadow: [BoxShadow(color: cyan.withValues(alpha: 0.2), blurRadius: 20)],
           ),
           child: Icon(Iconsax.shield_security, color: cyan, size: 48),
         ),
@@ -78,9 +78,9 @@ class ChangePasswordCyberpunk extends StatelessWidget {
               width: double.infinity,
               height: 64,
               decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
+                color: color.withValues(alpha: 0.1),
                 border: Border.all(color: color, width: 2),
-                boxShadow: [BoxShadow(color: color.withOpacity(0.2), blurRadius: 10)],
+                boxShadow: [BoxShadow(color: color.withValues(alpha: 0.2), blurRadius: 10)],
               ),
               child: Center(child: Text('FINALIZE_ENCRYPTION', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 15, color: color, letterSpacing: 2, fontFamily: 'Courier'))),
             ),
@@ -94,7 +94,7 @@ class ChangePasswordCyberpunk extends StatelessWidget {
     return Obx(() => Container(
       decoration: BoxDecoration(
         color: Colors.black,
-        border: Border.all(color: color.withOpacity(0.3), width: 1),
+        border: Border.all(color: color.withValues(alpha: 0.3), width: 1),
       ),
       child: TextFormField(
         controller: textController,
@@ -105,10 +105,10 @@ class ChangePasswordCyberpunk extends StatelessWidget {
           prefixIcon: Icon(Iconsax.password_check, color: color, size: 22),
           suffixIcon: IconButton(
             onPressed: () => controller.hidePassword.value = !controller.hidePassword.value,
-            icon: Icon(controller.hidePassword.value ? Iconsax.eye_slash : Iconsax.eye, color: color.withOpacity(0.4), size: 20),
+            icon: Icon(controller.hidePassword.value ? Iconsax.eye_slash : Iconsax.eye, color: color.withValues(alpha: 0.4), size: 20),
           ),
           hintText: label.toUpperCase(),
-          hintStyle: TextStyle(fontSize: 10, fontWeight: FontWeight.w900, color: color.withOpacity(0.3), letterSpacing: 2, fontFamily: 'Courier'),
+          hintStyle: TextStyle(fontSize: 10, fontWeight: FontWeight.w900, color: color.withValues(alpha: 0.3), letterSpacing: 2, fontFamily: 'Courier'),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
         ),

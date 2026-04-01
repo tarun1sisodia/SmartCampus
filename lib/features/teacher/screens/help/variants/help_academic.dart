@@ -39,7 +39,7 @@ class HelpAcademic extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('Assistance', style: TextStyle(color: ink, fontWeight: FontWeight.bold, fontSize: 36, fontFamily: 'Serif')),
-        Text('ACADEMIC_SUPPORT_LEDGER', style: TextStyle(color: accent.withOpacity(0.6), fontWeight: FontWeight.w900, fontSize: 11, letterSpacing: 2, fontFamily: 'Serif')),
+        Text('ACADEMIC_SUPPORT_LEDGER', style: TextStyle(color: accent.withValues(alpha: 0.6), fontWeight: FontWeight.w900, fontSize: 11, letterSpacing: 2, fontFamily: 'Serif')),
       ],
     );
   }
@@ -54,7 +54,7 @@ class HelpAcademic extends StatelessWidget {
         ),
         Container(
           padding: const EdgeInsets.all(28),
-          decoration: BoxDecoration(color: Colors.white, border: Border.all(color: ink.withOpacity(0.05)), boxShadow: [BoxShadow(color: ink.withOpacity(0.02), blurRadius: 15, offset: const Offset(0, 4))]),
+          decoration: BoxDecoration(color: Colors.white, border: Border.all(color: ink.withValues(alpha: 0.05)), boxShadow: [BoxShadow(color: ink.withValues(alpha: 0.02), blurRadius: 15, offset: const Offset(0, 4))]),
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: items),
         ),
       ],
@@ -68,7 +68,7 @@ class HelpAcademic extends StatelessWidget {
         onTap: onTap,
         child: Row(
           children: [
-            Container(padding: const EdgeInsets.all(12), decoration: BoxDecoration(color: const Color(0xFFFAF7F0), border: Border.all(color: Colors.black.withOpacity(0.05))), child: Icon(icon, color: color.withOpacity(0.6), size: 24)),
+            Container(padding: const EdgeInsets.all(12), decoration: BoxDecoration(color: const Color(0xFFFAF7F0), border: Border.all(color: Colors.black.withValues(alpha: 0.05))), child: Icon(icon, color: color.withValues(alpha: 0.6), size: 24)),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
@@ -169,7 +169,7 @@ class HelpAcademic extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 24),
       child: Row(
         children: [
-          Container(padding: const EdgeInsets.all(12), decoration: BoxDecoration(color: const Color(0xFFFAF7F0), border: Border.all(color: Colors.black.withOpacity(0.05))), child: Icon(icon, color: color.withOpacity(0.6), size: 24)),
+          Container(padding: const EdgeInsets.all(12), decoration: BoxDecoration(color: const Color(0xFFFAF7F0), border: Border.all(color: Colors.black.withValues(alpha: 0.05))), child: Icon(icon, color: color.withValues(alpha: 0.6), size: 24)),
           const SizedBox(width: 16),
           Expanded(
             child: Column(

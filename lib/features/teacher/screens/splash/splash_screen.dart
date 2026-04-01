@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
-import '../../../app/bindings/app_bindings.dart';
-import '../../../common/utils/constants/image_strings.dart';
-import '../../../common/utils/constants/text_strings.dart';
-import '../../../app/routes/app_routes.dart';
-import '../../../navigation_menu.dart';
-import '../../../services/auth_service.dart';
-import '../../../services/storage_service.dart';
-import '../../authentication/controllers/supabase_auth_controller.dart';
-import '../../../common/ui_patterns/ui_style.dart';
-import '../../../common/ui_patterns/ui_style_controller.dart';
+import 'package:smart_campus/app/bindings/app_bindings.dart';
+import 'package:smart_campus/common/utils/constants/image_strings.dart';
+import 'package:smart_campus/common/utils/constants/text_strings.dart';
+import 'package:smart_campus/app/routes/app_routes.dart';
+import 'package:smart_campus/navigation_menu.dart';
+import 'package:smart_campus/services/auth_service.dart';
+import 'package:smart_campus/services/storage_service.dart';
+import 'package:smart_campus/features/authentication/controllers/supabase_auth_controller.dart';
+import 'package:smart_campus/common/ui_patterns/ui_style.dart';
+import 'package:smart_campus/common/ui_patterns/ui_style_controller.dart';
 import 'dart:io';
 
-import '../controllers/dashboard_controller.dart';
+import 'package:smart_campus/features/teacher/controllers/dashboard_controller.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

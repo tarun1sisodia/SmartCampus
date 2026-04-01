@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../controllers/attendance_reports_controller.dart';
+import '../../../controllers/attendance_reports_controller.dart';
 
 class ReportsCyberpunk extends StatelessWidget {
   const ReportsCyberpunk({super.key});
@@ -68,7 +68,7 @@ class ReportsCyberpunk extends StatelessWidget {
   Widget _buildGridOverlay(Color cyan) {
     return Positioned.fill(
       child: CustomPaint(
-        painter: _GridPainter(color: cyan.withOpacity(0.04)),
+        painter: _GridPainter(color: cyan.withValues(alpha: 0.04)),
       ),
     );
   }
@@ -94,8 +94,8 @@ class ReportsCyberpunk extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           color: Colors.black,
-          border: Border.all(color: color.withOpacity(0.3), width: 2),
-          boxShadow: [BoxShadow(color: color.withOpacity(0.1), blurRadius: 10)],
+          border: Border.all(color: color.withValues(alpha: 0.3), width: 2),
+          boxShadow: [BoxShadow(color: color.withValues(alpha: 0.1), blurRadius: 10)],
         ),
         child: Row(
           children: [
@@ -107,11 +107,11 @@ class ReportsCyberpunk extends StatelessWidget {
                 children: [
                   Text(title, style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16, color: color, letterSpacing: 1, fontFamily: 'Courier')),
                   const SizedBox(height: 4),
-                  Text(desc, style: TextStyle(fontWeight: FontWeight.w900, fontSize: 10, color: color.withOpacity(0.5), letterSpacing: 2, fontFamily: 'Courier')),
+                  Text(desc, style: TextStyle(fontWeight: FontWeight.w900, fontSize: 10, color: color.withValues(alpha: 0.5), letterSpacing: 2, fontFamily: 'Courier')),
                 ],
               ),
             ),
-            Icon(Iconsax.arrow_right_3, color: color.withOpacity(0.3), size: 18),
+            Icon(Iconsax.arrow_right_3, color: color.withValues(alpha: 0.3), size: 18),
           ],
         ),
       ),

@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../common/ui_patterns/pattern_scaffold.dart';
-import '../../../common/ui_patterns/ui_style.dart';
-import '../../../common/ui_patterns/ui_style_controller.dart';
-import '../controllers/class_controller.dart';
-import 'variants/create_class/create_class_corporate.dart';
-import 'variants/create_class/create_class_minimalist.dart';
-import 'variants/create_class/create_class_glassmorphism.dart';
-import 'variants/create_class/create_class_neumorphism.dart';
-import 'variants/create_class/create_class_material3.dart';
-import 'variants/create_class/create_class_cupertino.dart';
-import 'variants/create_class/create_class_cyberpunk.dart';
-import 'variants/create_class/create_class_brutalist.dart';
-import 'variants/create_class/create_class_academic.dart';
-import 'variants/create_class/create_class_fluent.dart';
+import 'package:smart_campus/common/ui_patterns/pattern_scaffold.dart';
+import 'package:smart_campus/common/ui_patterns/ui_style.dart';
+import 'package:smart_campus/common/ui_patterns/ui_style_controller.dart';
+import 'package:smart_campus/features/teacher/controllers/class_controller.dart';
+import 'package:smart_campus/features/teacher/screens/create_class/variants/create_class_corporate.dart';
+import 'package:smart_campus/features/teacher/screens/create_class/variants/create_class_minimalist.dart';
+import 'package:smart_campus/features/teacher/screens/create_class/variants/create_class_glassmorphism.dart';
+import 'package:smart_campus/features/teacher/screens/create_class/variants/create_class_neumorphism.dart';
+import 'package:smart_campus/features/teacher/screens/create_class/variants/create_class_material3.dart';
+import 'package:smart_campus/features/teacher/screens/create_class/variants/create_class_cupertino.dart';
+import 'package:smart_campus/features/teacher/screens/create_class/variants/create_class_cyberpunk.dart';
+import 'package:smart_campus/features/teacher/screens/create_class/variants/create_class_brutalist.dart';
+import 'package:smart_campus/features/teacher/screens/create_class/variants/create_class_academic.dart';
+import 'package:smart_campus/features/teacher/screens/create_class/variants/create_class_fluent.dart';
 
 class CreateClassScreen extends StatelessWidget {
   const CreateClassScreen({super.key});

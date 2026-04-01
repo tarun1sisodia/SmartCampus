@@ -79,7 +79,7 @@ class _LegalCyberpunkState extends State<LegalCyberpunk> {
   }
 
   Widget _buildGridOverlay(Color cyan) {
-    return Positioned.fill(child: CustomPaint(painter: _GridPainter(color: cyan.withOpacity(0.04))));
+    return Positioned.fill(child: CustomPaint(painter: _GridPainter(color: cyan.withValues(alpha: 0.04))));
   }
 
   Widget _buildCyberHeader(Color cyan, Color magenta) {
@@ -111,8 +111,8 @@ class _LegalCyberpunkState extends State<LegalCyberpunk> {
         ),
         Container(
           padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(color: Colors.black, border: Border.all(color: color.withOpacity(0.3), width: 1.5)),
-          child: Text(content, style: TextStyle(color: color.withOpacity(0.6), fontWeight: FontWeight.bold, fontSize: 13, height: 1.6, fontFamily: 'Courier')),
+          decoration: BoxDecoration(color: Colors.black, border: Border.all(color: color.withValues(alpha: 0.3), width: 1.5)),
+          child: Text(content, style: TextStyle(color: color.withValues(alpha: 0.6), fontWeight: FontWeight.bold, fontSize: 13, height: 1.6, fontFamily: 'Courier')),
         ),
       ],
     );

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
-import '../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
+import '../../../../../common/ui_patterns/pattern_tokens.dart';
+import '../../../../../common/ui_patterns/ui_style.dart';
 import '../../controllers/all_sessions_controller.dart';
 import '../../controllers/attendance_controller.dart';
 import '../carousel_attendance_screen.dart';
@@ -108,7 +108,7 @@ class AllSessionsMaterial3 extends StatelessWidget {
         trailing: Container(
           width: 8,
           height: 8,
-          decoration: BoxDecoration(color: isRunning ? theme.colorScheme.primary : theme.colorScheme.error.withOpacity(0.5), shape: BoxShape.circle),
+          decoration: BoxDecoration(color: isRunning ? theme.colorScheme.primary : theme.colorScheme.error.withValues(alpha: 0.5), shape: BoxShape.circle),
         ),
         children: [
           Padding(

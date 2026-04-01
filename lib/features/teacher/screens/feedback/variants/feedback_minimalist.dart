@@ -26,7 +26,7 @@ class FeedbackMinimalist extends StatelessWidget {
               const SizedBox(height: 8),
               Text('Your insights help us refine the academic experience.', style: TextStyle(color: Colors.grey[500], fontSize: 13, height: 1.5)),
               const SizedBox(height: 48),
-              Text('How was your experience?', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: Colors.black.withOpacity(0.6))),
+              Text('How was your experience?', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: Colors.black.withValues(alpha: 0.6))),
               const SizedBox(height: 24),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -39,7 +39,7 @@ class FeedbackMinimalist extends StatelessWidget {
                 }),
               ),
               const SizedBox(height: 48),
-              Text('Details', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: Colors.black.withOpacity(0.6))),
+              Text('Details', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: Colors.black.withValues(alpha: 0.6))),
               const SizedBox(height: 16),
               TextFormField(
                 controller: textController,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../controllers/attendance_reports_controller.dart';
+import '../../../controllers/attendance_reports_controller.dart';
 
 class ReportsFluent extends StatelessWidget {
   const ReportsFluent({super.key});
@@ -73,12 +73,12 @@ class ReportsFluent extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Colors.black.withOpacity(0.05)),
-          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 20, offset: const Offset(0, 10))],
+          border: Border.all(color: Colors.black.withValues(alpha: 0.05)),
+          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 20, offset: const Offset(0, 10))],
         ),
         child: Row(
           children: [
-            Container(padding: const EdgeInsets.all(12), decoration: BoxDecoration(color: color.withOpacity(0.05), borderRadius: BorderRadius.circular(4)), child: Icon(icon, color: color, size: 24)),
+            Container(padding: const EdgeInsets.all(12), decoration: BoxDecoration(color: color.withValues(alpha: 0.05), borderRadius: BorderRadius.circular(4)), child: Icon(icon, color: color, size: 24)),
             const SizedBox(width: 20),
             Expanded(
               child: Column(
@@ -90,7 +90,7 @@ class ReportsFluent extends StatelessWidget {
                 ],
               ),
             ),
-            Icon(Iconsax.arrow_right_3, color: Colors.black.withOpacity(0.1), size: 18),
+            Icon(Iconsax.arrow_right_3, color: Colors.black.withValues(alpha: 0.1), size: 18),
           ],
         ),
       ),

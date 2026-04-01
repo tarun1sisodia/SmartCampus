@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import '../../../../../../common/utils/constants/image_strings.dart';
-import '../../../../controllers/controllers_onboarding/onboarding_controller.dart';
+import '../../../controllers/controllers_onboarding/onboarding_controller.dart';
 
 class OnboardingMaterial3 extends StatelessWidget {
   const OnboardingMaterial3({super.key});
@@ -56,7 +56,7 @@ class OnboardingMaterial3 extends StatelessWidget {
         children: [
           Container(
             padding: const EdgeInsets.all(32),
-            decoration: BoxDecoration(color: theme.colorScheme.primaryContainer.withOpacity(0.3), borderRadius: BorderRadius.circular(48)),
+            decoration: BoxDecoration(color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3), borderRadius: BorderRadius.circular(48)),
             child: lottie != null ? Lottie.asset(lottie, width: 180) : Image.asset(image!, width: 180),
           ),
           const SizedBox(height: 64),

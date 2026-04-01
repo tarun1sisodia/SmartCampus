@@ -2,8 +2,8 @@ import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
+import '../../../../../common/ui_patterns/pattern_tokens.dart';
+import '../../../../../common/ui_patterns/ui_style.dart';
 import '../../controllers/session_details_controller.dart';
 import '../../../common/utils/constants/sized.dart';
 
@@ -59,7 +59,7 @@ class SessionDetailsNeumorphism extends StatelessWidget {
         borderRadius: BorderRadius.circular(32),
         boxShadow: [
           const BoxShadow(color: Colors.white, offset: Offset(-8, -8), blurRadius: 16),
-          BoxShadow(color: const Color(0xFF94A3B8).withOpacity(0.4), offset: const Offset(8, 8), blurRadius: 16),
+          BoxShadow(color: const Color(0xFF94A3B8).withValues(alpha: 0.4), offset: const Offset(8, 8), blurRadius: 16),
         ],
       ),
       child: Column(
@@ -100,7 +100,7 @@ class SessionDetailsNeumorphism extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           const BoxShadow(color: Colors.white, offset: Offset(-2, -2), blurRadius: 4, inset: true),
-          BoxShadow(color: const Color(0xFF94A3B8).withOpacity(0.5), offset: const Offset(2, 2), blurRadius: 4, inset: true),
+          BoxShadow(color: const Color(0xFF94A3B8).withValues(alpha: 0.5), offset: const Offset(2, 2), blurRadius: 4, inset: true),
         ],
       ),
       child: Row(
@@ -122,7 +122,7 @@ class SessionDetailsNeumorphism extends StatelessWidget {
         borderRadius: BorderRadius.circular(32),
         boxShadow: [
           const BoxShadow(color: Colors.white, offset: Offset(-8, -8), blurRadius: 16),
-          BoxShadow(color: const Color(0xFF94A3B8).withOpacity(0.4), offset: const Offset(8, 8), blurRadius: 16),
+          BoxShadow(color: const Color(0xFF94A3B8).withValues(alpha: 0.4), offset: const Offset(8, 8), blurRadius: 16),
         ],
       ),
       child: Column(
@@ -144,7 +144,7 @@ class SessionDetailsNeumorphism extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
               boxShadow: [
                 BoxShadow(color: Colors.white, offset: const Offset(-2, -2), blurRadius: 4, inset: true),
-                BoxShadow(color: const Color(0xFF94A3B8).withOpacity(0.5), offset: const Offset(2, 2), blurRadius: 4, inset: true),
+                BoxShadow(color: const Color(0xFF94A3B8).withValues(alpha: 0.5), offset: const Offset(2, 2), blurRadius: 4, inset: true),
               ],
             ),
             child: FractionallySizedBox(
@@ -188,7 +188,7 @@ class SessionDetailsNeumorphism extends StatelessWidget {
            borderRadius: BorderRadius.circular(16),
            boxShadow: [
              const BoxShadow(color: Colors.white, offset: Offset(-4, -4), blurRadius: 8),
-             BoxShadow(color: const Color(0xFF94A3B8).withOpacity(0.5), offset: const Offset(4, 4), blurRadius: 8),
+             BoxShadow(color: const Color(0xFF94A3B8).withValues(alpha: 0.5), offset: const Offset(4, 4), blurRadius: 8),
            ],
          ),
          child: Row(
@@ -222,7 +222,7 @@ class SessionDetailsNeumorphism extends StatelessWidget {
             borderRadius: BorderRadius.circular(24),
             boxShadow: [
               const BoxShadow(color: Colors.white, offset: Offset(-6, -6), blurRadius: 12),
-              BoxShadow(color: const Color(0xFF94A3B8).withOpacity(0.4), offset: const Offset(6, 6), blurRadius: 12),
+              BoxShadow(color: const Color(0xFF94A3B8).withValues(alpha: 0.4), offset: const Offset(6, 6), blurRadius: 12),
             ],
           ),
           child: ListTile(
@@ -235,7 +235,7 @@ class SessionDetailsNeumorphism extends StatelessWidget {
                    shape: BoxShape.circle,
                    boxShadow: [
                       BoxShadow(color: Colors.white, offset: const Offset(-2, -2), blurRadius: 4, inset: true),
-                      BoxShadow(color: const Color(0xFF94A3B8).withOpacity(0.5), offset: const Offset(2, 2), blurRadius: 4, inset: true),
+                      BoxShadow(color: const Color(0xFF94A3B8).withValues(alpha: 0.5), offset: const Offset(2, 2), blurRadius: 4, inset: true),
                    ],
                 ),
                 child: Center(child: Icon(record.isPresent ? Iconsax.verify : Iconsax.close_circle, color: record.isPresent ? const Color(0xFF10B981) : const Color(0xFFEF4444), size: 20)),

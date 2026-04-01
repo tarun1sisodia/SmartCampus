@@ -53,7 +53,7 @@ class ClassListMaterial3 extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       child: SearchBar(
         elevation: WidgetStateProperty.all(0),
-        backgroundColor: WidgetStateProperty.all(theme.colorScheme.surfaceContainerHighest.withOpacity(0.5)),
+        backgroundColor: WidgetStateProperty.all(theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5)),
         hintText: 'Search classes...',
         onChanged: (v) => controller.searchClasses(v),
         leading: const Icon(Iconsax.search_normal_1, size: 20),
@@ -145,7 +145,7 @@ class ClassListMaterial3 extends StatelessWidget {
       onPressed: onTap,
       avatar: Icon(icon, size: 14, color: theme.colorScheme.onSecondaryContainer),
       label: Text(label, style: TextStyle(fontWeight: FontWeight.w700, fontSize: 11, color: theme.colorScheme.onSecondaryContainer)),
-      backgroundColor: theme.colorScheme.secondaryContainer.withOpacity(0.5),
+      backgroundColor: theme.colorScheme.secondaryContainer.withValues(alpha: 0.5),
       side: BorderSide.none,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
     );

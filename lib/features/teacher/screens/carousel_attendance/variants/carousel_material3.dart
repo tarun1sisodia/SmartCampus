@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import '../controllers/carousel_attendance_controller.dart';
+import '../../../controllers/carousel_attendance_controller.dart';
 import '../widgets/session_timer_widget.dart';
 
 class CarouselMaterial3 extends StatelessWidget {
@@ -69,7 +69,7 @@ class CarouselMaterial3 extends StatelessWidget {
       return Container(
         margin: const EdgeInsets.all(24),
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-        decoration: BoxDecoration(color: theme.colorScheme.primaryContainer.withOpacity(0.3), borderRadius: BorderRadius.circular(24)),
+        decoration: BoxDecoration(color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3), borderRadius: BorderRadius.circular(24)),
         child: SessionTimerWidget(remainingTime: controller.remainingTime.value, isSessionActive: true, isCountdownMode: true),
       );
     });

@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../controllers/class_controller.dart';
-import '../../../common/ui_patterns/pattern_scaffold.dart';
-import '../../../common/ui_patterns/ui_style_controller.dart';
-import '../../../common/ui_patterns/ui_style.dart';
-import 'create_class_screen.dart';
-import 'variants/class_list/class_list_corporate.dart';
-import 'variants/class_list/class_list_minimalist.dart';
-import 'variants/class_list/class_list_glassmorphism.dart';
-import 'variants/class_list/class_list_neumorphic.dart';
-import 'variants/class_list/class_list_material3.dart';
-import 'variants/class_list/class_list_cupertino.dart';
-import 'variants/class_list/class_list_cyberpunk.dart';
-import 'variants/class_list/class_list_brutalist.dart';
-import 'variants/class_list/class_list_academic.dart';
-import 'variants/class_list/class_list_fluent.dart';
+import 'package:smart_campus/features/teacher/controllers/class_controller.dart';
+import 'package:smart_campus/common/ui_patterns/pattern_scaffold.dart';
+import 'package:smart_campus/common/ui_patterns/ui_style_controller.dart';
+import 'package:smart_campus/common/ui_patterns/ui_style.dart';
+import 'package:smart_campus/features/teacher/screens/create_class/create_class_screen.dart';
+import 'package:smart_campus/features/teacher/screens/class_list/variants/class_list_corporate.dart';
+import 'package:smart_campus/features/teacher/screens/class_list/variants/class_list_minimalist.dart';
+import 'package:smart_campus/features/teacher/screens/class_list/variants/class_list_glassmorphism.dart';
+import 'package:smart_campus/features/teacher/screens/class_list/variants/class_list_neumorphic.dart';
+import 'package:smart_campus/features/teacher/screens/class_list/variants/class_list_material3.dart';
+import 'package:smart_campus/features/teacher/screens/class_list/variants/class_list_cupertino.dart';
+import 'package:smart_campus/features/teacher/screens/class_list/variants/class_list_cyberpunk.dart';
+import 'package:smart_campus/features/teacher/screens/class_list/variants/class_list_brutalist.dart';
+import 'package:smart_campus/features/teacher/screens/class_list/variants/class_list_academic.dart';
+import 'package:smart_campus/features/teacher/screens/class_list/variants/class_list_fluent.dart';
 
 class ClassListScreen extends StatelessWidget {
   final classController = Get.put(ClassController());

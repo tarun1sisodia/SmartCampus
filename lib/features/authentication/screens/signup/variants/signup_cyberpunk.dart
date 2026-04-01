@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../../../../controllers/signup_controller.dart';
+import '../../../controllers/signup_controller.dart';
 import '../../../../../common/utils/constants/image_strings.dart';
 
 class SignupCyberpunk extends StatelessWidget {
@@ -41,7 +41,7 @@ class SignupCyberpunk extends StatelessWidget {
   Widget _buildGridOverlay(Color color) {
     return Positioned.fill(
       child: CustomPaint(
-        painter: _GridPainter(color: color.withOpacity(0.05)),
+        painter: _GridPainter(color: color.withValues(alpha: 0.05)),
       ),
     );
   }
@@ -54,7 +54,7 @@ class SignupCyberpunk extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.black,
             border: Border.all(color: cyan, width: 2),
-            boxShadow: [BoxShadow(color: cyan.withOpacity(0.2), blurRadius: 20)],
+            boxShadow: [BoxShadow(color: cyan.withValues(alpha: 0.2), blurRadius: 20)],
           ),
           child: Icon(Iconsax.user_add, color: cyan, size: 48),
         ),
@@ -105,9 +105,9 @@ class SignupCyberpunk extends StatelessWidget {
               width: double.infinity,
               height: 64,
               decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
+                color: color.withValues(alpha: 0.1),
                 border: Border.all(color: color, width: 2),
-                boxShadow: [BoxShadow(color: color.withOpacity(0.2), blurRadius: 10)],
+                boxShadow: [BoxShadow(color: color.withValues(alpha: 0.2), blurRadius: 10)],
               ),
               child: Center(child: Text('INITIALIZE_IDENTITY', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 15, color: color, letterSpacing: 2, fontFamily: 'Courier'))),
             ),
@@ -121,7 +121,7 @@ class SignupCyberpunk extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: Colors.black,
-        border: Border.all(color: color.withOpacity(0.3), width: 1),
+        border: Border.all(color: color.withValues(alpha: 0.3), width: 1),
       ),
       child: TextFormField(
         controller: textController,
@@ -132,7 +132,7 @@ class SignupCyberpunk extends StatelessWidget {
           prefixIcon: icon != null ? Icon(icon, color: color, size: 22) : null,
           suffixIcon: suffix,
           hintText: hint.toUpperCase(),
-          hintStyle: TextStyle(fontSize: 10, fontWeight: FontWeight.w900, color: color.withOpacity(0.3), letterSpacing: 2, fontFamily: 'Courier'),
+          hintStyle: TextStyle(fontSize: 10, fontWeight: FontWeight.w900, color: color.withValues(alpha: 0.3), letterSpacing: 2, fontFamily: 'Courier'),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
         ),
@@ -149,13 +149,13 @@ class SignupCyberpunk extends StatelessWidget {
             width: 24,
             height: 24,
             decoration: BoxDecoration(
-              color: controller.privacyPolicy.value ? color.withOpacity(0.2) : Colors.transparent,
+              color: controller.privacyPolicy.value ? color.withValues(alpha: 0.2) : Colors.transparent,
               border: Border.all(color: color, width: 1),
             ),
             child: controller.privacyPolicy.value ? Icon(Icons.check, size: 16, color: color) : null,
           ),
           const SizedBox(width: 12),
-          Expanded(child: Text('AGREE_TO_ENCRYPTED_PROTOCOLS', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 10, color: color.withOpacity(0.5), letterSpacing: 1, fontFamily: 'Courier'))),
+          Expanded(child: Text('AGREE_TO_ENCRYPTED_PROTOCOLS', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 10, color: color.withValues(alpha: 0.5), letterSpacing: 1, fontFamily: 'Courier'))),
         ],
       ),
     ));
@@ -172,7 +172,7 @@ class SignupCyberpunk extends StatelessWidget {
             width: double.infinity,
             height: 64,
             decoration: BoxDecoration(
-              color: color.withOpacity(0.05),
+              color: color.withValues(alpha: 0.05),
               border: Border.all(color: color, width: 1),
             ),
             child: Row(

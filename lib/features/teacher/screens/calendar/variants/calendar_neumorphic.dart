@@ -3,8 +3,8 @@ import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:table_calendar/table_calendar.dart';
-import '../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
+import '../../../../../common/ui_patterns/pattern_tokens.dart';
+import '../../../../../common/ui_patterns/ui_style.dart';
 import '../../controllers/calendar_controller.dart';
 import '../../../../models/attendance_session_model.dart';
 
@@ -60,7 +60,7 @@ class CalendarNeumorphism extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
              const BoxShadow(color: Colors.white, offset: Offset(-3, -3), blurRadius: 6),
-             BoxShadow(color: const Color(0xFF94A3B8).withOpacity(0.5), offset: const Offset(3, 3), blurRadius: 6),
+             BoxShadow(color: const Color(0xFF94A3B8).withValues(alpha: 0.5), offset: const Offset(3, 3), blurRadius: 6),
           ],
         ),
         child: Row(
@@ -85,7 +85,7 @@ class CalendarNeumorphism extends StatelessWidget {
         borderRadius: BorderRadius.circular(32),
         boxShadow: [
           const BoxShadow(color: Colors.white, offset: Offset(-10, -10), blurRadius: 20),
-          BoxShadow(color: const Color(0xFF94A3B8).withOpacity(0.4), offset: const Offset(10, 10), blurRadius: 20),
+          BoxShadow(color: const Color(0xFF94A3B8).withValues(alpha: 0.4), offset: const Offset(10, 10), blurRadius: 20),
         ],
       ),
       child: TableCalendar(
@@ -108,7 +108,7 @@ class CalendarNeumorphism extends StatelessWidget {
              shape: BoxShape.circle,
              boxShadow: [
                BoxShadow(color: Colors.white, offset: const Offset(-2, -2), blurRadius: 4, inset: true),
-               BoxShadow(color: const Color(0xFF94A3B8).withOpacity(0.5), offset: const Offset(2, 2), blurRadius: 4, inset: true),
+               BoxShadow(color: const Color(0xFF94A3B8).withValues(alpha: 0.5), offset: const Offset(2, 2), blurRadius: 4, inset: true),
              ]
            ),
            todayTextStyle: const TextStyle(color: Color(0xFF1E293B), fontWeight: FontWeight.w900),
@@ -125,7 +125,7 @@ class CalendarNeumorphism extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               const BoxShadow(color: Colors.white, offset: Offset(-2, -2), blurRadius: 4),
-              BoxShadow(color: const Color(0xFF94A3B8).withOpacity(0.5), offset: const Offset(2, 2), blurRadius: 4),
+              BoxShadow(color: const Color(0xFF94A3B8).withValues(alpha: 0.5), offset: const Offset(2, 2), blurRadius: 4),
             ],
           ),
           leftChevronIcon: const Icon(Iconsax.arrow_left_2, size: 20, color: Color(0xFF1E293B)),
@@ -165,7 +165,7 @@ class CalendarNeumorphism extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           const BoxShadow(color: Colors.white, offset: Offset(-5, -5), blurRadius: 10),
-          BoxShadow(color: const Color(0xFF94A3B8).withOpacity(0.4), offset: const Offset(5, 5), blurRadius: 10),
+          BoxShadow(color: const Color(0xFF94A3B8).withValues(alpha: 0.4), offset: const Offset(5, 5), blurRadius: 10),
         ],
       ),
       child: ListTile(
@@ -203,7 +203,7 @@ class CalendarNeumorphism extends StatelessWidget {
              shape: BoxShape.circle,
              boxShadow: [
                 BoxShadow(color: Colors.white, offset: const Offset(-2, -2), blurRadius: 4, inset: !isMySession),
-                BoxShadow(color: const Color(0xFF94A3B8).withOpacity(0.5), offset: const Offset(2, 2), blurRadius: 4, inset: !isMySession),
+                BoxShadow(color: const Color(0xFF94A3B8).withValues(alpha: 0.5), offset: const Offset(2, 2), blurRadius: 4, inset: !isMySession),
              ],
            ),
            child: Center(child: Icon(isMySession ? Iconsax.verify : Iconsax.user_octagon, size: 20, color: isMySession ? const Color(0xFF3B82F6) : const Color(0xFF94A3B8))),

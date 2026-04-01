@@ -57,7 +57,7 @@ class AboutMaterial3 extends StatelessWidget {
   Widget _buildM3IdentityCard(ThemeData theme) {
     return Card(
       elevation: 0,
-      color: theme.colorScheme.primaryContainer.withOpacity(0.3),
+      color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -112,7 +112,7 @@ class AboutMaterial3 extends StatelessWidget {
       label: Text(label),
       labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      backgroundColor: theme.colorScheme.surfaceContainerHighest.withOpacity(0.5),
+      backgroundColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
       side: BorderSide.none,
     );
   }

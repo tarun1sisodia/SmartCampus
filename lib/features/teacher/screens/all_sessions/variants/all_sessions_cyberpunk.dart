@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
-import '../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
+import '../../../../../common/ui_patterns/pattern_tokens.dart';
+import '../../../../../common/ui_patterns/ui_style.dart';
 import '../../controllers/all_sessions_controller.dart';
 import '../../controllers/attendance_controller.dart';
 import '../carousel_attendance_screen.dart';
@@ -37,7 +37,7 @@ class AllSessionsCyberpunk extends StatelessWidget {
 
                   if (controller.filteredSessions.isEmpty) {
                     return Center(
-                      child: Text('LOGS_VOIDED', style: TextStyle(color: neonCyan.withOpacity(0.5), fontWeight: FontWeight.w900, fontSize: 13, letterSpacing: 2, fontFamily: 'Courier')),
+                      child: Text('LOGS_VOIDED', style: TextStyle(color: neonCyan.withValues(alpha: 0.5), fontWeight: FontWeight.w900, fontSize: 13, letterSpacing: 2, fontFamily: 'Courier')),
                     );
                   }
 
@@ -65,7 +65,7 @@ class AllSessionsCyberpunk extends StatelessWidget {
   Widget _buildHUDGrid(Color cyan) {
     return Positioned.fill(
       child: CustomPaint(
-        painter: CyberGridPainter(color: cyan.withOpacity(0.04)),
+        painter: CyberGridPainter(color: cyan.withValues(alpha: 0.04)),
       ),
     );
   }
@@ -80,13 +80,13 @@ class AllSessionsCyberpunk extends StatelessWidget {
             child: Container(
               height: 48,
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              decoration: BoxDecoration(color: cyan.withOpacity(0.05), border: Border.all(color: cyan.withOpacity(0.5))),
+              decoration: BoxDecoration(color: cyan.withValues(alpha: 0.05), border: Border.all(color: cyan.withValues(alpha: 0.5))),
               child: TextField(
                 controller: controller.searchController,
                 style: TextStyle(color: cyan, fontWeight: FontWeight.w700, fontSize: 13, fontFamily: 'Courier'),
                 decoration: InputDecoration(
                   hintText: 'SYNC_SEARCH_LOGS...',
-                  hintStyle: TextStyle(color: cyan.withOpacity(0.3), fontWeight: FontWeight.w800, fontSize: 10, fontFamily: 'Courier'),
+                  hintStyle: TextStyle(color: cyan.withValues(alpha: 0.3), fontWeight: FontWeight.w800, fontSize: 10, fontFamily: 'Courier'),
                   border: InputBorder.none,
                   prefixIcon: Icon(Iconsax.search_normal, color: cyan, size: 16),
                 ),
@@ -105,7 +105,7 @@ class AllSessionsCyberpunk extends StatelessWidget {
     return Container(
       height: 48,
       width: 48,
-      decoration: BoxDecoration(border: Border.all(color: cyan, width: 1.5), color: cyan.withOpacity(0.1)),
+      decoration: BoxDecoration(border: Border.all(color: cyan, width: 1.5), color: cyan.withValues(alpha: 0.1)),
       child: Center(child: Icon(icon, color: cyan, size: 20)),
     );
   }
@@ -118,8 +118,8 @@ class AllSessionsCyberpunk extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
         color: Colors.black,
-        border: Border.all(color: isSelected ? magenta : cyan.withOpacity(0.5), width: isSelected ? 2 : 1),
-        boxShadow: isSelected ? [BoxShadow(color: magenta.withOpacity(0.2), blurRadius: 10)] : null,
+        border: Border.all(color: isSelected ? magenta : cyan.withValues(alpha: 0.5), width: isSelected ? 2 : 1),
+        boxShadow: isSelected ? [BoxShadow(color: magenta.withValues(alpha: 0.2), blurRadius: 10)] : null,
       ),
       child: Theme(
         data: Theme.of(Get.context!).copyWith(dividerColor: Colors.transparent),
@@ -128,7 +128,7 @@ class AllSessionsCyberpunk extends StatelessWidget {
           leading: Container(
             width: 44,
             height: 44,
-            decoration: BoxDecoration(border: Border.all(color: cyan), color: cyan.withOpacity(0.1)),
+            decoration: BoxDecoration(border: Border.all(color: cyan), color: cyan.withValues(alpha: 0.1)),
             child: Center(
               child: Text(
                 DateFormat('d').format(session.date),
@@ -142,12 +142,12 @@ class AllSessionsCyberpunk extends StatelessWidget {
           ),
           subtitle: Text(
              DateFormat('yyyy-MM-dd').format(session.date).toUpperCase(),
-             style: TextStyle(fontWeight: FontWeight.w800, fontSize: 10, color: cyan.withOpacity(0.5), fontFamily: 'Courier'),
+             style: TextStyle(fontWeight: FontWeight.w800, fontSize: 10, color: cyan.withValues(alpha: 0.5), fontFamily: 'Courier'),
           ),
           trailing: Container(
              width: 10,
              height: 10,
-             decoration: BoxDecoration(color: isRunning ? magenta : cyan.withOpacity(0.2), shape: BoxShape.rectangle),
+             decoration: BoxDecoration(color: isRunning ? magenta : cyan.withValues(alpha: 0.2), shape: BoxShape.rectangle),
           ),
           children: [
             Padding(
@@ -164,7 +164,7 @@ class AllSessionsCyberpunk extends StatelessWidget {
                               onTap: () => _onMark(session),
                               child: Container(
                                 padding: const EdgeInsets.symmetric(vertical: 14),
-                                decoration: BoxDecoration(border: Border.all(color: magenta), color: magenta.withOpacity(0.05)),
+                                decoration: BoxDecoration(border: Border.all(color: magenta), color: magenta.withValues(alpha: 0.05)),
                                 child: Center(child: Text('UPLINK_MARK', style: TextStyle(color: magenta, fontWeight: FontWeight.w900, fontSize: 10, letterSpacing: 1))),
                               ),
                            ),
@@ -188,7 +188,7 @@ class AllSessionsCyberpunk extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: TextStyle(fontWeight: FontWeight.w800, fontSize: 9, color: cyan.withOpacity(0.4), fontFamily: 'Courier')),
+          Text(label, style: TextStyle(fontWeight: FontWeight.w800, fontSize: 9, color: cyan.withValues(alpha: 0.4), fontFamily: 'Courier')),
           Text(val, style: TextStyle(fontWeight: FontWeight.w900, fontSize: 10, color: cyan, fontFamily: 'Courier')),
         ],
       ),
@@ -201,7 +201,7 @@ class AllSessionsCyberpunk extends StatelessWidget {
       child: Container(
         height: 48,
         width: 48,
-        decoration: BoxDecoration(border: Border.all(color: color), color: color.withOpacity(0.1)),
+        decoration: BoxDecoration(border: Border.all(color: color), color: color.withValues(alpha: 0.1)),
         child: Center(child: Icon(icon, color: color, size: 20)),
       ),
     );

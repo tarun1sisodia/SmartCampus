@@ -121,7 +121,7 @@ class CreateClassMaterial3 extends StatelessWidget {
           icon: const Icon(Iconsax.arrow_down_1, size: 18),
           decoration: InputDecoration(
             prefixIcon: Icon(icon, size: 20),
-            filled: true, fillColor: Colors.white.withOpacity(0.5),
+            filled: true, fillColor: Colors.white.withValues(alpha: 0.5),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
             enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
@@ -145,7 +145,7 @@ class CreateClassMaterial3 extends StatelessWidget {
           decoration: InputDecoration(
             hintText: hint,
             prefixIcon: Icon(icon, size: 20),
-            filled: true, fillColor: Colors.white.withOpacity(0.5),
+            filled: true, fillColor: Colors.white.withValues(alpha: 0.5),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
             enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),

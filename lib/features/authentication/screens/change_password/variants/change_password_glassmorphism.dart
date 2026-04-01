@@ -2,7 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../change_password_controller.dart';
+import '../../../controllers/change_password_controller.dart';
 
 class ChangePasswordGlassmorphism extends StatelessWidget {
   const ChangePasswordGlassmorphism({super.key});
@@ -45,7 +45,7 @@ class ChangePasswordGlassmorphism extends StatelessWidget {
       children: [
         Container(
           padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(color: Colors.white.withOpacity(0.1), shape: BoxShape.circle, border: Border.all(color: Colors.white.withOpacity(0.2))),
+          decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.1), shape: BoxShape.circle, border: Border.all(color: Colors.white.withValues(alpha: 0.2))),
           child: const Icon(Iconsax.shield_security, color: Colors.white70, size: 48),
         ),
         const SizedBox(height: 24),
@@ -71,10 +71,10 @@ class ChangePasswordGlassmorphism extends StatelessWidget {
             child: ElevatedButton(
               onPressed: () => controller.updatePassword(),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white.withOpacity(0.2),
+                backgroundColor: Colors.white.withValues(alpha: 0.2),
                 foregroundColor: Colors.white,
                 elevation: 0,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24), side: BorderSide(color: Colors.white.withOpacity(0.2))),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24), side: BorderSide(color: Colors.white.withValues(alpha: 0.2))),
               ),
               child: const Text('Initialize Authorization', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
             ),
@@ -95,10 +95,10 @@ class ChangePasswordGlassmorphism extends StatelessWidget {
         hintText: hint,
         hintStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.white24),
         filled: true,
-        fillColor: Colors.white.withOpacity(0.05),
+        fillColor: Colors.white.withValues(alpha: 0.05),
         contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-        enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white.withOpacity(0.1)), borderRadius: BorderRadius.circular(24)),
-        focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white.withOpacity(0.3)), borderRadius: BorderRadius.circular(24)),
+        enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.1)), borderRadius: BorderRadius.circular(24)),
+        focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.3)), borderRadius: BorderRadius.circular(24)),
         suffixIcon: IconButton(
           onPressed: () => controller.hidePassword.value = !controller.hidePassword.value,
           icon: Icon(controller.hidePassword.value ? Iconsax.eye_slash : Iconsax.eye, color: Colors.white24, size: 20),
@@ -115,9 +115,9 @@ class ChangePasswordGlassmorphism extends StatelessWidget {
         child: Container(
           padding: padding,
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.1),
+            color: Colors.white.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(40),
-            border: Border.all(color: Colors.white.withOpacity(0.2)),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
           ),
           child: child,
         ),

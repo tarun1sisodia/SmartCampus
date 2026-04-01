@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:table_calendar/table_calendar.dart';
-import '../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
+import '../../../../../common/ui_patterns/pattern_tokens.dart';
+import '../../../../../common/ui_patterns/ui_style.dart';
 import '../../controllers/calendar_controller.dart';
 import '../../../../models/attendance_session_model.dart';
 
@@ -58,7 +58,7 @@ class CalendarCyberpunk extends StatelessWidget {
   Widget _buildHUDBackground(Color cyan) {
     return Positioned.fill(
       child: CustomPaint(
-        painter: HUDPainter(color: cyan.withOpacity(0.04)),
+        painter: HUDPainter(color: cyan.withValues(alpha: 0.04)),
       ),
     );
   }
@@ -74,7 +74,7 @@ class CalendarCyberpunk extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.black,
           border: Border.all(color: cyan, width: 2),
-          boxShadow: [BoxShadow(color: cyan.withOpacity(0.2), blurRadius: 10)],
+          boxShadow: [BoxShadow(color: cyan.withValues(alpha: 0.2), blurRadius: 10)],
         ),
         child: Row(
           children: [
@@ -97,7 +97,7 @@ class CalendarCyberpunk extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.black,
-        border: Border.all(color: cyan.withOpacity(0.5), width: 1.5),
+        border: Border.all(color: cyan.withValues(alpha: 0.5), width: 1.5),
       ),
       child: TableCalendar(
         firstDay: DateTime.utc(2020, 1, 1),
@@ -114,13 +114,13 @@ class CalendarCyberpunk extends StatelessWidget {
         eventLoader: (day) => controller.getSessionsForDay(day),
         calendarStyle: CalendarStyle(
            markerDecoration: BoxDecoration(color: magenta, shape: BoxShape.rectangle),
-           todayDecoration: BoxDecoration(color: cyan.withOpacity(0.1), border: Border.all(color: cyan, width: 1)),
+           todayDecoration: BoxDecoration(color: cyan.withValues(alpha: 0.1), border: Border.all(color: cyan, width: 1)),
            todayTextStyle: TextStyle(color: cyan, fontWeight: FontWeight.w900),
            selectedDecoration: BoxDecoration(color: cyan, shape: BoxShape.rectangle),
            selectedTextStyle: const TextStyle(color: Colors.black, fontWeight: FontWeight.w900),
-           defaultTextStyle: TextStyle(color: cyan.withOpacity(0.7), fontWeight: FontWeight.w800, fontFamily: 'Courier'),
-           weekendTextStyle: TextStyle(color: magenta.withOpacity(0.7), fontWeight: FontWeight.w800, fontFamily: 'Courier'),
-           outsideTextStyle: TextStyle(color: cyan.withOpacity(0.2)),
+           defaultTextStyle: TextStyle(color: cyan.withValues(alpha: 0.7), fontWeight: FontWeight.w800, fontFamily: 'Courier'),
+           weekendTextStyle: TextStyle(color: magenta.withValues(alpha: 0.7), fontWeight: FontWeight.w800, fontFamily: 'Courier'),
+           outsideTextStyle: TextStyle(color: cyan.withValues(alpha: 0.2)),
         ),
         headerStyle: HeaderStyle(
           titleTextStyle: TextStyle(color: cyan, fontWeight: FontWeight.w900, fontSize: 16, fontFamily: 'Courier', shadows: [Shadow(color: cyan, blurRadius: 5)]),
@@ -130,8 +130,8 @@ class CalendarCyberpunk extends StatelessWidget {
           rightChevronIcon: Icon(Iconsax.arrow_right_3, size: 20, color: cyan),
         ),
         daysOfWeekStyle: DaysOfWeekStyle(
-          weekdayStyle: TextStyle(color: cyan.withOpacity(0.5), fontWeight: FontWeight.w600, fontSize: 12),
-          weekendStyle: TextStyle(color: magenta.withOpacity(0.5), fontWeight: FontWeight.w600, fontSize: 12),
+          weekdayStyle: TextStyle(color: cyan.withValues(alpha: 0.5), fontWeight: FontWeight.w600, fontSize: 12),
+          weekendStyle: TextStyle(color: magenta.withValues(alpha: 0.5), fontWeight: FontWeight.w600, fontSize: 12),
         ),
       ),
     );
@@ -142,8 +142,8 @@ class CalendarCyberpunk extends StatelessWidget {
     if (sessions.isEmpty) {
       return Container(
         height: 100,
-        decoration: BoxDecoration(border: Border.all(color: cyan.withOpacity(0.2))),
-        child: Center(child: Text('NULL_SECTOR_DATA', style: TextStyle(color: cyan.withOpacity(0.3), fontWeight: FontWeight.w900, fontSize: 11, letterSpacing: 2))),
+        decoration: BoxDecoration(border: Border.all(color: cyan.withValues(alpha: 0.2))),
+        child: Center(child: Text('NULL_SECTOR_DATA', style: TextStyle(color: cyan.withValues(alpha: 0.3), fontWeight: FontWeight.w900, fontSize: 11, letterSpacing: 2))),
       );
     }
 
@@ -158,14 +158,14 @@ class CalendarCyberpunk extends StatelessWidget {
   Widget _buildCyberSessionRow(AttendanceSessionModel session, Color cyan, Color magenta) {
     final isMySession = controller.userClasses.any((cls) => cls.id == session.classId);
     final isActive = controller.isSessionActive(session);
-    final activeColor = isActive ? magenta : (isMySession ? cyan : cyan.withOpacity(0.4));
+    final activeColor = isActive ? magenta : (isMySession ? cyan : cyan.withValues(alpha: 0.4));
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
         color: Colors.black,
         border: Border.all(color: activeColor),
-        boxShadow: isActive ? [BoxShadow(color: magenta.withOpacity(0.3), blurRadius: 10)] : null,
+        boxShadow: isActive ? [BoxShadow(color: magenta.withValues(alpha: 0.3), blurRadius: 10)] : null,
       ),
       child: ListTile(
         contentPadding: const EdgeInsets.all(16),
@@ -179,7 +179,7 @@ class CalendarCyberpunk extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               '${session.courseName} | SEM ${session.semester}'.toUpperCase(),
-              style: TextStyle(color: activeColor.withOpacity(0.6), fontWeight: FontWeight.w800, fontSize: 10, fontFamily: 'Courier'),
+              style: TextStyle(color: activeColor.withValues(alpha: 0.6), fontWeight: FontWeight.w800, fontSize: 10, fontFamily: 'Courier'),
             ),
             const SizedBox(height: 12),
             Row(
@@ -197,7 +197,7 @@ class CalendarCyberpunk extends StatelessWidget {
         trailing: Container(
            width: 44,
            height: 44,
-           decoration: BoxDecoration(border: Border.all(color: activeColor.withOpacity(0.5))),
+           decoration: BoxDecoration(border: Border.all(color: activeColor.withValues(alpha: 0.5))),
            child: Center(child: Icon(isMySession ? Iconsax.command : Iconsax.user_octagon, size: 20, color: activeColor)),
         ),
       ),
@@ -224,7 +224,7 @@ class HUDPainter extends CustomPainter {
     }
     
     // Corner brackets
-    final bracketPaint = Paint()..color = color.withOpacity(0.2)..strokeWidth = 4;
+    final bracketPaint = Paint()..color = color.withValues(alpha: 0.2)..strokeWidth = 4;
     canvas.drawLine(Offset(0, 50), const Offset(0, 0), bracketPaint);
     canvas.drawLine(const Offset(0, 0), Offset(50, 0), bracketPaint);
     

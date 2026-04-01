@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../controllers/attendance_reports_controller.dart';
+import '../../../controllers/attendance_reports_controller.dart';
 
 class ReportsBrutalist extends StatelessWidget {
   const ReportsBrutalist({super.key});

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../../../../controllers/signup_controller.dart';
+import '../../../controllers/signup_controller.dart';
 import '../../../../../common/utils/constants/image_strings.dart';
 
 class SignupNeumorphism extends StatelessWidget {

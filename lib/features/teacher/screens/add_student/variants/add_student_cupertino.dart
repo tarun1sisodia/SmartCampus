@@ -2,10 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' show Colors, Divider, Icons, InkWell, Color, ColorScheme, Theme, ThemeData, CircleAvatar, TextButton, FontWeight, TextStyle, BorderRadius, Radius, Offset, BoxShape, BoxShadow, BoxDecoration, Border, BorderSide, Widget, EdgeInsets, Column, Row, Expanded, SizedBox, BuildContext, StatelessWidget, Center, ListView, Stack, Positioned, Obx, Get, IconData, Icon, MainAxisAlignment, CrossAxisAlignment, MainAxisSize, VoidCallback, Spacer, Badge, CircleAvatar, TextSelectionTheme, TextSelectionThemeData, TextFormField, InputDecoration, InputBorder, OutlineInputBorder, FileImage;
 import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
+import '../../../../../common/ui_patterns/pattern_tokens.dart';
+import '../../../../../common/ui_patterns/ui_style.dart';
 import '../../controllers/student_controller.dart';
-import '../../../../common/widgets/student_avatar.dart';
+import '../../../../../common/widgets/student_avatar.dart';
 import '../../../../models/class_model.dart';
 
 class AddStudentCupertino extends StatelessWidget {
@@ -76,7 +76,7 @@ class AddStudentCupertino extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12)),
-      child: ListTile(
+      child: _ListTile(
          onTap: () => isSelectionMode ? controller.toggleStudentSelection(student.id) : null,
          onLongPress: () {
             if (!isSelectionMode) {
@@ -91,7 +91,7 @@ class AddStudentCupertino extends StatelessWidget {
          title: Text(student.name, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15, color: Colors.black, letterSpacing: -0.2)),
          subtitle: Text('ID: ${student.rollNumber}', style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 11, color: Color(0xFF8E8E93))),
          trailing: !isSelectionMode 
-            ? IconButton(icon: const Icon(CupertinoIcons.trash, size: 18, color: Color(0xFFC7C7CC)), onPressed: () => controller.removeStudentFromClass(student.id))
+            ? _IconButton(icon: const Icon(CupertinoIcons.trash, size: 18, color: Color(0xFFC7C7CC)), onPressed: () => controller.removeStudentFromClass(student.id))
             : null,
       ),
     );
@@ -174,7 +174,7 @@ class AddStudentCupertino extends StatelessWidget {
   }
 }
 
-class ListTile extends StatelessWidget {
+class _ListTile extends StatelessWidget {
   final Widget? leading;
   final Widget title;
   final Widget? subtitle;
@@ -183,7 +183,7 @@ class ListTile extends StatelessWidget {
   final VoidCallback? onLongPress;
   final EdgeInsetsGeometry contentPadding;
 
-  const ListTile({super.key, this.leading, required this.title, this.subtitle, this.trailing, this.onTap, this.onLongPress, required this.contentPadding});
+  const _ListTile({super.key, this.leading, required this.title, this.subtitle, this.trailing, this.onTap, this.onLongPress, required this.contentPadding});
 
   @override
   Widget build(BuildContext context) {
@@ -204,10 +204,10 @@ class ListTile extends StatelessWidget {
   }
 }
 
-class IconButton extends StatelessWidget {
+class _IconButton extends StatelessWidget {
   final Widget icon;
   final VoidCallback onPressed;
-  const IconButton({super.key, required this.icon, required this.onPressed});
+  const _IconButton({super.key, required this.icon, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../../../../controllers/signup_controller.dart';
+import '../../../controllers/signup_controller.dart';
 import '../../../../../common/utils/constants/image_strings.dart';
 
 class SignupMaterial3 extends StatelessWidget {

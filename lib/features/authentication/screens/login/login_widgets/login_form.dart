@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:smart_campus/features/authentication/screens/signup/signup.dart';
 
 import '../../../../../common/utils/constants/colors.dart';
 import '../../../../../common/utils/constants/sized.dart';
@@ -125,7 +126,7 @@ class LoginForm extends StatelessWidget {
                   if (Get.isRegistered<SignupController>()) {
                     Get.delete<SignupController>(force: true);
                   }
-                  Get.to(Signup());
+                  Get.to(SignupScreen());
                 },
                 child: Text(
                   TTexts.createAccount.toUpperCase(),

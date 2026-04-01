@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../controllers/controllers_forgot_password/forgot_password_controller.dart';
+import '../../../controllers/forgot_password_controller.dart';
 
 class ResetConfirmationMinimalist extends StatelessWidget {
   const ResetConfirmationMinimalist({super.key, required this.email});

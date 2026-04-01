@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../change_password_controller.dart';
+import '../../../controllers/change_password_controller.dart';
 
 class ChangePasswordMinimalist extends StatelessWidget {
   const ChangePasswordMinimalist({super.key});

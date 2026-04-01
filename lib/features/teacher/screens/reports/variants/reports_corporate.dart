@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../controllers/attendance_reports_controller.dart';
+import '../../../controllers/attendance_reports_controller.dart';
 
 class ReportsCorporate extends StatelessWidget {
   const ReportsCorporate({super.key});
@@ -71,7 +71,7 @@ class ReportsCorporate extends StatelessWidget {
         decoration: BoxDecoration(color: Colors.white, border: Border.all(color: const Color(0xFF0F172A), width: 2), boxShadow: const [BoxShadow(color: Color(0xFFE2E8F0), offset: Offset(6, 6))]),
         child: Row(
           children: [
-            Container(padding: const EdgeInsets.all(12), decoration: BoxDecoration(color: color.withOpacity(0.05), border: Border.all(color: color.withOpacity(0.1))), child: Icon(icon, color: color, size: 24)),
+            Container(padding: const EdgeInsets.all(12), decoration: BoxDecoration(color: color.withValues(alpha: 0.05), border: Border.all(color: color.withValues(alpha: 0.1))), child: Icon(icon, color: color, size: 24)),
             const SizedBox(width: 20),
             Expanded(
               child: Column(

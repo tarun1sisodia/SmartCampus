@@ -79,7 +79,7 @@ class ImportAcademic extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('Import', style: TextStyle(color: ink, fontWeight: FontWeight.bold, fontSize: 36, fontFamily: 'Serif')),
-        Text('CENTRAL_DATA_INGESTION_LEAD', style: TextStyle(color: accent.withOpacity(0.6), fontWeight: FontWeight.w900, fontSize: 11, letterSpacing: 2, fontFamily: 'Serif')),
+        Text('CENTRAL_DATA_INGESTION_LEAD', style: TextStyle(color: accent.withValues(alpha: 0.6), fontWeight: FontWeight.w900, fontSize: 11, letterSpacing: 2, fontFamily: 'Serif')),
       ],
     );
   }
@@ -94,7 +94,7 @@ class ImportAcademic extends StatelessWidget {
         ),
         Container(
           padding: const EdgeInsets.all(28),
-          decoration: BoxDecoration(color: Colors.white, border: Border.all(color: ink.withOpacity(0.05)), boxShadow: [BoxShadow(color: ink.withOpacity(0.02), blurRadius: 15, offset: const Offset(0, 4))]),
+          decoration: BoxDecoration(color: Colors.white, border: Border.all(color: ink.withValues(alpha: 0.05)), boxShadow: [BoxShadow(color: ink.withValues(alpha: 0.02), blurRadius: 15, offset: const Offset(0, 4))]),
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: items),
         ),
       ],
@@ -107,8 +107,8 @@ class ImportAcademic extends StatelessWidget {
         onTap: onTap,
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 12),
-          decoration: BoxDecoration(color: isSelected ? ink.withOpacity(0.05) : Colors.transparent, border: Border.all(color: isSelected ? ink : ink.withOpacity(0.1))),
-          child: Center(child: Text(label, style: TextStyle(color: isSelected ? ink : ink.withOpacity(0.3), fontWeight: FontWeight.bold, fontSize: 10, fontFamily: 'Serif'))),
+          decoration: BoxDecoration(color: isSelected ? ink.withValues(alpha: 0.05) : Colors.transparent, border: Border.all(color: isSelected ? ink : ink.withValues(alpha: 0.1))),
+          child: Center(child: Text(label, style: TextStyle(color: isSelected ? ink : ink.withValues(alpha: 0.3), fontWeight: FontWeight.bold, fontSize: 10, fontFamily: 'Serif'))),
         ),
       ),
     );
@@ -120,9 +120,9 @@ class ImportAcademic extends StatelessWidget {
       child: Center(
         child: Column(
           children: [
-            Icon(Iconsax.import, size: 32, color: ink.withOpacity(0.2)),
+            Icon(Iconsax.import, size: 32, color: ink.withValues(alpha: 0.2)),
             const SizedBox(height: 12),
-            Text('Select File Payload'.toUpperCase(), style: TextStyle(color: ink.withOpacity(0.3), fontWeight: FontWeight.bold, fontSize: 11, letterSpacing: 1.5, fontFamily: 'Serif')),
+            Text('Select File Payload'.toUpperCase(), style: TextStyle(color: ink.withValues(alpha: 0.3), fontWeight: FontWeight.bold, fontSize: 11, letterSpacing: 1.5, fontFamily: 'Serif')),
           ],
         ),
       ),

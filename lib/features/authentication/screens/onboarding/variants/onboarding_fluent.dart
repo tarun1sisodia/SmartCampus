@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import '../../../../../../common/utils/constants/image_strings.dart';
-import '../../../../controllers/controllers_onboarding/onboarding_controller.dart';
+import '../../../controllers/controllers_onboarding/onboarding_controller.dart';
 
 class OnboardingFluent extends StatelessWidget {
   const OnboardingFluent({super.key});
@@ -56,7 +56,7 @@ class OnboardingFluent extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(12),
-              boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 40, offset: const Offset(0, 20))],
+              boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 40, offset: const Offset(0, 20))],
             ),
             child: lottie != null ? Lottie.asset(lottie, width: 140) : Image.asset(image!, width: 140),
           ),
@@ -93,7 +93,7 @@ class OnboardingFluent extends StatelessWidget {
             width: controller.currentPageIndex.value == index ? 20 : 10,
             height: 10,
             margin: const EdgeInsets.symmetric(horizontal: 4),
-            decoration: BoxDecoration(color: controller.currentPageIndex.value == index ? const Color(0xFF0078D4) : Colors.black.withOpacity(0.1), borderRadius: BorderRadius.circular(5)),
+            decoration: BoxDecoration(color: controller.currentPageIndex.value == index ? const Color(0xFF0078D4) : Colors.black.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(5)),
           )),
         )),
       ),

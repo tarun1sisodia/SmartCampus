@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../../../controllers/controllers_forgot_password/forgot_password_controller.dart';
+import '../../../controllers/forgot_password_controller.dart';
 
 class ForgotPasswordFluent extends StatelessWidget {
   const ForgotPasswordFluent({super.key});
@@ -37,7 +37,7 @@ class ForgotPasswordFluent extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
-            boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 40, offset: const Offset(0, 20))],
+            boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 40, offset: const Offset(0, 20))],
           ),
           child: Icon(Iconsax.password_check, color: color, size: 48),
         ),
@@ -64,7 +64,7 @@ class ForgotPasswordFluent extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(4),
-              border: Border.all(color: Colors.black.withOpacity(0.1)),
+              border: Border.all(color: Colors.black.withValues(alpha: 0.1)),
             ),
             child: TextFormField(
               controller: controller.email,
@@ -72,7 +72,7 @@ class ForgotPasswordFluent extends StatelessWidget {
               decoration: InputDecoration(
                 prefixIcon: const Icon(Iconsax.direct_right, color: Color(0xFF0078D4), size: 22),
                 hintText: 'Work Email Address',
-                hintStyle: TextStyle(fontSize: 14, color: Colors.black.withOpacity(0.2)),
+                hintStyle: TextStyle(fontSize: 14, color: Colors.black.withValues(alpha: 0.2)),
                 border: InputBorder.none,
                 contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
               ),

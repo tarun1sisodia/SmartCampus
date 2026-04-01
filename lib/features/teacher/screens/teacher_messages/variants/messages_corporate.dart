@@ -70,7 +70,7 @@ class MessagesCorporate extends StatelessWidget {
         contentPadding: const EdgeInsets.all(16),
         leading: Container(
           width: 48, height: 48,
-          decoration: BoxDecoration(color: const Color(0xFF0F172A).withOpacity(0.1), border: Border.all(color: const Color(0xFF0F172A).withOpacity(0.2))),
+          decoration: BoxDecoration(color: const Color(0xFF0F172A).withValues(alpha: 0.1), border: Border.all(color: const Color(0xFF0F172A).withValues(alpha: 0.2))),
           child: Center(child: Text(data.avatar, style: const TextStyle(fontWeight: FontWeight.w900, color: Color(0xFF0F172A)))),
         ),
         title: Row(

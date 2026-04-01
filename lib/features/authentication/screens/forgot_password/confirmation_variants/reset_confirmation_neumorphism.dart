@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 import 'package:get/get.dart';
-import '../../../controllers/controllers_forgot_password/forgot_password_controller.dart';
+import '../../../controllers/forgot_password_controller.dart';
 
 class ResetConfirmationNeumorphism extends StatelessWidget {
   const ResetConfirmationNeumorphism({super.key, required this.email});

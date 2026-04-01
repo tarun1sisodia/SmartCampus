@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../common/ui_patterns/pattern_scaffold.dart';
-import '../../../common/ui_patterns/ui_style.dart';
-import '../../../common/ui_patterns/ui_style_controller.dart';
-import 'variants/about/about_corporate.dart';
-import 'variants/about/about_minimalist.dart';
-import 'variants/about/about_glassmorphism.dart';
-import 'variants/about/about_neumorphism.dart';
-import 'variants/about/about_material3.dart';
-import 'variants/about/about_cupertino.dart';
-import 'variants/about/about_cyberpunk.dart';
-import 'variants/about/about_brutalist.dart';
-import 'variants/about/about_academic.dart';
-import 'variants/about/about_fluent.dart';
+
+import '../../../../../common/ui_patterns/pattern_scaffold.dart';
+import '../../../../../common/ui_patterns/ui_style.dart';
+import '../../../../../common/ui_patterns/ui_style_controller.dart';
+import 'variants/about_brutalist.dart';
+import 'variants/about_cupertino.dart';
+import 'variants/about_fluent.dart';
+import 'variants/about_material3.dart';
+import 'variants/about_neumorphism.dart';
+import 'variants/about_academic.dart';
+import 'variants/about_corporate.dart';
+import 'variants/about_cyberpunk.dart';
+import 'variants/about_glassmorphism.dart';
+import 'variants/about_minimalist.dart';
 
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});

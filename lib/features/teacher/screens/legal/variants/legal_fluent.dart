@@ -95,7 +95,7 @@ class _LegalFluentState extends State<LegalFluent> {
         ),
         Container(
           padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.black.withOpacity(0.05)), boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10, offset: const Offset(0, 4))]),
+          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.black.withValues(alpha: 0.05)), boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 10, offset: const Offset(0, 4))]),
           child: Text(content, style: const TextStyle(color: Color(0xFF605E5C), fontWeight: FontWeight.w500, fontSize: 13, height: 1.5)),
         ),
       ],

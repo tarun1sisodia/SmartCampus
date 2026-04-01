@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import '../controllers/carousel_attendance_controller.dart';
+import '../../../controllers/carousel_attendance_controller.dart';
 import '../widgets/session_timer_widget.dart';
 
 class CarouselCyberpunk extends StatelessWidget {
@@ -60,7 +60,7 @@ class CarouselCyberpunk extends StatelessWidget {
   }
 
   Widget _buildGridOverlay(Color cyan) {
-    return Positioned.fill(child: CustomPaint(painter: _GridPainter(color: cyan.withOpacity(0.04))));
+    return Positioned.fill(child: CustomPaint(painter: _GridPainter(color: cyan.withValues(alpha: 0.04))));
   }
 
   Widget _buildEmptyState(Color magenta) {
@@ -68,7 +68,7 @@ class CarouselCyberpunk extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Iconsax.people, size: 64, color: magenta.withOpacity(0.2)),
+          Icon(Iconsax.people, size: 64, color: magenta.withValues(alpha: 0.2)),
           const SizedBox(height: 16),
           Text('NO_NODES_FOUND', style: TextStyle(color: magenta, fontWeight: FontWeight.w900, fontFamily: 'Courier')),
         ],
@@ -82,7 +82,7 @@ class CarouselCyberpunk extends StatelessWidget {
       return Container(
         margin: const EdgeInsets.all(24),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-        decoration: BoxDecoration(color: Colors.black, border: Border.all(color: cyan, width: 2), boxShadow: [BoxShadow(color: cyan.withOpacity(0.2), blurRadius: 10)]),
+        decoration: BoxDecoration(color: Colors.black, border: Border.all(color: cyan, width: 2), boxShadow: [BoxShadow(color: cyan.withValues(alpha: 0.2), blurRadius: 10)]),
         child: SessionTimerWidget(remainingTime: controller.remainingTime.value, isSessionActive: true, isCountdownMode: true),
       );
     });
@@ -90,7 +90,7 @@ class CarouselCyberpunk extends StatelessWidget {
 
   Widget _buildCyberStudentCard(dynamic student, dynamic attendanceController, Color cyan, Color magenta) {
     return Container(
-      decoration: BoxDecoration(color: Colors.black, border: Border.all(color: cyan.withOpacity(0.3), width: 2), boxShadow: [BoxShadow(color: cyan.withOpacity(0.1), blurRadius: 20)]),
+      decoration: BoxDecoration(color: Colors.black, border: Border.all(color: cyan.withValues(alpha: 0.3), width: 2), boxShadow: [BoxShadow(color: cyan.withValues(alpha: 0.1), blurRadius: 20)]),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -136,7 +136,7 @@ class CarouselCyberpunk extends StatelessWidget {
         onTap: onTap,
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 16),
-          decoration: BoxDecoration(color: Colors.black, border: Border.all(color: color, width: 2), boxShadow: [BoxShadow(color: color.withOpacity(0.2), blurRadius: 10)]),
+          decoration: BoxDecoration(color: Colors.black, border: Border.all(color: color, width: 2), boxShadow: [BoxShadow(color: color.withValues(alpha: 0.2), blurRadius: 10)]),
           child: Center(child: Text(label, style: TextStyle(color: color, fontWeight: FontWeight.w900, fontSize: 13, letterSpacing: 2, fontFamily: 'Courier'))),
         ),
       ),

@@ -1,3 +1,4 @@
+import 'package:smart_campus/common/utils/constants/colors.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -5,11 +6,11 @@ import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
-import '../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
+import '../../../../../common/ui_patterns/pattern_tokens.dart';
+import '../../../../../common/ui_patterns/ui_style.dart';
 import '../../controllers/student_detail_controller.dart';
 import '../../../../models/student_model.dart';
-import '../../../../common/utils/constants/api_constants.dart';
+import '../../../../../common/utils/constants/api_constants.dart';
 
 class StudentDetailMinimalist extends StatelessWidget {
   final StudentDetailController controller;
@@ -26,7 +27,7 @@ class StudentDetailMinimalist extends StatelessWidget {
       color: bgColor,
       child: Obx(() {
         if (controller.isLoading.value) {
-          return Center(child: CircularProgressIndicator(color: tokens['primary']));
+          return Center(child: CircularProgressIndicator(color: TColors.primary));
         }
 
         return ListView(
@@ -44,7 +45,7 @@ class StudentDetailMinimalist extends StatelessWidget {
     );
   }
 
-  Widget _buildMinimalistProfile(BuildContext context, Map<String, dynamic> tokens) {
+  Widget _buildMinimalistProfile(BuildContext context, PatternTokens tokens) {
     final currentStudent = controller.student.value;
     final hasImage = currentStudent?.imageUrl != null && currentStudent!.imageUrl!.isNotEmpty;
 
@@ -56,14 +57,14 @@ class StudentDetailMinimalist extends StatelessWidget {
             children: [
                Container(
                   width: 100, height: 100,
-                  decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle, boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 20, offset: const Offset(0, 8))]),
+                  decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle, boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 20, offset: const Offset(0, 8))]),
                   child: ClipOval(
                      child: hasImage 
                         ? CachedNetworkImage(imageUrl: ApiConstants.optimizeImageUrl(currentStudent!.imageUrl!, width: 200, height: 200), fit: BoxFit.cover)
-                        : Icon(Iconsax.user, color: tokens['primary'], size: 40),
+                        : Icon(Iconsax.user, color: TColors.primary, size: 40),
                   ),
                ),
-               Positioned(right: 0, bottom: 0, child: Container(padding: const EdgeInsets.all(6), decoration: BoxDecoration(color: tokens['primary'], shape: BoxShape.circle), child: const Icon(Iconsax.camera, color: Colors.white, size: 16))),
+               Positioned(right: 0, bottom: 0, child: Container(padding: const EdgeInsets.all(6), decoration: BoxDecoration(color: TColors.primary, shape: BoxShape.circle), child: const Icon(Iconsax.camera, color: Colors.white, size: 16))),
                if (controller.isImageUploading.value) Positioned.fill(child: Container(decoration: const BoxDecoration(color: Colors.black26, shape: BoxShape.circle), child: const Center(child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2)))),
             ],
           ),
@@ -75,10 +76,10 @@ class StudentDetailMinimalist extends StatelessWidget {
     );
   }
 
-  Widget _buildMinimalistStatsCard(BuildContext context, Map<String, dynamic> tokens) {
+  Widget _buildMinimalistStatsCard(BuildContext context, PatternTokens tokens) {
     return Container(
       padding: const EdgeInsets.all(28),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(32), boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 40, offset: const Offset(0, 20))]),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(32), boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 40, offset: const Offset(0, 20))]),
       child: Column(
         children: [
           Row(
@@ -88,14 +89,14 @@ class StudentDetailMinimalist extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                      const Text('Overall Attendance', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: Color(0xFF1E293B))),
-                     Text('Last updated just now', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 11, color: Colors.black.withOpacity(0.4))),
+                     Text('Last updated just now', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 11, color: Colors.black.withValues(alpha: 0.4))),
                   ],
                ),
                CircularPercentIndicator(
                   radius: 36, lineWidth: 6,
                   percent: controller.attendancePercentage.value / 100,
                   center: Text('${controller.attendancePercentage.value.toStringAsFixed(0)}%', style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13)),
-                  progressColor: tokens['primary'], backgroundColor: const Color(0xFFF1F5F9), circularStrokeCap: CircularStrokeCap.round,
+                  progressColor: TColors.primary, backgroundColor: const Color(0xFFF1F5F9), circularStrokeCap: CircularStrokeCap.round,
                ),
             ],
           ),
@@ -122,7 +123,7 @@ class StudentDetailMinimalist extends StatelessWidget {
     );
   }
 
-  Widget _buildMinimalistHistorySection(BuildContext context, Map<String, dynamic> tokens) {
+  Widget _buildMinimalistHistorySection(BuildContext context, PatternTokens tokens) {
     if (controller.attendanceHistory.isEmpty) {
       return Center(child: Padding(padding: const EdgeInsets.all(48), child: Column(children: [Icon(Iconsax.calendar_1, size: 48, color: const Color(0xFFE2E8F0)), const SizedBox(height: 16), const Text('No history found', style: TextStyle(fontWeight: FontWeight.w600, color: Color(0xFF94A3B8)))])));
     }
@@ -148,10 +149,10 @@ class StudentDetailMinimalist extends StatelessWidget {
                 child: ListTile(
                    onTap: () => _updateStatus(context, session.id, status, record['remarks'], tokens),
                    contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                   leading: CircleAvatar(backgroundColor: color.withOpacity(0.1), child: Icon(_getStatusIcon(status), color: color, size: 18)),
+                   leading: CircleAvatar(backgroundColor: color.withValues(alpha: 0.1), child: Icon(_getStatusIcon(status), color: color, size: 18)),
                    title: Text(DateFormat('EEEE, MMM d').format(session.date), style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14, color: Color(0xFF1E293B))),
                    subtitle: Text('${session.startTime} - ${session.endTime}', style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 11, color: Color(0xFF94A3B8))),
-                   trailing: Container(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4), decoration: BoxDecoration(color: color.withOpacity(0.05), borderRadius: BorderRadius.circular(10)), child: Text(status.toUpperCase(), style: TextStyle(color: color, fontWeight: FontWeight.w800, fontSize: 9))),
+                   trailing: Container(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4), decoration: BoxDecoration(color: color.withValues(alpha: 0.05), borderRadius: BorderRadius.circular(10)), child: Text(status.toUpperCase(), style: TextStyle(color: color, fontWeight: FontWeight.w800, fontSize: 9))),
                 ),
               );
             },
@@ -160,7 +161,7 @@ class StudentDetailMinimalist extends StatelessWidget {
     );
   }
 
-  void _updateStatus(BuildContext context, String sessionId, String current, String? remarks, Map<String, dynamic> tokens) {
+  void _updateStatus(BuildContext context, String sessionId, String current, String? remarks, PatternTokens tokens) {
      final selected = current.obs;
      final rs = TextEditingController(text: remarks);
      Get.bottomSheet(Container(
@@ -177,7 +178,7 @@ class StudentDetailMinimalist extends StatelessWidget {
            const SizedBox(height: 24),
            TextField(controller: rs, decoration: InputDecoration(hintText: 'Add remarks...', filled: true, fillColor: const Color(0xFFF1F5F9), border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none))),
            const SizedBox(height: 32),
-           SizedBox(width: double.infinity, child: ElevatedButton(onPressed: () { controller.updateAttendanceRecord(sessionId: sessionId, status: selected.value, remarks: rs.text.isEmpty ? null : rs.text); Get.back(); }, style: ElevatedButton.styleFrom(backgroundColor: tokens['primary'], shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)), padding: const EdgeInsets.all(16)), child: const Text('Update Record'))),
+           SizedBox(width: double.infinity, child: ElevatedButton(onPressed: () { controller.updateAttendanceRecord(sessionId: sessionId, status: selected.value, remarks: rs.text.isEmpty ? null : rs.text); Get.back(); }, style: ElevatedButton.styleFrom(backgroundColor: TColors.primary, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)), padding: const EdgeInsets.all(16)), child: const Text('Update Record'))),
         ]),
      ));
   }
@@ -199,7 +200,7 @@ class StudentDetailMinimalist extends StatelessWidget {
     return Iconsax.clock;
   }
 
-  void _showImageOptions(BuildContext context, Map<String, dynamic> tokens) {
+  void _showImageOptions(BuildContext context, PatternTokens tokens) {
      Get.bottomSheet(Container(
         padding: const EdgeInsets.all(32),
         decoration: const BoxDecoration(color: Colors.white, borderRadius: BorderRadius.vertical(top: Radius.circular(32))),

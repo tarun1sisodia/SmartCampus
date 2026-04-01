@@ -18,7 +18,7 @@ import '../../../services/attendance_service.dart';
 import '../../../services/class_service.dart';
 import '../../../services/student_service.dart';
 import '../../../services/realtime_service.dart';
-import '../screens/student_detail_screen.dart';
+import 'package:smart_campus/features/teacher/screens/student_detail/student_detail_screen.dart';
 
 class AttendanceReportsController extends GetxController {
   final attendanceService = AttendanceService();

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../../common/ui_patterns/ui_style.dart';
-import '../../../controllers/attendance_reports_controller.dart';
+import 'package:smart_campus/common/ui_patterns/pattern_tokens.dart';
+import 'package:smart_campus/common/ui_patterns/ui_style.dart';
+import 'package:smart_campus/features/teacher/controllers/attendance_reports_controller.dart';
 
 class AttendanceReportsCorporate extends StatelessWidget {
   final AttendanceReportsController controller;
@@ -90,7 +90,7 @@ class AttendanceReportsCorporate extends StatelessWidget {
     );
   }
 
-  Widget _buildControlHeader(Map<String, dynamic> tokens) {
+  Widget _buildControlHeader(PatternTokens tokens) {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: const BoxDecoration(
@@ -111,12 +111,12 @@ class AttendanceReportsCorporate extends StatelessWidget {
     );
   }
 
-  Widget _buildClassDropdown(Map<String, dynamic> tokens) {
+  Widget _buildClassDropdown(PatternTokens tokens) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.05),
-        border: Border.all(color: Colors.white.withOpacity(0.2)),
+        color: Colors.white.withValues(alpha: 0.05),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
       ),
       child: Obx(() => DropdownButtonHideUnderline(
         child: DropdownButton<String>(
@@ -142,14 +142,14 @@ class AttendanceReportsCorporate extends StatelessWidget {
     );
   }
 
-  Widget _buildDateRangeToggle(Map<String, dynamic> tokens) {
+  Widget _buildDateRangeToggle(PatternTokens tokens) {
     return InkWell(
       onTap: () => _showDateRangePicker(),
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.05),
-          border: Border.all(color: Colors.white.withOpacity(0.2)),
+          color: Colors.white.withValues(alpha: 0.05),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -163,7 +163,7 @@ class AttendanceReportsCorporate extends StatelessWidget {
     );
   }
 
-  Widget _buildSummaryDashboard(Map<String, dynamic> tokens) {
+  Widget _buildSummaryDashboard(PatternTokens tokens) {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
@@ -213,7 +213,7 @@ class AttendanceReportsCorporate extends StatelessWidget {
     );
   }
 
-  Widget _buildTableHeader(Map<String, dynamic> tokens) {
+  Widget _buildTableHeader(PatternTokens tokens) {
     return Container(
       color: const Color(0xFF0F172A),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -229,7 +229,7 @@ class AttendanceReportsCorporate extends StatelessWidget {
     );
   }
 
-  Widget _buildStudentRecordRow(dynamic student, Map<String, dynamic> stats, Map<String, dynamic> tokens) {
+  Widget _buildStudentRecordRow(dynamic student, Map<String, dynamic> stats, PatternTokens tokens) {
     final percentage = stats['attendancePercentage'] ?? 0.0;
 
     return Container(

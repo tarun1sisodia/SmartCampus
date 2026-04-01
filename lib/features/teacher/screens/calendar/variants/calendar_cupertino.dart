@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' show Colors, Divider, Icons, InkWell, Color, ColorScheme, Theme, ThemeData, CircleAvatar, TextButton, FontWeight, TextStyle, BorderRadius, Radius, Offset, BoxShape, BoxShadow, BoxDecoration, Border, BorderSide, Widget, EdgeInsets, Column, Row, Expanded, SizedBox, BuildContext, StatelessWidget, Center, ListView, Stack, Positioned, Obx, Get, IconData, Icon, MainAxisAlignment, CrossAxisAlignment, MainAxisSize, VoidCallback, Spacer, DateTimeRange, showDateRangePicker;
 import 'package:iconsax/iconsax.dart';
 import 'package:table_calendar/table_calendar.dart';
-import '../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
+import '../../../../../common/ui_patterns/pattern_tokens.dart';
+import '../../../../../common/ui_patterns/ui_style.dart';
 import '../../controllers/calendar_controller.dart';
 import '../../../../models/attendance_session_model.dart';
 
@@ -22,7 +22,7 @@ class CalendarCupertino extends StatelessWidget {
         slivers: [
           CupertinoSliverNavigationBar(
             largeTitle: const Text('CALENDAR', style: TextStyle(letterSpacing: -0.5, fontWeight: FontWeight.w800)),
-            backgroundColor: const Color(0xFFF2F2F7).withOpacity(0.8),
+            backgroundColor: const Color(0xFFF2F2F7).withValues(alpha: 0.8),
             border: null,
             trailing: CupertinoButton(
               padding: EdgeInsets.zero,
@@ -66,7 +66,7 @@ class CalendarCupertino extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
         decoration: BoxDecoration(
-          color: const Color(0xFF34C759).withOpacity(0.1),
+          color: const Color(0xFF34C759).withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Row(
@@ -89,7 +89,7 @@ class CalendarCupertino extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10)],
       ),
       child: TableCalendar(
         firstDay: DateTime.utc(2020, 1, 1),
@@ -158,7 +158,7 @@ class CalendarCupertino extends StatelessWidget {
         width: 44,
         height: 44,
         decoration: BoxDecoration(
-          color: isActive ? const Color(0xFF34C759).withOpacity(0.1) : const Color(0xFFF2F2F7),
+          color: isActive ? const Color(0xFF34C759).withValues(alpha: 0.1) : const Color(0xFFF2F2F7),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Center(child: Icon(isMySession ? Iconsax.verify : Iconsax.user_octagon, size: 22, color: isMySession ? const Color(0xFF007AFF) : const Color(0xFF8E8E93))),

@@ -8,10 +8,10 @@ import 'common/utils/helpers/helper_function.dart';
 import 'features/teacher/controllers/attendance_controller.dart';
 import 'features/teacher/controllers/carousel_attendance_controller.dart';
 import 'features/teacher/controllers/teacher_profile_controller.dart';
-import 'features/teacher/screens/all_sessions_screen.dart';
-import 'features/teacher/screens/calendar_screen.dart';
-import 'features/teacher/screens/class_list_screen.dart';
-import 'features/teacher/screens/dashboard_screen.dart';
+import 'features/teacher/screens/all_sessions/all_sessions_screen.dart';
+import 'features/teacher/screens/calendar/calendar_screen.dart';
+import 'features/teacher/screens/class_list/class_list_screen.dart';
+import 'features/teacher/screens/dashboard/dashboard_screen.dart';
 import 'package:flutter/material.dart';
 
 class NavigationMenu extends StatelessWidget {

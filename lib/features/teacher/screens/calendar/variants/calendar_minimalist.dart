@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:table_calendar/table_calendar.dart';
-import '../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
-import '../../controllers/calendar_controller.dart';
-import '../../../../models/attendance_session_model.dart';
-import '../../../../common/utils/constants/sized.dart';
+import 'package:smart_campus/common/ui_patterns/pattern_tokens.dart';
+import 'package:smart_campus/common/ui_patterns/ui_style.dart';
+import 'package:smart_campus/features/teacher/controllers/calendar_controller.dart';
+import 'package:smart_campus/models/attendance_session_model.dart';
+import 'package:smart_campus/common/utils/constants/sized.dart';
 
 class CalendarMinimalist extends StatelessWidget {
   final CalendarController controller;
@@ -46,7 +46,7 @@ class CalendarMinimalist extends StatelessWidget {
     );
   }
 
-  Widget _buildLiveStatus(Map<String, dynamic> tokens) {
+  Widget _buildLiveStatus(PatternTokens tokens) {
     return Obx(() {
       final activeCount = controller.activeSessionsCount.value;
       if (activeCount == 0) return const SizedBox.shrink();
@@ -72,13 +72,13 @@ class CalendarMinimalist extends StatelessWidget {
     });
   }
 
-  Widget _buildSoftCalendar(Map<String, dynamic> tokens) {
+  Widget _buildSoftCalendar(PatternTokens tokens) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 24)],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 24)],
       ),
       child: TableCalendar(
         firstDay: DateTime.utc(2020, 1, 1),
@@ -113,7 +113,7 @@ class CalendarMinimalist extends StatelessWidget {
     );
   }
 
-  Widget _buildSessionList(Map<String, dynamic> tokens) {
+  Widget _buildSessionList(PatternTokens tokens) {
     final sessions = controller.getSessionsForDay(controller.selectedDay.value);
     if (sessions.isEmpty) {
       return Center(
@@ -132,7 +132,7 @@ class CalendarMinimalist extends StatelessWidget {
     );
   }
 
-  Widget _buildMinimalistSessionCard(AttendanceSessionModel session, Map<String, dynamic> tokens) {
+  Widget _buildMinimalistSessionCard(AttendanceSessionModel session, PatternTokens tokens) {
     final isMySession = controller.userClasses.any((cls) => cls.id == session.classId);
     final isActive = controller.isSessionActive(session);
 
@@ -142,7 +142,7 @@ class CalendarMinimalist extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
         border: isActive ? Border.all(color: const Color(0xFF10B981), width: 1.5) : null,
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10)],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 10)],
       ),
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),

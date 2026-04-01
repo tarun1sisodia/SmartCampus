@@ -108,7 +108,7 @@ class ImportCupertino extends StatelessWidget {
         onPressed: onTap,
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 12),
-          decoration: BoxDecoration(color: isSelected ? color.withOpacity(0.1) : const Color(0xFFF2F2F7), borderRadius: BorderRadius.circular(8)),
+          decoration: BoxDecoration(color: isSelected ? color.withValues(alpha: 0.1) : const Color(0xFFF2F2F7), borderRadius: BorderRadius.circular(8)),
           child: Text(label, style: TextStyle(color: isSelected ? color : const Color(0xFF8E8E93), fontWeight: FontWeight.w600, fontSize: 14)),
         ),
       ),

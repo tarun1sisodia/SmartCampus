@@ -1,3 +1,5 @@
+import 'package:smart_campus/features/authentication/screens/forgot_password/forgot_password_2.dart';
+
 import '../../../../../common/utils/constants/colors.dart';
 import '../../../../../common/utils/constants/text_strings.dart';
 import '../../../../../common/utils/helpers/helper_function.dart';
@@ -40,7 +42,7 @@ class RememberAndForget extends StatelessWidget {
           ],
         ),
         TextButton(
-          onPressed: () => Get.to(() => ForgotPasswordScreen()),
+          onPressed: () => Get.to(() => ForgotPassword()),
           child: Text(
             TTexts.forgotPassword,
             style: TextStyle(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../../../controllers/controllers_forgot_password/forgot_password_controller.dart';
+import '../../../controllers/forgot_password_controller.dart';
 
 class ForgotPasswordCyberpunk extends StatelessWidget {
   const ForgotPasswordCyberpunk({super.key});
@@ -38,7 +38,7 @@ class ForgotPasswordCyberpunk extends StatelessWidget {
   Widget _buildGridOverlay(Color color) {
     return Positioned.fill(
       child: CustomPaint(
-        painter: _GridPainter(color: color.withOpacity(0.05)),
+        painter: _GridPainter(color: color.withValues(alpha: 0.05)),
       ),
     );
   }
@@ -51,7 +51,7 @@ class ForgotPasswordCyberpunk extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.black,
             border: Border.all(color: cyan, width: 2),
-            boxShadow: [BoxShadow(color: cyan.withOpacity(0.2), blurRadius: 20)],
+            boxShadow: [BoxShadow(color: cyan.withValues(alpha: 0.2), blurRadius: 20)],
           ),
           child: Icon(Iconsax.password_check, color: cyan, size: 48),
         ),
@@ -63,7 +63,7 @@ class ForgotPasswordCyberpunk extends StatelessWidget {
         Text(
           'LOCATE_REGISTERED_IDENTITY_NODE_TO_RECEIVE_DECRYPTED_LINK.',
           textAlign: TextAlign.center,
-          style: TextStyle(fontWeight: FontWeight.w900, fontSize: 11, color: cyan.withOpacity(0.4), height: 1.6, letterSpacing: 1, fontFamily: 'Courier'),
+          style: TextStyle(fontWeight: FontWeight.w900, fontSize: 11, color: cyan.withValues(alpha: 0.4), height: 1.6, letterSpacing: 1, fontFamily: 'Courier'),
         ),
       ],
     );
@@ -77,7 +77,7 @@ class ForgotPasswordCyberpunk extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
               color: Colors.black,
-              border: Border.all(color: color.withOpacity(0.3), width: 1),
+              border: Border.all(color: color.withValues(alpha: 0.3), width: 1),
             ),
             child: TextFormField(
               controller: controller.email,
@@ -86,7 +86,7 @@ class ForgotPasswordCyberpunk extends StatelessWidget {
               decoration: InputDecoration(
                 prefixIcon: Icon(Iconsax.direct_right, color: color, size: 22),
                 hintText: 'EMAIL ADDRESS',
-                hintStyle: TextStyle(fontSize: 10, fontWeight: FontWeight.w900, color: color.withOpacity(0.3), letterSpacing: 2, fontFamily: 'Courier'),
+                hintStyle: TextStyle(fontSize: 10, fontWeight: FontWeight.w900, color: color.withValues(alpha: 0.3), letterSpacing: 2, fontFamily: 'Courier'),
                 border: InputBorder.none,
                 contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
               ),
@@ -99,9 +99,9 @@ class ForgotPasswordCyberpunk extends StatelessWidget {
               width: double.infinity,
               height: 64,
               decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
+                color: color.withValues(alpha: 0.1),
                 border: Border.all(color: color, width: 2),
-                boxShadow: [BoxShadow(color: color.withOpacity(0.2), blurRadius: 10)],
+                boxShadow: [BoxShadow(color: color.withValues(alpha: 0.2), blurRadius: 10)],
               ),
               child: Center(child: Text('ESTABLISH_RECOVERY_NODE', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 15, color: color, letterSpacing: 2, fontFamily: 'Courier'))),
             ),

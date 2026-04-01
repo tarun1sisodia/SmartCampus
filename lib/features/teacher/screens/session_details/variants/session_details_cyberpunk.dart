@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
+import '../../../../../common/ui_patterns/pattern_tokens.dart';
+import '../../../../../common/ui_patterns/ui_style.dart';
 import '../../controllers/session_details_controller.dart';
 import '../../../common/utils/constants/sized.dart';
 
@@ -29,7 +29,7 @@ class SessionDetailsCyberpunk extends StatelessWidget {
             }
 
             if (controller.session.value == null) {
-              return Center(child: Text('VOID_BUFFER_ERROR', style: TextStyle(color: neonCyan.withOpacity(0.5), fontWeight: FontWeight.w900)));
+              return Center(child: Text('VOID_BUFFER_ERROR', style: TextStyle(color: neonCyan.withValues(alpha: 0.5), fontWeight: FontWeight.w900)));
             }
 
             return ListView(
@@ -56,7 +56,7 @@ class SessionDetailsCyberpunk extends StatelessWidget {
   Widget _buildHUDGrid(Color cyan) {
     return Positioned.fill(
       child: CustomPaint(
-        painter: CyberGridPainter(color: cyan.withOpacity(0.04)),
+        painter: CyberGridPainter(color: cyan.withValues(alpha: 0.04)),
       ),
     );
   }
@@ -67,7 +67,7 @@ class SessionDetailsCyberpunk extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(color: Colors.black, border: Border.all(color: cyan, width: 2), boxShadow: [BoxShadow(color: cyan.withOpacity(0.2), blurRadius: 15)]),
+      decoration: BoxDecoration(color: Colors.black, border: Border.all(color: cyan, width: 2), boxShadow: [BoxShadow(color: cyan.withValues(alpha: 0.2), blurRadius: 15)]),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -78,13 +78,13 @@ class SessionDetailsCyberpunk extends StatelessWidget {
                if (isActive)
                  Container(
                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                   decoration: BoxDecoration(border: Border.all(color: cyan), color: cyan.withOpacity(0.1)),
+                   decoration: BoxDecoration(border: Border.all(color: cyan), color: cyan.withValues(alpha: 0.1)),
                    child: Text('LIVE', style: TextStyle(color: cyan, fontWeight: FontWeight.w900, fontSize: 10)),
                  ),
              ],
           ),
           const SizedBox(height: 8),
-          Text('${classDetails['courseName']} | NODE ${classDetails['semester']}'.toUpperCase(), style: TextStyle(color: cyan.withOpacity(0.5), fontWeight: FontWeight.w800, fontSize: 10, fontFamily: 'Courier')),
+          Text('${classDetails['courseName']} | NODE ${classDetails['semester']}'.toUpperCase(), style: TextStyle(color: cyan.withValues(alpha: 0.5), fontWeight: FontWeight.w800, fontSize: 10, fontFamily: 'Courier')),
           const SizedBox(height: 24),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -112,7 +112,7 @@ class SessionDetailsCyberpunk extends StatelessWidget {
     final stats = controller.attendanceStats.value;
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(color: Colors.black, border: Border.all(color: cyan.withOpacity(0.3))),
+      decoration: BoxDecoration(color: Colors.black, border: Border.all(color: cyan.withValues(alpha: 0.3))),
       child: Column(
         children: [
           Row(
@@ -126,7 +126,7 @@ class SessionDetailsCyberpunk extends StatelessWidget {
           const SizedBox(height: 16),
           LinearProgressIndicator(
             value: stats.presentPercentage / 100,
-            backgroundColor: cyan.withOpacity(0.05),
+            backgroundColor: cyan.withValues(alpha: 0.05),
             color: cyan,
             minHeight: 2,
           ),
@@ -139,7 +139,7 @@ class SessionDetailsCyberpunk extends StatelessWidget {
     return Column(
       children: [
         Text('$val', style: TextStyle(color: color, fontWeight: FontWeight.w900, fontSize: 24, shadows: [Shadow(color: color, blurRadius: 5)])),
-        Text(label, style: TextStyle(color: color.withOpacity(0.5), fontWeight: FontWeight.w900, fontSize: 9, fontFamily: 'Courier')),
+        Text(label, style: TextStyle(color: color.withValues(alpha: 0.5), fontWeight: FontWeight.w900, fontSize: 9, fontFamily: 'Courier')),
       ],
     );
   }
@@ -153,7 +153,7 @@ class SessionDetailsCyberpunk extends StatelessWidget {
             onTap: isActive ? controller.generateQRCode : null,
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 14),
-              decoration: BoxDecoration(border: Border.all(color: cyan, width: 1.5), color: cyan.withOpacity(0.05)),
+              decoration: BoxDecoration(border: Border.all(color: cyan, width: 1.5), color: cyan.withValues(alpha: 0.05)),
               child: Center(child: Text('GENERATION_QR', style: TextStyle(color: cyan, fontWeight: FontWeight.w900, fontSize: 10, letterSpacing: 1))),
             ),
           ),
@@ -164,7 +164,7 @@ class SessionDetailsCyberpunk extends StatelessWidget {
             onTap: controller.exportAttendanceData,
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 14),
-              decoration: BoxDecoration(border: Border.all(color: magenta, width: 1.5), color: magenta.withOpacity(0.05)),
+              decoration: BoxDecoration(border: Border.all(color: magenta, width: 1.5), color: magenta.withValues(alpha: 0.05)),
               child: Center(child: Text('DATA_EXPORT', style: TextStyle(color: magenta, fontWeight: FontWeight.w900, fontSize: 10, letterSpacing: 1))),
             ),
           ),
@@ -176,7 +176,7 @@ class SessionDetailsCyberpunk extends StatelessWidget {
   Widget _buildCyberRoster(Color cyan, Color magenta) {
     final records = controller.attendanceRecords;
     if (records.isEmpty) {
-      return Center(child: Text('VOID_BUFFER', style: TextStyle(color: cyan.withOpacity(0.3), fontWeight: FontWeight.w900)));
+      return Center(child: Text('VOID_BUFFER', style: TextStyle(color: cyan.withValues(alpha: 0.3), fontWeight: FontWeight.w900)));
     }
 
     return ListView.builder(
@@ -187,17 +187,17 @@ class SessionDetailsCyberpunk extends StatelessWidget {
         final record = records[index];
         return Container(
           margin: const EdgeInsets.only(bottom: 12),
-          decoration: BoxDecoration(color: Colors.black, border: Border.all(color: record.isPresent ? cyan : magenta.withOpacity(0.3))),
+          decoration: BoxDecoration(color: Colors.black, border: Border.all(color: record.isPresent ? cyan : magenta.withValues(alpha: 0.3))),
           child: ListTile(
              contentPadding: const EdgeInsets.all(16),
              leading: Container(
                 width: 44,
                 height: 44,
-                decoration: BoxDecoration(border: Border.all(color: record.isPresent ? cyan : magenta), color: record.isPresent ? cyan.withOpacity(0.1) : magenta.withOpacity(0.1)),
+                decoration: BoxDecoration(border: Border.all(color: record.isPresent ? cyan : magenta), color: record.isPresent ? cyan.withValues(alpha: 0.1) : magenta.withValues(alpha: 0.1)),
                 child: Center(child: Icon(record.isPresent ? Iconsax.verify : Iconsax.close_circle, color: record.isPresent ? cyan : magenta, size: 20)),
              ),
              title: Text(record.studentName.toUpperCase(), style: TextStyle(color: cyan, fontWeight: FontWeight.w900, fontSize: 13, letterSpacing: 0.5, fontFamily: 'Courier')),
-             subtitle: Text('ID_NODE: ${record.studentId}'.toUpperCase(), style: TextStyle(color: cyan.withOpacity(0.4), fontWeight: FontWeight.w800, fontSize: 9, fontFamily: 'Courier')),
+             subtitle: Text('ID_NODE: ${record.studentId}'.toUpperCase(), style: TextStyle(color: cyan.withValues(alpha: 0.4), fontWeight: FontWeight.w800, fontSize: 9, fontFamily: 'Courier')),
              trailing: controller.isSessionActive() 
                 ? Switch(
                     value: record.isPresent, 

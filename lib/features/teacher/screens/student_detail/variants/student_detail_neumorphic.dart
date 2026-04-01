@@ -6,11 +6,11 @@ import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
-import '../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
+import '../../../../../common/ui_patterns/pattern_tokens.dart';
+import '../../../../../common/ui_patterns/ui_style.dart';
 import '../../controllers/student_detail_controller.dart';
 import '../../../../models/student_model.dart';
-import '../../../../common/utils/constants/api_constants.dart';
+import '../../../../../common/utils/constants/api_constants.dart';
 
 class StudentDetailNeumorphism extends StatelessWidget {
   final StudentDetailController controller;
@@ -86,7 +86,7 @@ class StudentDetailNeumorphism extends StatelessWidget {
                    radius: 36, lineWidth: 6,
                    percent: controller.attendancePercentage.value / 100,
                    center: Text('${controller.attendancePercentage.value.toStringAsFixed(0)}%', style: const TextStyle(fontWeight: FontWeight.w900, color: Color(0xFF4D565F))),
-                   progressColor: const Color(0xFF6D5DFC), backgroundColor: Colors.white.withOpacity(0.5), circularStrokeCap: CircularStrokeCap.round,
+                   progressColor: const Color(0xFF6D5DFC), backgroundColor: Colors.white.withValues(alpha: 0.5), circularStrokeCap: CircularStrokeCap.round,
                  ),
               ],
            ),

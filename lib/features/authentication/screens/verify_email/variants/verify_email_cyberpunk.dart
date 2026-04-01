@@ -42,7 +42,7 @@ class VerifyEmailCyberpunk extends StatelessWidget {
   Widget _buildGridOverlay(Color color) {
     return Positioned.fill(
       child: CustomPaint(
-        painter: _GridPainter(color: color.withOpacity(0.05)),
+        painter: _GridPainter(color: color.withValues(alpha: 0.05)),
       ),
     );
   }
@@ -55,7 +55,7 @@ class VerifyEmailCyberpunk extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.black,
             border: Border.all(color: cyan, width: 2),
-            boxShadow: [BoxShadow(color: cyan.withOpacity(0.2), blurRadius: 20)],
+            boxShadow: [BoxShadow(color: cyan.withValues(alpha: 0.2), blurRadius: 20)],
           ),
           child: Icon(Iconsax.direct_send, color: cyan, size: 48),
         ),
@@ -71,7 +71,7 @@ class VerifyEmailCyberpunk extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(color: Colors.black, border: Border.all(color: color.withOpacity(0.3))),
+      decoration: BoxDecoration(color: Colors.black, border: Border.all(color: color.withValues(alpha: 0.3))),
       child: Column(
         children: [
           Text(email?.toUpperCase() ?? 'NODE_ID_PENDING', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 14, color: color, letterSpacing: 2, fontFamily: 'Courier')),
@@ -79,7 +79,7 @@ class VerifyEmailCyberpunk extends StatelessWidget {
           Text(
             'Institutional validation link transmitted. Access your terminal to secure your profile access.',
             textAlign: TextAlign.center,
-            style: TextStyle(fontWeight: FontWeight.w900, fontSize: 11, color: color.withOpacity(0.4), height: 1.6, letterSpacing: 1, fontFamily: 'Courier'),
+            style: TextStyle(fontWeight: FontWeight.w900, fontSize: 11, color: color.withValues(alpha: 0.4), height: 1.6, letterSpacing: 1, fontFamily: 'Courier'),
           ),
         ],
       ),
@@ -95,9 +95,9 @@ class VerifyEmailCyberpunk extends StatelessWidget {
             width: double.infinity,
             height: 64,
             decoration: BoxDecoration(
-              color: cyan.withOpacity(0.1),
+              color: cyan.withValues(alpha: 0.1),
               border: Border.all(color: cyan, width: 2),
-              boxShadow: [BoxShadow(color: cyan.withOpacity(0.2), blurRadius: 10)],
+              boxShadow: [BoxShadow(color: cyan.withValues(alpha: 0.2), blurRadius: 10)],
             ),
             child: const Center(child: Text('VERIFY_STATUS_UPLINK', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 15, color: Color(0xFF00F5FF), letterSpacing: 2, fontFamily: 'Courier'))),
           ),

@@ -59,10 +59,10 @@ class FeedbackGlassmorphism extends StatelessWidget {
                     style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 15),
                     decoration: InputDecoration(
                       hintText: 'IDENTIFY_OPTIMIZATIONS...',
-                      hintStyle: TextStyle(color: Colors.white.withOpacity(0.3), fontSize: 14),
-                      filled: true, fillColor: Colors.white.withOpacity(0.05),
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide(color: Colors.white.withOpacity(0.1))),
-                      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide(color: Colors.white.withOpacity(0.1))),
+                      hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.3), fontSize: 14),
+                      filled: true, fillColor: Colors.white.withValues(alpha: 0.05),
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.1))),
+                      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.1))),
                       focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: const BorderSide(color: Colors.white, width: 1.5)),
                     ),
                   ),
@@ -70,7 +70,7 @@ class FeedbackGlassmorphism extends StatelessWidget {
                 const SizedBox(height: 48),
                 _buildGlassButton(),
                 const SizedBox(height: 32),
-                Center(child: Text('UPLINK_SECURE', style: TextStyle(color: Colors.white.withOpacity(0.3), fontWeight: FontWeight.w900, fontSize: 10, letterSpacing: 2))),
+                Center(child: Text('UPLINK_SECURE', style: TextStyle(color: Colors.white.withValues(alpha: 0.3), fontWeight: FontWeight.w900, fontSize: 10, letterSpacing: 2))),
                 const SizedBox(height: 100),
               ],
             )),
@@ -83,7 +83,7 @@ class FeedbackGlassmorphism extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text('Feedback', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 36, letterSpacing: -1)),
-        Text('SYSTEM_OPTIMIZATION_LOGS', style: TextStyle(color: Colors.white.withOpacity(0.5), fontWeight: FontWeight.w900, fontSize: 12, letterSpacing: 2)),
+        Text('SYSTEM_OPTIMIZATION_LOGS', style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontWeight: FontWeight.w900, fontSize: 12, letterSpacing: 2)),
       ],
     );
   }
@@ -103,9 +103,9 @@ class FeedbackGlassmorphism extends StatelessWidget {
         child: Container(
           padding: padding,
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.1),
+            color: Colors.white.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: Colors.white.withOpacity(0.2)),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
           ),
           child: child,
         ),
@@ -118,7 +118,7 @@ class FeedbackGlassmorphism extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
-          BoxShadow(color: Colors.white.withOpacity(0.2), blurRadius: 20, offset: const Offset(0, 10)),
+          BoxShadow(color: Colors.white.withValues(alpha: 0.2), blurRadius: 20, offset: const Offset(0, 10)),
         ],
       ),
       child: ClipRRect(
@@ -130,9 +130,9 @@ class FeedbackGlassmorphism extends StatelessWidget {
             child: Container(
               height: 64,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: Colors.white.withOpacity(0.3)),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
               ),
               child: const Center(
                 child: Text('TRANSMIT_DATA', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 14, letterSpacing: 2)),

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:iconsax/iconsax.dart';
-import '../../../../controllers/signup_controller.dart';
+import '../../../controllers/signup_controller.dart';
 import '../../../../../common/utils/constants/image_strings.dart';
 
 class SignupCupertino extends StatelessWidget {
@@ -37,7 +37,7 @@ class SignupCupertino extends StatelessWidget {
       children: [
         Container(
           padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(24), boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 40, offset: const Offset(0, 10))]),
+          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(24), boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 40, offset: const Offset(0, 10))]),
           child: const Icon(CupertinoIcons.person_add_solid, color: Color(0xFF007AFF), size: 48),
         ),
         const SizedBox(height: 32),

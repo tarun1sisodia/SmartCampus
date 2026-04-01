@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
-import '../../../common/utils/constants/api_constants.dart';
-import '../../../common/ui_patterns/ui_style_controller.dart';
-import '../../../common/ui_patterns/ui_style.dart';
+import '../../../../common/utils/constants/api_constants.dart';
+import '../../../../common/ui_patterns/ui_style_controller.dart';
+import '../../../../common/ui_patterns/ui_style.dart';
 
 class ProfileImageViewScreen extends StatelessWidget {
   final String imageUrl;
@@ -70,10 +70,10 @@ class ProfileImageViewScreen extends StatelessWidget {
 
   Color _getBgColor(UIStyle style) {
     switch (style) {
-      case UIStyle.cyberpunkNeon: return const Color(0xFF000814).withOpacity(0.98);
-      case UIStyle.industrialCorporate: return const Color(0xFF0F172A).withOpacity(0.95);
+      case UIStyle.cyberpunkNeon: return const Color(0xFF000814).withValues(alpha: 0.98);
+      case UIStyle.industrialCorporate: return const Color(0xFF0F172A).withValues(alpha: 0.95);
       case UIStyle.academicClassic: return const Color(0xFFFAF7F0);
-      default: return Colors.black.withOpacity(0.95);
+      default: return Colors.black.withValues(alpha: 0.95);
     }
   }
 
@@ -109,7 +109,7 @@ class ProfileImageViewScreen extends StatelessWidget {
       case UIStyle.industrialCorporate: return Border.all(color: const Color(0xFF0F172A), width: 3);
       case UIStyle.cyberpunkNeon: return Border.all(color: const Color(0xFF00F5FF), width: 2);
       case UIStyle.brutalistBold: return Border.all(color: Colors.black, width: 4);
-      case UIStyle.academicClassic: return Border.all(color: const Color(0xFF2D2E32).withOpacity(0.1), width: 1);
+      case UIStyle.academicClassic: return Border.all(color: const Color(0xFF2D2E32).withValues(alpha: 0.1), width: 1);
       default: return Border.all(color: Colors.white, width: 2);
     }
   }

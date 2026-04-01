@@ -31,7 +31,7 @@ class AboutAcademic extends StatelessWidget {
             _buildScholarSocialRow(inkColor),
           ], inkColor),
           const SizedBox(height: 64),
-          Center(child: Text('© 2025 SmartCampus • Institutional Records', style: TextStyle(color: inkColor.withOpacity(0.3), fontWeight: FontWeight.bold, fontSize: 10, letterSpacing: 1, fontFamily: 'Serif'))),
+          Center(child: Text('© 2025 SmartCampus • Institutional Records', style: TextStyle(color: inkColor.withValues(alpha: 0.3), fontWeight: FontWeight.bold, fontSize: 10, letterSpacing: 1, fontFamily: 'Serif'))),
           const SizedBox(height: 100),
         ],
       ),
@@ -43,7 +43,7 @@ class AboutAcademic extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('About', style: TextStyle(color: ink, fontWeight: FontWeight.bold, fontSize: 36, fontFamily: 'Serif')),
-        Text('CENTRAL_IDENTITY_LEDGER_V1', style: TextStyle(color: accent.withOpacity(0.6), fontWeight: FontWeight.w900, fontSize: 11, letterSpacing: 2, fontFamily: 'Serif')),
+        Text('CENTRAL_IDENTITY_LEDGER_V1', style: TextStyle(color: accent.withValues(alpha: 0.6), fontWeight: FontWeight.w900, fontSize: 11, letterSpacing: 2, fontFamily: 'Serif')),
       ],
     );
   }
@@ -52,10 +52,10 @@ class AboutAcademic extends StatelessWidget {
     return Center(
       child: Column(
         children: [
-          Container(width: 100, height: 100, decoration: BoxDecoration(color: Colors.white, border: Border.all(color: ink.withOpacity(0.1)), shape: BoxShape.circle, image: const DecorationImage(image: AssetImage(TImageStrings.appLogo), fit: BoxFit.cover))),
+          Container(width: 100, height: 100, decoration: BoxDecoration(color: Colors.white, border: Border.all(color: ink.withValues(alpha: 0.1)), shape: BoxShape.circle, image: const DecorationImage(image: AssetImage(TImageStrings.appLogo), fit: BoxFit.cover))),
           const SizedBox(height: 24),
           const Text('Smart Campus', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24, letterSpacing: -0.5, fontFamily: 'Serif')),
-          Text('Institutional Build v0.0.1', style: TextStyle(color: ink.withOpacity(0.4), fontWeight: FontWeight.bold, fontSize: 13, fontFamily: 'Serif')),
+          Text('Institutional Build v0.0.1', style: TextStyle(color: ink.withValues(alpha: 0.4), fontWeight: FontWeight.bold, fontSize: 13, fontFamily: 'Serif')),
         ],
       ),
     );
@@ -71,7 +71,7 @@ class AboutAcademic extends StatelessWidget {
         ),
         Container(
           padding: const EdgeInsets.all(28),
-          decoration: BoxDecoration(color: Colors.white, border: Border.all(color: ink.withOpacity(0.05)), boxShadow: [BoxShadow(color: ink.withOpacity(0.02), blurRadius: 15, offset: const Offset(0, 4))]),
+          decoration: BoxDecoration(color: Colors.white, border: Border.all(color: ink.withValues(alpha: 0.05)), boxShadow: [BoxShadow(color: ink.withValues(alpha: 0.02), blurRadius: 15, offset: const Offset(0, 4))]),
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: items),
         ),
       ],
@@ -81,7 +81,7 @@ class AboutAcademic extends StatelessWidget {
   Widget _buildDeveloperTile({required String name, required String role, required IconData icon, required Color color}) {
     return Row(
       children: [
-        Container(padding: const EdgeInsets.all(12), decoration: BoxDecoration(color: const Color(0xFFFAF7F0), border: Border.all(color: Colors.black.withOpacity(0.05))), child: Icon(icon, color: color.withOpacity(0.6), size: 24)),
+        Container(padding: const EdgeInsets.all(12), decoration: BoxDecoration(color: const Color(0xFFFAF7F0), border: Border.all(color: Colors.black.withValues(alpha: 0.05))), child: Icon(icon, color: color.withValues(alpha: 0.6), size: 24)),
         const SizedBox(width: 16),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -111,7 +111,7 @@ class AboutAcademic extends StatelessWidget {
       onTap: () async => await launchUrl(Uri.parse(url)),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        decoration: BoxDecoration(border: Border.all(color: Colors.black.withOpacity(0.05))),
+        decoration: BoxDecoration(border: Border.all(color: Colors.black.withValues(alpha: 0.05))),
         child: Text(label, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 10, color: Colors.black38, letterSpacing: 1, fontFamily: 'Serif')),
       ),
     );

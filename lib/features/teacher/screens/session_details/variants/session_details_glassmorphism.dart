@@ -2,8 +2,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
+import '../../../../../common/ui_patterns/pattern_tokens.dart';
+import '../../../../../common/ui_patterns/ui_style.dart';
 import '../../controllers/session_details_controller.dart';
 import '../../../common/utils/constants/sized.dart';
 
@@ -36,7 +36,7 @@ class SessionDetailsGlassmorphism extends StatelessWidget {
           Positioned.fill(
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
-              child: Container(color: Colors.black.withOpacity(0.05)),
+              child: Container(color: Colors.black.withValues(alpha: 0.05)),
             ),
           ),
           
@@ -77,9 +77,9 @@ class SessionDetailsGlassmorphism extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
+        color: Colors.white.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: Colors.white.withOpacity(0.2)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -96,7 +96,7 @@ class SessionDetailsGlassmorphism extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-          Text('${classDetails['courseName']} | SESSION_NODE ${classDetails['semester']}'.toUpperCase(), style: TextStyle(color: Colors.white.withOpacity(0.6), fontWeight: FontWeight.w800, fontSize: 10)),
+          Text('${classDetails['courseName']} | SESSION_NODE ${classDetails['semester']}'.toUpperCase(), style: TextStyle(color: Colors.white.withValues(alpha: 0.6), fontWeight: FontWeight.w800, fontSize: 10)),
           const SizedBox(height: 24),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -125,9 +125,9 @@ class SessionDetailsGlassmorphism extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.08),
+        color: Colors.white.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: Colors.white.withOpacity(0.1)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
       ),
       child: Column(
         children: [
@@ -143,7 +143,7 @@ class SessionDetailsGlassmorphism extends StatelessWidget {
           Container(
              height: 6,
              width: double.infinity,
-             decoration: BoxDecoration(color: Colors.white.withOpacity(0.05), borderRadius: BorderRadius.circular(4)),
+             decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.05), borderRadius: BorderRadius.circular(4)),
              child: FractionallySizedBox(
                 alignment: Alignment.centerLeft,
                 widthFactor: stats.presentPercentage / 100,
@@ -161,7 +161,7 @@ class SessionDetailsGlassmorphism extends StatelessWidget {
     return Column(
       children: [
         Text('$val', style: TextStyle(color: color, fontWeight: FontWeight.w900, fontSize: 24)),
-        Text(label, style: TextStyle(color: Colors.white.withOpacity(0.4), fontWeight: FontWeight.w800, fontSize: 8, letterSpacing: 1)),
+        Text(label, style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontWeight: FontWeight.w800, fontSize: 8, letterSpacing: 1)),
       ],
     );
   }
@@ -175,7 +175,7 @@ class SessionDetailsGlassmorphism extends StatelessWidget {
             onTap: isActive ? controller.generateQRCode : null,
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 14),
-              decoration: BoxDecoration(color: Colors.white.withOpacity(0.1), borderRadius: BorderRadius.circular(16), border: Border.all(color: Colors.white.withOpacity(0.2))),
+              decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(16), border: Border.all(color: Colors.white.withValues(alpha: 0.2))),
               child: const Center(child: Text('GENERATE_QR', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 10))),
             ),
           ),
@@ -186,7 +186,7 @@ class SessionDetailsGlassmorphism extends StatelessWidget {
             onTap: controller.exportAttendanceData,
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 14),
-              decoration: BoxDecoration(color: Colors.white.withOpacity(0.05), borderRadius: BorderRadius.circular(16), border: Border.all(color: Colors.white.withOpacity(0.1))),
+              decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.05), borderRadius: BorderRadius.circular(16), border: Border.all(color: Colors.white.withValues(alpha: 0.1))),
               child: const Center(child: Text('EXPORT_SYNC', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 10))),
             ),
           ),
@@ -200,8 +200,8 @@ class SessionDetailsGlassmorphism extends StatelessWidget {
     if (records.isEmpty) {
       return Container(
         height: 100,
-        decoration: BoxDecoration(color: Colors.white.withOpacity(0.05), borderRadius: BorderRadius.circular(24)),
-        child: Center(child: Text('VOID_RECORDS_INDEXED', style: TextStyle(color: Colors.white.withOpacity(0.3), fontWeight: FontWeight.w900, fontSize: 11))),
+        decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.05), borderRadius: BorderRadius.circular(24)),
+        child: Center(child: Text('VOID_RECORDS_INDEXED', style: TextStyle(color: Colors.white.withValues(alpha: 0.3), fontWeight: FontWeight.w900, fontSize: 11))),
       );
     }
 
@@ -213,15 +213,15 @@ class SessionDetailsGlassmorphism extends StatelessWidget {
         final record = records[index];
         return Container(
           margin: const EdgeInsets.only(bottom: 12),
-          decoration: BoxDecoration(color: Colors.white.withOpacity(0.1), borderRadius: BorderRadius.circular(20), border: Border.all(color: Colors.white.withOpacity(0.1))),
+          decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(20), border: Border.all(color: Colors.white.withValues(alpha: 0.1))),
           child: ListTile(
              contentPadding: const EdgeInsets.all(16),
              leading: CircleAvatar(
-               backgroundColor: record.isPresent ? const Color(0xFF10B981).withOpacity(0.2) : Colors.white.withOpacity(0.05),
-               child: Icon(record.isPresent ? Iconsax.verify : Iconsax.close_circle, color: record.isPresent ? const Color(0xFF10B981) : Colors.white.withOpacity(0.3), size: 20),
+               backgroundColor: record.isPresent ? const Color(0xFF10B981).withValues(alpha: 0.2) : Colors.white.withValues(alpha: 0.05),
+               child: Icon(record.isPresent ? Iconsax.verify : Iconsax.close_circle, color: record.isPresent ? const Color(0xFF10B981) : Colors.white.withValues(alpha: 0.3), size: 20),
              ),
              title: Text(record.studentName.toUpperCase(), style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 13, letterSpacing: 0.5)),
-             subtitle: Text('NODE_ID: ${record.studentId}'.toUpperCase(), style: TextStyle(color: Colors.white.withOpacity(0.4), fontWeight: FontWeight.w800, fontSize: 9)),
+             subtitle: Text('NODE_ID: ${record.studentId}'.toUpperCase(), style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontWeight: FontWeight.w800, fontSize: 9)),
              trailing: controller.isSessionActive() 
                 ? Switch(
                     value: record.isPresent, 

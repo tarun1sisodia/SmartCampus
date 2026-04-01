@@ -72,7 +72,7 @@ class HelpCupertino extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: Row(
               children: [
-                Container(padding: const EdgeInsets.all(8), decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(8)), child: Icon(icon, color: color, size: 22)),
+                Container(padding: const EdgeInsets.all(8), decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)), child: Icon(icon, color: color, size: 22)),
                 const SizedBox(width: 16),
                 Expanded(child: Text(title, style: const TextStyle(color: Color(0xFF000000), fontWeight: FontWeight.w600, fontSize: 16))),
                 const Icon(CupertinoIcons.chevron_right, size: 14, color: Color(0xFFC7C7CC)),

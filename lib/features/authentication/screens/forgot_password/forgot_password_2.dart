@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../common/ui_patterns/ui_style.dart';
 import '../../../../common/ui_patterns/ui_style_controller.dart';
-import '../../controllers/controllers_forgot_password/forgot_password_controller.dart';
+import '../../controllers/forgot_password_controller.dart';
 import 'variants/forgot_password_academic.dart';
 import 'variants/forgot_password_brutalist.dart';
 import 'variants/forgot_password_corporate.dart';

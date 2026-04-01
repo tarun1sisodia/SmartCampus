@@ -4,9 +4,9 @@ import 'package:iconsax/iconsax.dart';
 import '../../../../app/routes/app_routes.dart';
 import '../../../../app/theme/theme_configs.dart';
 import '../../../../app/theme/theme_controller.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
-import '../../../../common/ui_patterns/ui_style_controller.dart';
-import '../../../../common/utils/constants/colors.dart';
+import '../../../../../common/ui_patterns/ui_style.dart';
+import '../../../../../common/ui_patterns/ui_style_controller.dart';
+import '../../../../../common/utils/constants/colors.dart';
 import '../../../../services/auth_service.dart';
 import '../../../../services/storage_service.dart';
 import '../../controllers/teacher_profile_controller.dart';
@@ -62,7 +62,7 @@ class SettingsCorporate extends StatelessWidget {
       final user = controller.user.value;
       return Container(
         padding: const EdgeInsets.all(28),
-        decoration: BoxDecoration(color: Colors.white, border: Border.all(color: const Color(0xFF0F172A), width: 2.5), boxShadow: [BoxShadow(color: const Color(0xFF0F172A).withOpacity(0.1), offset: const Offset(4, 4))]),
+        decoration: BoxDecoration(color: Colors.white, border: Border.all(color: const Color(0xFF0F172A), width: 2.5), boxShadow: [BoxShadow(color: const Color(0xFF0F172A).withValues(alpha: 0.1), offset: const Offset(4, 4))]),
         child: Row(
           children: [
             Container(width: 64, height: 64, decoration: BoxDecoration(color: const Color(0xFFF1F5F9), border: Border.all(color: const Color(0xFF0F172A), width: 1.5)), child: const Icon(Iconsax.user, size: 32, color: Color(0xFF0F172A))),

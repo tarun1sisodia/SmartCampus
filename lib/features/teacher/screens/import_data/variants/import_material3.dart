@@ -110,7 +110,7 @@ class ImportMaterial3 extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 20),
-          decoration: BoxDecoration(color: isSelected ? theme.colorScheme.primaryContainer.withOpacity(0.5) : Colors.transparent, borderRadius: BorderRadius.circular(16), border: Border.all(color: isSelected ? theme.colorScheme.primary : theme.colorScheme.outlineVariant, width: 2)),
+          decoration: BoxDecoration(color: isSelected ? theme.colorScheme.primaryContainer.withValues(alpha: 0.5) : Colors.transparent, borderRadius: BorderRadius.circular(16), border: Border.all(color: isSelected ? theme.colorScheme.primary : theme.colorScheme.outlineVariant, width: 2)),
           child: Column(
             children: [
               Icon(icon, color: isSelected ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant, size: 24),
@@ -130,10 +130,10 @@ class ImportMaterial3 extends StatelessWidget {
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 48),
-        decoration: BoxDecoration(color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.3), borderRadius: BorderRadius.circular(16), border: Border.all(color: theme.colorScheme.outlineVariant, width: 1.5)),
+        decoration: BoxDecoration(color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3), borderRadius: BorderRadius.circular(16), border: Border.all(color: theme.colorScheme.outlineVariant, width: 1.5)),
         child: Column(
           children: [
-            Icon(Iconsax.import, size: 32, color: theme.colorScheme.primary.withOpacity(0.5)),
+            Icon(Iconsax.import, size: 32, color: theme.colorScheme.primary.withValues(alpha: 0.5)),
             const SizedBox(height: 12),
             Text('Attach $format Payload', style: theme.textTheme.labelLarge?.copyWith(fontWeight: FontWeight.bold, color: theme.colorScheme.onSurfaceVariant)),
           ],

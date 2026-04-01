@@ -4,8 +4,8 @@ import 'package:iconsax/iconsax.dart';
 import '../../../../app/routes/app_routes.dart';
 import '../../../../app/theme/theme_configs.dart';
 import '../../../../app/theme/theme_controller.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
-import '../../../../common/ui_patterns/ui_style_controller.dart';
+import '../../../../../common/ui_patterns/ui_style.dart';
+import '../../../../../common/ui_patterns/ui_style_controller.dart';
 import '../../../../services/auth_service.dart';
 import '../../../../services/storage_service.dart';
 import '../../controllers/teacher_profile_controller.dart';
@@ -33,7 +33,7 @@ class SettingsAcademic extends StatelessWidget {
           const SizedBox(height: 48),
           _buildScholarSection('ACADEMIC_PREFERENCES', [
             _buildScholarItem('Lexical Selection', Iconsax.language_square, inkColor, 
-              trailing: Obx(() => Text(languageService.getCurrentLanguageName().toUpperCase(), style: TextStyle(color: inkColor.withOpacity(0.5), fontWeight: FontWeight.bold, fontSize: 10, fontFamily: 'Serif'))),
+              trailing: Obx(() => Text(languageService.getCurrentLanguageName().toUpperCase(), style: TextStyle(color: inkColor.withValues(alpha: 0.5), fontWeight: FontWeight.bold, fontSize: 10, fontFamily: 'Serif'))),
               onTap: () => _showLang(context, accentColor, inkColor)
             ),
             _buildScholarItem('Biometric Credentials', Iconsax.finger_scan, inkColor, 
@@ -76,21 +76,21 @@ class SettingsAcademic extends StatelessWidget {
         children: [
           Container(
             width: 90, height: 90,
-            decoration: BoxDecoration(color: Colors.white, border: Border.all(color: accent.withOpacity(0.4))),
+            decoration: BoxDecoration(color: Colors.white, border: Border.all(color: accent.withValues(alpha: 0.4))),
             child: Padding(
               padding: const EdgeInsets.all(4),
-              child: Container(decoration: BoxDecoration(border: Border.all(color: accent.withOpacity(0.1))), child: const Icon(Iconsax.user, color: Colors.black26, size: 40)),
+              child: Container(decoration: BoxDecoration(border: Border.all(color: accent.withValues(alpha: 0.1))), child: const Icon(Iconsax.user, color: Colors.black26, size: 40)),
             ),
           ),
           const SizedBox(height: 24),
           Text(user?.name ?? 'Distinguished Faculty', style: TextStyle(color: ink, fontWeight: FontWeight.w800, fontSize: 20, fontFamily: 'Serif')),
-          Text(user?.email ?? 'faculty@smartcampus.edu', style: TextStyle(color: ink.withOpacity(0.5), fontSize: 12, fontStyle: FontStyle.italic, fontFamily: 'Serif')),
+          Text(user?.email ?? 'faculty@smartcampus.edu', style: TextStyle(color: ink.withValues(alpha: 0.5), fontSize: 12, fontStyle: FontStyle.italic, fontFamily: 'Serif')),
           const SizedBox(height: 24),
           GestureDetector(
             onTap: () => Get.to(() => TeacherProfileScreen()),
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-              decoration: BoxDecoration(border: Border.all(color: ink.withOpacity(0.2))),
+              decoration: BoxDecoration(border: Border.all(color: ink.withValues(alpha: 0.2))),
               child: Text('Amend Credentials', style: TextStyle(color: ink, fontWeight: FontWeight.bold, fontSize: 13, fontFamily: 'Serif')),
             ),
           ),
@@ -105,10 +105,10 @@ class SettingsAcademic extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.only(left: 8, bottom: 12),
-          child: Text(title, style: TextStyle(color: accent.withOpacity(0.6), fontWeight: FontWeight.w900, fontSize: 10, letterSpacing: 2, fontFamily: 'Serif')),
+          child: Text(title, style: TextStyle(color: accent.withValues(alpha: 0.6), fontWeight: FontWeight.w900, fontSize: 10, letterSpacing: 2, fontFamily: 'Serif')),
         ),
         Container(
-          decoration: BoxDecoration(color: Colors.white, border: Border.all(color: ink.withOpacity(0.05)), boxShadow: [BoxShadow(color: ink.withOpacity(0.02), blurRadius: 10, offset: const Offset(0, 4))]),
+          decoration: BoxDecoration(color: Colors.white, border: Border.all(color: ink.withValues(alpha: 0.05)), boxShadow: [BoxShadow(color: ink.withValues(alpha: 0.02), blurRadius: 10, offset: const Offset(0, 4))]),
           child: Column(children: items),
         ),
       ],
@@ -117,13 +117,13 @@ class SettingsAcademic extends StatelessWidget {
 
   Widget _buildScholarItem(String title, IconData icon, Color ink, {Widget? trailing, VoidCallback? onTap}) {
     return Container(
-      decoration: BoxDecoration(border: Border(bottom: BorderSide(color: ink.withOpacity(0.01)))),
+      decoration: BoxDecoration(border: Border(bottom: BorderSide(color: ink.withValues(alpha: 0.01)))),
       child: ListTile(
         onTap: onTap,
         contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
-        leading: Icon(icon, color: ink.withOpacity(0.6), size: 20),
+        leading: Icon(icon, color: ink.withValues(alpha: 0.6), size: 20),
         title: Text(title, style: TextStyle(color: ink, fontWeight: FontWeight.w700, fontSize: 15, fontFamily: 'Serif')),
-        trailing: trailing ?? Icon(Iconsax.arrow_right_3, size: 16, color: ink.withOpacity(0.2)),
+        trailing: trailing ?? Icon(Iconsax.arrow_right_3, size: 16, color: ink.withValues(alpha: 0.2)),
       ),
     );
   }
@@ -133,7 +133,7 @@ class SettingsAcademic extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(padding: const EdgeInsets.only(left: 20, top: 20, bottom: 12), child: Text('Illumination Palette', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: ink.withOpacity(0.8), fontFamily: 'Serif'))),
+        Padding(padding: const EdgeInsets.only(left: 20, top: 20, bottom: 12), child: Text('Illumination Palette', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: ink.withValues(alpha: 0.8), fontFamily: 'Serif'))),
         SizedBox(
           height: 70,
           child: ListView.builder(
@@ -151,7 +151,7 @@ class SettingsAcademic extends StatelessWidget {
                     decoration: BoxDecoration(color: theme.primary, border: Border.all(color: sel ? accent : Colors.transparent, width: 2)),
                     child: Padding(
                       padding: const EdgeInsets.all(4),
-                      child: Container(decoration: BoxDecoration(border: Border.all(color: Colors.white.withOpacity(0.2)))),
+                      child: Container(decoration: BoxDecoration(border: Border.all(color: Colors.white.withValues(alpha: 0.2)))),
                     ),
                   ),
                 );
@@ -170,7 +170,7 @@ class SettingsAcademic extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Divider(height: 1),
-        Padding(padding: const EdgeInsets.only(left: 20, top: 16, bottom: 12), child: Text('Curricular Design Architecture', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: ink.withOpacity(0.8), fontFamily: 'Serif'))),
+        Padding(padding: const EdgeInsets.only(left: 20, top: 16, bottom: 12), child: Text('Curricular Design Architecture', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: ink.withValues(alpha: 0.8), fontFamily: 'Serif'))),
         SizedBox(
           height: 100,
           child: ListView.builder(
@@ -185,13 +185,13 @@ class SettingsAcademic extends StatelessWidget {
                   onTap: () => uc.setStyle(style),
                   child: Container(
                     width: 80, margin: const EdgeInsets.only(right: 16),
-                    decoration: BoxDecoration(color: sel ? ink : Colors.white, border: Border.all(color: ink.withOpacity(0.1))),
+                    decoration: BoxDecoration(color: sel ? ink : Colors.white, border: Border.all(color: ink.withValues(alpha: 0.1))),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(_getIcon(style), color: sel ? Colors.white : ink.withOpacity(0.4), size: 24),
+                        Icon(_getIcon(style), color: sel ? Colors.white : ink.withValues(alpha: 0.4), size: 24),
                         const SizedBox(height: 8),
-                        Text(style.label.toUpperCase(), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 8, color: sel ? Colors.white : ink.withOpacity(0.4), fontFamily: 'Serif')),
+                        Text(style.label.toUpperCase(), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 8, color: sel ? Colors.white : ink.withValues(alpha: 0.4), fontFamily: 'Serif')),
                       ],
                     ),
                   ),
@@ -230,7 +230,7 @@ class SettingsAcademic extends StatelessWidget {
         ...languageService.languages.map((l) => ListTile(
           onTap: () { languageService.changeLanguage(l['code']); Get.back(); },
           title: Text(l['name'].toString().toUpperCase(), style: TextStyle(color: ink, fontWeight: FontWeight.bold, fontSize: 13, fontFamily: 'Serif')),
-          trailing: Icon(Iconsax.arrow_right_3, size: 14, color: ink.withOpacity(0.2)),
+          trailing: Icon(Iconsax.arrow_right_3, size: 14, color: ink.withValues(alpha: 0.2)),
         )),
       ]),
     ));
@@ -267,10 +267,10 @@ class SettingsAcademic extends StatelessWidget {
       child: Column(mainAxisSize: MainAxisSize.min, children: [
         Text('Confirm Resignation', style: TextStyle(color: ink, fontWeight: FontWeight.bold, fontSize: 20, fontFamily: 'Serif')),
         const SizedBox(height: 16),
-        Text('Are you certain you wish to terminate the current session access?', textAlign: TextAlign.center, style: TextStyle(color: ink.withOpacity(0.6), fontSize: 14, fontFamily: 'Serif')),
+        Text('Are you certain you wish to terminate the current session access?', textAlign: TextAlign.center, style: TextStyle(color: ink.withValues(alpha: 0.6), fontSize: 14, fontFamily: 'Serif')),
         const SizedBox(height: 48),
         SizedBox(width: double.infinity, child: ElevatedButton(onPressed: () => controller.logout(), style: ElevatedButton.styleFrom(backgroundColor: ink, foregroundColor: Colors.white, shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero), padding: const EdgeInsets.all(16)), child: const Text('DISCONNECT', style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1, fontFamily: 'Serif')))),
-        TextButton(onPressed: () => Get.back(), child: Text('REMAIN', style: TextStyle(color: ink.withOpacity(0.4), fontWeight: FontWeight.bold, fontSize: 13, fontFamily: 'Serif'))),
+        TextButton(onPressed: () => Get.back(), child: Text('REMAIN', style: TextStyle(color: ink.withValues(alpha: 0.4), fontWeight: FontWeight.bold, fontSize: 13, fontFamily: 'Serif'))),
       ]),
     ));
   }

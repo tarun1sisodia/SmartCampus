@@ -29,7 +29,7 @@ class AboutFluent extends StatelessWidget {
             _buildSocialUplinks(),
           ]),
           const SizedBox(height: 64),
-          Center(child: Text('© 2025 SmartCampus • Institutional Build', style: TextStyle(color: Colors.black.withOpacity(0.3), fontWeight: FontWeight.bold, fontSize: 10, letterSpacing: 1))),
+          Center(child: Text('© 2025 SmartCampus • Institutional Build', style: TextStyle(color: Colors.black.withValues(alpha: 0.3), fontWeight: FontWeight.bold, fontSize: 10, letterSpacing: 1))),
           const SizedBox(height: 100),
         ],
       ),
@@ -49,7 +49,7 @@ class AboutFluent extends StatelessWidget {
   Widget _buildFluentIdentity(Color bg) {
     return Container(
       padding: const EdgeInsets.all(32),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.black.withOpacity(0.05)), boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10, offset: const Offset(0, 4))]),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.black.withValues(alpha: 0.05)), boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 10, offset: const Offset(0, 4))]),
       child: Column(
         children: [
           Container(width: 80, height: 80, decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.black12, width: 1), image: const DecorationImage(image: AssetImage(TImageStrings.appLogo), fit: BoxFit.cover))),
@@ -71,7 +71,7 @@ class AboutFluent extends StatelessWidget {
         ),
         Container(
           padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.black.withOpacity(0.05)), boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10, offset: const Offset(0, 4))]),
+          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.black.withValues(alpha: 0.05)), boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 10, offset: const Offset(0, 4))]),
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: items),
         ),
       ],
@@ -81,7 +81,7 @@ class AboutFluent extends StatelessWidget {
   Widget _buildDeveloperRow({required String name, required String role, required IconData icon, required Color color}) {
     return Row(
       children: [
-        Container(padding: const EdgeInsets.all(12), decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(4)), child: Icon(icon, color: color.withOpacity(0.6), size: 24)),
+        Container(padding: const EdgeInsets.all(12), decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(4)), child: Icon(icon, color: color.withValues(alpha: 0.6), size: 24)),
         const SizedBox(width: 16),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -111,7 +111,7 @@ class AboutFluent extends StatelessWidget {
       onTap: () async => await launchUrl(Uri.parse(url)),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        decoration: BoxDecoration(color: const Color(0xFFF3F3F3), borderRadius: BorderRadius.circular(4), border: Border.all(color: Colors.black.withOpacity(0.05))),
+        decoration: BoxDecoration(color: const Color(0xFFF3F3F3), borderRadius: BorderRadius.circular(4), border: Border.all(color: Colors.black.withValues(alpha: 0.05))),
         child: Text(label, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 10, color: Color(0xFF605E5C), letterSpacing: 0.5)),
       ),
     );

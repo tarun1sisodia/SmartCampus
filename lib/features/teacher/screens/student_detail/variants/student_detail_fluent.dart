@@ -5,11 +5,11 @@ import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
-import '../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
+import '../../../../../common/ui_patterns/pattern_tokens.dart';
+import '../../../../../common/ui_patterns/ui_style.dart';
 import '../../controllers/student_detail_controller.dart';
 import '../../../../models/student_model.dart';
-import '../../../../common/utils/constants/api_constants.dart';
+import '../../../../../common/utils/constants/api_constants.dart';
 
 class StudentDetailFluent extends StatelessWidget {
   final StudentDetailController controller;
@@ -51,17 +51,17 @@ class StudentDetailFluent extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.black.withOpacity(0.05)), boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10, offset: const Offset(0, 4))]),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.black.withValues(alpha: 0.05)), boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 10, offset: const Offset(0, 4))]),
       child: Row(
         children: [
           GestureDetector(
              onTap: () => _updatePhoto(context),
              child: Container(
                 width: 80, height: 80,
-                decoration: BoxDecoration(color: const Color(0xFFF3F3F3), borderRadius: BorderRadius.circular(40), border: Border.all(color: Colors.black.withOpacity(0.05))),
+                decoration: BoxDecoration(color: const Color(0xFFF3F3F3), borderRadius: BorderRadius.circular(40), border: Border.all(color: Colors.black.withValues(alpha: 0.05))),
                 child: Stack(
                    children: [
-                      Positioned.fill(child: ClipOval(child: hasImg ? CachedNetworkImage(imageUrl: ApiConstants.optimizeImageUrl(cur!.imageUrl!, width: 160, height: 160), fit: BoxFit.cover) : Icon(Iconsax.user, color: Colors.black.withOpacity(0.2), size: 32))),
+                      Positioned.fill(child: ClipOval(child: hasImg ? CachedNetworkImage(imageUrl: ApiConstants.optimizeImageUrl(cur!.imageUrl!, width: 160, height: 160), fit: BoxFit.cover) : Icon(Iconsax.user, color: Colors.black.withValues(alpha: 0.2), size: 32))),
                       Positioned(right: 0, bottom: 0, child: Container(padding: const EdgeInsets.all(6), decoration: const BoxDecoration(color: Color(0xFF0078D4), shape: BoxShape.circle), child: const Icon(Iconsax.camera, color: Colors.white, size: 12))),
                       if (controller.isImageUploading.value) Positioned.fill(child: Container(decoration: const BoxDecoration(color: Colors.black26, shape: BoxShape.circle), child: const Center(child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2)))),
                    ],
@@ -74,7 +74,7 @@ class StudentDetailFluent extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(cur?.name ?? student.name, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 18, color: Color(0xFF201F1E))),
-                Text('Scholar ID: ${cur?.rollNumber ?? student.rollNumber}', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 11, color: Colors.black.withOpacity(0.4))),
+                Text('Scholar ID: ${cur?.rollNumber ?? student.rollNumber}', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 11, color: Colors.black.withValues(alpha: 0.4))),
               ],
             ),
           ),
@@ -86,7 +86,7 @@ class StudentDetailFluent extends StatelessWidget {
   Widget _buildFluentStatsHUD() {
     return Container(
       padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.black.withOpacity(0.05))),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.black.withValues(alpha: 0.05))),
       child: Column(
         children: [
            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -110,7 +110,7 @@ class StudentDetailFluent extends StatelessWidget {
   }
 
   Widget _stNode(String l, String v, Color c) {
-    return Column(children: [Text(v, style: TextStyle(fontWeight: FontWeight.w800, fontSize: 20, color: c)), Text(l, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 9, color: Colors.black.withOpacity(0.3)))]);
+    return Column(children: [Text(v, style: TextStyle(fontWeight: FontWeight.w800, fontSize: 20, color: c)), Text(l, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 9, color: Colors.black.withValues(alpha: 0.3)))]);
   }
 
   Widget _buildFluentLogStream(BuildContext context) {
@@ -128,13 +128,13 @@ class StudentDetailFluent extends StatelessWidget {
 
         return Container(
           margin: const EdgeInsets.only(bottom: 8),
-          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(4), border: Border.all(color: Colors.black.withOpacity(0.01))),
+          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(4), border: Border.all(color: Colors.black.withValues(alpha: 0.01))),
           child: ListTile(
              onTap: () => _updateEntry(context, session.id, status, rec['remarks']),
              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-             leading: Container(width: 40, height: 40, decoration: BoxDecoration(color: col.withOpacity(0.05), borderRadius: BorderRadius.circular(20)), child: Center(child: Icon(_getIcon(status), color: col, size: 18))),
+             leading: Container(width: 40, height: 40, decoration: BoxDecoration(color: col.withValues(alpha: 0.05), borderRadius: BorderRadius.circular(20)), child: Center(child: Icon(_getIcon(status), color: col, size: 18))),
              title: Text(DateFormat('EEEE, MMM d').format(session.date), style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14, color: Color(0xFF201F1E))),
-             subtitle: Text('${session.startTime} - ${session.endTime}', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 11, color: Colors.black.withOpacity(0.3))),
+             subtitle: Text('${session.startTime} - ${session.endTime}', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 11, color: Colors.black.withValues(alpha: 0.3))),
              trailing: Text(status.toUpperCase(), style: TextStyle(color: col, fontWeight: FontWeight.w800, fontSize: 9)),
           ),
         );
@@ -165,7 +165,7 @@ class StudentDetailFluent extends StatelessWidget {
   }
 
   Widget _btn(String l, Color c, bool s, VoidCallback t) {
-     return InkWell(onTap: t, child: Container(width: 44, height: 44, decoration: BoxDecoration(color: s ? c : Colors.transparent, borderRadius: BorderRadius.circular(4), border: Border.all(color: s ? c : Colors.black.withOpacity(0.1))), child: Center(child: Text(l, style: TextStyle(color: s ? Colors.white : Colors.black.withOpacity(0.2), fontWeight: FontWeight.w800)))));
+     return InkWell(onTap: t, child: Container(width: 44, height: 44, decoration: BoxDecoration(color: s ? c : Colors.transparent, borderRadius: BorderRadius.circular(4), border: Border.all(color: s ? c : Colors.black.withValues(alpha: 0.1))), child: Center(child: Text(l, style: TextStyle(color: s ? Colors.white : Colors.black.withValues(alpha: 0.2), fontWeight: FontWeight.w800)))));
   }
 
   Color _getColor(String s) {

@@ -2,12 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' show Colors, Divider, Icons, InkWell, Color, ColorScheme, Theme, ThemeData, CircleAvatar, TextButton, FontWeight, TextStyle, BorderRadius, Radius, Offset, BoxShape, BoxShadow, BoxDecoration, Border, BorderSide, Widget, EdgeInsets, Column, Row, Expanded, SizedBox, BuildContext, StatelessWidget, Center, ListView, Stack, Positioned, Obx, Get, IconData, Icon, MainAxisAlignment, CrossAxisAlignment, MainAxisSize, VoidCallback, Spacer, DateTimeRange, showDateRangePicker, ExpansionTile;
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
-import '../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
-import '../../controllers/all_sessions_controller.dart';
-import '../../controllers/attendance_controller.dart';
-import '../carousel_attendance_screen.dart';
-import '../../../app/bindings/app_bindings.dart';
+import 'package:smart_campus/common/ui_patterns/pattern_tokens.dart';
+import 'package:smart_campus/common/ui_patterns/ui_style.dart';
+import 'package:smart_campus/features/teacher/controllers/all_sessions_controller.dart';
+import 'package:smart_campus/features/teacher/controllers/attendance_controller.dart';
+import 'package:smart_campus/features/teacher/screens/carousel_attendance/carousel_attendance_screen.dart';
+import 'package:smart_campus/app/bindings/app_bindings.dart';
 
 class AllSessionsCupertino extends StatelessWidget {
   final AllSessionsController controller;
@@ -55,10 +55,10 @@ class AllSessionsCupertino extends StatelessWidget {
     );
   }
 
-  Widget _buildIosSearch(Map<String, dynamic> tokens) {
+  Widget _buildIosSearch(PatternTokens tokens) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(color: const Color(0xFFF2F2F7).withOpacity(0.8), border: Border(bottom: BorderSide(color: Colors.black.withOpacity(0.05)))),
+      decoration: BoxDecoration(color: const Color(0xFFF2F2F7).withValues(alpha: 0.8), border: Border(bottom: BorderSide(color: Colors.black.withValues(alpha: 0.05)))),
       child: CupertinoSearchTextField(
         controller: controller.searchController,
         placeholder: 'Search Academic History',
@@ -68,7 +68,7 @@ class AllSessionsCupertino extends StatelessWidget {
     );
   }
 
-  Widget _buildIosSessionCard(dynamic session, Map<String, dynamic> tokens) {
+  Widget _buildIosSessionCard(dynamic session, PatternTokens tokens) {
     final isSelected = controller.selectedSessionIds.contains(session.id);
     final isRunning = controller.isSessionRunning(session);
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../oauth_consent_controller.dart';
+import '../../../controllers/oauth_consent_controller.dart';
 
 class OAuthConsentCyberpunk extends StatelessWidget {
   const OAuthConsentCyberpunk({
@@ -47,7 +47,7 @@ class OAuthConsentCyberpunk extends StatelessWidget {
   Widget _buildGridOverlay(Color color) {
     return Positioned.fill(
       child: CustomPaint(
-        painter: _GridPainter(color: color.withOpacity(0.05)),
+        painter: _GridPainter(color: color.withValues(alpha: 0.05)),
       ),
     );
   }
@@ -60,7 +60,7 @@ class OAuthConsentCyberpunk extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.black,
             border: Border.all(color: cyan, width: 2),
-            boxShadow: [BoxShadow(color: cyan.withOpacity(0.2), blurRadius: 20)],
+            boxShadow: [BoxShadow(color: cyan.withValues(alpha: 0.2), blurRadius: 20)],
           ),
           child: Icon(Iconsax.security_user, color: cyan, size: 48),
         ),
@@ -76,7 +76,7 @@ class OAuthConsentCyberpunk extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(color: Colors.black, border: Border.all(color: color.withOpacity(0.3))),
+      decoration: BoxDecoration(color: Colors.black, border: Border.all(color: color.withValues(alpha: 0.3))),
       child: Column(
         children: [
           Text(appName.toUpperCase(), style: TextStyle(fontWeight: FontWeight.w900, fontSize: 24, color: color, letterSpacing: 2, fontFamily: 'Courier')),
@@ -90,7 +90,7 @@ class OAuthConsentCyberpunk extends StatelessWidget {
               children: [
                 Icon(Icons.check_circle_outline, color: color, size: 18),
                 const SizedBox(width: 12),
-                Text(scope.toUpperCase(), style: TextStyle(fontWeight: FontWeight.w900, fontSize: 12, color: color.withOpacity(0.7), letterSpacing: 1, fontFamily: 'Courier')),
+                Text(scope.toUpperCase(), style: TextStyle(fontWeight: FontWeight.w900, fontSize: 12, color: color.withValues(alpha: 0.7), letterSpacing: 1, fontFamily: 'Courier')),
               ],
             ),
           )),
@@ -108,9 +108,9 @@ class OAuthConsentCyberpunk extends StatelessWidget {
             width: double.infinity,
             height: 64,
             decoration: BoxDecoration(
-              color: cyan.withOpacity(0.1),
+              color: cyan.withValues(alpha: 0.1),
               border: Border.all(color: cyan, width: 2),
-              boxShadow: [BoxShadow(color: cyan.withOpacity(0.2), blurRadius: 10)],
+              boxShadow: [BoxShadow(color: cyan.withValues(alpha: 0.2), blurRadius: 10)],
             ),
             child: const Center(child: Text('AUTHORIZE_UPLINK', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 15, color: Color(0xFF00F5FF), letterSpacing: 2, fontFamily: 'Courier'))),
           ),

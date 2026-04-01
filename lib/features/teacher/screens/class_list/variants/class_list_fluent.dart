@@ -56,8 +56,8 @@ class ClassListFluent extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.7),
-        border: Border(bottom: BorderSide(color: Colors.black.withOpacity(0.05), width: 1)),
+        color: Colors.white.withValues(alpha: 0.7),
+        border: Border(bottom: BorderSide(color: Colors.black.withValues(alpha: 0.05), width: 1)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -78,15 +78,15 @@ class ClassListFluent extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(4),
-        border: Border.all(color: Colors.black.withOpacity(0.1), width: 1),
+        border: Border.all(color: Colors.black.withValues(alpha: 0.1), width: 1),
       ),
       child: TextField(
         onChanged: (v) => controller.searchClasses(v),
         style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
         decoration: InputDecoration(
           hintText: 'Filter classes...',
-          hintStyle: TextStyle(color: Colors.black.withOpacity(0.4), fontSize: 13),
-          prefixIcon: Icon(Iconsax.search_normal, color: Colors.black.withOpacity(0.6), size: 18),
+          hintStyle: TextStyle(color: Colors.black.withValues(alpha: 0.4), fontSize: 13),
+          prefixIcon: Icon(Iconsax.search_normal, color: Colors.black.withValues(alpha: 0.6), size: 18),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         ),
@@ -101,12 +101,12 @@ class ClassListFluent extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: isSelected ? const Color(0xFF0078D4) : Colors.black.withOpacity(0.05), 
+          color: isSelected ? const Color(0xFF0078D4) : Colors.black.withValues(alpha: 0.05), 
           width: isSelected ? 2 : 1
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -131,7 +131,7 @@ class ClassListFluent extends StatelessWidget {
                     width: 44,
                     height: 44,
                     decoration: BoxDecoration(
-                      color: const Color(0xFF0078D4).withOpacity(0.1),
+                      color: const Color(0xFF0078D4).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Center(
@@ -152,7 +152,7 @@ class ClassListFluent extends StatelessWidget {
                         ),
                         Text(
                           '${classItem.courseName} | SEM ${classItem.semester}'.toUpperCase(),
-                          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 11, color: Colors.black.withOpacity(0.5)),
+                          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 11, color: Colors.black.withValues(alpha: 0.5)),
                         ),
                       ],
                     ),
@@ -200,7 +200,7 @@ class ClassListFluent extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Iconsax.folder_open, size: 48, color: Colors.black.withOpacity(0.2)),
+          Icon(Iconsax.folder_open, size: 48, color: Colors.black.withValues(alpha: 0.2)),
           const SizedBox(height: 16),
           const Text('No classes listed', style: TextStyle(fontWeight: FontWeight.w700, color: Color(0xFF484644))),
         ],

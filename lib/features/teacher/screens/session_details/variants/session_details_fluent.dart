@@ -2,8 +2,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
+import '../../../../../common/ui_patterns/pattern_tokens.dart';
+import '../../../../../common/ui_patterns/ui_style.dart';
 import '../../controllers/session_details_controller.dart';
 import '../../../common/utils/constants/sized.dart';
 
@@ -53,7 +53,7 @@ class SessionDetailsFluent extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(color: Colors.white, border: Border.all(color: Colors.black.withOpacity(0.05)), borderRadius: BorderRadius.circular(4), boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.01), blurRadius: 10)]),
+      decoration: BoxDecoration(color: Colors.white, border: Border.all(color: Colors.black.withValues(alpha: 0.05)), borderRadius: BorderRadius.circular(4), boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.01), blurRadius: 10)]),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -70,7 +70,7 @@ class SessionDetailsFluent extends StatelessWidget {
              ],
           ),
           const SizedBox(height: 8),
-          Text('${classDetails['courseName']} | Semester ${classDetails['semester']}', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 11, color: Colors.black.withOpacity(0.4))),
+          Text('${classDetails['courseName']} | Semester ${classDetails['semester']}', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 11, color: Colors.black.withValues(alpha: 0.4))),
           const SizedBox(height: 24),
           Row(
             children: [
@@ -98,7 +98,7 @@ class SessionDetailsFluent extends StatelessWidget {
     final stats = controller.attendanceStats.value;
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(color: Colors.white, border: Border.all(color: Colors.black.withOpacity(0.05)), borderRadius: BorderRadius.circular(4)),
+      decoration: BoxDecoration(color: Colors.white, border: Border.all(color: Colors.black.withValues(alpha: 0.05)), borderRadius: BorderRadius.circular(4)),
       child: Column(
         children: [
           Row(
@@ -150,7 +150,7 @@ class SessionDetailsFluent extends StatelessWidget {
             onTap: controller.exportAttendanceData,
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 14),
-              decoration: BoxDecoration(color: Colors.white, border: Border.all(color: Colors.black.withOpacity(0.1)), borderRadius: BorderRadius.circular(4)),
+              decoration: BoxDecoration(color: Colors.white, border: Border.all(color: Colors.black.withValues(alpha: 0.1)), borderRadius: BorderRadius.circular(4)),
               child: const Center(child: Text('Export Ledger', style: TextStyle(color: Color(0xFF201F1E), fontWeight: FontWeight.w800, fontSize: 11))),
             ),
           ),
@@ -162,26 +162,26 @@ class SessionDetailsFluent extends StatelessWidget {
   Widget _buildFluentRoster() {
     final records = controller.attendanceRecords;
     if (records.isEmpty) {
-      return Center(child: Text('No records stream found', style: TextStyle(color: Colors.black.withOpacity(0.3))));
+      return Center(child: Text('No records stream found', style: TextStyle(color: Colors.black.withValues(alpha: 0.3))));
     }
 
     return Container(
-      decoration: BoxDecoration(color: Colors.white, border: Border.all(color: Colors.black.withOpacity(0.05)), borderRadius: BorderRadius.circular(4)),
+      decoration: BoxDecoration(color: Colors.white, border: Border.all(color: Colors.black.withValues(alpha: 0.05)), borderRadius: BorderRadius.circular(4)),
       child: ListView.separated(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         itemCount: records.length,
-        separatorBuilder: (context, index) => Divider(height: 1, color: Colors.black.withOpacity(0.05)),
+        separatorBuilder: (context, index) => Divider(height: 1, color: Colors.black.withValues(alpha: 0.05)),
         itemBuilder: (context, index) {
           final record = records[index];
           return ListTile(
              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
              leading: CircleAvatar(
-                backgroundColor: record.isPresent ? const Color(0xFF0078D4).withOpacity(0.1) : Colors.black.withOpacity(0.05),
+                backgroundColor: record.isPresent ? const Color(0xFF0078D4).withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.05),
                 child: Icon(record.isPresent ? Iconsax.verify : Iconsax.close_circle, color: record.isPresent ? const Color(0xFF0078D4) : Colors.black38, size: 20),
              ),
              title: Text(record.studentName, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14, color: Color(0xFF201F1E))),
-             subtitle: Text('NodeID: ${record.studentId}', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 11, color: Colors.black.withOpacity(0.4))),
+             subtitle: Text('NodeID: ${record.studentId}', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 11, color: Colors.black.withValues(alpha: 0.4))),
              trailing: controller.isSessionActive() 
                 ? Switch(
                     value: record.isPresent, 

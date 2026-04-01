@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../change_password_controller.dart';
+import '../../../controllers/change_password_controller.dart';
 
 class ChangePasswordFluent extends StatelessWidget {
   const ChangePasswordFluent({super.key});
@@ -37,7 +37,7 @@ class ChangePasswordFluent extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
-            boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 40, offset: const Offset(0, 20))],
+            boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 40, offset: const Offset(0, 20))],
           ),
           child: Icon(Iconsax.shield_security, color: color, size: 48),
         ),
@@ -83,7 +83,7 @@ class ChangePasswordFluent extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(4),
-        border: Border.all(color: Colors.black.withOpacity(0.1)),
+        border: Border.all(color: Colors.black.withValues(alpha: 0.1)),
       ),
       child: Obx(() => TextFormField(
         controller: textController,
@@ -93,10 +93,10 @@ class ChangePasswordFluent extends StatelessWidget {
           prefixIcon: const Icon(Iconsax.password_check, color: Color(0xFF0078D4), size: 22),
           suffixIcon: IconButton(
             onPressed: () => controller.hidePassword.value = !controller.hidePassword.value,
-            icon: Icon(controller.hidePassword.value ? Iconsax.eye_slash : Iconsax.eye, color: color.withOpacity(0.4), size: 20),
+            icon: Icon(controller.hidePassword.value ? Iconsax.eye_slash : Iconsax.eye, color: color.withValues(alpha: 0.4), size: 20),
           ),
           hintText: label,
-          hintStyle: TextStyle(fontSize: 14, color: Colors.black.withOpacity(0.2)),
+          hintStyle: TextStyle(fontSize: 14, color: Colors.black.withValues(alpha: 0.2)),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
         ),

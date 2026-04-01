@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
-import '../../controllers/student_controller.dart';
-import '../../../../common/widgets/student_avatar.dart';
-import '../../../../models/class_model.dart';
-import '../../../../common/utils/constants/colors.dart';
+import '../../../../../common/ui_patterns/pattern_tokens.dart';
+import '../../../../../common/ui_patterns/ui_style.dart';
+import '../../../controllers/student_controller.dart';
+import '../../../../../common/widgets/student_avatar.dart';
+import '../../../../../models/class_model.dart';
+import '../../../../../common/utils/constants/colors.dart';
 
 class AddStudentCorporate extends StatelessWidget {
   final StudentController controller;

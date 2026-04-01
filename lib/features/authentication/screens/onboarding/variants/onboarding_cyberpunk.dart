@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import '../../../../../../common/utils/constants/image_strings.dart';
-import '../../../../controllers/controllers_onboarding/onboarding_controller.dart';
+import '../../../controllers/controllers_onboarding/onboarding_controller.dart';
 
 class OnboardingCyberpunk extends StatelessWidget {
   const OnboardingCyberpunk({super.key});
@@ -54,7 +54,7 @@ class OnboardingCyberpunk extends StatelessWidget {
   Widget _buildGridOverlay(Color color) {
     return Positioned.fill(
       child: CustomPaint(
-        painter: _GridPainter(color: color.withOpacity(0.05)),
+        painter: _GridPainter(color: color.withValues(alpha: 0.05)),
       ),
     );
   }
@@ -69,15 +69,15 @@ class OnboardingCyberpunk extends StatelessWidget {
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
               color: Colors.black,
-              border: Border.all(color: color.withOpacity(0.3), width: 2),
-              boxShadow: [BoxShadow(color: color.withOpacity(0.1), blurRadius: 20)],
+              border: Border.all(color: color.withValues(alpha: 0.3), width: 2),
+              boxShadow: [BoxShadow(color: color.withValues(alpha: 0.1), blurRadius: 20)],
             ),
             child: lottie != null ? Lottie.asset(lottie, width: 140) : Image.asset(image!, width: 140),
           ),
           const SizedBox(height: 64),
           Text(title, textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.w900, fontSize: 32, color: color, letterSpacing: 4, fontFamily: 'Courier')),
           const SizedBox(height: 24),
-          Text(subtitle, textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.w900, fontSize: 13, color: color.withOpacity(0.5), height: 1.6, letterSpacing: 2, fontFamily: 'Courier')),
+          Text(subtitle, textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.w900, fontSize: 13, color: color.withValues(alpha: 0.5), height: 1.6, letterSpacing: 2, fontFamily: 'Courier')),
         ],
       ),
     );
@@ -124,7 +124,7 @@ class OnboardingCyberpunk extends StatelessWidget {
         onPressed: () => controller.nextPage(),
         icon: Container(
           padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(color: color.withOpacity(0.1), border: Border.all(color: color, width: 1)),
+          decoration: BoxDecoration(color: color.withValues(alpha: 0.1), border: Border.all(color: color, width: 1)),
           child: Icon(Icons.arrow_forward, color: color, size: 24),
         ),
       ),

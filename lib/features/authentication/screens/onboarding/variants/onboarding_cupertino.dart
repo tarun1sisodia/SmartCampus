@@ -5,7 +5,7 @@ import 'package:lottie/lottie.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import '../../../../../../common/utils/constants/image_strings.dart';
-import '../../../../controllers/controllers_onboarding/onboarding_controller.dart';
+import '../../../controllers/controllers_onboarding/onboarding_controller.dart';
 
 class OnboardingCupertino extends StatelessWidget {
   const OnboardingCupertino({super.key});

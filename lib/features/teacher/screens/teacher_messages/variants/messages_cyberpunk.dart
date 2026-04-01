@@ -60,7 +60,7 @@ class MessagesCyberpunk extends StatelessWidget {
   }
 
   Widget _buildGridOverlay(Color cyan) {
-    return Positioned.fill(child: CustomPaint(painter: _GridPainter(color: cyan.withOpacity(0.04))));
+    return Positioned.fill(child: CustomPaint(painter: _GridPainter(color: cyan.withValues(alpha: 0.04))));
   }
 
   Widget _buildCyberHeader(Color cyan, Color magenta) {
@@ -81,8 +81,8 @@ class MessagesCyberpunk extends StatelessWidget {
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(color: isSelected ? accent.withOpacity(0.1) : Colors.transparent, border: Border.all(color: isSelected ? accent : accent.withOpacity(0.2))),
-        child: Text(label, style: TextStyle(color: isSelected ? accent : accent.withOpacity(0.3), fontWeight: FontWeight.w900, fontSize: 10, letterSpacing: 1, fontFamily: 'Courier')),
+        decoration: BoxDecoration(color: isSelected ? accent.withValues(alpha: 0.1) : Colors.transparent, border: Border.all(color: isSelected ? accent : accent.withValues(alpha: 0.2))),
+        child: Text(label, style: TextStyle(color: isSelected ? accent : accent.withValues(alpha: 0.3), fontWeight: FontWeight.w900, fontSize: 10, letterSpacing: 1, fontFamily: 'Courier')),
       ),
     );
   }
@@ -93,7 +93,7 @@ class MessagesCyberpunk extends StatelessWidget {
       children: [
         Container(
           padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(color: Colors.black, border: Border.all(color: accent.withOpacity(0.3), width: 1.5), boxShadow: [BoxShadow(color: accent.withOpacity(0.1), blurRadius: 10)]),
+          decoration: BoxDecoration(color: Colors.black, border: Border.all(color: accent.withValues(alpha: 0.3), width: 1.5), boxShadow: [BoxShadow(color: accent.withValues(alpha: 0.1), blurRadius: 10)]),
           child: Row(
             children: [
               Container(width: 52, height: 52, decoration: BoxDecoration(border: Border.all(color: accent), shape: BoxShape.circle), child: Center(child: Text(data.avatar, style: TextStyle(color: accent, fontWeight: FontWeight.w900)))),
@@ -106,15 +106,15 @@ class MessagesCyberpunk extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(data.name.toUpperCase(), style: TextStyle(color: accent, fontWeight: FontWeight.w900, fontSize: 15, fontFamily: 'Courier')),
-                        Text(data.time, style: TextStyle(color: accent.withOpacity(0.3), fontSize: 10, fontWeight: FontWeight.w900, fontFamily: 'Courier')),
+                        Text(data.time, style: TextStyle(color: accent.withValues(alpha: 0.3), fontSize: 10, fontWeight: FontWeight.w900, fontFamily: 'Courier')),
                       ],
                     ),
                     const SizedBox(height: 4),
-                    Text(data.message, style: TextStyle(color: accent.withOpacity(0.6), fontSize: 13, height: 1.4, fontFamily: 'Courier'), maxLines: 1, overflow: TextOverflow.ellipsis),
+                    Text(data.message, style: TextStyle(color: accent.withValues(alpha: 0.6), fontSize: 13, height: 1.4, fontFamily: 'Courier'), maxLines: 1, overflow: TextOverflow.ellipsis),
                   ],
                 ),
               ),
-              if (data.isUnread) Container(margin: const EdgeInsets.only(left: 12), width: 8, height: 8, decoration: BoxDecoration(color: magenta, shape: BoxShape.circle, boxShadow: [BoxShadow(color: magenta.withOpacity(0.5), blurRadius: 10)])),
+              if (data.isUnread) Container(margin: const EdgeInsets.only(left: 12), width: 8, height: 8, decoration: BoxDecoration(color: magenta, shape: BoxShape.circle, boxShadow: [BoxShadow(color: magenta.withValues(alpha: 0.5), blurRadius: 10)])),
             ],
           ),
         ),

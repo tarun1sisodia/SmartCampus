@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
+import '../../../../../common/ui_patterns/pattern_tokens.dart';
+import '../../../../../common/ui_patterns/ui_style.dart';
 import '../../controllers/session_details_controller.dart';
 import '../../../common/utils/constants/colors.dart';
 
@@ -80,7 +80,7 @@ class SessionDetailsCorporate extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: Row(
         children: [
-          Text('$label: ', style: TextStyle(color: Colors.white.withOpacity(0.5), fontWeight: FontWeight.w900, fontSize: 9)),
+          Text('$label: ', style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontWeight: FontWeight.w900, fontSize: 9)),
           Text(val, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 11)),
         ],
       ),
@@ -141,7 +141,7 @@ class SessionDetailsCorporate extends StatelessWidget {
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 14),
-        decoration: BoxDecoration(color: color, border: Border.all(color: isDark ? Colors.white.withOpacity(0.2) : const Color(0xFF0F172A), width: 1)),
+        decoration: BoxDecoration(color: color, border: Border.all(color: isDark ? Colors.white.withValues(alpha: 0.2) : const Color(0xFF0F172A), width: 1)),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -178,7 +178,7 @@ class SessionDetailsCorporate extends StatelessWidget {
              leading: Container(
                width: 44,
                height: 44,
-               decoration: BoxDecoration(color: record.isPresent ? const Color(0xFF10B981).withOpacity(0.1) : Colors.red.withOpacity(0.1), border: Border.all(color: record.isPresent ? const Color(0xFF10B981) : Colors.red)),
+               decoration: BoxDecoration(color: record.isPresent ? const Color(0xFF10B981).withValues(alpha: 0.1) : Colors.red.withValues(alpha: 0.1), border: Border.all(color: record.isPresent ? const Color(0xFF10B981) : Colors.red)),
                child: Center(child: Icon(record.isPresent ? Iconsax.verify : Iconsax.close_circle, color: record.isPresent ? const Color(0xFF10B981) : Colors.red, size: 20)),
              ),
              title: Text(record.studentName.toUpperCase(), style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 13, color: Color(0xFF0F172A))),
@@ -188,7 +188,7 @@ class SessionDetailsCorporate extends StatelessWidget {
                     value: record.isPresent, 
                     onChanged: (v) => controller.toggleAttendance(record.id, v),
                     activeThumbColor: const Color(0xFF10B981),
-                    activeTrackColor: const Color(0xFF10B981).withOpacity(0.2),
+                    activeTrackColor: const Color(0xFF10B981).withValues(alpha: 0.2),
                   )
                 : null,
           ),

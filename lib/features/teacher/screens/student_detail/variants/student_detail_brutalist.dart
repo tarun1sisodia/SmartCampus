@@ -4,11 +4,11 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import '../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
+import '../../../../../common/ui_patterns/pattern_tokens.dart';
+import '../../../../../common/ui_patterns/ui_style.dart';
 import '../../controllers/student_detail_controller.dart';
 import '../../../../models/student_model.dart';
-import '../../../../common/utils/constants/api_constants.dart';
+import '../../../../../common/utils/constants/api_constants.dart';
 
 class StudentDetailBrutalist extends StatelessWidget {
   final StudentDetailController controller;
@@ -124,11 +124,11 @@ class StudentDetailBrutalist extends StatelessWidget {
 
         return Container(
           margin: const EdgeInsets.only(bottom: 16),
-          decoration: BoxDecoration(color: Colors.white, border: Border.all(color: Colors.black, width: 3), boxShadow: [BoxShadow(color: col.withOpacity(0.5), offset: const Offset(4, 4))]),
+          decoration: BoxDecoration(color: Colors.white, border: Border.all(color: Colors.black, width: 3), boxShadow: [BoxShadow(color: col.withValues(alpha: 0.5), offset: const Offset(4, 4))]),
           child: ListTile(
              onTap: () => _updateRec(context, rec['session'].id, status, rec['remarks'], orange, blue),
              contentPadding: const EdgeInsets.all(16),
-             leading: Container(width: 44, height: 44, decoration: BoxDecoration(color: col.withOpacity(0.1), border: Border.all(color: Colors.black, width: 2)), child: Icon(_getIcon(status), color: Colors.black, size: 20)),
+             leading: Container(width: 44, height: 44, decoration: BoxDecoration(color: col.withValues(alpha: 0.1), border: Border.all(color: Colors.black, width: 2)), child: Icon(_getIcon(status), color: Colors.black, size: 20)),
              title: Text(DateFormat('yyyy_MM_dd').format(rec['session'].date).toUpperCase(), style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 13)),
              subtitle: Text('${rec['session'].startTime} > ${rec['session'].endTime}', style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 10, color: Colors.black45)),
              trailing: Container(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4), decoration: BoxDecoration(color: col, border: Border.all(color: Colors.black, width: 2)), child: Text(status.toUpperCase(), style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 8))),

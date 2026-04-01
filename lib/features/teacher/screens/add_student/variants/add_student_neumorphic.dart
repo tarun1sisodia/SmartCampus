@@ -3,10 +3,10 @@ import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
+import '../../../../../common/ui_patterns/pattern_tokens.dart';
+import '../../../../../common/ui_patterns/ui_style.dart';
 import '../../controllers/student_controller.dart';
-import '../../../../common/widgets/student_avatar.dart';
+import '../../../../../common/widgets/student_avatar.dart';
 import '../../../../models/class_model.dart';
 
 class AddStudentNeumorphism extends StatelessWidget {
@@ -55,7 +55,7 @@ class AddStudentNeumorphism extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Iconsax.user_add, size: 80, color: const Color(0xFF94A3B8).withOpacity(0.5)),
+          Icon(Iconsax.user_add, size: 80, color: const Color(0xFF94A3B8).withValues(alpha: 0.5)),
           const SizedBox(height: 24),
           const Text('MANIFEST_VACANCY', style: TextStyle(fontWeight: FontWeight.w900, color: Color(0xFF1E293B), fontSize: 16)),
           const SizedBox(height: 32),
@@ -75,7 +75,7 @@ class AddStudentNeumorphism extends StatelessWidget {
              borderRadius: BorderRadius.circular(16),
              boxShadow: [
                 const BoxShadow(color: Colors.white, offset: Offset(-6, -6), blurRadius: 10),
-                BoxShadow(color: const Color(0xFF94A3B8).withOpacity(0.5), offset: const Offset(6, 6), blurRadius: 10),
+                BoxShadow(color: const Color(0xFF94A3B8).withValues(alpha: 0.5), offset: const Offset(6, 6), blurRadius: 10),
              ],
           ),
           child: Row(
@@ -102,10 +102,10 @@ class AddStudentNeumorphism extends StatelessWidget {
           boxShadow: [
              if (!isSelected) ...[
                 const BoxShadow(color: Colors.white, offset: Offset(-8, -8), blurRadius: 12),
-                BoxShadow(color: const Color(0xFF94A3B8).withOpacity(0.4), offset: const Offset(8, 8), blurRadius: 12),
+                BoxShadow(color: const Color(0xFF94A3B8).withValues(alpha: 0.4), offset: const Offset(8, 8), blurRadius: 12),
              ] else ...[
                 const BoxShadow(color: Colors.white, offset: Offset(-4, -4), blurRadius: 8, inset: true),
-                BoxShadow(color: const Color(0xFF94A3B8).withOpacity(0.5), offset: const Offset(4, 4), blurRadius: 8, inset: true),
+                BoxShadow(color: const Color(0xFF94A3B8).withValues(alpha: 0.5), offset: const Offset(4, 4), blurRadius: 8, inset: true),
              ]
           ],
        ),
@@ -138,10 +138,10 @@ class AddStudentNeumorphism extends StatelessWidget {
            boxShadow: [
               if (isSelected) ...[
                  const BoxShadow(color: Colors.white, offset: Offset(-2, -2), blurRadius: 4, inset: true),
-                 BoxShadow(color: const Color(0xFF94A3B8).withOpacity(0.5), offset: const Offset(2, 2), blurRadius: 4, inset: true),
+                 BoxShadow(color: const Color(0xFF94A3B8).withValues(alpha: 0.5), offset: const Offset(2, 2), blurRadius: 4, inset: true),
               ] else ...[
                  const BoxShadow(color: Colors.white, offset: Offset(-2, -2), blurRadius: 4),
-                 BoxShadow(color: const Color(0xFF94A3B8).withOpacity(0.5), offset: const Offset(2, 2), blurRadius: 4),
+                 BoxShadow(color: const Color(0xFF94A3B8).withValues(alpha: 0.5), offset: const Offset(2, 2), blurRadius: 4),
               ]
            ],
         ),
@@ -171,7 +171,7 @@ class AddStudentNeumorphism extends StatelessWidget {
                              color: bgColor, borderRadius: BorderRadius.circular(24),
                              boxShadow: [
                                 const BoxShadow(color: Colors.white, offset: Offset(-4, -4), blurRadius: 8),
-                                BoxShadow(color: const Color(0xFF94A3B8).withOpacity(0.5), offset: const Offset(4, 4), blurRadius: 8),
+                                BoxShadow(color: const Color(0xFF94A3B8).withValues(alpha: 0.5), offset: const Offset(4, 4), blurRadius: 8),
                              ],
                           ),
                           child: controller.selectedImage.value != null 
@@ -205,7 +205,7 @@ class AddStudentNeumorphism extends StatelessWidget {
            color: bgColor, borderRadius: BorderRadius.circular(16),
            boxShadow: [
               const BoxShadow(color: Colors.white, offset: Offset(-4, -4), blurRadius: 8, inset: true),
-              BoxShadow(color: const Color(0xFF94A3B8).withOpacity(0.5), offset: const Offset(4, 4), blurRadius: 8, inset: true),
+              BoxShadow(color: const Color(0xFF94A3B8).withValues(alpha: 0.5), offset: const Offset(4, 4), blurRadius: 8, inset: true),
            ],
         ),
         child: TextFormField(
@@ -251,7 +251,7 @@ class AddStudentNeumorphism extends StatelessWidget {
               color: bgColor, borderRadius: BorderRadius.circular(16),
               boxShadow: [
                  const BoxShadow(color: Colors.white, offset: Offset(-3, -3), blurRadius: 6),
-                 BoxShadow(color: const Color(0xFF94A3B8).withOpacity(0.4), offset: const Offset(3, 3), blurRadius: 6),
+                 BoxShadow(color: const Color(0xFF94A3B8).withValues(alpha: 0.4), offset: const Offset(3, 3), blurRadius: 6),
               ],
            ),
            child: Row(children: [Icon(icon, size: 20), const SizedBox(width: 16), Text(label, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 12))]),

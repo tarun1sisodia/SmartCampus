@@ -143,7 +143,7 @@ class ClassListBrutalist extends StatelessWidget {
                         ),
                         Text(
                           'SEM_${classItem.semester} | SEC_${classItem.section ?? "NA"}'.toUpperCase(),
-                          style: TextStyle(color: isSelected ? Colors.white.withOpacity(0.8) : Colors.black, fontWeight: FontWeight.w800, fontSize: 12),
+                          style: TextStyle(color: isSelected ? Colors.white.withValues(alpha: 0.8) : Colors.black, fontWeight: FontWeight.w800, fontSize: 12),
                         ),
                       ],
                     ),

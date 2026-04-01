@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
+import '../../../../../common/ui_patterns/pattern_tokens.dart';
+import '../../../../../common/ui_patterns/ui_style.dart';
 import '../../controllers/student_controller.dart';
-import '../../../../common/widgets/student_avatar.dart';
+import '../../../../../common/widgets/student_avatar.dart';
 import '../../../../models/class_model.dart';
 
 class AddStudentFluent extends StatelessWidget {
@@ -93,8 +93,8 @@ class AddStudentFluent extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(4),
-        border: Border.all(color: isSelected ? const Color(0xFF0078D4) : Colors.black.withOpacity(0.05)),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 4, offset: const Offset(0, 2))],
+        border: Border.all(color: isSelected ? const Color(0xFF0078D4) : Colors.black.withValues(alpha: 0.05)),
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 4, offset: const Offset(0, 2))],
       ),
       child: ListTile(
          onTap: () => isSelectionMode ? controller.toggleStudentSelection(student.id) : null,
@@ -109,7 +109,7 @@ class AddStudentFluent extends StatelessWidget {
             ? _buildFluentCheckbox(isSelected)
             : StudentAvatar(imageUrl: student.imageUrl, name: student.name, size: 44, isDarkMode: false),
          title: Text(student.name, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14, color: Color(0xFF201F1E))),
-         subtitle: Text('ID: ${student.rollNumber}', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 11, color: Colors.black.withOpacity(0.4))),
+         subtitle: Text('ID: ${student.rollNumber}', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 11, color: Colors.black.withValues(alpha: 0.4))),
          trailing: !isSelectionMode 
             ? IconButton(icon: const Icon(Iconsax.trash, size: 18, color: Color(0xFFA19F9D)), onPressed: () => controller.removeStudentFromClass(student.id))
             : null,
@@ -143,7 +143,7 @@ class AddStudentFluent extends StatelessWidget {
                        onTap: () => _showPicker(context),
                        child: Container(
                           width: 80, height: 80,
-                          decoration: BoxDecoration(color: const Color(0xFFF3F3F3), borderRadius: BorderRadius.circular(40), border: Border.all(color: Colors.black.withOpacity(0.1))),
+                          decoration: BoxDecoration(color: const Color(0xFFF3F3F3), borderRadius: BorderRadius.circular(40), border: Border.all(color: Colors.black.withValues(alpha: 0.1))),
                           child: controller.selectedImage.value != null 
                              ? ClipRRect(borderRadius: BorderRadius.circular(40), child: Image.file(controller.selectedImage.value!, fit: BoxFit.cover))
                              : const Icon(Iconsax.camera, color: Color(0xFF0078D4), size: 24),
@@ -175,7 +175,7 @@ class AddStudentFluent extends StatelessWidget {
         style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
         decoration: InputDecoration(
            labelText: label,
-           labelStyle: TextStyle(fontWeight: FontWeight.w600, fontSize: 10, color: Colors.black.withOpacity(0.4)),
+           labelStyle: TextStyle(fontWeight: FontWeight.w600, fontSize: 10, color: Colors.black.withValues(alpha: 0.4)),
            prefixIcon: Icon(icon, color: const Color(0xFF0078D4), size: 16),
            filled: true,
            fillColor: const Color(0xFFFAF9F8),

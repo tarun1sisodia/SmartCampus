@@ -91,7 +91,7 @@ class ImportFluent extends StatelessWidget {
         ),
         Container(
           padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.black.withOpacity(0.05)), boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10, offset: const Offset(0, 4))]),
+          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.black.withValues(alpha: 0.05)), boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 10, offset: const Offset(0, 4))]),
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: items),
         ),
       ],
@@ -104,7 +104,7 @@ class ImportFluent extends StatelessWidget {
         onTap: onTap,
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 12),
-          decoration: BoxDecoration(color: isSelected ? const Color(0xFF0078D4).withOpacity(0.1) : const Color(0xFFF3F3F3), borderRadius: BorderRadius.circular(4), border: Border.all(color: isSelected ? const Color(0xFF0078D4) : Colors.black.withOpacity(0.05))),
+          decoration: BoxDecoration(color: isSelected ? const Color(0xFF0078D4).withValues(alpha: 0.1) : const Color(0xFFF3F3F3), borderRadius: BorderRadius.circular(4), border: Border.all(color: isSelected ? const Color(0xFF0078D4) : Colors.black.withValues(alpha: 0.05))),
           child: Center(child: Text(label, style: TextStyle(color: isSelected ? const Color(0xFF0078D4) : const Color(0xFF605E5C), fontWeight: FontWeight.bold, fontSize: 11))),
         ),
       ),

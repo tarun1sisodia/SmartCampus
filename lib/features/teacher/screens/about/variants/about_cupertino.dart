@@ -74,7 +74,7 @@ class AboutCupertino extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       child: Row(
         children: [
-          Container(padding: const EdgeInsets.all(8), decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(8)), child: Icon(CupertinoIcons.chevron_right_circle_fill, color: color, size: 22)),
+          Container(padding: const EdgeInsets.all(8), decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)), child: Icon(CupertinoIcons.chevron_right_circle_fill, color: color, size: 22)),
           const SizedBox(width: 16),
           Expanded(
             child: Column(

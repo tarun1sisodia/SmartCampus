@@ -2,7 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../oauth_consent_controller.dart';
+import '../../../controllers/oauth_consent_controller.dart';
 
 class OAuthConsentGlassmorphism extends StatelessWidget {
   const OAuthConsentGlassmorphism({
@@ -54,7 +54,7 @@ class OAuthConsentGlassmorphism extends StatelessWidget {
       children: [
         Container(
           padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(color: Colors.white.withOpacity(0.1), shape: BoxShape.circle, border: Border.all(color: Colors.white.withOpacity(0.2))),
+          decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.1), shape: BoxShape.circle, border: Border.all(color: Colors.white.withValues(alpha: 0.2))),
           child: const Icon(Iconsax.security_user, color: Colors.white70, size: 48),
         ),
         const SizedBox(height: 24),
@@ -70,7 +70,7 @@ class OAuthConsentGlassmorphism extends StatelessWidget {
       children: [
         Text(appName.toUpperCase(), textAlign: TextAlign.center, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24, color: Colors.white)),
         const SizedBox(height: 32),
-        Text('The application requests following scopes:', textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.w400, fontSize: 13, color: Colors.white.withOpacity(0.4))),
+        Text('The application requests following scopes:', textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.w400, fontSize: 13, color: Colors.white.withValues(alpha: 0.4))),
         const SizedBox(height: 24),
         ...scopes.map((scope) => Padding(
           padding: const EdgeInsets.only(bottom: 12),
@@ -96,10 +96,10 @@ class OAuthConsentGlassmorphism extends StatelessWidget {
           child: ElevatedButton(
             onPressed: () => controller.grantConsent(),
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.white.withOpacity(0.2),
+              backgroundColor: Colors.white.withValues(alpha: 0.2),
               foregroundColor: Colors.white,
               elevation: 0,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24), side: BorderSide(color: Colors.white.withOpacity(0.2))),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24), side: BorderSide(color: Colors.white.withValues(alpha: 0.2))),
             ),
             child: const Text('Authorize Access', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
           ),
@@ -107,7 +107,7 @@ class OAuthConsentGlassmorphism extends StatelessWidget {
         const SizedBox(height: 24),
         TextButton(
           onPressed: () => controller.denyConsent(),
-          child: Text('Deny Protocol', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.white.withOpacity(0.4))),
+          child: Text('Deny Protocol', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.white.withValues(alpha: 0.4))),
         ),
       ],
     );
@@ -121,9 +121,9 @@ class OAuthConsentGlassmorphism extends StatelessWidget {
         child: Container(
           padding: padding,
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.1),
+            color: Colors.white.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(40),
-            border: Border.all(color: Colors.white.withOpacity(0.2)),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
           ),
           child: child,
         ),

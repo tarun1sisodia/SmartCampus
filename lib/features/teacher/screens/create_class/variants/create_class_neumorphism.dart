@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../../../controllers/class_controller.dart';
+import 'package:smart_campus/features/teacher/controllers/class_controller.dart';
 
 class CreateClassNeumorphism extends StatelessWidget {
   final ClassController controller;

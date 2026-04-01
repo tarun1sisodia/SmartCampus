@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../controllers/all_sessions_controller.dart';
-import '../../../common/ui_patterns/pattern_scaffold.dart';
-import '../../../common/ui_patterns/ui_style_controller.dart';
-import '../../../common/ui_patterns/ui_style.dart';
-import 'variants/all_sessions/all_sessions_corporate.dart';
-import 'variants/all_sessions/all_sessions_minimalist.dart';
-import 'variants/all_sessions/all_sessions_glassmorphism.dart';
-import 'variants/all_sessions/all_sessions_neumorphic.dart';
-import 'variants/all_sessions/all_sessions_material3.dart';
-import 'variants/all_sessions/all_sessions_cupertino.dart';
-import 'variants/all_sessions/all_sessions_cyberpunk.dart';
-import 'variants/all_sessions/all_sessions_brutalist.dart';
-import 'variants/all_sessions/all_sessions_academic.dart';
-import 'variants/all_sessions/all_sessions_fluent.dart';
-import '../../../common/utils/constants/sized.dart';
+import 'package:smart_campus/common/ui_patterns/pattern_scaffold.dart';
+import 'package:smart_campus/common/ui_patterns/ui_style_controller.dart';
+import 'package:smart_campus/common/ui_patterns/ui_style.dart';
+import 'package:smart_campus/features/teacher/controllers/all_sessions_controller.dart';
+import 'package:smart_campus/common/utils/constants/sized.dart';
+import 'package:smart_campus/features/teacher/screens/all_sessions/variants/all_sessions_corporate.dart';
+import 'package:smart_campus/features/teacher/screens/all_sessions/variants/all_sessions_minimalist.dart';
+import 'package:smart_campus/features/teacher/screens/all_sessions/variants/all_sessions_glassmorphism.dart';
+import 'package:smart_campus/features/teacher/screens/all_sessions/variants/all_sessions_neumorphic.dart';
+import 'package:smart_campus/features/teacher/screens/all_sessions/variants/all_sessions_material3.dart';
+import 'package:smart_campus/features/teacher/screens/all_sessions/variants/all_sessions_cupertino.dart';
+import 'package:smart_campus/features/teacher/screens/all_sessions/variants/all_sessions_cyberpunk.dart';
+import 'package:smart_campus/features/teacher/screens/all_sessions/variants/all_sessions_brutalist.dart';
+import 'package:smart_campus/features/teacher/screens/all_sessions/variants/all_sessions_academic.dart';
+import 'package:smart_campus/features/teacher/screens/all_sessions/variants/all_sessions_fluent.dart';
 
 class AllSessionsScreen extends StatelessWidget {
   final AllSessionsController allSessionsController = Get.put(AllSessionsController());

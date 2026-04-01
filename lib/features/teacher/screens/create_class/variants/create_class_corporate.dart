@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../../../controllers/class_controller.dart';
+import 'package:smart_campus/features/teacher/controllers/class_controller.dart';
 
 class CreateClassCorporate extends StatelessWidget {
   final ClassController controller;

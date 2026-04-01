@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
-import '../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
-import '../../controllers/all_sessions_controller.dart';
-import '../../controllers/attendance_controller.dart';
-import '../carousel_attendance_screen.dart';
-import '../../../app/bindings/app_bindings.dart';
+import 'package:smart_campus/common/ui_patterns/pattern_tokens.dart';
+import 'package:smart_campus/common/ui_patterns/ui_style.dart';
+import 'package:smart_campus/features/teacher/controllers/all_sessions_controller.dart';
+import 'package:smart_campus/features/teacher/controllers/attendance_controller.dart';
+import 'package:smart_campus/features/teacher/screens/mark_attendance/mark_attendance_screen.dart';
+import 'package:smart_campus/features/teacher/screens/carousel_attendance/carousel_attendance_screen.dart';
+import 'package:smart_campus/app/bindings/app_bindings.dart';
 
 class AllSessionsAcademic extends StatelessWidget {
   final AllSessionsController controller;
@@ -35,7 +36,7 @@ class AllSessionsAcademic extends StatelessWidget {
 
               if (controller.filteredSessions.isEmpty) {
                 return Center(
-                  child: Text('LOGS_VOID', style: TextStyle(color: inkColor.withOpacity(0.5), fontWeight: FontWeight.w700, fontSize: 13, fontFamily: 'Serif', letterSpacing: 1)),
+                  child: Text('LOGS_VOID', style: TextStyle(color: inkColor.withValues(alpha: 0.5), fontWeight: FontWeight.w700, fontSize: 13, fontFamily: 'Serif', letterSpacing: 1)),
                 );
               }
 
@@ -61,18 +62,18 @@ class AllSessionsAcademic extends StatelessWidget {
   Widget _buildScholarSearch(Color paper, Color ink, Color accent) {
     return Container(
        padding: const EdgeInsets.all(20),
-       decoration: BoxDecoration(color: paper, border: Border(bottom: BorderSide(color: accent.withOpacity(0.2)))),
+       decoration: BoxDecoration(color: paper, border: Border(bottom: BorderSide(color: accent.withValues(alpha: 0.2)))),
        child: Container(
           height: 48,
-          decoration: BoxDecoration(color: Colors.white, border: Border.all(color: accent.withOpacity(0.1))),
+          decoration: BoxDecoration(color: Colors.white, border: Border.all(color: accent.withValues(alpha: 0.1))),
           child: TextField(
              controller: controller.searchController,
              style: TextStyle(color: ink, fontWeight: FontWeight.w700, fontSize: 13, fontFamily: 'Serif'),
              decoration: InputDecoration(
                 hintText: 'Search curricular registry...',
-                hintStyle: TextStyle(color: ink.withOpacity(0.3), fontWeight: FontWeight.w600, fontSize: 11, fontFamily: 'Serif'),
+                hintStyle: TextStyle(color: ink.withValues(alpha: 0.3), fontWeight: FontWeight.w600, fontSize: 11, fontFamily: 'Serif'),
                 border: InputBorder.none,
-                prefixIcon: Icon(Iconsax.search_normal, color: ink.withOpacity(0.5), size: 16),
+                prefixIcon: Icon(Iconsax.search_normal, color: ink.withValues(alpha: 0.5), size: 16),
              ),
              onChanged: (_) => controller.filterSessions(),
           ),
@@ -88,8 +89,8 @@ class AllSessionsAcademic extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 20),
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border.all(color: isSelected ? accent : accent.withOpacity(0.1), width: isSelected ? 1.5 : 0.5),
-        boxShadow: [BoxShadow(color: accent.withOpacity(0.03), blurRadius: 10, offset: const Offset(0, 4))],
+        border: Border.all(color: isSelected ? accent : accent.withValues(alpha: 0.1), width: isSelected ? 1.5 : 0.5),
+        boxShadow: [BoxShadow(color: accent.withValues(alpha: 0.03), blurRadius: 10, offset: const Offset(0, 4))],
       ),
       child: Theme(
         data: Theme.of(Get.context!).copyWith(dividerColor: Colors.transparent),
@@ -98,7 +99,7 @@ class AllSessionsAcademic extends StatelessWidget {
           leading: Container(
             width: 48,
             height: 48,
-            decoration: BoxDecoration(color: paper, border: Border.all(color: accent.withOpacity(0.2))),
+            decoration: BoxDecoration(color: paper, border: Border.all(color: accent.withValues(alpha: 0.2))),
             child: Center(
                child: Text(
                  DateFormat('d').format(session.date),
@@ -112,12 +113,12 @@ class AllSessionsAcademic extends StatelessWidget {
           ),
           subtitle: Text(
              DateFormat('EEEE, MMM d').format(session.date).toUpperCase(),
-             style: TextStyle(fontWeight: FontWeight.w700, fontSize: 9, color: ink.withOpacity(0.5), fontFamily: 'Serif'),
+             style: TextStyle(fontWeight: FontWeight.w700, fontSize: 9, color: ink.withValues(alpha: 0.5), fontFamily: 'Serif'),
           ),
           trailing: Container(
              width: 10,
              height: 10,
-             decoration: BoxDecoration(color: isRunning ? accent : ink.withOpacity(0.1), shape: BoxShape.circle),
+             decoration: BoxDecoration(color: isRunning ? accent : ink.withValues(alpha: 0.1), shape: BoxShape.circle),
           ),
           children: [
              Padding(
@@ -134,7 +135,7 @@ class AllSessionsAcademic extends StatelessWidget {
                                  onTap: () => _onMark(session),
                                  child: Container(
                                     padding: const EdgeInsets.symmetric(vertical: 14),
-                                    decoration: BoxDecoration(color: paper, border: Border.all(color: accent.withOpacity(0.3))),
+                                    decoration: BoxDecoration(color: paper, border: Border.all(color: accent.withValues(alpha: 0.3))),
                                     child: Center(child: Text('MARK_RECORD', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 10, color: ink, fontFamily: 'Serif'))),
                                  ),
                               ),
@@ -158,7 +159,7 @@ class AllSessionsAcademic extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: TextStyle(fontWeight: FontWeight.w800, fontSize: 9, color: ink.withOpacity(0.4), fontFamily: 'Serif')),
+          Text(label, style: TextStyle(fontWeight: FontWeight.w800, fontSize: 9, color: ink.withValues(alpha: 0.4), fontFamily: 'Serif')),
           Text(val, style: TextStyle(fontWeight: FontWeight.w900, fontSize: 10, color: ink, fontFamily: 'Serif')),
         ],
       ),

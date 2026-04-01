@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../../../../controllers/signup_controller.dart';
+import '../../../controllers/signup_controller.dart';
 import '../../../../../common/utils/constants/image_strings.dart';
 
 class SignupFluent extends StatelessWidget {
@@ -40,7 +40,7 @@ class SignupFluent extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
-            boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 40, offset: const Offset(0, 20))],
+            boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 40, offset: const Offset(0, 20))],
           ),
           child: Icon(Iconsax.user_add, color: color, size: 48),
         ),
@@ -78,7 +78,7 @@ class SignupFluent extends StatelessWidget {
             obscure: controller.hidePassword.value,
             suffix: IconButton(
               onPressed: () => controller.hidePassword.value = !controller.hidePassword.value,
-              icon: Icon(controller.hidePassword.value ? Iconsax.eye_slash : Iconsax.eye, color: color.withOpacity(0.4), size: 20),
+              icon: Icon(controller.hidePassword.value ? Iconsax.eye_slash : Iconsax.eye, color: color.withValues(alpha: 0.4), size: 20),
             ),
           )),
           const SizedBox(height: 24),
@@ -109,7 +109,7 @@ class SignupFluent extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(4),
-        border: Border.all(color: Colors.black.withOpacity(0.1)),
+        border: Border.all(color: Colors.black.withValues(alpha: 0.1)),
       ),
       child: TextFormField(
         controller: textController,
@@ -119,7 +119,7 @@ class SignupFluent extends StatelessWidget {
           prefixIcon: icon != null ? Icon(icon, color: const Color(0xFF0078D4), size: 22) : null,
           suffixIcon: suffix,
           hintText: hint,
-          hintStyle: TextStyle(fontSize: 14, color: Colors.black.withOpacity(0.2)),
+          hintStyle: TextStyle(fontSize: 14, color: Colors.black.withValues(alpha: 0.2)),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
         ),
@@ -137,7 +137,7 @@ class SignupFluent extends StatelessWidget {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
         ),
         const SizedBox(width: 8),
-        Expanded(child: Text('Agreement to Institutional Terms', style: TextStyle(fontSize: 12, color: Colors.black.withOpacity(0.4)))),
+        Expanded(child: Text('Agreement to Institutional Terms', style: TextStyle(fontSize: 12, color: Colors.black.withValues(alpha: 0.4)))),
       ],
     ));
   }
@@ -147,9 +147,9 @@ class SignupFluent extends StatelessWidget {
       children: [
         Row(
           children: [
-            Expanded(child: Divider(color: Colors.black.withOpacity(0.1))),
-            Padding(padding: const EdgeInsets.symmetric(horizontal: 16), child: Text('External Authentication', style: TextStyle(fontSize: 12, color: Colors.black.withOpacity(0.3)))),
-            Expanded(child: Divider(color: Colors.black.withOpacity(0.1))),
+            Expanded(child: Divider(color: Colors.black.withValues(alpha: 0.1))),
+            Padding(padding: const EdgeInsets.symmetric(horizontal: 16), child: Text('External Authentication', style: TextStyle(fontSize: 12, color: Colors.black.withValues(alpha: 0.3)))),
+            Expanded(child: Divider(color: Colors.black.withValues(alpha: 0.1))),
           ],
         ),
         const SizedBox(height: 32),
@@ -159,7 +159,7 @@ class SignupFluent extends StatelessWidget {
           child: OutlinedButton.icon(
             onPressed: () => {},
             style: OutlinedButton.styleFrom(
-              side: BorderSide(color: Colors.black.withOpacity(0.1)),
+              side: BorderSide(color: Colors.black.withValues(alpha: 0.1)),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
               foregroundColor: const Color(0xFF201F1E),
             ),

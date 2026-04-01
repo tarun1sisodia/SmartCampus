@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import '../controllers/carousel_attendance_controller.dart';
+import '../../../controllers/carousel_attendance_controller.dart';
 import '../widgets/session_timer_widget.dart';
 
 class CarouselMinimalist extends StatelessWidget {
@@ -75,7 +75,7 @@ class CarouselMinimalist extends StatelessWidget {
   Widget _buildMinimalStudentCard(dynamic student, dynamic attendanceController) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 20),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(32), boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 30, offset: const Offset(0, 15))]),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(32), boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 30, offset: const Offset(0, 15))]),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -116,7 +116,7 @@ class CarouselMinimalist extends StatelessWidget {
   }
 
   Widget _miniBtn(IconData icon, Color color, VoidCallback onTap) {
-    return InkWell(onTap: onTap, borderRadius: BorderRadius.circular(20), child: Container(padding: const EdgeInsets.all(20), decoration: BoxDecoration(color: color.withOpacity(0.05), shape: BoxShape.circle), child: Icon(icon, color: color, size: 32)));
+    return InkWell(onTap: onTap, borderRadius: BorderRadius.circular(20), child: Container(padding: const EdgeInsets.all(20), decoration: BoxDecoration(color: color.withValues(alpha: 0.05), shape: BoxShape.circle), child: Icon(icon, color: color, size: 32)));
   }
 
   void _mark(CarouselAttendanceController controller, dynamic attendanceController, CarouselSliderController carousel, String status) {

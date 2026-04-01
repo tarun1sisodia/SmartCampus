@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../controllers/attendance_controller.dart';
-import '../../../models/class_model.dart';
-import '../../../common/ui_patterns/pattern_scaffold.dart';
-import '../../../common/ui_patterns/ui_style_controller.dart';
-import '../../../common/ui_patterns/ui_style.dart';
-import 'variants/attendance/attendance_corporate.dart';
-import 'variants/attendance/attendance_minimalist.dart';
-import 'variants/attendance/attendance_glassmorphism.dart';
-import 'variants/attendance/attendance_neumorphic.dart';
-import 'variants/attendance/attendance_material3.dart';
-import 'variants/attendance/attendance_cupertino.dart';
-import 'variants/attendance/attendance_cyberpunk.dart';
-import 'variants/attendance/attendance_brutalist.dart';
-import 'variants/attendance/attendance_academic.dart';
-import 'variants/attendance/attendance_fluent.dart';
+import 'package:smart_campus/features/teacher/controllers/attendance_controller.dart';
+import 'package:smart_campus/models/class_model.dart';
+import 'package:smart_campus/common/ui_patterns/pattern_scaffold.dart';
+import 'package:smart_campus/common/ui_patterns/ui_style_controller.dart';
+import 'package:smart_campus/common/ui_patterns/ui_style.dart';
+import 'package:smart_campus/features/teacher/screens/attendance/variants/attendance_corporate.dart';
+import 'package:smart_campus/features/teacher/screens/attendance/variants/attendance_minimalist.dart';
+import 'package:smart_campus/features/teacher/screens/attendance/variants/attendance_glassmorphism.dart';
+import 'package:smart_campus/features/teacher/screens/attendance/variants/attendance_neumorphic.dart';
+import 'package:smart_campus/features/teacher/screens/attendance/variants/attendance_material3.dart';
+import 'package:smart_campus/features/teacher/screens/attendance/variants/attendance_cupertino.dart';
+import 'package:smart_campus/features/teacher/screens/attendance/variants/attendance_cyberpunk.dart';
+import 'package:smart_campus/features/teacher/screens/attendance/variants/attendance_brutalist.dart';
+import 'package:smart_campus/features/teacher/screens/attendance/variants/attendance_academic.dart';
+import 'package:smart_campus/features/teacher/screens/attendance/variants/attendance_fluent.dart';
 
 class AttendanceScreen extends StatelessWidget {
   final ClassModel classModel;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../../../../common/ui_patterns/pattern_tokens.dart';
+import '../../../../../common/ui_patterns/pattern_tokens.dart';
 import '../. ./../../common/ui_patterns/ui_style.dart';
 import '../../../controllers/attendance_reports_controller.dart';
 
@@ -56,7 +56,7 @@ class AttendanceReportsCyberpunk extends StatelessWidget {
   Widget _buildGridBackground(Color cyan) {
     return Positioned.fill(
       child: CustomPaint(
-        painter: GridPainter(color: cyan.withOpacity(0.05)),
+        painter: GridPainter(color: cyan.withValues(alpha: 0.05)),
       ),
     );
   }
@@ -65,7 +65,7 @@ class AttendanceReportsCyberpunk extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
       decoration: BoxDecoration(
-        color: cyan.withOpacity(0.05),
+        color: cyan.withValues(alpha: 0.05),
         border: Border(bottom: BorderSide(color: cyan, width: 2)),
       ),
       child: Row(
@@ -81,7 +81,7 @@ class AttendanceReportsCyberpunk extends StatelessWidget {
   Widget _buildTerminalDropdown(Color cyan) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12),
-      decoration: BoxDecoration(border: Border.all(color: cyan.withOpacity(0.5)), color: Colors.black),
+      decoration: BoxDecoration(border: Border.all(color: cyan.withValues(alpha: 0.5)), color: Colors.black),
       child: Obx(() => DropdownButtonHideUnderline(
         child: DropdownButton<String>(
           isExpanded: true,
@@ -112,7 +112,7 @@ class AttendanceReportsCyberpunk extends StatelessWidget {
       child: Container(
         height: 44,
         width: 44,
-        decoration: BoxDecoration(border: Border.all(color: magenta), color: magenta.withOpacity(0.05)),
+        decoration: BoxDecoration(border: Border.all(color: magenta), color: magenta.withValues(alpha: 0.05)),
         child: Center(child: Icon(icon, color: magenta, size: 20)),
       ),
     );
@@ -124,7 +124,7 @@ class AttendanceReportsCyberpunk extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.black,
         border: Border.all(color: cyan, width: 2),
-        boxShadow: [BoxShadow(color: cyan.withOpacity(0.2), blurRadius: 20)],
+        boxShadow: [BoxShadow(color: cyan.withValues(alpha: 0.2), blurRadius: 20)],
       ),
       child: Column(
         children: [
@@ -134,7 +134,7 @@ class AttendanceReportsCyberpunk extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('BUFFER_PERCENTAGE', style: TextStyle(color: cyan.withOpacity(0.5), fontWeight: FontWeight.w800, fontSize: 10, letterSpacing: 1)),
+                  Text('BUFFER_PERCENTAGE', style: TextStyle(color: cyan.withValues(alpha: 0.5), fontWeight: FontWeight.w800, fontSize: 10, letterSpacing: 1)),
                   Obx(() => Text(
                     '${controller.averageAttendance.value.toStringAsFixed(1)}%',
                     style: TextStyle(color: cyan, fontWeight: FontWeight.w900, fontSize: 44, height: 1, shadows: [Shadow(color: cyan, blurRadius: 15)]),
@@ -184,7 +184,7 @@ class AttendanceReportsCyberpunk extends StatelessWidget {
           margin: const EdgeInsets.only(bottom: 12),
           decoration: BoxDecoration(
             color: Colors.black,
-            border: Border.all(color: activeColor.withOpacity(0.5)),
+            border: Border.all(color: activeColor.withValues(alpha: 0.5)),
           ),
           child: ListTile(
             onTap: () => controller.navigateToStudentDetail(student),
@@ -194,7 +194,7 @@ class AttendanceReportsCyberpunk extends StatelessWidget {
             ),
             subtitle: Text(
               'RE_ID_${student.rollNumber}',
-              style: TextStyle(color: activeColor.withOpacity(0.5), fontWeight: FontWeight.w800, fontSize: 10),
+              style: TextStyle(color: activeColor.withValues(alpha: 0.5), fontWeight: FontWeight.w800, fontSize: 10),
             ),
             trailing: Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),

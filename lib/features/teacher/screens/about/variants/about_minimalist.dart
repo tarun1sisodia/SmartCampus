@@ -42,9 +42,9 @@ class AboutMinimalist extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: Colors.black.withOpacity(0.6))),
+        Text(title, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: Colors.black.withValues(alpha: 0.6))),
         const SizedBox(height: 16),
-        Text(content, style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, color: Colors.black.withOpacity(0.4), height: 1.6)),
+        Text(content, style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, color: Colors.black.withValues(alpha: 0.4), height: 1.6)),
       ],
     );
   }
@@ -58,7 +58,7 @@ class AboutMinimalist extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text('Tarun Sisodia', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16, color: Colors.black87)),
-            Text('Lead Architect', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 12, color: Colors.black.withOpacity(0.3))),
+            Text('Lead Architect', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 12, color: Colors.black.withValues(alpha: 0.3))),
           ],
         ),
       ],
@@ -83,7 +83,7 @@ class AboutMinimalist extends StatelessWidget {
   Widget _socialIcon(IconData icon, String url) {
     return InkWell(
       onTap: () async => await launchUrl(Uri.parse(url)),
-      child: Icon(icon, color: Colors.black.withOpacity(0.2), size: 20),
+      child: Icon(icon, color: Colors.black.withValues(alpha: 0.2), size: 20),
     );
   }
 }

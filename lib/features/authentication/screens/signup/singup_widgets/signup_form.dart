@@ -9,7 +9,7 @@ import '../../../../../common/utils/constants/image_strings.dart';
 import '../../../../../common/utils/constants/sized.dart';
 import '../../../../../common/utils/constants/text_strings.dart';
 import '../../../../../common/utils/helpers/snackbar_helper.dart';
-import '../../../../controllers/signup_controller.dart';
+import '../../../controllers/signup_controller.dart';
 import 'textfields.dart';
 
 class SignupForm extends StatelessWidget {
