@@ -62,7 +62,7 @@ class AboutCorporate extends StatelessWidget {
   Widget _buildDeveloperTile({required String name, required String role, required IconData icon, required Color color}) {
     return Row(
       children: [
-        Container(padding: const EdgeInsets.all(12), decoration: BoxDecoration(color: color.withOpacity(0.1), border: Border.all(color: color.withOpacity(0.2))), child: Icon(icon, color: color, size: 24)),
+        Container(padding: const EdgeInsets.all(12), decoration: BoxDecoration(color: color.withValues(alpha: 0.1), border: Border.all(color: color.withValues(alpha: 0.2))), child: Icon(icon, color: color, size: 24)),
         const SizedBox(width: 16),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,

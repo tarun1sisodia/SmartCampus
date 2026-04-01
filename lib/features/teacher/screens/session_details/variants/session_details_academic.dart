@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
+import '../../../../../common/ui_patterns/pattern_tokens.dart';
+import '../../../../../common/ui_patterns/ui_style.dart';
 import '../../controllers/session_details_controller.dart';
 import '../../../common/utils/constants/sized.dart';
 
@@ -27,7 +27,7 @@ class SessionDetailsAcademic extends StatelessWidget {
         }
 
         if (controller.session.value == null) {
-          return Center(child: Text('CURRICULAR_LOG_VOID', style: TextStyle(color: inkColor.withOpacity(0.5), fontFamily: 'Serif')));
+          return Center(child: Text('CURRICULAR_LOG_VOID', style: TextStyle(color: inkColor.withValues(alpha: 0.5), fontFamily: 'Serif')));
         }
 
         return ListView(
@@ -55,7 +55,7 @@ class SessionDetailsAcademic extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.all(32),
-      decoration: BoxDecoration(color: Colors.white, border: Border.all(color: accent.withOpacity(0.2)), boxShadow: [BoxShadow(color: accent.withOpacity(0.02), blurRadius: 20)]),
+      decoration: BoxDecoration(color: Colors.white, border: Border.all(color: accent.withValues(alpha: 0.2)), boxShadow: [BoxShadow(color: accent.withValues(alpha: 0.02), blurRadius: 20)]),
       child: Column(
         children: [
           if (isActive)
@@ -67,7 +67,7 @@ class SessionDetailsAcademic extends StatelessWidget {
           const SizedBox(height: 16),
           Text(classDetails['subjectName'] ?? 'Academic Unit', textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.w900, fontSize: 24, color: ink, fontFamily: 'Serif', letterSpacing: -0.5)),
           const SizedBox(height: 8),
-          Text('${classDetails['courseName']} | Semester ${classDetails['semester']}'.toUpperCase(), style: TextStyle(fontWeight: FontWeight.w600, fontSize: 10, color: ink.withOpacity(0.5), fontFamily: 'Serif', letterSpacing: 1)),
+          Text('${classDetails['courseName']} | Semester ${classDetails['semester']}'.toUpperCase(), style: TextStyle(fontWeight: FontWeight.w600, fontSize: 10, color: ink.withValues(alpha: 0.5), fontFamily: 'Serif', letterSpacing: 1)),
           const SizedBox(height: 32),
           const Divider(),
           const SizedBox(height: 16),
@@ -86,7 +86,7 @@ class SessionDetailsAcademic extends StatelessWidget {
   Widget _buildScholarMeta(IconData icon, String val, Color ink) {
     return Row(
       children: [
-        Icon(icon, color: ink.withOpacity(0.4), size: 14),
+        Icon(icon, color: ink.withValues(alpha: 0.4), size: 14),
         const SizedBox(width: 8),
         Text(val, style: TextStyle(fontWeight: FontWeight.w700, fontSize: 11, color: ink, fontFamily: 'Serif')),
       ],
@@ -97,7 +97,7 @@ class SessionDetailsAcademic extends StatelessWidget {
     final stats = controller.attendanceStats.value;
     return Container(
       padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(color: Colors.white, border: Border.all(color: accent.withOpacity(0.1))),
+      decoration: BoxDecoration(color: Colors.white, border: Border.all(color: accent.withValues(alpha: 0.1))),
       child: Column(
         children: [
           Row(
@@ -105,18 +105,18 @@ class SessionDetailsAcademic extends StatelessWidget {
              children: [
                _buildScholarStatNode('TOTAL', stats.total, ink),
                _buildScholarStatNode('PRESENT', stats.present, accent),
-               _buildScholarStatNode('ABSENT', stats.absent, ink.withOpacity(0.4)),
+               _buildScholarStatNode('ABSENT', stats.absent, ink.withValues(alpha: 0.4)),
              ],
           ),
           const SizedBox(height: 24),
           Stack(
             children: [
-              Container(height: 1, width: double.infinity, color: ink.withOpacity(0.05)),
+              Container(height: 1, width: double.infinity, color: ink.withValues(alpha: 0.05)),
               Container(height: 1, width: Get.width * (stats.presentPercentage / 300), color: accent),
             ],
           ),
           const SizedBox(height: 8),
-          Text('Fulfillment Rate: ${stats.presentPercentage.toStringAsFixed(1)}%', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 10, color: ink.withOpacity(0.5), fontFamily: 'Serif', fontStyle: FontStyle.italic)),
+          Text('Fulfillment Rate: ${stats.presentPercentage.toStringAsFixed(1)}%', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 10, color: ink.withValues(alpha: 0.5), fontFamily: 'Serif', fontStyle: FontStyle.italic)),
         ],
       ),
     );
@@ -163,7 +163,7 @@ class SessionDetailsAcademic extends StatelessWidget {
   Widget _buildScholarRoster(Color paper, Color ink, Color accent) {
     final records = controller.attendanceRecords;
     if (records.isEmpty) {
-      return Center(child: Text('LOG_VOID', style: TextStyle(color: ink.withOpacity(0.3), fontFamily: 'Serif')));
+      return Center(child: Text('LOG_VOID', style: TextStyle(color: ink.withValues(alpha: 0.3), fontFamily: 'Serif')));
     }
 
     return ListView.builder(
@@ -174,15 +174,15 @@ class SessionDetailsAcademic extends StatelessWidget {
         final record = records[index];
         return Container(
           margin: const EdgeInsets.only(bottom: 12),
-          decoration: BoxDecoration(color: Colors.white, border: Border(bottom: BorderSide(color: accent.withOpacity(0.1)))),
+          decoration: BoxDecoration(color: Colors.white, border: Border(bottom: BorderSide(color: accent.withValues(alpha: 0.1)))),
           child: ListTile(
              contentPadding: const EdgeInsets.all(16),
              leading: CircleAvatar(
                 backgroundColor: paper,
-                child: Icon(record.isPresent ? Iconsax.verify : Iconsax.close_circle, color: record.isPresent ? accent : ink.withOpacity(0.2), size: 20),
+                child: Icon(record.isPresent ? Iconsax.verify : Iconsax.close_circle, color: record.isPresent ? accent : ink.withValues(alpha: 0.2), size: 20),
              ),
              title: Text(record.studentName, style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14, color: ink, fontFamily: 'Serif')),
-             subtitle: Text('ID: ${record.studentId}', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 11, color: ink.withOpacity(0.4), fontFamily: 'Serif')),
+             subtitle: Text('ID: ${record.studentId}', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 11, color: ink.withValues(alpha: 0.4), fontFamily: 'Serif')),
              trailing: controller.isSessionActive() 
                 ? Switch(
                     value: record.isPresent, 

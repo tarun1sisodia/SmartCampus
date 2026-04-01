@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../common/ui_patterns/pattern_scaffold.dart';
-import '../../../common/ui_patterns/ui_style.dart';
-import '../../../common/ui_patterns/ui_style_controller.dart';
-import 'variants/help/help_corporate.dart';
-import 'variants/help/help_minimalist.dart';
-import 'variants/help/help_glassmorphism.dart';
-import 'variants/help/help_neumorphism.dart';
-import 'variants/help/help_material3.dart';
-import 'variants/help/help_cupertino.dart';
-import 'variants/help/help_cyberpunk.dart';
-import 'variants/help/help_brutalist.dart';
-import 'variants/help/help_academic.dart';
-import 'variants/help/help_fluent.dart';
+import '../../../../common/ui_patterns/pattern_scaffold.dart';
+import '../../../../common/ui_patterns/ui_style.dart';
+import '../../../../common/ui_patterns/ui_style_controller.dart';
+import 'variants/help_corporate.dart';
+import 'variants/help_minimalist.dart';
+import 'variants/help_glassmorphism.dart';
+import 'variants/help_neumorphism.dart';
+import 'variants/help_material3.dart';
+import 'variants/help_cupertino.dart';
+import 'variants/help_cyberpunk.dart';
+import 'variants/help_brutalist.dart';
+import 'variants/help_academic.dart';
+import 'variants/help_fluent.dart';
 
 class HelpScreen extends StatelessWidget {
   const HelpScreen({super.key});

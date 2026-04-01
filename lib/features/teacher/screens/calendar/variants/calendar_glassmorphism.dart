@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:table_calendar/table_calendar.dart';
-import '../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
+import '../../../../../common/ui_patterns/pattern_tokens.dart';
+import '../../../../../common/ui_patterns/ui_style.dart';
 import '../../controllers/calendar_controller.dart';
 import '../../../../models/attendance_session_model.dart';
 
@@ -36,7 +36,7 @@ class CalendarGlassmorphism extends StatelessWidget {
           Positioned.fill(
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-              child: Container(color: Colors.white.withOpacity(0.02)),
+              child: Container(color: Colors.white.withValues(alpha: 0.02)),
             ),
           ),
           
@@ -81,9 +81,9 @@ class CalendarGlassmorphism extends StatelessWidget {
         margin: const EdgeInsets.fromLTRB(20, 20, 20, 10),
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.1),
+          color: Colors.white.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Colors.white.withOpacity(0.2)),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
         ),
         child: Row(
           children: [
@@ -103,9 +103,9 @@ class CalendarGlassmorphism extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
+        color: Colors.white.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: Colors.white.withOpacity(0.2)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
       ),
       child: TableCalendar(
         firstDay: DateTime.utc(2020, 1, 1),
@@ -122,18 +122,18 @@ class CalendarGlassmorphism extends StatelessWidget {
         eventLoader: (day) => controller.getSessionsForDay(day),
         calendarStyle: CalendarStyle(
           markerDecoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-          todayDecoration: BoxDecoration(color: Colors.white.withOpacity(0.1), shape: BoxShape.circle),
+          todayDecoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.1), shape: BoxShape.circle),
           todayTextStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800),
           selectedDecoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
           selectedTextStyle: const TextStyle(color: Color(0xFF6366F1), fontWeight: FontWeight.w900),
           defaultTextStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
           weekendTextStyle: const TextStyle(color: Color(0xFFFF9494), fontWeight: FontWeight.w700),
-          outsideTextStyle: TextStyle(color: Colors.white.withOpacity(0.3)),
+          outsideTextStyle: TextStyle(color: Colors.white.withValues(alpha: 0.3)),
         ),
         headerStyle: HeaderStyle(
           titleTextStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 17),
           formatButtonTextStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 11),
-          formatButtonDecoration: BoxDecoration(color: Colors.white.withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
+          formatButtonDecoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
           leftChevronIcon: const Icon(Iconsax.arrow_left_2, size: 20, color: Colors.white),
           rightChevronIcon: const Icon(Iconsax.arrow_right_3, size: 20, color: Colors.white),
         ),
@@ -150,7 +150,7 @@ class CalendarGlassmorphism extends StatelessWidget {
     if (sessions.isEmpty) {
       return Container(
         padding: const EdgeInsets.all(48),
-        decoration: BoxDecoration(color: Colors.white.withOpacity(0.05), borderRadius: BorderRadius.circular(20)),
+        decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.05), borderRadius: BorderRadius.circular(20)),
         child: const Center(child: Text('NO DATA STREAM INGESTED', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 11, letterSpacing: 1))),
       );
     }
@@ -170,9 +170,9 @@ class CalendarGlassmorphism extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.08),
+        color: Colors.white.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: isActive ? const Color(0xFF10B981) : Colors.white.withOpacity(0.1)),
+        border: Border.all(color: isActive ? const Color(0xFF10B981) : Colors.white.withValues(alpha: 0.1)),
       ),
       child: ListTile(
         contentPadding: const EdgeInsets.all(16),
@@ -186,7 +186,7 @@ class CalendarGlassmorphism extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               '${session.courseName} | SEM ${session.semester}'.toUpperCase(),
-              style: TextStyle(color: Colors.white.withOpacity(0.6), fontWeight: FontWeight.w700, fontSize: 10),
+              style: TextStyle(color: Colors.white.withValues(alpha: 0.6), fontWeight: FontWeight.w700, fontSize: 10),
             ),
             const SizedBox(height: 12),
             Row(
@@ -204,8 +204,8 @@ class CalendarGlassmorphism extends StatelessWidget {
         trailing: Container(
            width: 44,
            height: 44,
-           decoration: BoxDecoration(shape: BoxShape.circle, color: isMySession ? const Color(0xFF6366F1).withOpacity(0.2) : Colors.white.withOpacity(0.05)),
-           child: Center(child: Icon(isMySession ? Iconsax.verify : Iconsax.user_octagon, size: 20, color: isMySession ? const Color(0xFF818CF8) : Colors.white.withOpacity(0.4))),
+           decoration: BoxDecoration(shape: BoxShape.circle, color: isMySession ? const Color(0xFF6366F1).withValues(alpha: 0.2) : Colors.white.withValues(alpha: 0.05)),
+           child: Center(child: Icon(isMySession ? Iconsax.verify : Iconsax.user_octagon, size: 20, color: isMySession ? const Color(0xFF818CF8) : Colors.white.withValues(alpha: 0.4))),
         ),
       ),
     );

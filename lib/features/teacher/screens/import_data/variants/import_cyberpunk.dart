@@ -65,7 +65,7 @@ class ImportCyberpunk extends StatelessWidget {
                 child: Container(
                   width: double.infinity,
                   height: 60,
-                  decoration: BoxDecoration(color: Colors.black, border: Border.all(color: cyan, width: 2), boxShadow: [BoxShadow(color: cyan.withOpacity(0.2), blurRadius: 10)]),
+                  decoration: BoxDecoration(color: Colors.black, border: Border.all(color: cyan, width: 2), boxShadow: [BoxShadow(color: cyan.withValues(alpha: 0.2), blurRadius: 10)]),
                   child: Center(
                     child: isImporting.value 
                       ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.indigo))
@@ -82,7 +82,7 @@ class ImportCyberpunk extends StatelessWidget {
   }
 
   Widget _buildGridOverlay(Color cyan) {
-    return Positioned.fill(child: CustomPaint(painter: _GridPainter(color: cyan.withOpacity(0.04))));
+    return Positioned.fill(child: CustomPaint(painter: _GridPainter(color: cyan.withValues(alpha: 0.04))));
   }
 
   Widget _buildCyberHeader(Color cyan, Color magenta) {
@@ -107,7 +107,7 @@ class ImportCyberpunk extends StatelessWidget {
         ),
         Container(
           padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(color: Colors.black, border: Border.all(color: accent.withOpacity(0.3), width: 1.5)),
+          decoration: BoxDecoration(color: Colors.black, border: Border.all(color: accent.withValues(alpha: 0.3), width: 1.5)),
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: items),
         ),
       ],
@@ -120,8 +120,8 @@ class ImportCyberpunk extends StatelessWidget {
         onTap: onTap,
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 12),
-          decoration: BoxDecoration(color: isSelected ? accent.withOpacity(0.1) : Colors.transparent, border: Border.all(color: isSelected ? accent : accent.withOpacity(0.2))),
-          child: Center(child: Text(label, style: TextStyle(color: isSelected ? accent : accent.withOpacity(0.3), fontWeight: FontWeight.w900, fontSize: 11, fontFamily: 'Courier'))),
+          decoration: BoxDecoration(color: isSelected ? accent.withValues(alpha: 0.1) : Colors.transparent, border: Border.all(color: isSelected ? accent : accent.withValues(alpha: 0.2))),
+          child: Center(child: Text(label, style: TextStyle(color: isSelected ? accent : accent.withValues(alpha: 0.3), fontWeight: FontWeight.w900, fontSize: 11, fontFamily: 'Courier'))),
         ),
       ),
     );
@@ -133,12 +133,12 @@ class ImportCyberpunk extends StatelessWidget {
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 32),
-        decoration: BoxDecoration(border: Border.all(color: accent.withOpacity(0.3), style: BorderStyle.none)),
+        decoration: BoxDecoration(border: Border.all(color: accent.withValues(alpha: 0.3), style: BorderStyle.none)),
         child: Column(
           children: [
-            Icon(Iconsax.import, size: 32, color: accent.withOpacity(0.5)),
+            Icon(Iconsax.import, size: 32, color: accent.withValues(alpha: 0.5)),
             const SizedBox(height: 12),
-            Text('ATTACH_SOURCE_PAYLOAD', style: TextStyle(color: accent.withOpacity(0.5), fontWeight: FontWeight.w900, fontSize: 11, letterSpacing: 1, fontFamily: 'Courier')),
+            Text('ATTACH_SOURCE_PAYLOAD', style: TextStyle(color: accent.withValues(alpha: 0.5), fontWeight: FontWeight.w900, fontSize: 11, letterSpacing: 1, fontFamily: 'Courier')),
           ],
         ),
       ),
@@ -160,7 +160,7 @@ class ImportCyberpunk extends StatelessWidget {
     return Obx(() => Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label, style: TextStyle(color: accent.withOpacity(0.7), fontWeight: FontWeight.w900, fontSize: 12, fontFamily: 'Courier')),
+        Text(label, style: TextStyle(color: accent.withValues(alpha: 0.7), fontWeight: FontWeight.w900, fontSize: 12, fontFamily: 'Courier')),
         Switch(value: value.value, onChanged: (v) => value.value = v, activeThumbColor: accent),
       ],
     ));

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:iconsax/iconsax.dart';
-import '../change_password_controller.dart';
+import '../../../controllers/change_password_controller.dart';
 
 class ChangePasswordCupertino extends StatelessWidget {
   const ChangePasswordCupertino({super.key});
@@ -34,7 +34,7 @@ class ChangePasswordCupertino extends StatelessWidget {
       children: [
         Container(
           padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(24), boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 40, offset: const Offset(0, 10))]),
+          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(24), boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 40, offset: const Offset(0, 10))]),
           child: const Icon(CupertinoIcons.lock_shield_fill, color: Color(0xFF5856D6), size: 48),
         ),
         const SizedBox(height: 32),

@@ -51,7 +51,7 @@ class HelpCyberpunk extends StatelessWidget {
   }
 
   Widget _buildGridOverlay(Color cyan) {
-    return Positioned.fill(child: CustomPaint(painter: _GridPainter(color: cyan.withOpacity(0.04))));
+    return Positioned.fill(child: CustomPaint(painter: _GridPainter(color: cyan.withValues(alpha: 0.04))));
   }
 
   Widget _buildCyberHeader(Color cyan, Color magenta) {
@@ -76,7 +76,7 @@ class HelpCyberpunk extends StatelessWidget {
         ),
         Container(
           padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(color: Colors.black, border: Border.all(color: accent.withOpacity(0.3), width: 1.5)),
+          decoration: BoxDecoration(color: Colors.black, border: Border.all(color: accent.withValues(alpha: 0.3), width: 1.5)),
           child: Column(children: items),
         ),
       ],
@@ -87,7 +87,7 @@ class HelpCyberpunk extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        decoration: BoxDecoration(color: Colors.black, border: Border.all(color: color.withOpacity(0.3))),
+        decoration: BoxDecoration(color: Colors.black, border: Border.all(color: color.withValues(alpha: 0.3))),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -106,12 +106,12 @@ class HelpCyberpunk extends StatelessWidget {
       child: ExpansionTile(
         title: Text(question.toUpperCase(), style: TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 12, fontFamily: 'Courier')),
         iconColor: color,
-        collapsedIconColor: color.withOpacity(0.3),
+        collapsedIconColor: color.withValues(alpha: 0.3),
         tilePadding: EdgeInsets.zero,
         children: [
           Padding(
             padding: const EdgeInsets.only(top: 8, bottom: 16),
-            child: Text(answer, style: TextStyle(color: color.withOpacity(0.6), fontWeight: FontWeight.bold, fontSize: 13, height: 1.5, fontFamily: 'Courier')),
+            child: Text(answer, style: TextStyle(color: color.withValues(alpha: 0.6), fontWeight: FontWeight.bold, fontSize: 13, height: 1.5, fontFamily: 'Courier')),
           ),
         ],
       ),
@@ -167,7 +167,7 @@ class HelpCyberpunk extends StatelessWidget {
               onTap: () => Navigator.pop(context),
               child: Container(
                 height: 60,
-                decoration: BoxDecoration(color: magenta.withOpacity(0.1), border: Border.all(color: magenta, width: 2)),
+                decoration: BoxDecoration(color: magenta.withValues(alpha: 0.1), border: Border.all(color: magenta, width: 2)),
                 child: const Center(child: Text('DISMISS_OVERLAY', style: TextStyle(color: magenta, fontWeight: FontWeight.w900, fontSize: 11, letterSpacing: 2, fontFamily: 'Courier'))),
               ),
             ),
@@ -182,13 +182,13 @@ class HelpCyberpunk extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 16),
       child: Row(
         children: [
-          Container(padding: const EdgeInsets.all(12), decoration: BoxDecoration(color: color.withOpacity(0.1), border: Border.all(color: color.withOpacity(0.3))), child: Icon(icon, color: color, size: 24)),
+          Container(padding: const EdgeInsets.all(12), decoration: BoxDecoration(color: color.withValues(alpha: 0.1), border: Border.all(color: color.withValues(alpha: 0.3))), child: Icon(icon, color: color, size: 24)),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: TextStyle(color: color.withOpacity(0.4), fontWeight: FontWeight.w900, fontSize: 9, letterSpacing: 1, fontFamily: 'Courier')),
+                Text(title, style: TextStyle(color: color.withValues(alpha: 0.4), fontWeight: FontWeight.w900, fontSize: 9, letterSpacing: 1, fontFamily: 'Courier')),
                 const SizedBox(height: 2),
                 Text(subtitle, style: TextStyle(color: color, fontWeight: FontWeight.w900, fontSize: 14, fontFamily: 'Courier')),
               ],

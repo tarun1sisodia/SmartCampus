@@ -76,7 +76,7 @@ class ImportMinimalist extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title, style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: Colors.black.withOpacity(0.6))),
+        Text(title, style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: Colors.black.withValues(alpha: 0.6))),
         const SizedBox(height: 16),
         ...children,
       ],
@@ -89,7 +89,7 @@ class ImportMinimalist extends StatelessWidget {
         onTap: onTap,
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 16),
-          decoration: BoxDecoration(color: isSelected ? Colors.black.withOpacity(0.02) : Colors.transparent, borderRadius: BorderRadius.circular(12), border: Border.all(color: isSelected ? Colors.black : Colors.grey[200]!, width: 1.5)),
+          decoration: BoxDecoration(color: isSelected ? Colors.black.withValues(alpha: 0.02) : Colors.transparent, borderRadius: BorderRadius.circular(12), border: Border.all(color: isSelected ? Colors.black : Colors.grey[200]!, width: 1.5)),
           child: Column(
             children: [
               Icon(icon, color: isSelected ? Colors.black : Colors.grey[400], size: 24),

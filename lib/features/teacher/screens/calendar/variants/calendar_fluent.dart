@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:table_calendar/table_calendar.dart';
-import '../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
+import '../../../../../common/ui_patterns/pattern_tokens.dart';
+import '../../../../../common/ui_patterns/ui_style.dart';
 import '../../controllers/calendar_controller.dart';
 import '../../../../models/attendance_session_model.dart';
 
@@ -55,8 +55,8 @@ class CalendarFluent extends StatelessWidget {
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.7),
-          border: Border(bottom: BorderSide(color: Colors.black.withOpacity(0.05), width: 1)),
+          color: Colors.white.withValues(alpha: 0.7),
+          border: Border(bottom: BorderSide(color: Colors.black.withValues(alpha: 0.05), width: 1)),
         ),
         child: Row(
           children: [
@@ -78,7 +78,7 @@ class CalendarFluent extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4))],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 4))],
       ),
       child: TableCalendar(
         firstDay: DateTime.utc(2020, 1, 1),
@@ -119,7 +119,7 @@ class CalendarFluent extends StatelessWidget {
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(48.0),
-          child: Text('NO_SESSIONS_INDEXED', style: TextStyle(color: Colors.black.withOpacity(0.4), fontWeight: FontWeight.w700, fontSize: 11)),
+          child: Text('NO_SESSIONS_INDEXED', style: TextStyle(color: Colors.black.withValues(alpha: 0.4), fontWeight: FontWeight.w700, fontSize: 11)),
         ),
       );
     }
@@ -128,13 +128,13 @@ class CalendarFluent extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.black.withOpacity(0.05)),
+        border: Border.all(color: Colors.black.withValues(alpha: 0.05)),
       ),
       child: ListView.separated(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         itemCount: sessions.length,
-        separatorBuilder: (context, index) => Divider(height: 1, color: Colors.black.withOpacity(0.05)),
+        separatorBuilder: (context, index) => Divider(height: 1, color: Colors.black.withValues(alpha: 0.05)),
         itemBuilder: (context, index) => _buildFluentRow(sessions[index]),
       ),
     );
@@ -156,7 +156,7 @@ class CalendarFluent extends StatelessWidget {
            const SizedBox(height: 6),
            Text(
              '${session.courseName} | SEM ${session.semester}'.toUpperCase(),
-             style: TextStyle(fontWeight: FontWeight.w600, fontSize: 10, color: Colors.black.withOpacity(0.5)),
+             style: TextStyle(fontWeight: FontWeight.w600, fontSize: 10, color: Colors.black.withValues(alpha: 0.5)),
            ),
            const SizedBox(height: 12),
            Row(
@@ -173,8 +173,8 @@ class CalendarFluent extends StatelessWidget {
       ),
       trailing: Container(
          padding: const EdgeInsets.all(8),
-         decoration: BoxDecoration(border: Border.all(color: Colors.black.withOpacity(0.1))),
-         child: Icon(isMySession ? Iconsax.verify : Iconsax.user_octagon, size: 20, color: isMySession ? const Color(0xFF0078D4) : Colors.black.withOpacity(0.4)),
+         decoration: BoxDecoration(border: Border.all(color: Colors.black.withValues(alpha: 0.1))),
+         child: Icon(isMySession ? Iconsax.verify : Iconsax.user_octagon, size: 20, color: isMySession ? const Color(0xFF0078D4) : Colors.black.withValues(alpha: 0.4)),
       ),
     );
   }

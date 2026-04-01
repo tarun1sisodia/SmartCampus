@@ -62,7 +62,7 @@ class ClassListNeumorphism extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(color: Colors.white, offset: const Offset(-5, -5), blurRadius: 10),
-            BoxShadow(color: const Color(0xFF94A3B8).withOpacity(0.5), offset: const Offset(5, 5), blurRadius: 10),
+            BoxShadow(color: const Color(0xFF94A3B8).withValues(alpha: 0.5), offset: const Offset(5, 5), blurRadius: 10),
           ],
         ),
         child: TextField(
@@ -70,7 +70,7 @@ class ClassListNeumorphism extends StatelessWidget {
           style: const TextStyle(fontWeight: FontWeight.w700, color: Color(0xFF475569)),
           decoration: InputDecoration(
             hintText: 'IDENTIFY RECORD...',
-            hintStyle: TextStyle(color: const Color(0xFF475569).withOpacity(0.4), fontSize: 12, fontWeight: FontWeight.w800),
+            hintStyle: TextStyle(color: const Color(0xFF475569).withValues(alpha: 0.4), fontSize: 12, fontWeight: FontWeight.w800),
             prefixIcon: const Icon(Iconsax.search_normal, color: Color(0xFF475569), size: 20),
             border: InputBorder.none,
             contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
@@ -93,7 +93,7 @@ class ClassListNeumorphism extends StatelessWidget {
             ]
           : [
               const BoxShadow(color: Colors.white, offset: Offset(-8, -8), blurRadius: 16),
-              BoxShadow(color: const Color(0xFF94A3B8).withOpacity(0.6), offset: const Offset(8, 8), blurRadius: 16),
+              BoxShadow(color: const Color(0xFF94A3B8).withValues(alpha: 0.6), offset: const Offset(8, 8), blurRadius: 16),
             ],
       ),
       child: InkWell(
@@ -121,7 +121,7 @@ class ClassListNeumorphism extends StatelessWidget {
                       shape: BoxShape.circle,
                       boxShadow: [
                          const BoxShadow(color: Colors.white, offset: Offset(-3, -3), blurRadius: 6),
-                         BoxShadow(color: const Color(0xFF94A3B8).withOpacity(0.5), offset: const Offset(3, 3), blurRadius: 6),
+                         BoxShadow(color: const Color(0xFF94A3B8).withValues(alpha: 0.5), offset: const Offset(3, 3), blurRadius: 6),
                       ],
                     ),
                     child: Center(
@@ -172,7 +172,7 @@ class ClassListNeumorphism extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           const BoxShadow(color: Colors.white, offset: Offset(-2, -2), blurRadius: 4),
-          BoxShadow(color: const Color(0xFF94A3B8).withOpacity(0.5), offset: const Offset(2, 2), blurRadius: 4),
+          BoxShadow(color: const Color(0xFF94A3B8).withValues(alpha: 0.5), offset: const Offset(2, 2), blurRadius: 4),
         ],
       ),
       child: InkWell(
@@ -197,7 +197,7 @@ class ClassListNeumorphism extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Iconsax.box, size: 64, color: const Color(0xFF94A3B8).withOpacity(0.3)),
+          Icon(Iconsax.box, size: 64, color: const Color(0xFF94A3B8).withValues(alpha: 0.3)),
           const SizedBox(height: 16),
           const Text('RECORD NOT FOUND', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16, color: Color(0xFF475569))),
         ],

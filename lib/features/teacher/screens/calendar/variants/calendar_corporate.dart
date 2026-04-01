@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:table_calendar/table_calendar.dart';
-import '../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
-import '../../controllers/calendar_controller.dart';
-import '../../../../models/attendance_session_model.dart';
+import 'package:smart_campus/common/ui_patterns/pattern_tokens.dart';
+import 'package:smart_campus/common/ui_patterns/ui_style.dart';
+import 'package:smart_campus/features/teacher/controllers/calendar_controller.dart';
+import 'package:smart_campus/models/attendance_session_model.dart';
 
 class CalendarCorporate extends StatelessWidget {
   final CalendarController controller;
@@ -38,7 +38,7 @@ class CalendarCorporate extends StatelessWidget {
     );
   }
 
-  Widget _buildActiveHeader(Map<String, dynamic> tokens) {
+  Widget _buildActiveHeader(PatternTokens tokens) {
     return Obx(() {
       final activeCount = controller.activeSessionsCount.value;
       if (activeCount == 0) return const SizedBox.shrink();
@@ -64,7 +64,7 @@ class CalendarCorporate extends StatelessWidget {
     });
   }
 
-  Widget _buildCorporateCalendar(Map<String, dynamic> tokens) {
+  Widget _buildCorporateCalendar(PatternTokens tokens) {
     return Container(
       color: Colors.white,
       child: TableCalendar(
@@ -100,7 +100,7 @@ class CalendarCorporate extends StatelessWidget {
     );
   }
 
-  Widget _buildSessionListing(Map<String, dynamic> tokens) {
+  Widget _buildSessionListing(PatternTokens tokens) {
     final sessions = controller.getSessionsForDay(controller.selectedDay.value);
     if (sessions.isEmpty) {
       return const Center(
@@ -115,7 +115,7 @@ class CalendarCorporate extends StatelessWidget {
     );
   }
 
-  Widget _buildCorporateSessionCard(AttendanceSessionModel session, Map<String, dynamic> tokens) {
+  Widget _buildCorporateSessionCard(AttendanceSessionModel session, PatternTokens tokens) {
     final isMySession = controller.userClasses.any((cls) => cls.id == session.classId);
     final isActive = controller.isSessionActive(session);
 

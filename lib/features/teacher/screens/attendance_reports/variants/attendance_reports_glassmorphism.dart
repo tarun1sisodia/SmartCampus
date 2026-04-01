@@ -2,8 +2,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
+import '../../../../../common/ui_patterns/pattern_tokens.dart';
+import '../../../../../common/ui_patterns/ui_style.dart';
 import '../../controllers/attendance_reports_controller.dart';
 
 class AttendanceReportsGlassmorphism extends StatelessWidget {
@@ -34,7 +34,7 @@ class AttendanceReportsGlassmorphism extends StatelessWidget {
           Positioned.fill(
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-              child: Container(color: Colors.white.withOpacity(0.05)),
+              child: Container(color: Colors.white.withValues(alpha: 0.05)),
             ),
           ),
           
@@ -74,8 +74,8 @@ class AttendanceReportsGlassmorphism extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
-        border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.15), width: 1)),
+        color: Colors.white.withValues(alpha: 0.1),
+        border: Border(bottom: BorderSide(color: Colors.white.withValues(alpha: 0.15), width: 1)),
       ),
       child: Column(
         children: [
@@ -95,15 +95,15 @@ class AttendanceReportsGlassmorphism extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
+        color: Colors.white.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withOpacity(0.2)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
       ),
       child: Obx(() => DropdownButtonHideUnderline(
         child: DropdownButton<String>(
           isExpanded: true,
           value: controller.selectedClassId.value,
-          dropdownColor: const Color(0xFF6366F1).withOpacity(0.9),
+          dropdownColor: const Color(0xFF6366F1).withValues(alpha: 0.9),
           icon: const Icon(Iconsax.arrow_down_1, color: Colors.white, size: 16),
           items: controller.classes.map((c) => DropdownMenuItem(
             value: c.id,
@@ -130,9 +130,9 @@ class AttendanceReportsGlassmorphism extends StatelessWidget {
         height: 44,
         padding: const EdgeInsets.symmetric(horizontal: 16),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.1),
+          color: Colors.white.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.white.withOpacity(0.2)),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
         ),
         child: const Center(child: Icon(Iconsax.calendar_1, color: Colors.white, size: 20)),
       ),
@@ -143,9 +143,9 @@ class AttendanceReportsGlassmorphism extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
+        color: Colors.white.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: Colors.white.withOpacity(0.2)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
       ),
       child: Column(
         children: [
@@ -165,7 +165,7 @@ class AttendanceReportsGlassmorphism extends StatelessWidget {
               Container(
                 width: 64,
                 height: 64,
-                decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white.withOpacity(0.1)),
+                decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white.withValues(alpha: 0.1)),
                 child: const Center(child: Icon(Iconsax.chart_2, size: 32, color: Colors.white)),
               ),
             ],
@@ -213,22 +213,22 @@ class AttendanceReportsGlassmorphism extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.08),
+        color: Colors.white.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withOpacity(0.1)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
       ),
       child: ListTile(
         onTap: () => controller.navigateToStudentDetail(student),
         leading: CircleAvatar(
-          backgroundColor: Colors.white.withOpacity(0.1),
+          backgroundColor: Colors.white.withValues(alpha: 0.1),
           child: Text(student.name.toString().substring(0, 1).toUpperCase(), style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w900)),
         ),
         title: Text(student.name.toString().toUpperCase(), style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 13, letterSpacing: 0.5)),
-        subtitle: Text('ID: ${student.rollNumber}', style: TextStyle(color: Colors.white.withOpacity(0.5), fontWeight: FontWeight.w700, fontSize: 10)),
+        subtitle: Text('ID: ${student.rollNumber}', style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontWeight: FontWeight.w700, fontSize: 10)),
         trailing: Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
           decoration: BoxDecoration(
-            color: percentage >= 75 ? const Color(0xFF10B981).withOpacity(0.2) : const Color(0xFFEF4444).withOpacity(0.2),
+            color: percentage >= 75 ? const Color(0xFF10B981).withValues(alpha: 0.2) : const Color(0xFFEF4444).withValues(alpha: 0.2),
             borderRadius: BorderRadius.circular(20),
             border: Border.all(color: percentage >= 75 ? const Color(0xFF10B981) : const Color(0xFFEF4444), width: 1),
           ),

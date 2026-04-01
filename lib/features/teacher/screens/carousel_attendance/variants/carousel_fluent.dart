@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import '../controllers/carousel_attendance_controller.dart';
+import '../../../controllers/carousel_attendance_controller.dart';
 import '../widgets/session_timer_widget.dart';
 
 class CarouselFluent extends StatelessWidget {
@@ -57,9 +57,9 @@ class CarouselFluent extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Iconsax.people, size: 64, color: accent.withOpacity(0.1)),
+          Icon(Iconsax.people, size: 64, color: accent.withValues(alpha: 0.1)),
           const SizedBox(height: 16),
-          Text('No Students Found', style: TextStyle(color: accent.withOpacity(0.3), fontWeight: FontWeight.bold, fontSize: 18)),
+          Text('No Students Found', style: TextStyle(color: accent.withValues(alpha: 0.3), fontWeight: FontWeight.bold, fontSize: 18)),
         ],
       ),
     );
@@ -71,7 +71,7 @@ class CarouselFluent extends StatelessWidget {
       return Container(
         margin: const EdgeInsets.all(24),
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(4), border: Border.all(color: Colors.black.withOpacity(0.05))),
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(4), border: Border.all(color: Colors.black.withValues(alpha: 0.05))),
         child: SessionTimerWidget(remainingTime: controller.remainingTime.value, isSessionActive: true, isCountdownMode: true),
       );
     });
@@ -79,11 +79,11 @@ class CarouselFluent extends StatelessWidget {
 
   Widget _buildFluentStudentCard(dynamic student, dynamic attendanceController, Color accent) {
     return Container(
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.black.withOpacity(0.05)), boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 20, offset: const Offset(0, 10))]),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.black.withValues(alpha: 0.05)), boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 20, offset: const Offset(0, 10))]),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(width: 120, height: 120, decoration: BoxDecoration(color: accent.withOpacity(0.05), borderRadius: BorderRadius.circular(4)), child: Center(child: Icon(Iconsax.user, size: 64, color: accent.withOpacity(0.2)))),
+          Container(width: 120, height: 120, decoration: BoxDecoration(color: accent.withValues(alpha: 0.05), borderRadius: BorderRadius.circular(4)), child: Center(child: Icon(Iconsax.user, size: 64, color: accent.withValues(alpha: 0.2)))),
           const SizedBox(height: 32),
           Text(student.name, style: const TextStyle(color: Color(0xFF201F1E), fontWeight: FontWeight.bold, fontSize: 22, letterSpacing: -0.5)),
           const SizedBox(height: 16),
@@ -99,7 +99,7 @@ class CarouselFluent extends StatelessWidget {
   Widget _buildNavFluent(CarouselAttendanceController controller, int total, Color accent) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 24),
-      child: Obx(() => Text('${controller.currentIndex.value + 1} of $total', style: TextStyle(color: Colors.black.withOpacity(0.3), fontWeight: FontWeight.bold, fontSize: 13))),
+      child: Obx(() => Text('${controller.currentIndex.value + 1} of $total', style: TextStyle(color: Colors.black.withValues(alpha: 0.3), fontWeight: FontWeight.bold, fontSize: 13))),
     );
   }
 

@@ -41,7 +41,7 @@ class LoginCyberpunk extends StatelessWidget {
   Widget _buildGridOverlay(Color color) {
     return Positioned.fill(
       child: CustomPaint(
-        painter: _GridPainter(color: color.withOpacity(0.05)),
+        painter: _GridPainter(color: color.withValues(alpha: 0.05)),
       ),
     );
   }
@@ -54,7 +54,7 @@ class LoginCyberpunk extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.black,
             border: Border.all(color: cyan, width: 2),
-            boxShadow: [BoxShadow(color: cyan.withOpacity(0.2), blurRadius: 20)],
+            boxShadow: [BoxShadow(color: cyan.withValues(alpha: 0.2), blurRadius: 20)],
           ),
           child: Icon(Iconsax.lock_1, color: cyan, size: 48),
         ),
@@ -91,9 +91,9 @@ class LoginCyberpunk extends StatelessWidget {
               width: double.infinity,
               height: 64,
               decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
+                color: color.withValues(alpha: 0.1),
                 border: Border.all(color: color, width: 2),
-                boxShadow: [BoxShadow(color: color.withOpacity(0.2), blurRadius: 10)],
+                boxShadow: [BoxShadow(color: color.withValues(alpha: 0.2), blurRadius: 10)],
               ),
               child: Center(child: Text('INITIALIZE_GATEWAY', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 15, color: color, letterSpacing: 2, fontFamily: 'Courier'))),
             ),
@@ -107,7 +107,7 @@ class LoginCyberpunk extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: Colors.black,
-        border: Border.all(color: color.withOpacity(0.3), width: 1),
+        border: Border.all(color: color.withValues(alpha: 0.3), width: 1),
       ),
       child: TextFormField(
         controller: textController,
@@ -118,7 +118,7 @@ class LoginCyberpunk extends StatelessWidget {
           prefixIcon: Icon(icon, color: color, size: 22),
           suffixIcon: suffix,
           hintText: hint.toUpperCase(),
-          hintStyle: TextStyle(fontSize: 10, fontWeight: FontWeight.w900, color: color.withOpacity(0.3), letterSpacing: 2, fontFamily: 'Courier'),
+          hintStyle: TextStyle(fontSize: 10, fontWeight: FontWeight.w900, color: color.withValues(alpha: 0.3), letterSpacing: 2, fontFamily: 'Courier'),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
         ),
@@ -137,7 +137,7 @@ class LoginCyberpunk extends StatelessWidget {
             width: double.infinity,
             height: 64,
             decoration: BoxDecoration(
-              color: color.withOpacity(0.05),
+              color: color.withValues(alpha: 0.05),
               border: Border.all(color: color, width: 1),
             ),
             child: Row(

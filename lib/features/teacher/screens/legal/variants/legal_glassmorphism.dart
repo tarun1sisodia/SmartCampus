@@ -81,7 +81,7 @@ class _LegalGlassmorphismState extends State<LegalGlassmorphism> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text('Legal', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 36, letterSpacing: -1)),
-        Text('COMPLIANCE_PROTOCOL_UPLINK', style: TextStyle(color: Colors.white.withOpacity(0.5), fontWeight: FontWeight.w900, fontSize: 12, letterSpacing: 2)),
+        Text('COMPLIANCE_PROTOCOL_UPLINK', style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontWeight: FontWeight.w900, fontSize: 12, letterSpacing: 2)),
       ],
     );
   }
@@ -117,9 +117,9 @@ class _LegalGlassmorphismState extends State<LegalGlassmorphism> {
         child: Container(
           padding: padding,
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.1),
+            color: Colors.white.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: Colors.white.withOpacity(0.2)),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
           ),
           child: child,
         ),

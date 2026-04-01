@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../controllers/attendance_reports_controller.dart';
+import '../../../controllers/attendance_reports_controller.dart';
 
 class ReportsAcademic extends StatelessWidget {
   const ReportsAcademic({super.key});
@@ -80,12 +80,12 @@ class ReportsAcademic extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           color: Colors.white,
-          border: Border.all(color: color.withOpacity(0.05)),
-          boxShadow: [BoxShadow(color: color.withOpacity(0.02), blurRadius: 20, offset: const Offset(0, 10))],
+          border: Border.all(color: color.withValues(alpha: 0.05)),
+          boxShadow: [BoxShadow(color: color.withValues(alpha: 0.02), blurRadius: 20, offset: const Offset(0, 10))],
         ),
         child: Row(
           children: [
-            Container(padding: const EdgeInsets.all(12), decoration: BoxDecoration(color: color.withOpacity(0.05), shape: BoxShape.circle), child: Icon(icon, color: color.withOpacity(0.4), size: 24)),
+            Container(padding: const EdgeInsets.all(12), decoration: BoxDecoration(color: color.withValues(alpha: 0.05), shape: BoxShape.circle), child: Icon(icon, color: color.withValues(alpha: 0.4), size: 24)),
             const SizedBox(width: 20),
             Expanded(
               child: Column(
@@ -93,11 +93,11 @@ class ReportsAcademic extends StatelessWidget {
                 children: [
                   Text(title, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: color, letterSpacing: 0, fontFamily: 'Serif')),
                   const SizedBox(height: 4),
-                  Text(desc, style: TextStyle(fontWeight: FontWeight.normal, fontSize: 12, color: color.withOpacity(0.4), letterSpacing: 0.5, fontFamily: 'Serif')),
+                  Text(desc, style: TextStyle(fontWeight: FontWeight.normal, fontSize: 12, color: color.withValues(alpha: 0.4), letterSpacing: 0.5, fontFamily: 'Serif')),
                 ],
               ),
             ),
-            Icon(Iconsax.arrow_right_3, color: color.withOpacity(0.2), size: 18),
+            Icon(Iconsax.arrow_right_3, color: color.withValues(alpha: 0.2), size: 18),
           ],
         ),
       ),

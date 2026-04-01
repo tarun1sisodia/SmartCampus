@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../common/ui_patterns/ui_style.dart';
 import '../../../../common/ui_patterns/ui_style_controller.dart';
-import '../../../controllers/signup_controller.dart';
 import 'variants/signup_academic.dart';
 import 'variants/signup_brutalist.dart';
 import 'variants/signup_corporate.dart';

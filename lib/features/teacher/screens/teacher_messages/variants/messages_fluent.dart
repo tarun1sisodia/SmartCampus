@@ -70,10 +70,10 @@ class MessagesFluent extends StatelessWidget {
       children: [
         Container(
           padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.black.withOpacity(0.05)), boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10, offset: const Offset(0, 4))]),
+          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.black.withValues(alpha: 0.05)), boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 10, offset: const Offset(0, 4))]),
           child: Row(
             children: [
-              Container(width: 52, height: 52, decoration: BoxDecoration(color: accent.withOpacity(0.1), borderRadius: BorderRadius.circular(4)), child: Center(child: Text(data.avatar, style: TextStyle(color: accent, fontWeight: FontWeight.bold)))),
+              Container(width: 52, height: 52, decoration: BoxDecoration(color: accent.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(4)), child: Center(child: Text(data.avatar, style: TextStyle(color: accent, fontWeight: FontWeight.bold)))),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(

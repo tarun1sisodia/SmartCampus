@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' show Colors, Divider, Icons, InkWell, Color, ColorScheme, Theme, ThemeData, CircleAvatar, TextButton, FontWeight, TextStyle, BorderRadius, Radius, Offset, BoxShape, BoxShadow, BoxDecoration, Border, BorderSide, Widget, EdgeInsets, Column, Row, Expanded, SizedBox, BuildContext, StatelessWidget, Center, ListView, Stack, Positioned, Obx, Get, IconData, Icon, MainAxisAlignment, CrossAxisAlignment, MainAxisSize, VoidCallback, Spacer, Badge, CircleAvatar, Switch;
 import 'package:iconsax/iconsax.dart';
-import '../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
+import '../../../../../common/ui_patterns/pattern_tokens.dart';
+import '../../../../../common/ui_patterns/ui_style.dart';
 import '../../controllers/session_details_controller.dart';
 import '../../../common/utils/constants/sized.dart';
 
@@ -179,7 +179,7 @@ class SessionDetailsCupertino extends StatelessWidget {
           return ListTile(
              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
              leading: CircleAvatar(
-                backgroundColor: record.isPresent ? const Color(0xFF34C759).withOpacity(0.1) : const Color(0xFFFF3B30).withOpacity(0.1),
+                backgroundColor: record.isPresent ? const Color(0xFF34C759).withValues(alpha: 0.1) : const Color(0xFFFF3B30).withValues(alpha: 0.1),
                 child: Icon(record.isPresent ? CupertinoIcons.check_mark : CupertinoIcons.xmark, color: record.isPresent ? const Color(0xFF34C759) : const Color(0xFFFF3B30), size: 18),
              ),
              title: Text(record.studentName, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15, color: Colors.black)),

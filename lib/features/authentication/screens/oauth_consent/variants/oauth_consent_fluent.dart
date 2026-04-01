@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../oauth_consent_controller.dart';
+import '../../../controllers/oauth_consent_controller.dart';
 
 class OAuthConsentFluent extends StatelessWidget {
   const OAuthConsentFluent({
@@ -45,7 +45,7 @@ class OAuthConsentFluent extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
-            boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 40, offset: const Offset(0, 20))],
+            boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 40, offset: const Offset(0, 20))],
           ),
           child: Icon(Iconsax.security_user, color: color, size: 48),
         ),
@@ -64,13 +64,13 @@ class OAuthConsentFluent extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 40, offset: const Offset(0, 10))],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 40, offset: const Offset(0, 10))],
       ),
       child: Column(
         children: [
           Text(appName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24, color: Color(0xFF201F1E))),
           const SizedBox(height: 32),
-          Text('Requests following permissions:', style: TextStyle(fontSize: 14, color: Colors.black.withOpacity(0.4))),
+          Text('Requests following permissions:', style: TextStyle(fontSize: 14, color: Colors.black.withValues(alpha: 0.4))),
           const SizedBox(height: 24),
           ...scopes.map((scope) => Padding(
             padding: const EdgeInsets.only(bottom: 12),
@@ -111,7 +111,7 @@ class OAuthConsentFluent extends StatelessWidget {
         const SizedBox(height: 24),
         TextButton(
           onPressed: () => controller.denyConsent(),
-          child: Text('Deny & Close', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: color.withOpacity(0.5))),
+          child: Text('Deny & Close', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: color.withValues(alpha: 0.5))),
         ),
       ],
     );

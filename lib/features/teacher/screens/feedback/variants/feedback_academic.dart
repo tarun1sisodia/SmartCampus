@@ -39,7 +39,7 @@ class FeedbackAcademic extends StatelessWidget {
                     final isSel = index < controller.rating.value;
                     return IconButton(
                       onPressed: () => controller.setRating(index + 1),
-                      icon: Icon(isSel ? Iconsax.star1 : Iconsax.star, color: isSel ? accentColor : inkColor.withOpacity(0.1), size: 36),
+                      icon: Icon(isSel ? Iconsax.star1 : Iconsax.star, color: isSel ? accentColor : inkColor.withValues(alpha: 0.1), size: 36),
                     );
                   }),
                 ),
@@ -54,11 +54,11 @@ class FeedbackAcademic extends StatelessWidget {
                   style: TextStyle(color: inkColor, fontWeight: FontWeight.bold, fontSize: 14, fontFamily: 'Serif'),
                   decoration: InputDecoration(
                     hintText: 'Enter your formal observations...',
-                    hintStyle: TextStyle(color: inkColor.withOpacity(0.2), fontSize: 14, fontFamily: 'Serif'),
-                    filled: true, fillColor: const Color(0xFFFAF7F0).withOpacity(0.5),
-                    border: OutlineInputBorder(borderRadius: BorderRadius.zero, borderSide: BorderSide(color: inkColor.withOpacity(0.1))),
-                    enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.zero, borderSide: BorderSide(color: inkColor.withOpacity(0.1))),
-                    focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.zero, borderSide: BorderSide(color: inkColor.withOpacity(0.4), width: 1.5)),
+                    hintStyle: TextStyle(color: inkColor.withValues(alpha: 0.2), fontSize: 14, fontFamily: 'Serif'),
+                    filled: true, fillColor: const Color(0xFFFAF7F0).withValues(alpha: 0.5),
+                    border: OutlineInputBorder(borderRadius: BorderRadius.zero, borderSide: BorderSide(color: inkColor.withValues(alpha: 0.1))),
+                    enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.zero, borderSide: BorderSide(color: inkColor.withValues(alpha: 0.1))),
+                    focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.zero, borderSide: BorderSide(color: inkColor.withValues(alpha: 0.4), width: 1.5)),
                   ),
                 ),
               ], inkColor),
@@ -77,7 +77,7 @@ class FeedbackAcademic extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('Feedback', style: TextStyle(color: ink, fontWeight: FontWeight.bold, fontSize: 36, fontFamily: 'Serif')),
-        Text('SYSTEM_OPTIMIZATION_LEDGER', style: TextStyle(color: accent.withOpacity(0.6), fontWeight: FontWeight.w900, fontSize: 11, letterSpacing: 2, fontFamily: 'Serif')),
+        Text('SYSTEM_OPTIMIZATION_LEDGER', style: TextStyle(color: accent.withValues(alpha: 0.6), fontWeight: FontWeight.w900, fontSize: 11, letterSpacing: 2, fontFamily: 'Serif')),
       ],
     );
   }
@@ -92,7 +92,7 @@ class FeedbackAcademic extends StatelessWidget {
         ),
         Container(
           padding: const EdgeInsets.all(28),
-          decoration: BoxDecoration(color: Colors.white, border: Border.all(color: ink.withOpacity(0.05)), boxShadow: [BoxShadow(color: ink.withOpacity(0.02), blurRadius: 15, offset: const Offset(0, 4))]),
+          decoration: BoxDecoration(color: Colors.white, border: Border.all(color: ink.withValues(alpha: 0.05)), boxShadow: [BoxShadow(color: ink.withValues(alpha: 0.02), blurRadius: 15, offset: const Offset(0, 4))]),
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: items),
         ),
       ],

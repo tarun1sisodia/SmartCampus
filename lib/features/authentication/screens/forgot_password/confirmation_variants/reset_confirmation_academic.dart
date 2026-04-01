@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../controllers/controllers_forgot_password/forgot_password_controller.dart';
+
+import '../../../controllers/forgot_password_controller.dart';
 
 class ResetConfirmationAcademic extends StatelessWidget {
   const ResetConfirmationAcademic({super.key, required this.email});
@@ -36,8 +37,8 @@ class ResetConfirmationAcademic extends StatelessWidget {
       children: [
         Container(
           padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(color: Colors.white, border: Border.all(color: color.withOpacity(0.05)), shape: BoxShape.circle, boxShadow: [BoxShadow(color: color.withOpacity(0.02), blurRadius: 20, offset: const Offset(0, 10))]),
-          child: Icon(Icons.mark_email_read_outlined, color: color.withOpacity(0.4), size: 48),
+          decoration: BoxDecoration(color: Colors.white, border: Border.all(color: color.withValues(alpha: 0.05)), shape: BoxShape.circle, boxShadow: [BoxShadow(color: color.withValues(alpha: 0.02), blurRadius: 20, offset: const Offset(0, 10))]),
+          child: Icon(Icons.mark_email_read_outlined, color: color.withValues(alpha: 0.4), size: 48),
         ),
         const SizedBox(height: 32),
         const Text('SmartCampus', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 32, color: Color(0xFF2D2E32), letterSpacing: 0, fontFamily: 'Serif')),
@@ -81,7 +82,7 @@ class ResetConfirmationAcademic extends StatelessWidget {
         const SizedBox(height: 24),
         TextButton(
           onPressed: () => ForgotPasswordController.instance.resendPasswordResetEmail(email),
-          child: Text('Re-dispatch Communication', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: color.withOpacity(0.5), fontFamily: 'Serif')),
+          child: Text('Re-dispatch Communication', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: color.withValues(alpha: 0.5), fontFamily: 'Serif')),
         ),
       ],
     );

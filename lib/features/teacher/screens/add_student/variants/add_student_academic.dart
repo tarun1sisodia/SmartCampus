@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
+import '../../../../../common/ui_patterns/pattern_tokens.dart';
+import '../../../../../common/ui_patterns/ui_style.dart';
 import '../../controllers/student_controller.dart';
-import '../../../../common/widgets/student_avatar.dart';
+import '../../../../../common/widgets/student_avatar.dart';
 import '../../../../models/class_model.dart';
 
 class AddStudentAcademic extends StatelessWidget {
@@ -58,7 +58,7 @@ class AddStudentAcademic extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Iconsax.user_add, size: 80, color: ink.withOpacity(0.1)),
+            Icon(Iconsax.user_add, size: 80, color: ink.withValues(alpha: 0.1)),
             const SizedBox(height: 24),
             Text('No Scholar Records Found', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18, color: ink, fontFamily: 'Serif')),
             const SizedBox(height: 32),
@@ -82,8 +82,8 @@ class AddStudentAcademic extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border.all(color: accent.withOpacity(0.1)),
-        boxShadow: [BoxShadow(color: accent.withOpacity(0.02), blurRadius: 10, offset: const Offset(0, 4))],
+        border: Border.all(color: accent.withValues(alpha: 0.1)),
+        boxShadow: [BoxShadow(color: accent.withValues(alpha: 0.02), blurRadius: 10, offset: const Offset(0, 4))],
       ),
       child: ListTile(
          onTap: () => isSelectionMode ? controller.toggleStudentSelection(student.id) : null,
@@ -98,9 +98,9 @@ class AddStudentAcademic extends StatelessWidget {
             ? _buildScholarCheckbox(isSelected, accent)
             : StudentAvatar(imageUrl: student.imageUrl, name: student.name, size: 48, isDarkMode: false),
          title: Text(student.name, style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14, color: ink, fontFamily: 'Serif')),
-         subtitle: Text('Roll No: ${student.rollNumber}', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 11, color: ink.withOpacity(0.4), fontFamily: 'Serif')),
+         subtitle: Text('Roll No: ${student.rollNumber}', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 11, color: ink.withValues(alpha: 0.4), fontFamily: 'Serif')),
          trailing: !isSelectionMode 
-            ? IconButton(icon: Icon(Iconsax.trash, size: 18, color: ink.withOpacity(0.2)), onPressed: () => controller.removeStudentFromClass(student.id))
+            ? IconButton(icon: Icon(Iconsax.trash, size: 18, color: ink.withValues(alpha: 0.2)), onPressed: () => controller.removeStudentFromClass(student.id))
             : null,
       ),
     );
@@ -132,10 +132,10 @@ class AddStudentAcademic extends StatelessWidget {
                        onTap: () => _showPicker(context, accent, ink),
                        child: Container(
                           width: 100, height: 100,
-                          decoration: BoxDecoration(color: const Color(0xFFFAF7F0), border: Border.all(color: accent.withOpacity(0.3))),
+                          decoration: BoxDecoration(color: const Color(0xFFFAF7F0), border: Border.all(color: accent.withValues(alpha: 0.3))),
                           child: controller.selectedImage.value != null 
                              ? Image.file(controller.selectedImage.value!, fit: BoxFit.cover)
-                             : Icon(Iconsax.camera, color: accent.withOpacity(0.5), size: 28),
+                             : Icon(Iconsax.camera, color: accent.withValues(alpha: 0.5), size: 28),
                        ),
                     )),
                     const SizedBox(height: 32),
@@ -169,7 +169,7 @@ class AddStudentAcademic extends StatelessWidget {
         decoration: InputDecoration(
            labelText: label,
            labelStyle: TextStyle(fontWeight: FontWeight.w600, fontSize: 10, color: Colors.black38, fontFamily: 'Serif'),
-           prefixIcon: Icon(icon, color: accent.withOpacity(0.4), size: 18),
+           prefixIcon: Icon(icon, color: accent.withValues(alpha: 0.4), size: 18),
            border: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.black12)),
            focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: accent, width: 2)),
         ),
@@ -201,7 +201,7 @@ class AddStudentAcademic extends StatelessWidget {
         onTap: onTap,
         child: Container(
            padding: const EdgeInsets.all(16),
-           decoration: BoxDecoration(border: Border.all(color: accent.withOpacity(0.1)), color: const Color(0xFFFAF7F0)),
+           decoration: BoxDecoration(border: Border.all(color: accent.withValues(alpha: 0.1)), color: const Color(0xFFFAF7F0)),
            child: Row(children: [Icon(icon, size: 20, color: accent), const SizedBox(width: 16), Text(label, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 12, fontFamily: 'Serif'))]),
         ),
      );

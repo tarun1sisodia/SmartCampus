@@ -2,8 +2,8 @@ import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
+import '../../../../../common/ui_patterns/pattern_tokens.dart';
+import '../../../../../common/ui_patterns/ui_style.dart';
 import '../../controllers/attendance_reports_controller.dart';
 
 class AttendanceReportsNeumorphism extends StatelessWidget {
@@ -69,7 +69,7 @@ class AttendanceReportsNeumorphism extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           const BoxShadow(color: Colors.white, offset: Offset(-5, -5), blurRadius: 10),
-          BoxShadow(color: const Color(0xFF94A3B8).withOpacity(0.5), offset: const Offset(5, 5), blurRadius: 10),
+          BoxShadow(color: const Color(0xFF94A3B8).withValues(alpha: 0.5), offset: const Offset(5, 5), blurRadius: 10),
         ],
       ),
       child: Obx(() => DropdownButtonHideUnderline(
@@ -102,7 +102,7 @@ class AttendanceReportsNeumorphism extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           const BoxShadow(color: Colors.white, offset: Offset(-3, -3), blurRadius: 6),
-          BoxShadow(color: const Color(0xFF94A3B8).withOpacity(0.5), offset: const Offset(3, 3), blurRadius: 6),
+          BoxShadow(color: const Color(0xFF94A3B8).withValues(alpha: 0.5), offset: const Offset(3, 3), blurRadius: 6),
         ],
       ),
       child: IconButton(
@@ -120,7 +120,7 @@ class AttendanceReportsNeumorphism extends StatelessWidget {
         borderRadius: BorderRadius.circular(32),
         boxShadow: [
           const BoxShadow(color: Colors.white, offset: Offset(-10, -10), blurRadius: 20),
-          BoxShadow(color: const Color(0xFF94A3B8).withOpacity(0.4), offset: const Offset(10, 10), blurRadius: 20),
+          BoxShadow(color: const Color(0xFF94A3B8).withValues(alpha: 0.4), offset: const Offset(10, 10), blurRadius: 20),
         ],
       ),
       child: Column(
@@ -146,7 +146,7 @@ class AttendanceReportsNeumorphism extends StatelessWidget {
                   shape: BoxShape.circle,
                   boxShadow: [
                     const BoxShadow(color: Colors.white, offset: Offset(-5, -5), blurRadius: 10),
-                    BoxShadow(color: const Color(0xFF94A3B8).withOpacity(0.5), offset: const Offset(5, 5), blurRadius: 10),
+                    BoxShadow(color: const Color(0xFF94A3B8).withValues(alpha: 0.5), offset: const Offset(5, 5), blurRadius: 10),
                   ],
                 ),
                 child: const Center(child: Icon(Iconsax.activity, size: 32, color: Color(0xFF475569))),
@@ -200,7 +200,7 @@ class AttendanceReportsNeumorphism extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           const BoxShadow(color: Colors.white, offset: Offset(-2, -2), blurRadius: 5),
-          BoxShadow(color: const Color(0xFF94A3B8).withOpacity(0.4), offset: const Offset(2, 2), blurRadius: 5),
+          BoxShadow(color: const Color(0xFF94A3B8).withValues(alpha: 0.4), offset: const Offset(2, 2), blurRadius: 5),
         ],
       ),
       child: ListTile(
@@ -221,7 +221,7 @@ class AttendanceReportsNeumorphism extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
                BoxShadow(color: Colors.white, offset: const Offset(-2, -2), blurRadius: 4, inset: true),
-               BoxShadow(color: const Color(0xFF94A3B8).withOpacity(0.5), offset: const Offset(2, 2), blurRadius: 4, inset: true),
+               BoxShadow(color: const Color(0xFF94A3B8).withValues(alpha: 0.5), offset: const Offset(2, 2), blurRadius: 4, inset: true),
             ],
           ),
           child: Text(

@@ -64,7 +64,7 @@ class HelpCorporate extends StatelessWidget {
       decoration: BoxDecoration(color: Colors.white, border: Border.all(color: const Color(0xFFE2E8F0), width: 2)),
       child: ListTile(
         onTap: onTap,
-        leading: Container(padding: const EdgeInsets.all(12), decoration: BoxDecoration(color: color.withOpacity(0.1), border: Border.all(color: color.withOpacity(0.2))), child: Icon(icon, color: color, size: 24)),
+        leading: Container(padding: const EdgeInsets.all(12), decoration: BoxDecoration(color: color.withValues(alpha: 0.1), border: Border.all(color: color.withValues(alpha: 0.2))), child: Icon(icon, color: color, size: 24)),
         title: Text(title, style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 13, color: Color(0xFF1E293B), letterSpacing: 1)),
         trailing: const Icon(Iconsax.arrow_right_3, size: 18, color: Color(0xFF94A3B8)),
       ),
@@ -153,7 +153,7 @@ class HelpCorporate extends StatelessWidget {
   Widget _buildContactTile({required IconData icon, required String title, required String subtitle, required Color color}) {
     return ListTile(
       contentPadding: EdgeInsets.zero,
-      leading: Container(padding: const EdgeInsets.all(8), decoration: BoxDecoration(color: color.withOpacity(0.1), border: Border.all(color: color.withOpacity(0.2))), child: Icon(icon, color: color, size: 20)),
+      leading: Container(padding: const EdgeInsets.all(8), decoration: BoxDecoration(color: color.withValues(alpha: 0.1), border: Border.all(color: color.withValues(alpha: 0.2))), child: Icon(icon, color: color, size: 20)),
       title: Text(title, style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 11, color: Color(0xFF1E293B), letterSpacing: 1)),
       subtitle: Text(subtitle, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF64748B))),
     );

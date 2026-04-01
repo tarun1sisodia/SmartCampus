@@ -49,7 +49,7 @@ class VerifyEmailGlassmorphism extends StatelessWidget {
       children: [
         Container(
           padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(color: Colors.white.withOpacity(0.1), shape: BoxShape.circle, border: Border.all(color: Colors.white.withOpacity(0.2))),
+          decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.1), shape: BoxShape.circle, border: Border.all(color: Colors.white.withValues(alpha: 0.2))),
           child: const Icon(Iconsax.direct_send, color: Colors.white70, size: 48),
         ),
         const SizedBox(height: 24),
@@ -68,7 +68,7 @@ class VerifyEmailGlassmorphism extends StatelessWidget {
         Text(
           'We have transmitted an encrypted validation link. Access your inbox to secure your institutional profile.',
           textAlign: TextAlign.center,
-          style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14, color: Colors.white.withOpacity(0.4), height: 1.5),
+          style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14, color: Colors.white.withValues(alpha: 0.4), height: 1.5),
         ),
       ],
     );
@@ -83,10 +83,10 @@ class VerifyEmailGlassmorphism extends StatelessWidget {
           child: ElevatedButton(
             onPressed: () => controller.checkEmailVerificationStatus(),
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.white.withOpacity(0.2),
+              backgroundColor: Colors.white.withValues(alpha: 0.2),
               foregroundColor: Colors.white,
               elevation: 0,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24), side: BorderSide(color: Colors.white.withOpacity(0.2))),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24), side: BorderSide(color: Colors.white.withValues(alpha: 0.2))),
             ),
             child: const Text('Verify Uplink', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
           ),
@@ -94,7 +94,7 @@ class VerifyEmailGlassmorphism extends StatelessWidget {
         const SizedBox(height: 24),
         TextButton(
           onPressed: () => controller.sendEmailVerification(),
-          child: Text('Resend Transmission', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.white.withOpacity(0.4))),
+          child: Text('Resend Transmission', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.white.withValues(alpha: 0.4))),
         ),
       ],
     );
@@ -108,9 +108,9 @@ class VerifyEmailGlassmorphism extends StatelessWidget {
         child: Container(
           padding: padding,
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.1),
+            color: Colors.white.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(40),
-            border: Border.all(color: Colors.white.withOpacity(0.2)),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
           ),
           child: child,
         ),

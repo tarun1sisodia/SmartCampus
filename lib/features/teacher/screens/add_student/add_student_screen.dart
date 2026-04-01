@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../controllers/student_controller.dart';
-import '../../../models/class_model.dart';
-import '../../../common/ui_patterns/pattern_scaffold.dart';
-import '../../../common/ui_patterns/ui_style_controller.dart';
-import '../../../common/ui_patterns/ui_style.dart';
-import '../../../common/utils/constants/colors.dart';
-import 'variants/add_student/add_student_corporate.dart';
-import 'variants/add_student/add_student_minimalist.dart';
-import 'variants/add_student/add_student_glassmorphism.dart';
-import 'variants/add_student/add_student_neumorphic.dart';
-import 'variants/add_student/add_student_material3.dart';
-import 'variants/add_student/add_student_cupertino.dart';
-import 'variants/add_student/add_student_cyberpunk.dart';
-import 'variants/add_student/add_student_brutalist.dart';
-import 'variants/add_student/add_student_academic.dart';
-import 'variants/add_student/add_student_fluent.dart';
+
+import 'package:smart_campus/common/ui_patterns/pattern_scaffold.dart';
+import 'package:smart_campus/common/ui_patterns/ui_style_controller.dart';
+import 'package:smart_campus/common/ui_patterns/ui_style.dart';
+import 'package:smart_campus/common/utils/constants/colors.dart';
+import 'package:smart_campus/models/class_model.dart';
+import 'package:smart_campus/features/teacher/controllers/student_controller.dart';
+import 'variants/add_student_academic.dart';
+import 'variants/add_student_brutalist.dart';
+import 'variants/add_student_corporate.dart';
+import 'variants/add_student_cupertino.dart';
+import 'variants/add_student_cyberpunk.dart';
+import 'variants/add_student_fluent.dart';
+import 'variants/add_student_glassmorphism.dart';
+import 'variants/add_student_material3.dart';
+import 'variants/add_student_minimalist.dart';
+import 'variants/add_student_neumorphic.dart';
 
 class AddStudentScreen extends StatelessWidget {
   final ClassModel classModel;

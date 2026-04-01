@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../controllers/controllers_forgot_password/forgot_password_controller.dart';
+
+import '../../../controllers/forgot_password_controller.dart';
 
 class ResetConfirmationBrutalist extends StatelessWidget {
   const ResetConfirmationBrutalist({super.key, required this.email});

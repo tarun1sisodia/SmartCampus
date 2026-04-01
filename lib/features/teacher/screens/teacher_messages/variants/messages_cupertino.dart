@@ -105,7 +105,7 @@ class MessagesCupertino extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Row(
           children: [
-            CircleAvatar(backgroundColor: const Color(0xFF007AFF).withOpacity(0.1), radius: 24, child: Text(data.avatar, style: const TextStyle(color: Color(0xFF007AFF), fontWeight: FontWeight.bold))),
+            CircleAvatar(backgroundColor: const Color(0xFF007AFF).withValues(alpha: 0.1), radius: 24, child: Text(data.avatar, style: const TextStyle(color: Color(0xFF007AFF), fontWeight: FontWeight.bold))),
             const SizedBox(width: 16),
             Expanded(
               child: Column(

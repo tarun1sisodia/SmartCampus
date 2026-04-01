@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
-import '../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
+import '../../../../../common/ui_patterns/pattern_tokens.dart';
+import '../../../../../common/ui_patterns/ui_style.dart';
 import '../../controllers/attendance_reports_controller.dart';
 
 class AttendanceReportsFluent extends StatelessWidget {
@@ -52,8 +52,8 @@ class AttendanceReportsFluent extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.7),
-        border: Border(bottom: BorderSide(color: Colors.black.withOpacity(0.05), width: 1)),
+        color: Colors.white.withValues(alpha: 0.7),
+        border: Border(bottom: BorderSide(color: Colors.black.withValues(alpha: 0.05), width: 1)),
       ),
       child: Row(
         children: [
@@ -71,14 +71,14 @@ class AttendanceReportsFluent extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(4),
-        border: Border.all(color: Colors.black.withOpacity(0.1)),
+        border: Border.all(color: Colors.black.withValues(alpha: 0.1)),
       ),
       child: Obx(() => DropdownButtonHideUnderline(
         child: DropdownButton<String>(
           isExpanded: true,
           value: controller.selectedClassId.value,
           dropdownColor: Colors.white,
-          icon: Icon(Iconsax.arrow_down_1, size: 16, color: Colors.black.withOpacity(0.6)),
+          icon: Icon(Iconsax.arrow_down_1, size: 16, color: Colors.black.withValues(alpha: 0.6)),
           items: controller.classes.map((c) => DropdownMenuItem(
             value: c.id,
             child: Text(
@@ -106,7 +106,7 @@ class AttendanceReportsFluent extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(4),
-          border: Border.all(color: Colors.black.withOpacity(0.1)),
+          border: Border.all(color: Colors.black.withValues(alpha: 0.1)),
         ),
         child: const Center(child: Icon(Iconsax.calendar_1, color: Color(0xFF484644), size: 18)),
       ),
@@ -119,7 +119,7 @@ class AttendanceReportsFluent extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4))],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 4))],
       ),
       child: Column(
         children: [
@@ -129,14 +129,14 @@ class AttendanceReportsFluent extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('AVG_QUOTA', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 10, color: Colors.black.withOpacity(0.5))),
+                  Text('AVG_QUOTA', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 10, color: Colors.black.withValues(alpha: 0.5))),
                   Obx(() => Text(
                     '${controller.averageAttendance.value.toStringAsFixed(1)}%',
                     style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 44, color: Color(0xFF0078D4), height: 1),
                   )),
                 ],
               ),
-              Icon(Iconsax.chart_2, size: 48, color: const Color(0xFF0078D4).withOpacity(0.4)),
+              Icon(Iconsax.chart_2, size: 48, color: const Color(0xFF0078D4).withValues(alpha: 0.4)),
             ],
           ),
           const SizedBox(height: 24),
@@ -170,13 +170,13 @@ class AttendanceReportsFluent extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.black.withOpacity(0.05)),
+        border: Border.all(color: Colors.black.withValues(alpha: 0.05)),
       ),
       child: ListView.separated(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         itemCount: students.length,
-        separatorBuilder: (context, index) => Divider(height: 1, color: Colors.black.withOpacity(0.05)),
+        separatorBuilder: (context, index) => Divider(height: 1, color: Colors.black.withValues(alpha: 0.05)),
         itemBuilder: (context, index) {
           final student = students[index];
           final stats = controller.getStudentStats(student.id);
@@ -186,11 +186,11 @@ class AttendanceReportsFluent extends StatelessWidget {
           return ListTile(
             onTap: () => controller.navigateToStudentDetail(student),
             title: Text(student.name.toString(), style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: Color(0xFF201F1E))),
-            subtitle: Text('ID: ${student.rollNumber}', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 11, color: Colors.black.withOpacity(0.5))),
+            subtitle: Text('ID: ${student.rollNumber}', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 11, color: Colors.black.withValues(alpha: 0.5))),
             trailing: Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               decoration: BoxDecoration(
-                color: percentage >= 75 ? const Color(0xFF0078D4).withOpacity(0.1) : const Color(0xFFD83B01).withOpacity(0.1),
+                color: percentage >= 75 ? const Color(0xFF0078D4).withValues(alpha: 0.1) : const Color(0xFFD83B01).withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(4),
               ),
               child: Text(

@@ -4,11 +4,11 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import '../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
+import '../../../../../common/ui_patterns/pattern_tokens.dart';
+import '../../../../../common/ui_patterns/ui_style.dart';
 import '../../controllers/student_detail_controller.dart';
 import '../../../../models/student_model.dart';
-import '../../../../common/utils/constants/api_constants.dart';
+import '../../../../../common/utils/constants/api_constants.dart';
 
 class StudentDetailCorporate extends StatelessWidget {
   final StudentDetailController controller;
@@ -52,7 +52,7 @@ class StudentDetailCorporate extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.all(28),
-      decoration: BoxDecoration(color: Colors.white, border: Border.all(color: const Color(0xFF0F172A), width: 2.5), boxShadow: [BoxShadow(color: const Color(0xFF0F172A).withOpacity(0.1), offset: const Offset(4, 4))]),
+      decoration: BoxDecoration(color: Colors.white, border: Border.all(color: const Color(0xFF0F172A), width: 2.5), boxShadow: [BoxShadow(color: const Color(0xFF0F172A).withValues(alpha: 0.1), offset: const Offset(4, 4))]),
       child: Row(
         children: [
           GestureDetector(
@@ -150,7 +150,7 @@ class StudentDetailCorporate extends StatelessWidget {
           child: ListTile(
              onTap: () => _showUpdateStatusDialog(context, session.id, status, record['remarks']),
              contentPadding: const EdgeInsets.all(16),
-             leading: Container(width: 44, height: 44, decoration: BoxDecoration(color: color.withOpacity(0.1), border: Border.all(color: color, width: 2)), child: Center(child: Icon(_getStatusIcon(status), color: color, size: 20))),
+             leading: Container(width: 44, height: 44, decoration: BoxDecoration(color: color.withValues(alpha: 0.1), border: Border.all(color: color, width: 2)), child: Center(child: Icon(_getStatusIcon(status), color: color, size: 20))),
              title: Text(DateFormat('yyyy_MM_dd').format(session.date).toUpperCase(), style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 13, color: Color(0xFF0F172A), fontFamily: 'Courier')),
              subtitle: Text('${session.startTime} > ${session.endTime}', style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 10, color: Color(0xFF64748B), fontFamily: 'Courier')),
              trailing: Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4), color: color, child: Text(status.toUpperCase(), style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 9))),
@@ -221,7 +221,7 @@ class StudentDetailCorporate extends StatelessWidget {
         onTap: onTap,
         child: Container(
            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-           decoration: BoxDecoration(color: isSelected ? color.withOpacity(0.1) : Colors.transparent, border: Border.all(color: isSelected ? color : Colors.transparent, width: 1.5)),
+           decoration: BoxDecoration(color: isSelected ? color.withValues(alpha: 0.1) : Colors.transparent, border: Border.all(color: isSelected ? color : Colors.transparent, width: 1.5)),
            child: Column(children: [Icon(icon, color: color, size: 24), const SizedBox(height: 4), Text(label, style: TextStyle(fontWeight: FontWeight.w900, fontSize: 8, color: color))]),
         ),
      );

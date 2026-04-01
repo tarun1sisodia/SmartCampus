@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
-import '../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
-import '../../controllers/attendance_reports_controller.dart';
+import 'package:smart_campus/common/ui_patterns/pattern_tokens.dart';
+import 'package:smart_campus/common/ui_patterns/ui_style.dart';
+import 'package:smart_campus/features/teacher/controllers/attendance_reports_controller.dart';
 
 class AttendanceReportsMinimalist extends StatelessWidget {
   final AttendanceReportsController controller;
@@ -56,7 +56,7 @@ class AttendanceReportsMinimalist extends StatelessWidget {
     );
   }
 
-  Widget _buildFilterBar(Map<String, dynamic> tokens) {
+  Widget _buildFilterBar(PatternTokens tokens) {
     return Padding(
       padding: const EdgeInsets.all(24.0),
       child: Row(
@@ -69,13 +69,13 @@ class AttendanceReportsMinimalist extends StatelessWidget {
     );
   }
 
-  Widget _buildMinimalDropdown(Map<String, dynamic> tokens) {
+  Widget _buildMinimalDropdown(PatternTokens tokens) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 10)],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 10)],
       ),
       child: Obx(() => DropdownButtonHideUnderline(
         child: DropdownButton<String>(
@@ -100,7 +100,7 @@ class AttendanceReportsMinimalist extends StatelessWidget {
     );
   }
 
-  Widget _buildDateFab(Map<String, dynamic> tokens) {
+  Widget _buildDateFab(PatternTokens tokens) {
     return IconButton.filled(
       onPressed: () => _pickDateRange(),
       style: IconButton.styleFrom(
@@ -113,13 +113,13 @@ class AttendanceReportsMinimalist extends StatelessWidget {
     );
   }
 
-  Widget _buildSummaryAnalytics(Map<String, dynamic> tokens) {
+  Widget _buildSummaryAnalytics(PatternTokens tokens) {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 24)],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 24)],
       ),
       child: Column(
         children: [
@@ -162,13 +162,13 @@ class AttendanceReportsMinimalist extends StatelessWidget {
     );
   }
 
-  Widget _buildStudentList(Map<String, dynamic> tokens) {
+  Widget _buildStudentList(PatternTokens tokens) {
     final filteredStudents = controller.displayStudents;
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 24)],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 24)],
       ),
       child: ListView.separated(
         shrinkWrap: true,
@@ -185,7 +185,7 @@ class AttendanceReportsMinimalist extends StatelessWidget {
     );
   }
 
-  Widget _buildMinimalRow(dynamic student, Map<String, dynamic> stats, Map<String, dynamic> tokens) {
+  Widget _buildMinimalRow(dynamic student, Map<String, dynamic> stats, PatternTokens tokens) {
     final percentage = stats['attendancePercentage'] ?? 0.0;
     return ListTile(
       onTap: () => controller.navigateToStudentDetail(student),

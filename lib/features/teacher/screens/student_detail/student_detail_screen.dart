@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../../../models/student_model.dart';
-import '../controllers/student_detail_controller.dart';
-import '../../../common/ui_patterns/pattern_scaffold.dart';
-import '../../../common/ui_patterns/ui_style_controller.dart';
-import '../../../common/ui_patterns/ui_style.dart';
-import 'variants/student_detail/student_detail_corporate.dart';
-import 'variants/student_detail/student_detail_minimalist.dart';
-import 'variants/student_detail/student_detail_glassmorphism.dart';
-import 'variants/student_detail/student_detail_neumorphic.dart';
-import 'variants/student_detail/student_detail_material3.dart';
-import 'variants/student_detail/student_detail_cupertino.dart';
-import 'variants/student_detail/student_detail_cyberpunk.dart';
-import 'variants/student_detail/student_detail_brutalist.dart';
-import 'variants/student_detail/student_detail_academic.dart';
-import 'variants/student_detail/student_detail_fluent.dart';
+import '../../../../models/student_model.dart';
+import '../../controllers/student_detail_controller.dart';
+import '../../../../common/ui_patterns/pattern_scaffold.dart';
+import '../../../../common/ui_patterns/ui_style_controller.dart';
+import '../../../../common/ui_patterns/ui_style.dart';
+import 'variants/student_detail_corporate.dart';
+import 'variants/student_detail_minimalist.dart';
+import 'variants/student_detail_glassmorphism.dart';
+import 'variants/student_detail_neumorphic.dart';
+import 'variants/student_detail_material3.dart';
+import 'variants/student_detail_cupertino.dart';
+import 'variants/student_detail_cyberpunk.dart';
+import 'variants/student_detail_brutalist.dart';
+import 'variants/student_detail_academic.dart';
+import 'variants/student_detail_fluent.dart';
 
 class StudentDetailScreen extends StatelessWidget {
   final StudentModel student;

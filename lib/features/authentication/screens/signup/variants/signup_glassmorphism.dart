@@ -2,7 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../../../../controllers/signup_controller.dart';
+import '../../../controllers/signup_controller.dart';
 import '../../../../../common/utils/constants/image_strings.dart';
 
 class SignupGlassmorphism extends StatelessWidget {
@@ -48,7 +48,7 @@ class SignupGlassmorphism extends StatelessWidget {
       children: [
         Container(
           padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(color: Colors.white.withOpacity(0.1), shape: BoxShape.circle, border: Border.all(color: Colors.white.withOpacity(0.2))),
+          decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.1), shape: BoxShape.circle, border: Border.all(color: Colors.white.withValues(alpha: 0.2))),
           child: const Icon(Iconsax.user_tag, color: Colors.white70, size: 48),
         ),
         const SizedBox(height: 24),
@@ -100,10 +100,10 @@ class SignupGlassmorphism extends StatelessWidget {
             child: ElevatedButton(
               onPressed: () => controller.signup(),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white.withOpacity(0.2),
+                backgroundColor: Colors.white.withValues(alpha: 0.2),
                 foregroundColor: Colors.white,
                 elevation: 0,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24), side: BorderSide(color: Colors.white.withOpacity(0.2))),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24), side: BorderSide(color: Colors.white.withValues(alpha: 0.2))),
               ),
               child: const Text('Initialize Credentials', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
             ),
@@ -122,10 +122,10 @@ class SignupGlassmorphism extends StatelessWidget {
       hintText: hint,
       hintStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.white24),
       filled: true,
-      fillColor: Colors.white.withOpacity(0.05),
+      fillColor: Colors.white.withValues(alpha: 0.05),
       contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white.withOpacity(0.1)), borderRadius: BorderRadius.circular(24)),
-      focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white.withOpacity(0.3)), borderRadius: BorderRadius.circular(24)),
+      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.1)), borderRadius: BorderRadius.circular(24)),
+      focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.3)), borderRadius: BorderRadius.circular(24)),
     );
   }
 
@@ -139,9 +139,9 @@ class SignupGlassmorphism extends StatelessWidget {
             value: controller.privacyPolicy.value,
             onChanged: (value) => controller.privacyPolicy.value = value!,
             checkColor: Colors.white,
-            activeColor: Colors.white.withOpacity(0.2),
+            activeColor: Colors.white.withValues(alpha: 0.2),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            side: BorderSide(color: Colors.white.withOpacity(0.3)),
+            side: BorderSide(color: Colors.white.withValues(alpha: 0.3)),
           ),
         ),
         const SizedBox(width: 12),
@@ -160,7 +160,7 @@ class SignupGlassmorphism extends StatelessWidget {
           height: 64,
           child: OutlinedButton.icon(
             onPressed: () => controller.signInWithGoogle(),
-            style: OutlinedButton.styleFrom(side: BorderSide(color: Colors.white.withOpacity(0.1)), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)), foregroundColor: Colors.white70),
+            style: OutlinedButton.styleFrom(side: BorderSide(color: Colors.white.withValues(alpha: 0.1)), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)), foregroundColor: Colors.white70),
             icon: Image.network(TImageStrings.google, width: 22),
             label: const Text('Google Cloud Access', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
           ),
@@ -177,9 +177,9 @@ class SignupGlassmorphism extends StatelessWidget {
         child: Container(
           padding: padding,
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.1),
+            color: Colors.white.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(40),
-            border: Border.all(color: Colors.white.withOpacity(0.2)),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
           ),
           child: child,
         ),

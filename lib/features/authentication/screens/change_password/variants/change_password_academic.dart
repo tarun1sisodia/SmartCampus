@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../change_password_controller.dart';
+
+import '../../../controllers/change_password_controller.dart';
 
 class ChangePasswordAcademic extends StatelessWidget {
   const ChangePasswordAcademic({super.key});
@@ -34,8 +35,8 @@ class ChangePasswordAcademic extends StatelessWidget {
       children: [
         Container(
           padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(color: Colors.white, border: Border.all(color: color.withOpacity(0.05)), shape: BoxShape.circle, boxShadow: [BoxShadow(color: color.withOpacity(0.02), blurRadius: 20, offset: const Offset(0, 10))]),
-          child: Icon(Iconsax.shield_security, color: color.withOpacity(0.4), size: 48),
+          decoration: BoxDecoration(color: Colors.white, border: Border.all(color: color.withValues(alpha: 0.05)), shape: BoxShape.circle, boxShadow: [BoxShadow(color: color.withValues(alpha: 0.02), blurRadius: 20, offset: const Offset(0, 10))]),
+          child: Icon(Iconsax.shield_security, color: color.withValues(alpha: 0.4), size: 48),
         ),
         const SizedBox(height: 32),
         const Text('SmartCampus', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 32, color: Color(0xFF2D2E32), letterSpacing: 0, fontFamily: 'Serif')),
@@ -77,7 +78,7 @@ class ChangePasswordAcademic extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border(bottom: BorderSide(color: color.withOpacity(0.1), width: 1)),
+        border: Border(bottom: BorderSide(color: color.withValues(alpha: 0.1), width: 1)),
       ),
       child: Obx(() => TextFormField(
         controller: textController,
@@ -85,13 +86,13 @@ class ChangePasswordAcademic extends StatelessWidget {
         style: const TextStyle(color: Color(0xFF2D2E32), fontFamily: 'Serif'),
         validator: (value) => value!.isEmpty ? 'Field required' : null,
         decoration: InputDecoration(
-          prefixIcon: Icon(Iconsax.password_check, color: color.withOpacity(0.4), size: 22),
+          prefixIcon: Icon(Iconsax.password_check, color: color.withValues(alpha: 0.4), size: 22),
           suffixIcon: IconButton(
             onPressed: () => controller.hidePassword.value = !controller.hidePassword.value,
-            icon: Icon(controller.hidePassword.value ? Iconsax.eye_slash : Iconsax.eye, color: color.withOpacity(0.2), size: 20),
+            icon: Icon(controller.hidePassword.value ? Iconsax.eye_slash : Iconsax.eye, color: color.withValues(alpha: 0.2), size: 20),
           ),
           hintText: label,
-          hintStyle: TextStyle(fontSize: 14, color: color.withOpacity(0.2), fontFamily: 'Serif'),
+          hintStyle: TextStyle(fontSize: 14, color: color.withValues(alpha: 0.2), fontFamily: 'Serif'),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
         ),

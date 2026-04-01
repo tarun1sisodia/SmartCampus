@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
-import '../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
-import '../../controllers/all_sessions_controller.dart';
-import '../../controllers/attendance_controller.dart';
-import '../carousel_attendance_screen.dart';
-import '../../../app/bindings/app_bindings.dart';
+import 'package:smart_campus/common/ui_patterns/pattern_tokens.dart';
+import 'package:smart_campus/common/ui_patterns/ui_style.dart';
+import 'package:smart_campus/features/teacher/controllers/all_sessions_controller.dart';
+import 'package:smart_campus/features/teacher/controllers/attendance_controller.dart';
+import 'package:smart_campus/features/teacher/screens/mark_attendance/mark_attendance_screen.dart';
+import 'package:smart_campus/features/teacher/screens/carousel_attendance/carousel_attendance_screen.dart';
+import 'package:smart_campus/app/bindings/app_bindings.dart';
 
 class AllSessionsCorporate extends StatelessWidget {
   final AllSessionsController controller;
@@ -52,7 +53,7 @@ class AllSessionsCorporate extends StatelessWidget {
     );
   }
 
-  Widget _buildSearchHUD(Map<String, dynamic> tokens) {
+  Widget _buildSearchHUD(PatternTokens tokens) {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: const BoxDecoration(
@@ -65,13 +66,13 @@ class AllSessionsCorporate extends StatelessWidget {
             child: Container(
               height: 48,
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              decoration: BoxDecoration(color: Colors.white.withOpacity(0.05), border: Border.all(color: Colors.white.withOpacity(0.2))),
+              decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.05), border: Border.all(color: Colors.white.withValues(alpha: 0.2))),
               child: TextField(
                 controller: controller.searchController,
                 style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 13),
                 decoration: InputDecoration(
                   hintText: 'SEARCH_REGISTRY...',
-                  hintStyle: TextStyle(color: Colors.white.withOpacity(0.3), fontWeight: FontWeight.w800, fontSize: 11),
+                  hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.3), fontWeight: FontWeight.w800, fontSize: 11),
                   border: InputBorder.none,
                   icon: const Icon(Iconsax.search_normal, color: Colors.white, size: 16),
                 ),
@@ -92,13 +93,13 @@ class AllSessionsCorporate extends StatelessWidget {
       child: Container(
         height: 48,
         width: 48,
-        decoration: BoxDecoration(border: Border.all(color: Colors.white.withOpacity(0.2)), color: Colors.white.withOpacity(0.05)),
+        decoration: BoxDecoration(border: Border.all(color: Colors.white.withValues(alpha: 0.2)), color: Colors.white.withValues(alpha: 0.05)),
         child: Center(child: Icon(icon, color: Colors.white, size: 20)),
       ),
     );
   }
 
-  Widget _buildCorporateSessionExpansion(dynamic session, Map<String, dynamic> tokens) {
+  Widget _buildCorporateSessionExpansion(dynamic session, PatternTokens tokens) {
     final isSelected = controller.selectedSessionIds.contains(session.id);
     final isRunning = controller.isSessionRunning(session);
     final dateStr = DateFormat('yyyy-MM-dd').format(session.date);
@@ -207,7 +208,7 @@ class AllSessionsCorporate extends StatelessWidget {
       child: Container(
         height: 44,
         width: 44,
-        decoration: BoxDecoration(border: Border.all(color: color), color: color.withOpacity(0.05)),
+        decoration: BoxDecoration(border: Border.all(color: color), color: color.withValues(alpha: 0.05)),
         child: Center(child: Icon(icon, color: color, size: 18)),
       ),
     );

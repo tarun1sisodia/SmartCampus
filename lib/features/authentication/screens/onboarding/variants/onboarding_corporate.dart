@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import '../../../../../../../common/utils/constants/image_strings.dart';
-import '../../../../../../../common/utils/constants/text_strings.dart';
-import '../../../../controllers/controllers_onboarding/onboarding_controller.dart';
+import '../../../controllers/controllers_onboarding/onboarding_controller.dart';
 
 class OnboardingCorporate extends StatelessWidget {
   const OnboardingCorporate({super.key});

@@ -73,7 +73,7 @@ class _LegalCorporateState extends State<LegalCorporate> {
       children: [
         Row(
           children: [
-            Container(padding: const EdgeInsets.all(10), decoration: BoxDecoration(color: const Color(0xFF0F172A).withOpacity(0.1), border: Border.all(color: const Color(0xFF0F172A).withOpacity(0.2))), child: Icon(icon, color: const Color(0xFF0F172A), size: 18)),
+            Container(padding: const EdgeInsets.all(10), decoration: BoxDecoration(color: const Color(0xFF0F172A).withValues(alpha: 0.1), border: Border.all(color: const Color(0xFF0F172A).withValues(alpha: 0.2))), child: Icon(icon, color: const Color(0xFF0F172A), size: 18)),
             const SizedBox(width: 12),
             Text(title, style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 13, color: Color(0xFF0F172A), letterSpacing: 1)),
           ],

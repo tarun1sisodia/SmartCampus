@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../../../../controllers/signup_controller.dart';
+import '../../../controllers/signup_controller.dart';
 import '../../../../../common/utils/constants/image_strings.dart';
 
 class SignupAcademic extends StatelessWidget {
@@ -37,13 +37,13 @@ class SignupAcademic extends StatelessWidget {
       children: [
         Container(
           padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(color: Colors.white, border: Border.all(color: color.withOpacity(0.05)), shape: BoxShape.circle, boxShadow: [BoxShadow(color: color.withOpacity(0.02), blurRadius: 20, offset: const Offset(0, 10))]),
-          child: Icon(Iconsax.user_add, color: color.withOpacity(0.4), size: 48),
+          decoration: BoxDecoration(color: Colors.white, border: Border.all(color: color.withValues(alpha: 0.05)), shape: BoxShape.circle, boxShadow: [BoxShadow(color: color.withValues(alpha: 0.02), blurRadius: 20, offset: const Offset(0, 10))]),
+          child: Icon(Iconsax.user_add, color: color.withValues(alpha: 0.4), size: 48),
         ),
         const SizedBox(height: 32),
         Text('SmartCampus', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 32, color: color, letterSpacing: 0, fontFamily: 'Serif')),
         const SizedBox(height: 12),
-        Text('Institutional Enrollment Protocol', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: color.withOpacity(0.5), letterSpacing: 0.5, fontFamily: 'Serif')),
+        Text('Institutional Enrollment Protocol', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: color.withValues(alpha: 0.5), letterSpacing: 0.5, fontFamily: 'Serif')),
       ],
     );
   }
@@ -75,7 +75,7 @@ class SignupAcademic extends StatelessWidget {
             obscure: controller.hidePassword.value,
             suffix: IconButton(
               onPressed: () => controller.hidePassword.value = !controller.hidePassword.value,
-              icon: Icon(controller.hidePassword.value ? Iconsax.eye_slash : Iconsax.eye, color: color.withOpacity(0.2), size: 20),
+              icon: Icon(controller.hidePassword.value ? Iconsax.eye_slash : Iconsax.eye, color: color.withValues(alpha: 0.2), size: 20),
             ),
           )),
           const SizedBox(height: 24),
@@ -104,7 +104,7 @@ class SignupAcademic extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border(bottom: BorderSide(color: color.withOpacity(0.1), width: 1)),
+        border: Border(bottom: BorderSide(color: color.withValues(alpha: 0.1), width: 1)),
       ),
       child: TextFormField(
         controller: textController,
@@ -112,10 +112,10 @@ class SignupAcademic extends StatelessWidget {
         style: TextStyle(color: color, fontFamily: 'Serif'),
         validator: (value) => value!.isEmpty ? 'Field required' : null,
         decoration: InputDecoration(
-          prefixIcon: icon != null ? Icon(icon, color: color.withOpacity(0.4), size: 22) : null,
+          prefixIcon: icon != null ? Icon(icon, color: color.withValues(alpha: 0.4), size: 22) : null,
           suffixIcon: suffix,
           hintText: hint,
-          hintStyle: TextStyle(fontSize: 14, color: color.withOpacity(0.2), fontFamily: 'Serif'),
+          hintStyle: TextStyle(fontSize: 14, color: color.withValues(alpha: 0.2), fontFamily: 'Serif'),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
         ),
@@ -131,11 +131,11 @@ class SignupAcademic extends StatelessWidget {
           onChanged: (value) => controller.privacyPolicy.value = value!,
           checkColor: Colors.white,
           activeColor: color,
-          side: BorderSide(color: color.withOpacity(0.2)),
+          side: BorderSide(color: color.withValues(alpha: 0.2)),
           shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
         ),
         const SizedBox(width: 8),
-        Expanded(child: Text('I agree to the Institutional Terms.', style: TextStyle(fontSize: 12, color: color.withOpacity(0.5), fontFamily: 'Serif'))),
+        Expanded(child: Text('I agree to the Institutional Terms.', style: TextStyle(fontSize: 12, color: color.withValues(alpha: 0.5), fontFamily: 'Serif'))),
       ],
     ));
   }
@@ -145,9 +145,9 @@ class SignupAcademic extends StatelessWidget {
       children: [
         Row(
           children: [
-            Expanded(child: Divider(color: color.withOpacity(0.05))),
-            Padding(padding: const EdgeInsets.symmetric(horizontal: 16), child: Text('External Registry', style: TextStyle(fontSize: 12, color: color.withOpacity(0.3), fontFamily: 'Serif'))),
-            Expanded(child: Divider(color: color.withOpacity(0.05))),
+            Expanded(child: Divider(color: color.withValues(alpha: 0.05))),
+            Padding(padding: const EdgeInsets.symmetric(horizontal: 16), child: Text('External Registry', style: TextStyle(fontSize: 12, color: color.withValues(alpha: 0.3), fontFamily: 'Serif'))),
+            Expanded(child: Divider(color: color.withValues(alpha: 0.05))),
           ],
         ),
         const SizedBox(height: 32),
@@ -157,7 +157,7 @@ class SignupAcademic extends StatelessWidget {
           child: OutlinedButton.icon(
             onPressed: () => controller.signInWithGoogle(),
             style: OutlinedButton.styleFrom(
-              side: BorderSide(color: color.withOpacity(0.1)),
+              side: BorderSide(color: color.withValues(alpha: 0.1)),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
               foregroundColor: color,
             ),

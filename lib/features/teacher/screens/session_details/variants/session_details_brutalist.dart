@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
+import '../../../../../common/ui_patterns/pattern_tokens.dart';
+import '../../../../../common/ui_patterns/ui_style.dart';
 import '../../controllers/session_details_controller.dart';
 import '../../../common/utils/constants/sized.dart';
 
@@ -204,7 +204,7 @@ class SessionDetailsBrutalist extends StatelessWidget {
                     value: record.isPresent, 
                     onChanged: (v) => controller.toggleAttendance(record.id, v),
                     activeThumbColor: blue,
-                    activeTrackColor: blue.withOpacity(0.3),
+                    activeTrackColor: blue.withValues(alpha: 0.3),
                   )
                 : null,
           ),

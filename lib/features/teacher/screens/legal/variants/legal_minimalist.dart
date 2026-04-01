@@ -75,13 +75,13 @@ class _LegalMinimalistState extends State<LegalMinimalist> {
       children: [
         Row(
           children: [
-            Icon(icon, color: Colors.black.withOpacity(0.2), size: 20),
+            Icon(icon, color: Colors.black.withValues(alpha: 0.2), size: 20),
             const SizedBox(width: 12),
-            Text(title, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: Colors.black.withOpacity(0.6))),
+            Text(title, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: Colors.black.withValues(alpha: 0.6))),
           ],
         ),
         const SizedBox(height: 16),
-        Text(content, style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, color: Colors.black.withOpacity(0.4), height: 1.8)),
+        Text(content, style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, color: Colors.black.withValues(alpha: 0.4), height: 1.8)),
       ],
     );
   }

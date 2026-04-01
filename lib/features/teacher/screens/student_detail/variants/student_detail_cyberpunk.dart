@@ -4,11 +4,11 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import '../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
+import '../../../../../common/ui_patterns/pattern_tokens.dart';
+import '../../../../../common/ui_patterns/ui_style.dart';
 import '../../controllers/student_detail_controller.dart';
 import '../../../../models/student_model.dart';
-import '../../../../common/utils/constants/api_constants.dart';
+import '../../../../../common/utils/constants/api_constants.dart';
 
 class StudentDetailCyberpunk extends StatelessWidget {
   final StudentDetailController controller;
@@ -50,7 +50,7 @@ class StudentDetailCyberpunk extends StatelessWidget {
   }
 
   Widget _buildGridOverlay(Color cyan) {
-    return Positioned.fill(child: CustomPaint(painter: _GridPainter(color: cyan.withOpacity(0.04))));
+    return Positioned.fill(child: CustomPaint(painter: _GridPainter(color: cyan.withValues(alpha: 0.04))));
   }
 
   Widget _buildCyberProfile(BuildContext context, Color cyan, Color magenta) {
@@ -59,7 +59,7 @@ class StudentDetailCyberpunk extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(color: Colors.black, border: Border.all(color: cyan.withOpacity(0.3)), boxShadow: [BoxShadow(color: cyan.withOpacity(0.1), blurRadius: 10)]),
+      decoration: BoxDecoration(color: Colors.black, border: Border.all(color: cyan.withValues(alpha: 0.3)), boxShadow: [BoxShadow(color: cyan.withValues(alpha: 0.1), blurRadius: 10)]),
       child: Column(
         children: [
           GestureDetector(
@@ -78,7 +78,7 @@ class StudentDetailCyberpunk extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           Text(cur?.name.toUpperCase() ?? student.name.toUpperCase(), style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18, color: cyan, letterSpacing: 1, fontFamily: 'Courier')),
-          Text('NODE_ID: ${cur?.rollNumber ?? student.rollNumber}'.toUpperCase(), style: TextStyle(fontWeight: FontWeight.w800, fontSize: 10, color: cyan.withOpacity(0.5), fontFamily: 'Courier')),
+          Text('NODE_ID: ${cur?.rollNumber ?? student.rollNumber}'.toUpperCase(), style: TextStyle(fontWeight: FontWeight.w800, fontSize: 10, color: cyan.withValues(alpha: 0.5), fontFamily: 'Courier')),
         ],
       ),
     );
@@ -87,7 +87,7 @@ class StudentDetailCyberpunk extends StatelessWidget {
   Widget _buildCyberHUD(Color cyan, Color magenta) {
     return Container(
       padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(color: Colors.black, border: Border.all(color: magenta.withOpacity(0.3))),
+      decoration: BoxDecoration(color: Colors.black, border: Border.all(color: magenta.withValues(alpha: 0.3))),
       child: Column(
         children: [
            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -107,7 +107,7 @@ class StudentDetailCyberpunk extends StatelessWidget {
   }
 
   Widget _stNode(String l, String v, Color c) {
-    return Column(children: [Text(v, style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18, color: c, fontFamily: 'Courier')), Text(l, style: TextStyle(fontWeight: FontWeight.w900, fontSize: 8, color: c.withOpacity(0.5), fontFamily: 'Courier'))]);
+    return Column(children: [Text(v, style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18, color: c, fontFamily: 'Courier')), Text(l, style: TextStyle(fontWeight: FontWeight.w900, fontSize: 8, color: c.withValues(alpha: 0.5), fontFamily: 'Courier'))]);
   }
 
   Widget _buildCyberLogStream(BuildContext context, Color cyan, Color magenta) {
@@ -116,7 +116,7 @@ class StudentDetailCyberpunk extends StatelessWidget {
     return Column(
        crossAxisAlignment: CrossAxisAlignment.start,
        children: [
-          Text('UPLINK_ACTIVITY_LEDGER'.toUpperCase(), style: TextStyle(color: cyan.withOpacity(0.3), fontWeight: FontWeight.w900, fontSize: 10, letterSpacing: 1.5, fontFamily: 'Courier')),
+          Text('UPLINK_ACTIVITY_LEDGER'.toUpperCase(), style: TextStyle(color: cyan.withValues(alpha: 0.3), fontWeight: FontWeight.w900, fontSize: 10, letterSpacing: 1.5, fontFamily: 'Courier')),
           const SizedBox(height: 16),
           ListView.builder(
             shrinkWrap: true,
@@ -129,13 +129,13 @@ class StudentDetailCyberpunk extends StatelessWidget {
 
               return Container(
                 margin: const EdgeInsets.only(bottom: 12),
-                decoration: BoxDecoration(color: Colors.black, border: Border.all(color: cyan.withOpacity(0.1))),
+                decoration: BoxDecoration(color: Colors.black, border: Border.all(color: cyan.withValues(alpha: 0.1))),
                 child: ListTile(
                    onTap: () => _updateEntry(context, rec['session'].id, status, rec['remarks'], cyan, magenta),
                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                    leading: Icon(_getIcon(status), color: col, size: 20),
                    title: Text(DateFormat('yyyy_MM_dd').format(rec['session'].date), style: TextStyle(fontWeight: FontWeight.w900, fontSize: 13, color: cyan, fontFamily: 'Courier')),
-                   subtitle: Text('${rec['session'].startTime} > ${rec['session'].endTime}', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 10, color: cyan.withOpacity(0.4), fontFamily: 'Courier')),
+                   subtitle: Text('${rec['session'].startTime} > ${rec['session'].endTime}', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 10, color: cyan.withValues(alpha: 0.4), fontFamily: 'Courier')),
                    trailing: Text(status.toUpperCase(), style: TextStyle(color: col, fontWeight: FontWeight.w900, fontSize: 9, fontFamily: 'Courier')),
                 ),
               );
@@ -160,7 +160,7 @@ class StudentDetailCyberpunk extends StatelessWidget {
              _stBtn('L', Colors.orangeAccent, sel.value == 'late', () => sel.value = 'late', cyan),
           ])),
           const SizedBox(height: 24),
-          Container(decoration: BoxDecoration(border: Border.all(color: cyan.withOpacity(0.2)), color: cyan.withOpacity(0.02)), child: TextField(controller: tc, style: TextStyle(color: cyan, fontSize: 13, fontFamily: 'Courier'), decoration: InputDecoration(hintText: 'IDENTIFIER_REMARKS', hintStyle: TextStyle(color: cyan.withOpacity(0.3), fontSize: 10), border: InputBorder.none, contentPadding: const EdgeInsets.all(12)))),
+          Container(decoration: BoxDecoration(border: Border.all(color: cyan.withValues(alpha: 0.2)), color: cyan.withValues(alpha: 0.02)), child: TextField(controller: tc, style: TextStyle(color: cyan, fontSize: 13, fontFamily: 'Courier'), decoration: InputDecoration(hintText: 'IDENTIFIER_REMARKS', hintStyle: TextStyle(color: cyan.withValues(alpha: 0.3), fontSize: 10), border: InputBorder.none, contentPadding: const EdgeInsets.all(12)))),
        ]),
        actions: [
           TextButton(onPressed: () => Get.back(), child: Text('TERMINATE', style: TextStyle(color: magenta, fontWeight: FontWeight.w900, fontSize: 10))),
@@ -199,7 +199,7 @@ class StudentDetailCyberpunk extends StatelessWidget {
   }
 
   Widget _pTile(String l, IconData i, Color c, VoidCallback t) {
-     return InkWell(onTap: t, child: Container(margin: const EdgeInsets.only(bottom: 12), padding: const EdgeInsets.all(16), decoration: BoxDecoration(border: Border.all(color: c.withOpacity(0.3)), color: c.withOpacity(0.02)), child: Row(children: [Icon(i, color: c, size: 20), const SizedBox(width: 16), Text(l, style: TextStyle(color: c, fontWeight: FontWeight.w800, fontSize: 12, fontFamily: 'Courier'))])));
+     return InkWell(onTap: t, child: Container(margin: const EdgeInsets.only(bottom: 12), padding: const EdgeInsets.all(16), decoration: BoxDecoration(border: Border.all(color: c.withValues(alpha: 0.3)), color: c.withValues(alpha: 0.02)), child: Row(children: [Icon(i, color: c, size: 20), const SizedBox(width: 16), Text(l, style: TextStyle(color: c, fontWeight: FontWeight.w800, fontSize: 12, fontFamily: 'Courier'))])));
   }
 }
 

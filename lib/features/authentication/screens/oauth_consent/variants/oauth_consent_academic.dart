@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../oauth_consent_controller.dart';
+import '../../../controllers/oauth_consent_controller.dart';
 
 class OAuthConsentAcademic extends StatelessWidget {
   const OAuthConsentAcademic({
@@ -42,8 +42,8 @@ class OAuthConsentAcademic extends StatelessWidget {
       children: [
         Container(
           padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(color: Colors.white, border: Border.all(color: color.withOpacity(0.05)), shape: BoxShape.circle, boxShadow: [BoxShadow(color: color.withOpacity(0.02), blurRadius: 20, offset: const Offset(0, 10))]),
-          child: Icon(Iconsax.security_user, color: color.withOpacity(0.4), size: 48),
+          decoration: BoxDecoration(color: Colors.white, border: Border.all(color: color.withValues(alpha: 0.05)), shape: BoxShape.circle, boxShadow: [BoxShadow(color: color.withValues(alpha: 0.02), blurRadius: 20, offset: const Offset(0, 10))]),
+          child: Icon(Iconsax.security_user, color: color.withValues(alpha: 0.4), size: 48),
         ),
         const SizedBox(height: 32),
         const Text('SmartCampus', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 32, color: Color(0xFF2D2E32), letterSpacing: 0, fontFamily: 'Serif')),
@@ -90,7 +90,7 @@ class OAuthConsentAcademic extends StatelessWidget {
         const SizedBox(height: 24),
         TextButton(
           onPressed: () => controller.denyConsent(),
-          child: Text('Deny & Close', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: color.withOpacity(0.5), fontFamily: 'Serif')),
+          child: Text('Deny & Close', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: color.withValues(alpha: 0.5), fontFamily: 'Serif')),
         ),
       ],
     );

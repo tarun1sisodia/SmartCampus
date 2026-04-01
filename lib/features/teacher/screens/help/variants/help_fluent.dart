@@ -52,7 +52,7 @@ class HelpFluent extends StatelessWidget {
         ),
         Container(
           padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.black.withOpacity(0.05)), boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10, offset: const Offset(0, 4))]),
+          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.black.withValues(alpha: 0.05)), boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 10, offset: const Offset(0, 4))]),
           child: Column(children: items),
         ),
       ],
@@ -66,7 +66,7 @@ class HelpFluent extends StatelessWidget {
         onTap: onTap,
         child: Row(
           children: [
-            Container(padding: const EdgeInsets.all(12), decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(8)), child: Icon(icon, color: color.withOpacity(0.6), size: 24)),
+            Container(padding: const EdgeInsets.all(12), decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)), child: Icon(icon, color: color.withValues(alpha: 0.6), size: 24)),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
@@ -167,7 +167,7 @@ class HelpFluent extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 24),
       child: Row(
         children: [
-          Container(padding: const EdgeInsets.all(12), decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(4)), child: Icon(icon, color: color.withOpacity(0.6), size: 24)),
+          Container(padding: const EdgeInsets.all(12), decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(4)), child: Icon(icon, color: color.withValues(alpha: 0.6), size: 24)),
           const SizedBox(width: 16),
           Expanded(
             child: Column(

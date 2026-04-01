@@ -53,9 +53,9 @@ class FeedbackFluent extends StatelessWidget {
                   decoration: InputDecoration(
                     hintText: 'Share your thoughts here...',
                     hintStyle: const TextStyle(color: Color(0xFFA19F9D), fontSize: 14),
-                    filled: true, fillColor: const Color(0xFFF3F3F3).withOpacity(0.5),
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(4), borderSide: BorderSide(color: Colors.black.withOpacity(0.05))),
-                    enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(4), borderSide: BorderSide(color: Colors.black.withOpacity(0.05))),
+                    filled: true, fillColor: const Color(0xFFF3F3F3).withValues(alpha: 0.5),
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(4), borderSide: BorderSide(color: Colors.black.withValues(alpha: 0.05))),
+                    enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(4), borderSide: BorderSide(color: Colors.black.withValues(alpha: 0.05))),
                     focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(4), borderSide: const BorderSide(color: Color(0xFF0078D4), width: 1.5)),
                   ),
                 ),
@@ -90,7 +90,7 @@ class FeedbackFluent extends StatelessWidget {
         ),
         Container(
           padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.black.withOpacity(0.05)), boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10, offset: const Offset(0, 4))]),
+          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.black.withValues(alpha: 0.05)), boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 10, offset: const Offset(0, 4))]),
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: items),
         ),
       ],

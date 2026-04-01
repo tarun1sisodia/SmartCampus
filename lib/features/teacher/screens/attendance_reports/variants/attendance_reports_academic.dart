@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../../../controllers/attendance_reports_controller.dart';
+import 'package:smart_campus/features/teacher/controllers/attendance_reports_controller.dart';
 
 class AttendanceReportsAcademic extends StatelessWidget {
   final AttendanceReportsController controller;
@@ -51,7 +51,7 @@ class AttendanceReportsAcademic extends StatelessWidget {
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: const Color(0xFFF0EAD6),
-        border: Border(bottom: BorderSide(color: accent.withOpacity(0.3), width: 1.5)),
+        border: Border(bottom: BorderSide(color: accent.withValues(alpha: 0.3), width: 1.5)),
       ),
       child: Row(
         children: [
@@ -67,7 +67,7 @@ class AttendanceReportsAcademic extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
-        border: Border.all(color: ink.withOpacity(0.2), width: 1),
+        border: Border.all(color: ink.withValues(alpha: 0.2), width: 1),
         borderRadius: BorderRadius.circular(4),
       ),
       child: Obx(() => DropdownButtonHideUnderline(
@@ -101,7 +101,7 @@ class AttendanceReportsAcademic extends StatelessWidget {
         height: 48,
         width: 48,
         decoration: BoxDecoration(
-          border: Border.all(color: accent.withOpacity(0.5), width: 1.5),
+          border: Border.all(color: accent.withValues(alpha: 0.5), width: 1.5),
           shape: BoxShape.circle,
         ),
         child: Center(child: Icon(Iconsax.calendar_1, color: accent, size: 20)),
@@ -114,8 +114,8 @@ class AttendanceReportsAcademic extends StatelessWidget {
       padding: const EdgeInsets.all(32),
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border.all(color: accent.withOpacity(0.2), width: 1),
-        boxShadow: [BoxShadow(color: accent.withOpacity(0.05), blurRadius: 10)],
+        border: Border.all(color: accent.withValues(alpha: 0.2), width: 1),
+        boxShadow: [BoxShadow(color: accent.withValues(alpha: 0.05), blurRadius: 10)],
       ),
       child: Column(
         children: [
@@ -125,14 +125,14 @@ class AttendanceReportsAcademic extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('AGGREGATE_PERCENTAGE', style: TextStyle(fontFamily: 'Serif', fontWeight: FontWeight.w800, fontSize: 10, color: ink.withOpacity(0.5))),
+                  Text('AGGREGATE_PERCENTAGE', style: TextStyle(fontFamily: 'Serif', fontWeight: FontWeight.w800, fontSize: 10, color: ink.withValues(alpha: 0.5))),
                   Obx(() => Text(
                     '${controller.averageAttendance.value.toStringAsFixed(1)}%',
                     style: TextStyle(fontFamily: 'Serif', fontWeight: FontWeight.w900, fontSize: 48, color: accent, height: 1),
                   )),
                 ],
               ),
-              Icon(Iconsax.judge, size: 48, color: accent.withOpacity(0.3)),
+              Icon(Iconsax.judge, size: 48, color: accent.withValues(alpha: 0.3)),
             ],
           ),
           const SizedBox(height: 24),
@@ -176,12 +176,12 @@ class AttendanceReportsAcademic extends StatelessWidget {
           margin: const EdgeInsets.only(bottom: 8),
           decoration: BoxDecoration(
             color: Colors.white,
-            border: Border(bottom: BorderSide(color: ink.withOpacity(0.05), width: 1)),
+            border: Border(bottom: BorderSide(color: ink.withValues(alpha: 0.05), width: 1)),
           ),
           child: ListTile(
             onTap: () => controller.navigateToStudentDetail(student),
             title: Text(student.name.toString().toUpperCase(), style: TextStyle(fontFamily: 'Serif', fontWeight: FontWeight.w900, fontSize: 13, color: ink)),
-            subtitle: Text('ID_SYS: ${student.rollNumber}', style: TextStyle(fontFamily: 'Serif', fontWeight: FontWeight.w600, fontSize: 10, color: ink.withOpacity(0.5))),
+            subtitle: Text('ID_SYS: ${student.rollNumber}', style: TextStyle(fontFamily: 'Serif', fontWeight: FontWeight.w600, fontSize: 10, color: ink.withValues(alpha: 0.5))),
             trailing: Text(
               '${percentage.toStringAsFixed(0)}%',
               style: TextStyle(

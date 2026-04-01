@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import '../../../../../../common/utils/constants/image_strings.dart';
-import '../../../../controllers/controllers_onboarding/onboarding_controller.dart';
+import '../../../controllers/controllers_onboarding/onboarding_controller.dart';
 
 class OnboardingAcademic extends StatelessWidget {
   const OnboardingAcademic({super.key});
@@ -57,13 +57,13 @@ class OnboardingAcademic extends StatelessWidget {
         children: [
           Container(
             padding: const EdgeInsets.all(40),
-            decoration: BoxDecoration(color: Colors.white, border: Border.all(color: color.withOpacity(0.05)), boxShadow: [BoxShadow(color: color.withOpacity(0.02), blurRadius: 20, offset: const Offset(0, 10))]),
+            decoration: BoxDecoration(color: Colors.white, border: Border.all(color: color.withValues(alpha: 0.05)), boxShadow: [BoxShadow(color: color.withValues(alpha: 0.02), blurRadius: 20, offset: const Offset(0, 10))]),
             child: lottie != null ? Lottie.asset(lottie, width: 140) : Image.asset(image!, width: 140),
           ),
           const SizedBox(height: 64),
           Text(title, textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 32, color: color, letterSpacing: 0, fontFamily: 'Serif')),
           const SizedBox(height: 24),
-          Text(subtitle, textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.normal, fontSize: 16, color: color.withOpacity(0.5), height: 1.6, letterSpacing: 0.5, fontFamily: 'Serif')),
+          Text(subtitle, textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.normal, fontSize: 16, color: color.withValues(alpha: 0.5), height: 1.6, letterSpacing: 0.5, fontFamily: 'Serif')),
         ],
       ),
     );
@@ -75,7 +75,7 @@ class OnboardingAcademic extends StatelessWidget {
       right: 32,
       child: TextButton(
         onPressed: () => controller.skipPage(),
-        child: Text('Skip Protocol', style: TextStyle(color: color.withOpacity(0.4), fontWeight: FontWeight.normal, fontSize: 14, fontFamily: 'Serif')),
+        child: Text('Skip Protocol', style: TextStyle(color: color.withValues(alpha: 0.4), fontWeight: FontWeight.normal, fontSize: 14, fontFamily: 'Serif')),
       ),
     );
   }
@@ -92,7 +92,7 @@ class OnboardingAcademic extends StatelessWidget {
             width: 8,
             height: 8,
             margin: const EdgeInsets.symmetric(horizontal: 6),
-            decoration: BoxDecoration(color: controller.currentPageIndex.value == index ? color : color.withOpacity(0.1), shape: BoxShape.circle),
+            decoration: BoxDecoration(color: controller.currentPageIndex.value == index ? color : color.withValues(alpha: 0.1), shape: BoxShape.circle),
           )),
         )),
       ),
@@ -107,8 +107,8 @@ class OnboardingAcademic extends StatelessWidget {
         onPressed: () => controller.nextPage(),
         icon: Container(
           padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(color: color.withOpacity(0.05), border: Border.all(color: color.withOpacity(0.1)), shape: BoxShape.circle),
-          child: Icon(Icons.arrow_forward_ios, color: color.withOpacity(0.4), size: 20),
+          decoration: BoxDecoration(color: color.withValues(alpha: 0.05), border: Border.all(color: color.withValues(alpha: 0.1)), shape: BoxShape.circle),
+          child: Icon(Icons.arrow_forward_ios, color: color.withValues(alpha: 0.4), size: 20),
         ),
       ),
     );

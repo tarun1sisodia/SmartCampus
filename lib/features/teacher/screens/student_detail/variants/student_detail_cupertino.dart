@@ -6,11 +6,11 @@ import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
-import '../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
+import '../../../../../common/ui_patterns/pattern_tokens.dart';
+import '../../../../../common/ui_patterns/ui_style.dart';
 import '../../controllers/student_detail_controller.dart';
 import '../../../../models/student_model.dart';
-import '../../../../common/utils/constants/api_constants.dart';
+import '../../../../../common/utils/constants/api_constants.dart';
 
 class StudentDetailCupertino extends StatelessWidget {
   final StudentDetailController controller;
@@ -131,7 +131,7 @@ class StudentDetailCupertino extends StatelessWidget {
 
                   return _ListTile(
                      onTap: () => _updateEntry(context, session.id, status, rec['remarks']),
-                     leading: CircleAvatar(backgroundColor: _getColor(status).withOpacity(0.1), radius: 20, child: Icon(_getIcon(status), color: _getColor(status), size: 18)),
+                     leading: CircleAvatar(backgroundColor: _getColor(status).withValues(alpha: 0.1), radius: 20, child: Icon(_getIcon(status), color: _getColor(status), size: 18)),
                      title: Text(DateFormat('EEEE, MMM d').format(session.date), style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14, color: Colors.black)),
                      subtitle: Text('${session.startTime} - ${session.endTime}', style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 11, color: Color(0xFF8E8E93))),
                      trailing: const Icon(CupertinoIcons.chevron_right, size: 14, color: Color(0xFFC7C7CC)),

@@ -7,6 +7,9 @@ import 'pattern_tokens.dart';
 class PatternScaffold extends StatelessWidget {
   final Widget body;
   final Widget? appBar;
+  final String? title;
+  final Widget? leading;
+  final List<Widget>? actions;
   final Widget? bottomNavigationBar;
   final Widget? floatingActionButton;
   final FloatingActionButtonLocation? floatingActionButtonLocation;
@@ -17,6 +20,9 @@ class PatternScaffold extends StatelessWidget {
     super.key,
     required this.body,
     this.appBar,
+    this.title,
+    this.leading,
+    this.actions,
     this.bottomNavigationBar,
     this.floatingActionButton,
     this.floatingActionButtonLocation,
@@ -54,7 +60,9 @@ class PatternScaffold extends StatelessWidget {
             Scaffold(
               backgroundColor: Colors.transparent,
               resizeToAvoidBottomInset: resizeToAvoidBottomInset,
-              appBar: appBar != null ? _buildAppBar(context, appBar!, tokens) : null,
+              appBar: appBar != null 
+                  ? _buildAppBar(context, appBar!, tokens) 
+                  : (title != null ? _buildDefaultAppBar(context, tokens) : null),
               body: _buildBody(tokens),
               bottomNavigationBar: bottomNavigationBar,
               floatingActionButton: floatingActionButton,
@@ -79,7 +87,30 @@ class PatternScaffold extends StatelessWidget {
         ),
       );
     }
-    return AppBar(title: originalAppBar) as PreferredSizeWidget;
+    return AppBar(
+      title: originalAppBar,
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      centerTitle: true,
+    );
+  }
+
+  PreferredSizeWidget _buildDefaultAppBar(BuildContext context, PatternTokens tokens) {
+    return AppBar(
+      title: Text(
+        title!,
+        style: TextStyle(
+          fontFamily: tokens.fontFamily,
+          fontWeight: FontWeight.bold,
+          color: Theme.of(context).textTheme.titleLarge?.color,
+        ),
+      ),
+      leading: leading,
+      actions: actions,
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      centerTitle: true,
+    );
   }
 
   Widget _buildBody(PatternTokens tokens) {

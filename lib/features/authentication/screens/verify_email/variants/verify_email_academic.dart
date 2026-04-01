@@ -37,8 +37,8 @@ class VerifyEmailAcademic extends StatelessWidget {
       children: [
         Container(
           padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(color: Colors.white, border: Border.all(color: color.withOpacity(0.05)), shape: BoxShape.circle, boxShadow: [BoxShadow(color: color.withOpacity(0.02), blurRadius: 20, offset: const Offset(0, 10))]),
-          child: Icon(Iconsax.direct_send, color: color.withOpacity(0.4), size: 48),
+          decoration: BoxDecoration(color: Colors.white, border: Border.all(color: color.withValues(alpha: 0.05)), shape: BoxShape.circle, boxShadow: [BoxShadow(color: color.withValues(alpha: 0.02), blurRadius: 20, offset: const Offset(0, 10))]),
+          child: Icon(Iconsax.direct_send, color: color.withValues(alpha: 0.4), size: 48),
         ),
         const SizedBox(height: 32),
         const Text('SmartCampus', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 32, color: Color(0xFF2D2E32), letterSpacing: 0, fontFamily: 'Serif')),
@@ -56,7 +56,7 @@ class VerifyEmailAcademic extends StatelessWidget {
         Text(
           'An institutional validation link has been transmitted. Please verify your membership via the instructions in your inbox.',
           textAlign: TextAlign.center,
-          style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14, color: color.withOpacity(0.5), fontFamily: 'Serif', height: 1.6),
+          style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14, color: color.withValues(alpha: 0.5), fontFamily: 'Serif', height: 1.6),
         ),
       ],
     );
@@ -84,7 +84,7 @@ class VerifyEmailAcademic extends StatelessWidget {
         const SizedBox(height: 32),
         TextButton(
           onPressed: () => controller.sendEmailVerification(),
-          child: Text('Re-transmit Protocol link', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: color.withOpacity(0.5), fontFamily: 'Serif')),
+          child: Text('Re-transmit Protocol link', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: color.withValues(alpha: 0.5), fontFamily: 'Serif')),
         ),
       ],
     );

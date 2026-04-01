@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
-import '../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
+import '../../../../../common/ui_patterns/pattern_tokens.dart';
+import '../../../../../common/ui_patterns/ui_style.dart';
 import '../../controllers/attendance_reports_controller.dart';
 
 class AttendanceReportsMaterial3 extends StatelessWidget {
@@ -167,7 +167,7 @@ class AttendanceReportsMaterial3 extends StatelessWidget {
     return Card(
       elevation: 0,
       margin: const EdgeInsets.only(bottom: 8),
-      color: theme.colorScheme.surfaceContainerHigh.withOpacity(0.5),
+      color: theme.colorScheme.surfaceContainerHigh.withValues(alpha: 0.5),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: ListTile(
         onTap: () => controller.navigateToStudentDetail(student),

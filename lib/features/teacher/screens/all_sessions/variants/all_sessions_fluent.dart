@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
-import '../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
+import '../../../../../common/ui_patterns/pattern_tokens.dart';
+import '../../../../../common/ui_patterns/ui_style.dart';
 import '../../controllers/all_sessions_controller.dart';
 import '../../controllers/attendance_controller.dart';
 import '../carousel_attendance_screen.dart';
@@ -33,7 +33,7 @@ class AllSessionsFluent extends StatelessWidget {
 
               if (controller.filteredSessions.isEmpty) {
                 return Center(
-                  child: Text('Empty_Registry_Node', style: TextStyle(color: Colors.black.withOpacity(0.4), fontWeight: FontWeight.w700, fontSize: 13)),
+                  child: Text('Empty_Registry_Node', style: TextStyle(color: Colors.black.withValues(alpha: 0.4), fontWeight: FontWeight.w700, fontSize: 13)),
                 );
               }
 
@@ -59,10 +59,10 @@ class AllSessionsFluent extends StatelessWidget {
   Widget _buildFluentSearchHeader() {
     return Container(
        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-       decoration: BoxDecoration(color: Colors.white.withOpacity(0.7), border: Border(bottom: BorderSide(color: Colors.black.withOpacity(0.05)))),
+       decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.7), border: Border(bottom: BorderSide(color: Colors.black.withValues(alpha: 0.05)))),
        child: Container(
           height: 48,
-          decoration: BoxDecoration(color: Colors.white, border: Border.all(color: Colors.black.withOpacity(0.1)), borderRadius: BorderRadius.circular(4)),
+          decoration: BoxDecoration(color: Colors.white, border: Border.all(color: Colors.black.withValues(alpha: 0.1)), borderRadius: BorderRadius.circular(4)),
           child: TextField(
              controller: controller.searchController,
              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: Color(0xFF201F1E)),
@@ -87,8 +87,8 @@ class AllSessionsFluent extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(4),
-        border: Border.all(color: isSelected ? const Color(0xFF0078D4) : Colors.black.withOpacity(0.05), width: isSelected ? 2 : 1),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 10, offset: const Offset(0, 2))],
+        border: Border.all(color: isSelected ? const Color(0xFF0078D4) : Colors.black.withValues(alpha: 0.05), width: isSelected ? 2 : 1),
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 10, offset: const Offset(0, 2))],
       ),
       child: Theme(
         data: Theme.of(Get.context!).copyWith(dividerColor: Colors.transparent),
@@ -111,12 +111,12 @@ class AllSessionsFluent extends StatelessWidget {
           ),
           subtitle: Text(
             DateFormat('EEEE, MMM d').format(session.date).toUpperCase(),
-            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 10, color: Colors.black.withOpacity(0.4)),
+            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 10, color: Colors.black.withValues(alpha: 0.4)),
           ),
           trailing: Container(
             width: 8,
             height: 8,
-            decoration: BoxDecoration(color: isRunning ? const Color(0xFF0078D4) : Colors.black.withOpacity(0.1), shape: BoxShape.rectangle),
+            decoration: BoxDecoration(color: isRunning ? const Color(0xFF0078D4) : Colors.black.withValues(alpha: 0.1), shape: BoxShape.rectangle),
           ),
           children: [
             Padding(
@@ -157,7 +157,7 @@ class AllSessionsFluent extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 11, color: Colors.black.withOpacity(0.4))),
+          Text(label, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 11, color: Colors.black.withValues(alpha: 0.4))),
           Text(val, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 11, color: Color(0xFF201F1E))),
         ],
       ),
@@ -170,7 +170,7 @@ class AllSessionsFluent extends StatelessWidget {
       child: Container(
          height: 44,
          width: 44,
-         decoration: BoxDecoration(border: Border.all(color: Colors.black.withOpacity(0.1)), borderRadius: BorderRadius.circular(4)),
+         decoration: BoxDecoration(border: Border.all(color: Colors.black.withValues(alpha: 0.1)), borderRadius: BorderRadius.circular(4)),
          child: Center(child: Icon(icon, color: color, size: 18)),
       ),
     );

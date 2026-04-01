@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../common/ui_patterns/pattern_scaffold.dart';
-import '../../../common/ui_patterns/ui_style.dart';
-import '../../../common/ui_patterns/ui_style_controller.dart';
-import '../controllers/carousel_attendance_controller.dart';
-import 'variants/carousel_attendance/carousel_corporate.dart';
-import 'variants/carousel_attendance/carousel_minimalist.dart';
-import 'variants/carousel_attendance/carousel_glassmorphism.dart';
-import 'variants/carousel_attendance/carousel_neumorphism.dart';
-import 'variants/carousel_attendance/carousel_material3.dart';
-import 'variants/carousel_attendance/carousel_cupertino.dart';
-import 'variants/carousel_attendance/carousel_cyberpunk.dart';
-import 'variants/carousel_attendance/carousel_brutalist.dart';
-import 'variants/carousel_attendance/carousel_academic.dart';
-import 'variants/carousel_attendance/carousel_fluent.dart';
+import 'package:smart_campus/common/ui_patterns/pattern_scaffold.dart';
+import 'package:smart_campus/common/ui_patterns/ui_style.dart';
+import 'package:smart_campus/common/ui_patterns/ui_style_controller.dart';
+import 'package:smart_campus/features/teacher/controllers/carousel_attendance_controller.dart';
+import 'package:smart_campus/features/teacher/screens/carousel_attendance/variants/carousel_corporate.dart';
+import 'package:smart_campus/features/teacher/screens/carousel_attendance/variants/carousel_minimalist.dart';
+import 'package:smart_campus/features/teacher/screens/carousel_attendance/variants/carousel_glassmorphism.dart';
+import 'package:smart_campus/features/teacher/screens/carousel_attendance/variants/carousel_neumorphism.dart';
+import 'package:smart_campus/features/teacher/screens/carousel_attendance/variants/carousel_material3.dart';
+import 'package:smart_campus/features/teacher/screens/carousel_attendance/variants/carousel_cupertino.dart';
+import 'package:smart_campus/features/teacher/screens/carousel_attendance/variants/carousel_cyberpunk.dart';
+import 'package:smart_campus/features/teacher/screens/carousel_attendance/variants/carousel_brutalist.dart';
+import 'package:smart_campus/features/teacher/screens/carousel_attendance/variants/carousel_academic.dart';
+import 'package:smart_campus/features/teacher/screens/carousel_attendance/variants/carousel_fluent.dart';
 
 class CarouselAttendanceScreen extends StatelessWidget {
   CarouselAttendanceScreen({super.key});

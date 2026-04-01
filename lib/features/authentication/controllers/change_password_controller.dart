@@ -10,11 +10,22 @@ class ChangePasswordController extends GetxController {
   final newPasswordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
 
+  final changePasswordFormKey = GlobalKey<FormState>();
+
   // Loading and visibility states
   final isLoading = false.obs;
   final isCurrentPasswordVisible = false.obs;
   final isNewPasswordVisible = false.obs;
   final isConfirmPasswordVisible = false.obs;
+  final hidePassword = true.obs;
+
+  // --- UI Facade Getters ---
+  TextEditingController get currentPassword => currentPasswordController;
+  TextEditingController get newPassword => newPasswordController;
+  TextEditingController get confirmPassword => confirmPasswordController;
+
+  // --- UI Facade Methods ---
+  void updatePassword() => changePassword();
 
   // Password strength indicators
   final passwordStrength = 0.0.obs;

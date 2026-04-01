@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../controllers/controllers_forgot_password/forgot_password_controller.dart';
+import '../../../controllers/forgot_password_controller.dart';
 
 class ResetConfirmationFluent extends StatelessWidget {
   const ResetConfirmationFluent({super.key, required this.email});
@@ -39,7 +39,7 @@ class ResetConfirmationFluent extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
-            boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 40, offset: const Offset(0, 20))],
+            boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 40, offset: const Offset(0, 20))],
           ),
           child: Icon(Icons.mark_email_read_outlined, color: color, size: 48),
         ),
@@ -86,7 +86,7 @@ class ResetConfirmationFluent extends StatelessWidget {
         const SizedBox(height: 24),
         TextButton(
           onPressed: () => ForgotPasswordController.instance.resendPasswordResetEmail(email),
-          child: Text('Resend Transmission', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: color.withOpacity(0.5))),
+          child: Text('Resend Transmission', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: color.withValues(alpha: 0.5))),
         ),
       ],
     );

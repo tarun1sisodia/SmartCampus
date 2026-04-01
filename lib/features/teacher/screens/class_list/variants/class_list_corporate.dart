@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../../common/ui_patterns/ui_style.dart';
-import '../../../../../models/class_model.dart';
-import '../../../controllers/class_controller.dart';
-import '../../add_student_screen.dart';
-import '../../attendance_screen.dart';
+import 'package:smart_campus/common/ui_patterns/pattern_tokens.dart';
+import 'package:smart_campus/common/ui_patterns/ui_style.dart';
+import 'package:smart_campus/models/class_model.dart';
+import 'package:smart_campus/features/teacher/controllers/class_controller.dart';
+import 'package:smart_campus/features/teacher/screens/add_student/add_student_screen.dart';
+import 'package:smart_campus/features/teacher/screens/attendance/attendance_screen.dart';
 
 class ClassListCorporate extends StatelessWidget {
   final ClassController controller;
@@ -48,12 +48,12 @@ class ClassListCorporate extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(Map<String, dynamic> tokens) {
+  Widget _buildHeader(PatternTokens tokens) {
     return Container(
       padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
       decoration: BoxDecoration(
         color: const Color(0xFF0F172A),
-        border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.1), width: 2)),
+        border: Border(bottom: BorderSide(color: Colors.white.withValues(alpha: 0.1), width: 2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,7 +67,7 @@ class ClassListCorporate extends StatelessWidget {
               ),
               Obx(() => Text(
                 '${controller.classes.length} ACTIVE RECORDS',
-                style: TextStyle(color: Colors.white.withOpacity(0.6), fontWeight: FontWeight.w800, fontSize: 10),
+                style: TextStyle(color: Colors.white.withValues(alpha: 0.6), fontWeight: FontWeight.w800, fontSize: 10),
               )),
             ],
           ),
@@ -78,11 +78,11 @@ class ClassListCorporate extends StatelessWidget {
     );
   }
 
-  Widget _buildSearchBar(Map<String, dynamic> tokens) {
+  Widget _buildSearchBar(PatternTokens tokens) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.05),
-        border: Border.all(color: Colors.white.withOpacity(0.2), width: 1.5),
+        color: Colors.white.withValues(alpha: 0.05),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.2), width: 1.5),
         borderRadius: BorderRadius.zero,
       ),
       child: TextField(
@@ -90,8 +90,8 @@ class ClassListCorporate extends StatelessWidget {
         style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
         decoration: InputDecoration(
           hintText: 'SEARCH CLASS RECORDS...',
-          hintStyle: TextStyle(color: Colors.white.withOpacity(0.3), fontWeight: FontWeight.w800, fontSize: 13),
-          prefixIcon: Icon(Iconsax.search_normal, color: Colors.white.withOpacity(0.5), size: 20),
+          hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.3), fontWeight: FontWeight.w800, fontSize: 13),
+          prefixIcon: Icon(Iconsax.search_normal, color: Colors.white.withValues(alpha: 0.5), size: 20),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         ),
@@ -99,7 +99,7 @@ class ClassListCorporate extends StatelessWidget {
     );
   }
 
-  Widget _buildClassCard(BuildContext context, ClassModel classItem, bool isSelected, Map<String, dynamic> tokens) {
+  Widget _buildClassCard(BuildContext context, ClassModel classItem, bool isSelected, PatternTokens tokens) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
@@ -192,7 +192,7 @@ class ClassListCorporate extends StatelessWidget {
     );
   }
 
-  Widget _buildEmptyState(Map<String, dynamic> tokens) {
+  Widget _buildEmptyState(PatternTokens tokens) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -205,14 +205,14 @@ class ClassListCorporate extends StatelessWidget {
           ),
           Text(
             'PLEASE ADJUST YOUR SEARCH PARAMETERS.',
-            style: TextStyle(fontWeight: FontWeight.w800, fontSize: 11, color: const Color(0xFF0F172A).withOpacity(0.5)),
+            style: TextStyle(fontWeight: FontWeight.w800, fontSize: 11, color: const Color(0xFF0F172A).withValues(alpha: 0.5)),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildLoadMore(Map<String, dynamic> tokens) {
+  Widget _buildLoadMore(PatternTokens tokens) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 24),

@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../common/ui_patterns/pattern_scaffold.dart';
-import '../../../common/ui_patterns/ui_style.dart';
-import '../../../common/ui_patterns/ui_style_controller.dart';
-import '../controllers/attendance_reports_controller.dart';
-import 'variants/reports/reports_corporate.dart';
-import 'variants/reports/reports_minimalist.dart';
-import 'variants/reports/reports_glassmorphism.dart';
-import 'variants/reports/reports_neumorphism.dart';
-import 'variants/reports/reports_material3.dart';
-import 'variants/reports/reports_cupertino.dart';
-import 'variants/reports/reports_cyberpunk.dart';
-import 'variants/reports/reports_brutalist.dart';
-import 'variants/reports/reports_academic.dart';
-import 'variants/reports/reports_fluent.dart';
+import '../../../../common/ui_patterns/pattern_scaffold.dart';
+import '../../../../common/ui_patterns/ui_style.dart';
+import '../../../../common/ui_patterns/ui_style_controller.dart';
+import '../../controllers/attendance_reports_controller.dart';
+import 'variants/reports_corporate.dart';
+import 'variants/reports_minimalist.dart';
+import 'variants/reports_glassmorphism.dart';
+import 'variants/reports_neumorphism.dart';
+import 'variants/reports_material3.dart';
+import 'variants/reports_cupertino.dart';
+import 'variants/reports_cyberpunk.dart';
+import 'variants/reports_brutalist.dart';
+import 'variants/reports_academic.dart';
+import 'variants/reports_fluent.dart';
 
 class ReportsScreen extends StatelessWidget {
   final reportsController = Get.put(AttendanceReportsController());

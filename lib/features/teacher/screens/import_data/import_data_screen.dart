@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../common/ui_patterns/pattern_scaffold.dart';
-import '../../../common/ui_patterns/ui_style.dart';
-import '../../../common/ui_patterns/ui_style_controller.dart';
-import 'variants/import_data/import_corporate.dart';
-import 'variants/import_data/import_minimalist.dart';
-import 'variants/import_data/import_glassmorphism.dart';
-import 'variants/import_data/import_neumorphism.dart';
-import 'variants/import_data/import_material3.dart';
-import 'variants/import_data/import_cupertino.dart';
-import 'variants/import_data/import_cyberpunk.dart';
-import 'variants/import_data/import_brutalist.dart';
-import 'variants/import_data/import_academic.dart';
-import 'variants/import_data/import_fluent.dart';
+import '../../../../common/ui_patterns/pattern_scaffold.dart';
+import '../../../../common/ui_patterns/ui_style.dart';
+import '../../../../common/ui_patterns/ui_style_controller.dart';
+import 'variants/import_corporate.dart';
+import 'variants/import_minimalist.dart';
+import 'variants/import_glassmorphism.dart';
+import 'variants/import_neumorphism.dart';
+import 'variants/import_material3.dart';
+import 'variants/import_cupertino.dart';
+import 'variants/import_cyberpunk.dart';
+import 'variants/import_brutalist.dart';
+import 'variants/import_academic.dart';
+import 'variants/import_fluent.dart';
 
 class ImportDataScreen extends StatelessWidget {
   const ImportDataScreen({super.key});

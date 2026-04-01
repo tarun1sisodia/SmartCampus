@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../controllers/calendar_controller.dart';
-import '../../../common/ui_patterns/pattern_scaffold.dart';
-import '../../../common/ui_patterns/ui_style_controller.dart';
-import '../../../common/ui_patterns/ui_style.dart';
-import 'variants/calendar/calendar_corporate.dart';
-import 'variants/calendar/calendar_minimalist.dart';
-import 'variants/calendar/calendar_glassmorphism.dart';
-import 'variants/calendar/calendar_neumorphic.dart';
-import 'variants/calendar/calendar_material3.dart';
-import 'variants/calendar/calendar_cupertino.dart';
-import 'variants/calendar/calendar_cyberpunk.dart';
-import 'variants/calendar/calendar_brutalist.dart';
-import 'variants/calendar/calendar_academic.dart';
-import 'variants/calendar/calendar_fluent.dart';
-import '../../../common/utils/constants/sized.dart';
+import 'package:smart_campus/features/teacher/controllers/calendar_controller.dart';
+import 'package:smart_campus/common/ui_patterns/pattern_scaffold.dart';
+import 'package:smart_campus/common/ui_patterns/ui_style_controller.dart';
+import 'package:smart_campus/common/ui_patterns/ui_style.dart';
+import 'package:smart_campus/features/teacher/screens/calendar/variants/calendar_corporate.dart';
+import 'package:smart_campus/features/teacher/screens/calendar/variants/calendar_minimalist.dart';
+import 'package:smart_campus/features/teacher/screens/calendar/variants/calendar_glassmorphism.dart';
+import 'package:smart_campus/features/teacher/screens/calendar/variants/calendar_neumorphic.dart';
+import 'package:smart_campus/features/teacher/screens/calendar/variants/calendar_material3.dart';
+import 'package:smart_campus/features/teacher/screens/calendar/variants/calendar_cupertino.dart';
+import 'package:smart_campus/features/teacher/screens/calendar/variants/calendar_cyberpunk.dart';
+import 'package:smart_campus/features/teacher/screens/calendar/variants/calendar_brutalist.dart';
+import 'package:smart_campus/features/teacher/screens/calendar/variants/calendar_academic.dart';
+import 'package:smart_campus/features/teacher/screens/calendar/variants/calendar_fluent.dart';
+import 'package:smart_campus/common/utils/constants/sized.dart';
 
 class CalendarScreen extends StatelessWidget {
   final CalendarController controller = Get.put(CalendarController());

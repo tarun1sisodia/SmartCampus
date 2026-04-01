@@ -72,7 +72,7 @@ class MessagesGlassmorphism extends StatelessWidget {
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(color: isSelected ? Colors.white.withOpacity(0.2) : Colors.transparent, borderRadius: BorderRadius.circular(12)),
+        decoration: BoxDecoration(color: isSelected ? Colors.white.withValues(alpha: 0.2) : Colors.transparent, borderRadius: BorderRadius.circular(12)),
         child: Text(label, style: TextStyle(color: isSelected ? Colors.white : Colors.white54, fontWeight: FontWeight.bold, fontSize: 13)),
       ),
     );
@@ -85,7 +85,7 @@ class MessagesGlassmorphism extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           child: Row(
             children: [
-              Container(width: 52, height: 52, decoration: BoxDecoration(color: Colors.white.withOpacity(0.1), shape: BoxShape.circle), child: Center(child: Text(data.avatar, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)))),
+              Container(width: 52, height: 52, decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.1), shape: BoxShape.circle), child: Center(child: Text(data.avatar, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)))),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(
@@ -95,11 +95,11 @@ class MessagesGlassmorphism extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(data.name, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15)),
-                        Text(data.time, style: TextStyle(color: Colors.white.withOpacity(0.4), fontSize: 11)),
+                        Text(data.time, style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontSize: 11)),
                       ],
                     ),
                     const SizedBox(height: 4),
-                    Text(data.message, style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 13), maxLines: 1, overflow: TextOverflow.ellipsis),
+                    Text(data.message, style: TextStyle(color: Colors.white.withValues(alpha: 0.6), fontSize: 13), maxLines: 1, overflow: TextOverflow.ellipsis),
                   ],
                 ),
               ),
@@ -120,9 +120,9 @@ class MessagesGlassmorphism extends StatelessWidget {
         child: Container(
           padding: padding,
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.1),
+            color: Colors.white.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: Colors.white.withOpacity(0.2)),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
           ),
           child: child,
         ),

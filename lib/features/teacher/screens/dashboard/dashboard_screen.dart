@@ -1,22 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../controllers/dashboard_controller.dart';
-import '../controllers/teacher_profile_controller.dart';
+import '../../controllers/dashboard_controller.dart';
+import '../../controllers/teacher_profile_controller.dart';
 import 'widgets/biometric_overlay.dart';
 import 'widgets/dashboard_shimmer.dart';
-import '../../../common/ui_patterns/ui_style.dart';
-import '../../../common/ui_patterns/ui_style_controller.dart';
-import 'variants/dashboard_corporate.dart';
+import '../../../../common/ui_patterns/ui_style.dart';
+import '../../../../common/ui_patterns/ui_style_controller.dart';
 import 'variants/dashboard_minimalist.dart';
-import 'variants/dashboard_glassmorphism.dart';
 import 'variants/dashboard_neumorphic.dart';
-import 'variants/dashboard_material3.dart';
 import 'variants/dashboard_cupertino.dart';
-import 'variants/dashboard_cyberpunk.dart';
 import 'variants/dashboard_brutalist.dart';
-import 'variants/dashboard_academic.dart';
 import 'variants/dashboard_fluent.dart';
-import '../../../common/ui_patterns/pattern_scaffold.dart';
+import '../../../../common/ui_patterns/pattern_scaffold.dart';
 
 // DashboardScreen acts as a Switchboard for 10 distinct UI variants.
 class DashboardScreen extends StatelessWidget {

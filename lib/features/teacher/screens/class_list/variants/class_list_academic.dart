@@ -59,7 +59,7 @@ class ClassListAcademic extends StatelessWidget {
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: const Color(0xFFF0EAD6), // Eggshell
-        border: Border(bottom: BorderSide(color: accent.withOpacity(0.3), width: 1.5)),
+        border: Border(bottom: BorderSide(color: accent.withValues(alpha: 0.3), width: 1.5)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -78,7 +78,7 @@ class ClassListAcademic extends StatelessWidget {
   Widget _buildScribeSearch(Color ink) {
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(color: ink.withOpacity(0.2), width: 1),
+        border: Border.all(color: ink.withValues(alpha: 0.2), width: 1),
         borderRadius: BorderRadius.circular(4),
       ),
       child: TextField(
@@ -86,8 +86,8 @@ class ClassListAcademic extends StatelessWidget {
         style: TextStyle(fontFamily: 'Serif', fontWeight: FontWeight.w600, color: ink),
         decoration: InputDecoration(
           hintText: 'FILTER BY SUBJECT MATTER...',
-          hintStyle: TextStyle(fontFamily: 'Serif', color: ink.withOpacity(0.4), fontSize: 12, fontWeight: FontWeight.w700),
-          prefixIcon: Icon(Iconsax.search_normal, color: ink.withOpacity(0.5), size: 20),
+          hintStyle: TextStyle(fontFamily: 'Serif', color: ink.withValues(alpha: 0.4), fontSize: 12, fontWeight: FontWeight.w700),
+          prefixIcon: Icon(Iconsax.search_normal, color: ink.withValues(alpha: 0.5), size: 20),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         ),
@@ -99,8 +99,8 @@ class ClassListAcademic extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: isSelected ? accent.withOpacity(0.05) : Colors.white,
-        border: Border.all(color: isSelected ? accent : ink.withOpacity(0.15), width: isSelected ? 2 : 1),
+        color: isSelected ? accent.withValues(alpha: 0.05) : Colors.white,
+        border: Border.all(color: isSelected ? accent : ink.withValues(alpha: 0.15), width: isSelected ? 2 : 1),
         borderRadius: BorderRadius.circular(8),
       ),
       child: InkWell(
@@ -143,7 +143,7 @@ class ClassListAcademic extends StatelessWidget {
                         ),
                         Text(
                           '${classItem.courseName} | SEM ${classItem.semester} | SEC ${classItem.section ?? "N/A"}'.toUpperCase(),
-                          style: TextStyle(color: ink.withOpacity(0.6), fontWeight: FontWeight.w700, fontSize: 10, letterSpacing: 0.5),
+                          style: TextStyle(color: ink.withValues(alpha: 0.6), fontWeight: FontWeight.w700, fontSize: 10, letterSpacing: 0.5),
                         ),
                       ],
                     ),
@@ -152,7 +152,7 @@ class ClassListAcademic extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 20),
-              Divider(height: 1, color: accent.withOpacity(0.1)),
+              Divider(height: 1, color: accent.withValues(alpha: 0.1)),
               const SizedBox(height: 12),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -189,7 +189,7 @@ class ClassListAcademic extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Iconsax.book_1, size: 64, color: ink.withOpacity(0.2)),
+          Icon(Iconsax.book_1, size: 64, color: ink.withValues(alpha: 0.2)),
           const SizedBox(height: 16),
           Text('EMPTY ROSTER', style: TextStyle(fontFamily: 'Serif', fontWeight: FontWeight.w900, fontSize: 16, color: ink)),
         ],

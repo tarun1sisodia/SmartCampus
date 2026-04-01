@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../common/ui_patterns/pattern_scaffold.dart';
-import '../../../common/ui_patterns/ui_style.dart';
-import '../../../common/ui_patterns/ui_style_controller.dart';
-import 'variants/messages/messages_corporate.dart';
-import 'variants/messages/messages_minimalist.dart';
-import 'variants/messages/messages_glassmorphism.dart';
-import 'variants/messages/messages_neumorphism.dart';
-import 'variants/messages/messages_material3.dart';
-import 'variants/messages/messages_cupertino.dart';
-import 'variants/messages/messages_cyberpunk.dart';
-import 'variants/messages/messages_brutalist.dart';
-import 'variants/messages/messages_academic.dart';
-import 'variants/messages/messages_fluent.dart';
+import '../../../../common/ui_patterns/pattern_scaffold.dart';
+import '../../../../common/ui_patterns/ui_style.dart';
+import '../../../../common/ui_patterns/ui_style_controller.dart';
+import 'variants/messages_corporate.dart';
+import 'variants/messages_minimalist.dart';
+import 'variants/messages_glassmorphism.dart';
+import 'variants/messages_neumorphism.dart';
+import 'variants/messages_material3.dart';
+import 'variants/messages_cupertino.dart';
+import 'variants/messages_cyberpunk.dart';
+import 'variants/messages_brutalist.dart';
+import 'variants/messages_academic.dart';
+import 'variants/messages_fluent.dart';
 
 class TeacherMessagesScreen extends StatelessWidget {
   const TeacherMessagesScreen({super.key});

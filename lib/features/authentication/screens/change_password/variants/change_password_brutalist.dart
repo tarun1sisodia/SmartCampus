@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../change_password_controller.dart';
+import '../../../controllers/change_password_controller.dart';
 
 class ChangePasswordBrutalist extends StatelessWidget {
   const ChangePasswordBrutalist({super.key});
@@ -11,7 +11,6 @@ class ChangePasswordBrutalist extends StatelessWidget {
     final controller = Get.put(ChangePasswordController());
     const yellow = Color(0xFFFFE14D);
     const orange = Color(0xFFFF8C42);
-    const blue = Color(0xFF4D91FF);
 
     return Container(
       color: Colors.white,

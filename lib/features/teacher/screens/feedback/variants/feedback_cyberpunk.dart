@@ -44,7 +44,7 @@ class FeedbackCyberpunk extends StatelessWidget {
                         final isSel = index < controller.rating.value;
                         return IconButton(
                           onPressed: () => controller.setRating(index + 1),
-                          icon: Icon(isSel ? Iconsax.star1 : Iconsax.star, color: isSel ? cyan : cyan.withOpacity(0.1), size: 36),
+                          icon: Icon(isSel ? Iconsax.star1 : Iconsax.star, color: isSel ? cyan : cyan.withValues(alpha: 0.1), size: 36),
                         );
                       }),
                     ),
@@ -59,10 +59,10 @@ class FeedbackCyberpunk extends StatelessWidget {
                       style: const TextStyle(color: cyan, fontWeight: FontWeight.bold, fontSize: 14, fontFamily: 'Courier'),
                       decoration: InputDecoration(
                         hintText: 'IDENTIFY_OPTIMIZATIONS...',
-                        hintStyle: TextStyle(color: cyan.withOpacity(0.2), fontSize: 14, fontFamily: 'Courier'),
+                        hintStyle: TextStyle(color: cyan.withValues(alpha: 0.2), fontSize: 14, fontFamily: 'Courier'),
                         filled: true, fillColor: Colors.black,
-                        border: OutlineInputBorder(borderRadius: BorderRadius.zero, borderSide: BorderSide(color: cyan.withOpacity(0.3))),
-                        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.zero, borderSide: BorderSide(color: cyan.withOpacity(0.3))),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.zero, borderSide: BorderSide(color: cyan.withValues(alpha: 0.3))),
+                        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.zero, borderSide: BorderSide(color: cyan.withValues(alpha: 0.3))),
                         focusedBorder: const OutlineInputBorder(borderRadius: BorderRadius.zero, borderSide: BorderSide(color: cyan, width: 1.5)),
                       ),
                     ),
@@ -70,7 +70,7 @@ class FeedbackCyberpunk extends StatelessWidget {
                   const SizedBox(height: 64),
                   _buildCyberButton(cyan, magenta),
                   const SizedBox(height: 32),
-                  Center(child: Text('UPLINK_STATUS: SECURE_STABLE', style: TextStyle(color: cyan.withOpacity(0.3), fontWeight: FontWeight.w900, fontSize: 10, letterSpacing: 2, fontFamily: 'Courier'))),
+                  Center(child: Text('UPLINK_STATUS: SECURE_STABLE', style: TextStyle(color: cyan.withValues(alpha: 0.3), fontWeight: FontWeight.w900, fontSize: 10, letterSpacing: 2, fontFamily: 'Courier'))),
                   const SizedBox(height: 100),
                 ],
               )),
@@ -80,7 +80,7 @@ class FeedbackCyberpunk extends StatelessWidget {
   }
 
   Widget _buildGridOverlay(Color cyan) {
-    return Positioned.fill(child: CustomPaint(painter: _GridPainter(color: cyan.withOpacity(0.04))));
+    return Positioned.fill(child: CustomPaint(painter: _GridPainter(color: cyan.withValues(alpha: 0.04))));
   }
 
   Widget _buildCyberHeader(Color cyan, Color magenta) {
@@ -105,7 +105,7 @@ class FeedbackCyberpunk extends StatelessWidget {
         ),
         Container(
           padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(color: Colors.black, border: Border.all(color: accent.withOpacity(0.3), width: 1.5)),
+          decoration: BoxDecoration(color: Colors.black, border: Border.all(color: accent.withValues(alpha: 0.3), width: 1.5)),
           child: Column(children: items),
         ),
       ],
@@ -117,7 +117,7 @@ class FeedbackCyberpunk extends StatelessWidget {
       onTap: () => controller.submitFeedback(),
       child: Container(
         height: 64,
-        decoration: BoxDecoration(color: magenta.withOpacity(0.1), border: Border.all(color: magenta, width: 2), boxShadow: [BoxShadow(color: magenta.withOpacity(0.2), blurRadius: 10)]),
+        decoration: BoxDecoration(color: magenta.withValues(alpha: 0.1), border: Border.all(color: magenta, width: 2), boxShadow: [BoxShadow(color: magenta.withValues(alpha: 0.2), blurRadius: 10)]),
         child: Center(
           child: Text('INITIALIZE_UPLINK_TRANSMIT', style: TextStyle(color: magenta, fontWeight: FontWeight.w900, fontSize: 12, letterSpacing: 2, fontFamily: 'Courier')),
         ),

@@ -74,7 +74,7 @@ class HelpNeumorphism extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, color: color.withOpacity(0.6), size: 32),
+            Icon(icon, color: color.withValues(alpha: 0.6), size: 32),
             const SizedBox(height: 12),
             Text(title, style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 11, color: Color(0xFF4D565F), letterSpacing: 1)),
           ],
@@ -196,7 +196,7 @@ class HelpNeumorphism extends StatelessWidget {
                 BoxShadow(color: Color(0xFFA3B1C6), offset: Offset(4, 4), blurRadius: 8, inset: true),
               ],
             ),
-            child: Icon(icon, color: color.withOpacity(0.6), size: 24),
+            child: Icon(icon, color: color.withValues(alpha: 0.6), size: 24),
           ),
           const SizedBox(width: 16),
           Expanded(

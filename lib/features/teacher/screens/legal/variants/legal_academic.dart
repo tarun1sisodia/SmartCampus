@@ -78,7 +78,7 @@ class _LegalAcademicState extends State<LegalAcademic> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('Legal', style: TextStyle(color: ink, fontWeight: FontWeight.bold, fontSize: 36, fontFamily: 'Serif')),
-        Text('REGULATORY_RECORDS_PROTOCOL', style: TextStyle(color: accent.withOpacity(0.6), fontWeight: FontWeight.w900, fontSize: 11, letterSpacing: 2, fontFamily: 'Serif')),
+        Text('REGULATORY_RECORDS_PROTOCOL', style: TextStyle(color: accent.withValues(alpha: 0.6), fontWeight: FontWeight.w900, fontSize: 11, letterSpacing: 2, fontFamily: 'Serif')),
       ],
     );
   }
@@ -100,7 +100,7 @@ class _LegalAcademicState extends State<LegalAcademic> {
         ),
         Container(
           padding: const EdgeInsets.all(28),
-          decoration: BoxDecoration(color: Colors.white, border: Border.all(color: inkColor.withOpacity(0.05)), boxShadow: [BoxShadow(color: inkColor.withOpacity(0.02), blurRadius: 15, offset: const Offset(0, 4))]),
+          decoration: BoxDecoration(color: Colors.white, border: Border.all(color: inkColor.withValues(alpha: 0.05)), boxShadow: [BoxShadow(color: inkColor.withValues(alpha: 0.02), blurRadius: 15, offset: const Offset(0, 4))]),
           child: Text(content, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.black45, height: 1.6, fontFamily: 'Serif')),
         ),
       ],

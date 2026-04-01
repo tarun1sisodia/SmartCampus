@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import '../controllers/carousel_attendance_controller.dart';
+import '../../../controllers/carousel_attendance_controller.dart';
 import '../widgets/session_timer_widget.dart';
 
 class CarouselBrutalist extends StatelessWidget {
@@ -58,7 +58,7 @@ class CarouselBrutalist extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Iconsax.people, size: 64, color: orange.withOpacity(0.2)),
+          Icon(Iconsax.people, size: 64, color: orange.withValues(alpha: 0.2)),
           const SizedBox(height: 16),
           const Text('NO_NODES_FOUND', style: TextStyle(fontWeight: FontWeight.w900, fontFamily: 'Courier')),
         ],

@@ -2,16 +2,16 @@ import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../../../../app/routes/app_routes.dart';
-import '../../../../app/theme/theme_configs.dart';
-import '../../../../app/theme/theme_controller.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
-import '../../../../common/ui_patterns/ui_style_controller.dart';
-import '../../../../services/auth_service.dart';
-import '../../../../services/storage_service.dart';
-import '../../controllers/teacher_profile_controller.dart';
-import '../../../../services/language_service.dart';
-import '../teacher_profile_screen.dart';
+import '../../../../../app/routes/app_routes.dart';
+import '../../../../../app/theme/theme_configs.dart';
+import '../../../../../app/theme/theme_controller.dart';
+import '../../../../../common/ui_patterns/ui_style.dart';
+import '../../../../../common/ui_patterns/ui_style_controller.dart';
+import '../../../../../services/auth_service.dart';
+import '../../../../../services/language_service.dart';
+import '../../../../../services/storage_service.dart';
+import '../../../controllers/teacher_profile_controller.dart';
+import '../../teacher_profile/teacher_profile_screen.dart';
 
 class SettingsNeumorphism extends StatelessWidget {
   final TeacherProfileController controller;
@@ -166,8 +166,8 @@ class SettingsNeumorphism extends StatelessWidget {
               color: val ? const Color(0xFF6D5DFC) : const Color(0xFFA3B1C6),
               shape: BoxShape.circle,
               boxShadow: [
-                BoxShadow(color: Colors.white.withOpacity(0.5), offset: const Offset(-1, -1), blurRadius: 2),
-                BoxShadow(color: Colors.black.withOpacity(0.1), offset: const Offset(1, 1), blurRadius: 2),
+                BoxShadow(color: Colors.white.withValues(alpha: 0.5), offset: const Offset(-1, -1), blurRadius: 2),
+                BoxShadow(color: Colors.black.withValues(alpha: 0.1), offset: const Offset(1, 1), blurRadius: 2),
               ],
             ),
           ),
@@ -201,7 +201,7 @@ class SettingsNeumorphism extends StatelessWidget {
                       shape: BoxShape.circle,
                       boxShadow: sel ? [
                         BoxShadow(color: Colors.white, offset: const Offset(-2, -2), blurRadius: 4, inset: true),
-                        BoxShadow(color: Colors.black.withOpacity(0.2), offset: const Offset(2, 2), blurRadius: 4, inset: true),
+                        BoxShadow(color: Colors.black.withValues(alpha: 0.2), offset: const Offset(2, 2), blurRadius: 4, inset: true),
                       ] : [
                         BoxShadow(color: Colors.white, offset: const Offset(-4, -4), blurRadius: 8),
                         BoxShadow(color: const Color(0xFFA3B1C6), offset: const Offset(4, 4), blurRadius: 8),

@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../common/ui_patterns/pattern_scaffold.dart';
-import '../../../common/ui_patterns/ui_style.dart';
-import '../../../common/ui_patterns/ui_style_controller.dart';
-import 'variants/legal/legal_corporate.dart';
-import 'variants/legal/legal_minimalist.dart';
-import 'variants/legal/legal_glassmorphism.dart';
-import 'variants/legal/legal_neumorphism.dart';
-import 'variants/legal/legal_material3.dart';
-import 'variants/legal/legal_cupertino.dart';
-import 'variants/legal/legal_cyberpunk.dart';
-import 'variants/legal/legal_brutalist.dart';
-import 'variants/legal/legal_academic.dart';
-import 'variants/legal/legal_fluent.dart';
+import '../../../../common/ui_patterns/pattern_scaffold.dart';
+import '../../../../common/ui_patterns/ui_style.dart';
+import '../../../../common/ui_patterns/ui_style_controller.dart';
+import 'variants/legal_corporate.dart';
+import 'variants/legal_minimalist.dart';
+import 'variants/legal_glassmorphism.dart';
+import 'variants/legal_neumorphism.dart';
+import 'variants/legal_material3.dart';
+import 'variants/legal_cupertino.dart';
+import 'variants/legal_cyberpunk.dart';
+import 'variants/legal_brutalist.dart';
+import 'variants/legal_academic.dart';
+import 'variants/legal_fluent.dart';
 
 class LegalScreen extends StatelessWidget {
   final String initialSection;

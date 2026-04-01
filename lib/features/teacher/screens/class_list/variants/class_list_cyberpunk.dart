@@ -27,7 +27,7 @@ class ClassListCyberpunk extends StatelessWidget {
           // Grid Background
           Positioned.fill(
             child: CustomPaint(
-              painter: GridPainter(color: neonCyan.withOpacity(0.05)),
+              painter: GridPainter(color: neonCyan.withValues(alpha: 0.05)),
             ),
           ),
           
@@ -69,7 +69,7 @@ class ClassListCyberpunk extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
       decoration: BoxDecoration(
-        color: cyan.withOpacity(0.05),
+        color: cyan.withValues(alpha: 0.05),
         border: Border(bottom: BorderSide(color: cyan, width: 2)),
       ),
       child: Column(
@@ -102,14 +102,14 @@ class ClassListCyberpunk extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: Colors.black,
-        border: Border.all(color: cyan.withOpacity(0.5)),
+        border: Border.all(color: cyan.withValues(alpha: 0.5)),
       ),
       child: TextField(
         onChanged: (v) => controller.searchClasses(v),
         style: TextStyle(color: cyan, fontWeight: FontWeight.w700, fontFamily: 'Courier', letterSpacing: 1),
         decoration: InputDecoration(
           hintText: '> SEARCH_QUERY_ENTER...',
-          hintStyle: TextStyle(color: cyan.withOpacity(0.2), fontWeight: FontWeight.w700, fontSize: 12),
+          hintStyle: TextStyle(color: cyan.withValues(alpha: 0.2), fontWeight: FontWeight.w700, fontSize: 12),
           prefixIcon: Icon(Iconsax.search_normal, color: cyan, size: 20),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -127,7 +127,7 @@ class ClassListCyberpunk extends StatelessWidget {
         color: Colors.black,
         border: Border.all(color: activeColor, width: 2),
         boxShadow: [
-          BoxShadow(color: activeColor.withOpacity(0.2), blurRadius: 15, spreadRadius: 1),
+          BoxShadow(color: activeColor.withValues(alpha: 0.2), blurRadius: 15, spreadRadius: 1),
         ],
       ),
       child: InkWell(
@@ -170,7 +170,7 @@ class ClassListCyberpunk extends StatelessWidget {
                         ),
                         Text(
                           'LVL: ${classItem.semester} | SECTOR: ${classItem.courseName}'.toUpperCase(),
-                          style: TextStyle(color: activeColor.withOpacity(0.5), fontWeight: FontWeight.w800, fontSize: 10, letterSpacing: 1),
+                          style: TextStyle(color: activeColor.withValues(alpha: 0.5), fontWeight: FontWeight.w800, fontSize: 10, letterSpacing: 1),
                         ),
                       ],
                     ),
@@ -179,7 +179,7 @@ class ClassListCyberpunk extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 20),
-              Container(height: 1, color: activeColor.withOpacity(0.2)),
+              Container(height: 1, color: activeColor.withValues(alpha: 0.2)),
               const SizedBox(height: 12),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -201,8 +201,8 @@ class ClassListCyberpunk extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          border: Border.all(color: color.withOpacity(0.5)),
-          color: color.withOpacity(0.05),
+          border: Border.all(color: color.withValues(alpha: 0.5)),
+          color: color.withValues(alpha: 0.05),
         ),
         child: Row(
           children: [
@@ -220,7 +220,7 @@ class ClassListCyberpunk extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Iconsax.warning_2, size: 64, color: cyan.withOpacity(0.3)),
+          Icon(Iconsax.warning_2, size: 64, color: cyan.withValues(alpha: 0.3)),
           const SizedBox(height: 16),
           Text('ZERO_NODES_ALLOCATED', style: TextStyle(color: cyan, fontWeight: FontWeight.w900, fontSize: 16)),
         ],
@@ -235,7 +235,7 @@ class ClassListCyberpunk extends StatelessWidget {
         onPressed: controller.loadMoreClasses,
         style: OutlinedButton.styleFrom(
           side: BorderSide(color: cyan),
-          backgroundColor: cyan.withOpacity(0.05),
+          backgroundColor: cyan.withValues(alpha: 0.05),
         ),
         child: Text('LOAD_ADDITIONAL_BUFFERS', style: TextStyle(color: cyan, fontWeight: FontWeight.w900, letterSpacing: 1)),
       ),

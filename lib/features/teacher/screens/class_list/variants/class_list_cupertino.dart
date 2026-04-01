@@ -24,7 +24,7 @@ class ClassListCupertino extends StatelessWidget {
         slivers: [
           CupertinoSliverNavigationBar(
             largeTitle: const Text('CLASSES', style: TextStyle(letterSpacing: -0.5, fontWeight: FontWeight.w800)),
-            backgroundColor: const Color(0xFFF2F2F7).withOpacity(0.8),
+            backgroundColor: const Color(0xFFF2F2F7).withValues(alpha: 0.8),
             border: null,
             trailing: CupertinoButton(
               padding: EdgeInsets.zero,

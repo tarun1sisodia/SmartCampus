@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../oauth_consent_controller.dart';
+import '../../../controllers/oauth_consent_controller.dart';
 
 class OAuthConsentMinimalist extends StatelessWidget {
   const OAuthConsentMinimalist({

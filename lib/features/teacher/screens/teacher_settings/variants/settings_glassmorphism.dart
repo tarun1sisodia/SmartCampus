@@ -5,8 +5,8 @@ import 'package:iconsax/iconsax.dart';
 import '../../../../app/routes/app_routes.dart';
 import '../../../../app/theme/theme_configs.dart';
 import '../../../../app/theme/theme_controller.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
-import '../../../../common/ui_patterns/ui_style_controller.dart';
+import '../../../../../common/ui_patterns/ui_style.dart';
+import '../../../../../common/ui_patterns/ui_style_controller.dart';
 import '../../../../services/auth_service.dart';
 import '../../../../services/storage_service.dart';
 import '../../controllers/teacher_profile_controller.dart';
@@ -87,7 +87,7 @@ class SettingsGlassmorphism extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(color: Colors.white24),
-                gradient: LinearGradient(colors: [Colors.white.withOpacity(0.2), Colors.white.withOpacity(0.05)]),
+                gradient: LinearGradient(colors: [Colors.white.withValues(alpha: 0.2), Colors.white.withValues(alpha: 0.05)]),
               ),
               child: const Icon(Iconsax.user, color: Colors.white, size: 28),
             ),
@@ -97,7 +97,7 @@ class SettingsGlassmorphism extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(user?.name ?? 'Teacher', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18)),
-                  Text(user?.email ?? 'teacher@campus.com', style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 12)),
+                  Text(user?.email ?? 'teacher@campus.com', style: TextStyle(color: Colors.white.withValues(alpha: 0.6), fontSize: 12)),
                 ],
               ),
             ),
@@ -117,7 +117,7 @@ class SettingsGlassmorphism extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.only(left: 8, bottom: 12),
-          child: Text(title, style: TextStyle(color: Colors.white.withOpacity(0.5), fontWeight: FontWeight.w900, fontSize: 10, letterSpacing: 1.5)),
+          child: Text(title, style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontWeight: FontWeight.w900, fontSize: 10, letterSpacing: 1.5)),
         ),
         _glassContainer(
           child: Column(children: items),
@@ -147,9 +147,9 @@ class SettingsGlassmorphism extends StatelessWidget {
         child: Container(
           padding: padding,
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.1),
+            color: Colors.white.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: Colors.white.withOpacity(0.2)),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
           ),
           child: child,
         ),
@@ -185,7 +185,7 @@ class SettingsGlassmorphism extends StatelessWidget {
                       color: theme.primary,
                       shape: BoxShape.circle,
                       border: Border.all(color: isSelected ? Colors.white : Colors.transparent, width: 2),
-                      boxShadow: isSelected ? [BoxShadow(color: theme.primary.withOpacity(0.5), blurRadius: 10, spreadRadius: 2)] : null,
+                      boxShadow: isSelected ? [BoxShadow(color: theme.primary.withValues(alpha: 0.5), blurRadius: 10, spreadRadius: 2)] : null,
                     ),
                   ),
                 );
@@ -224,7 +224,7 @@ class SettingsGlassmorphism extends StatelessWidget {
                     width: 70,
                     margin: const EdgeInsets.only(right: 12),
                     decoration: BoxDecoration(
-                      color: isSelected ? Colors.white.withOpacity(0.2) : Colors.white.withOpacity(0.05),
+                      color: isSelected ? Colors.white.withValues(alpha: 0.2) : Colors.white.withValues(alpha: 0.05),
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(color: isSelected ? Colors.white : Colors.white12),
                     ),

@@ -4,8 +4,8 @@ import 'package:iconsax/iconsax.dart';
 import '../../../../app/routes/app_routes.dart';
 import '../../../../app/theme/theme_configs.dart';
 import '../../../../app/theme/theme_controller.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
-import '../../../../common/ui_patterns/ui_style_controller.dart';
+import '../../../../../common/ui_patterns/ui_style.dart';
+import '../../../../../common/ui_patterns/ui_style_controller.dart';
 import '../../../../services/auth_service.dart';
 import '../../../../services/storage_service.dart';
 import '../../controllers/teacher_profile_controller.dart';
@@ -65,7 +65,7 @@ class SettingsCyberpunk extends StatelessWidget {
               const SizedBox(height: 64),
               _buildSignOut(context, cyan, magenta),
               const SizedBox(height: 48),
-              Center(child: Text('VERSION_1.2.4_STABLE_UPLINK', style: TextStyle(color: cyan.withOpacity(0.3), fontWeight: FontWeight.w900, fontSize: 10, letterSpacing: 2, fontFamily: 'Courier'))),
+              Center(child: Text('VERSION_1.2.4_STABLE_UPLINK', style: TextStyle(color: cyan.withValues(alpha: 0.3), fontWeight: FontWeight.w900, fontSize: 10, letterSpacing: 2, fontFamily: 'Courier'))),
               const SizedBox(height: 64),
             ],
           ),
@@ -75,7 +75,7 @@ class SettingsCyberpunk extends StatelessWidget {
   }
 
   Widget _buildGridOverlay(Color cyan) {
-    return Positioned.fill(child: CustomPaint(painter: _GridPainter(color: cyan.withOpacity(0.04))));
+    return Positioned.fill(child: CustomPaint(painter: _GridPainter(color: cyan.withValues(alpha: 0.04))));
   }
 
   Widget _buildCyberProfile(BuildContext context, Color cyan, Color magenta) {
@@ -86,7 +86,7 @@ class SettingsCyberpunk extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.black,
           border: Border.all(color: cyan, width: 2),
-          boxShadow: [BoxShadow(color: cyan.withOpacity(0.2), blurRadius: 15, spreadRadius: -5)],
+          boxShadow: [BoxShadow(color: cyan.withValues(alpha: 0.2), blurRadius: 15, spreadRadius: -5)],
         ),
         child: Column(
           children: [
@@ -102,7 +102,7 @@ class SettingsCyberpunk extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             Text(user?.name.toUpperCase() ?? 'IDENTIFIED_USER', style: TextStyle(color: cyan, fontWeight: FontWeight.w900, fontSize: 18, letterSpacing: 1, fontFamily: 'Courier')),
-            Text(user?.email.toUpperCase() ?? 'UPLINK_PENDING', style: TextStyle(color: cyan.withOpacity(0.5), fontWeight: FontWeight.bold, fontSize: 10, fontFamily: 'Courier')),
+            Text(user?.email.toUpperCase() ?? 'UPLINK_PENDING', style: TextStyle(color: cyan.withValues(alpha: 0.5), fontWeight: FontWeight.bold, fontSize: 10, fontFamily: 'Courier')),
             const SizedBox(height: 24),
             GestureDetector(
               onTap: () => Get.to(() => TeacherProfileScreen()),
@@ -127,7 +127,7 @@ class SettingsCyberpunk extends StatelessWidget {
           child: Text(title, style: TextStyle(color: accent, fontWeight: FontWeight.w900, fontSize: 11, letterSpacing: 2, fontFamily: 'Courier')),
         ),
         Container(
-          decoration: BoxDecoration(color: Colors.black, border: Border.all(color: accent.withOpacity(0.3))),
+          decoration: BoxDecoration(color: Colors.black, border: Border.all(color: accent.withValues(alpha: 0.3))),
           child: Column(children: items),
         ),
       ],
@@ -142,7 +142,7 @@ class SettingsCyberpunk extends StatelessWidget {
         contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
         leading: Icon(icon, color: cyan, size: 20),
         title: Text(title, style: TextStyle(color: cyan, fontWeight: FontWeight.w900, fontSize: 12, letterSpacing: 1, fontFamily: 'Courier')),
-        trailing: trailing ?? Icon(Iconsax.arrow_right_3, size: 16, color: cyan.withOpacity(0.3)),
+        trailing: trailing ?? Icon(Iconsax.arrow_right_3, size: 16, color: cyan.withValues(alpha: 0.3)),
       ),
     );
   }
@@ -159,7 +159,7 @@ class SettingsCyberpunk extends StatelessWidget {
           alignment: val ? Alignment.centerRight : Alignment.centerLeft,
           child: Container(
             width: 16, height: 16,
-            color: val ? cyan : cyan.withOpacity(0.2),
+            color: val ? cyan : cyan.withValues(alpha: 0.2),
           ),
         ),
       ),
@@ -171,7 +171,7 @@ class SettingsCyberpunk extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(padding: const EdgeInsets.only(left: 20, top: 16, bottom: 12), child: Text('SCHEMA_UPLINK', style: TextStyle(color: cyan.withOpacity(0.5), fontWeight: FontWeight.bold, fontSize: 10, fontFamily: 'Courier'))),
+        Padding(padding: const EdgeInsets.only(left: 20, top: 16, bottom: 12), child: Text('SCHEMA_UPLINK', style: TextStyle(color: cyan.withValues(alpha: 0.5), fontWeight: FontWeight.bold, fontSize: 10, fontFamily: 'Courier'))),
         SizedBox(
           height: 80,
           child: ListView.builder(
@@ -205,7 +205,7 @@ class SettingsCyberpunk extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Divider(color: Colors.white10),
-        Padding(padding: const EdgeInsets.only(left: 20, top: 16, bottom: 12), child: Text('SYSTEM_ARCHITECTURE_MOD', style: TextStyle(color: cyan.withOpacity(0.5), fontWeight: FontWeight.bold, fontSize: 10, fontFamily: 'Courier'))),
+        Padding(padding: const EdgeInsets.only(left: 20, top: 16, bottom: 12), child: Text('SYSTEM_ARCHITECTURE_MOD', style: TextStyle(color: cyan.withValues(alpha: 0.5), fontWeight: FontWeight.bold, fontSize: 10, fontFamily: 'Courier'))),
         SizedBox(
           height: 100,
           child: ListView.builder(
@@ -265,7 +265,7 @@ class SettingsCyberpunk extends StatelessWidget {
           onTap: () { languageService.changeLanguage(l['code']); Get.back(); },
           child: Container(
             margin: const EdgeInsets.only(bottom: 12), padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(border: Border.all(color: cyan.withOpacity(0.3))),
+            decoration: BoxDecoration(border: Border.all(color: cyan.withValues(alpha: 0.3))),
             child: Center(child: Text(l['name'].toString().toUpperCase(), style: TextStyle(color: cyan, fontWeight: FontWeight.w900, fontSize: 12, fontFamily: 'Courier'))),
           ),
         )),
@@ -292,7 +292,7 @@ class SettingsCyberpunk extends StatelessWidget {
       onTap: () => _confirm(context, cyan, magenta),
       child: Container(
         padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(border: Border.all(color: magenta, width: 2), color: magenta.withOpacity(0.05)),
+        decoration: BoxDecoration(border: Border.all(color: magenta, width: 2), color: magenta.withValues(alpha: 0.05)),
         child: Center(child: Text('TERMINATE_UPLINK_U01', style: TextStyle(color: magenta, fontWeight: FontWeight.w900, fontSize: 14, letterSpacing: 2, fontFamily: 'Courier'))),
       ),
     );

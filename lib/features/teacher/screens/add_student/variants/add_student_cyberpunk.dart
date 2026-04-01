@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
+import '../../../../../common/ui_patterns/pattern_tokens.dart';
+import '../../../../../common/ui_patterns/ui_style.dart';
 import '../../controllers/student_controller.dart';
-import '../../../../common/widgets/student_avatar.dart';
+import '../../../../../common/widgets/student_avatar.dart';
 import '../../../../models/class_model.dart';
 
 class AddStudentCyberpunk extends StatelessWidget {
@@ -58,7 +58,7 @@ class AddStudentCyberpunk extends StatelessWidget {
   Widget _buildHUDGrid(Color cyan) {
     return Positioned.fill(
       child: CustomPaint(
-        painter: GridPainter(color: cyan.withOpacity(0.04)),
+        painter: GridPainter(color: cyan.withValues(alpha: 0.04)),
       ),
     );
   }
@@ -68,7 +68,7 @@ class AddStudentCyberpunk extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Iconsax.user_add, size: 80, color: cyan.withOpacity(0.3)),
+          Icon(Iconsax.user_add, size: 80, color: cyan.withValues(alpha: 0.3)),
           const SizedBox(height: 24),
           Text('TERMINAL_MANIFEST_EMPTY', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16, color: cyan, letterSpacing: 2, fontFamily: 'Courier')),
           const SizedBox(height: 40),
@@ -83,7 +83,7 @@ class AddStudentCyberpunk extends StatelessWidget {
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-        decoration: BoxDecoration(border: Border.all(color: const Color(0xFF00F5FF), width: 1.5), color: const Color(0xFF00F5FF).withOpacity(0.05)),
+        decoration: BoxDecoration(border: Border.all(color: const Color(0xFF00F5FF), width: 1.5), color: const Color(0xFF00F5FF).withValues(alpha: 0.05)),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -104,8 +104,8 @@ class AddStudentCyberpunk extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
         color: Colors.black,
-        border: Border.all(color: isSelected ? cyan : cyan.withOpacity(0.2), width: isSelected ? 2 : 1),
-        boxShadow: isSelected ? [BoxShadow(color: cyan.withOpacity(0.15), blurRadius: 10)] : null,
+        border: Border.all(color: isSelected ? cyan : cyan.withValues(alpha: 0.2), width: isSelected ? 2 : 1),
+        boxShadow: isSelected ? [BoxShadow(color: cyan.withValues(alpha: 0.15), blurRadius: 10)] : null,
       ),
       child: ListTile(
          onTap: () => isSelectionMode ? controller.toggleStudentSelection(student.id) : null,
@@ -120,9 +120,9 @@ class AddStudentCyberpunk extends StatelessWidget {
             ? _buildCyberCheckbox(isSelected, cyan)
             : StudentAvatar(imageUrl: student.imageUrl, name: student.name, size: 48, isDarkMode: true),
          title: Text(student.name.toString().toUpperCase(), style: TextStyle(fontWeight: FontWeight.w900, fontSize: 13, color: cyan, letterSpacing: 0.5, fontFamily: 'Courier')),
-         subtitle: Text('NODE_ID: ${student.rollNumber}'.toUpperCase(), style: TextStyle(fontWeight: FontWeight.w800, fontSize: 9, color: cyan.withOpacity(0.4), fontFamily: 'Courier')),
+         subtitle: Text('NODE_ID: ${student.rollNumber}'.toUpperCase(), style: TextStyle(fontWeight: FontWeight.w800, fontSize: 9, color: cyan.withValues(alpha: 0.4), fontFamily: 'Courier')),
          trailing: !isSelectionMode 
-            ? IconButton(icon: Icon(Iconsax.trash, size: 18, color: magenta.withOpacity(0.5)), onPressed: () => controller.removeStudentFromClass(student.id))
+            ? IconButton(icon: Icon(Iconsax.trash, size: 18, color: magenta.withValues(alpha: 0.5)), onPressed: () => controller.removeStudentFromClass(student.id))
             : null,
       ),
     );
@@ -168,7 +168,7 @@ class AddStudentCyberpunk extends StatelessWidget {
               ),
            ),
            actions: [
-              TextButton(onPressed: () => Get.back(), child: Text('TERMINATE', style: TextStyle(color: magenta.withOpacity(0.5), fontWeight: FontWeight.w900, fontSize: 10, fontFamily: 'Courier'))),
+              TextButton(onPressed: () => Get.back(), child: Text('TERMINATE', style: TextStyle(color: magenta.withValues(alpha: 0.5), fontWeight: FontWeight.w900, fontSize: 10, fontFamily: 'Courier'))),
               ElevatedButton(
                  onPressed: () {
                     if (controller.nameController.text.trim().isNotEmpty) {
@@ -186,13 +186,13 @@ class AddStudentCyberpunk extends StatelessWidget {
 
   Widget _buildCyberInput(TextEditingController ctrl, String label, IconData icon, Color cyan) {
      return Container(
-        decoration: BoxDecoration(border: Border.all(color: cyan.withOpacity(0.2)), color: cyan.withOpacity(0.02)),
+        decoration: BoxDecoration(border: Border.all(color: cyan.withValues(alpha: 0.2)), color: cyan.withValues(alpha: 0.02)),
         child: TextFormField(
            controller: ctrl,
            style: TextStyle(color: cyan, fontWeight: FontWeight.w800, fontSize: 13, fontFamily: 'Courier'),
            decoration: InputDecoration(
               labelText: label,
-              labelStyle: TextStyle(color: cyan.withOpacity(0.4), fontWeight: FontWeight.w900, fontSize: 9, fontFamily: 'Courier'),
+              labelStyle: TextStyle(color: cyan.withValues(alpha: 0.4), fontWeight: FontWeight.w900, fontSize: 9, fontFamily: 'Courier'),
               prefixIcon: Icon(icon, color: cyan, size: 16),
               border: InputBorder.none,
               contentPadding: const EdgeInsets.all(16),
@@ -226,7 +226,7 @@ class AddStudentCyberpunk extends StatelessWidget {
         child: Container(
            margin: const EdgeInsets.only(bottom: 12),
            padding: const EdgeInsets.all(16),
-           decoration: BoxDecoration(border: Border.all(color: cyan.withOpacity(0.3)), color: cyan.withOpacity(0.02)),
+           decoration: BoxDecoration(border: Border.all(color: cyan.withValues(alpha: 0.3)), color: cyan.withValues(alpha: 0.02)),
            child: Row(children: [Icon(icon, color: cyan, size: 20), const SizedBox(width: 16), Text(label, style: TextStyle(color: cyan, fontWeight: FontWeight.w800, fontSize: 12, fontFamily: 'Courier'))]),
         ),
      );

@@ -46,7 +46,7 @@ class HelpGlassmorphism extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text('Support', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 36, letterSpacing: -1)),
-        Text('CENTRAL_KNOWLEDGE_UPLINK', style: TextStyle(color: Colors.white.withOpacity(0.5), fontWeight: FontWeight.w900, fontSize: 12, letterSpacing: 2)),
+        Text('CENTRAL_KNOWLEDGE_UPLINK', style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontWeight: FontWeight.w900, fontSize: 12, letterSpacing: 2)),
       ],
     );
   }
@@ -75,9 +75,9 @@ class HelpGlassmorphism extends StatelessWidget {
         child: Container(
           padding: padding,
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.1),
+            color: Colors.white.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: Colors.white.withOpacity(0.2)),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
           ),
           child: child,
         ),
@@ -92,7 +92,7 @@ class HelpGlassmorphism extends StatelessWidget {
         onTap: onTap,
         child: Row(
           children: [
-            Container(padding: const EdgeInsets.all(12), decoration: BoxDecoration(color: Colors.white.withOpacity(0.1), borderRadius: BorderRadius.circular(12)), child: Icon(icon, color: color, size: 24)),
+            Container(padding: const EdgeInsets.all(12), decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)), child: Icon(icon, color: color, size: 24)),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
@@ -100,11 +100,11 @@ class HelpGlassmorphism extends StatelessWidget {
                 children: [
                   Text(title, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15)),
                   const SizedBox(height: 2),
-                  Text(subtitle, style: TextStyle(color: Colors.white.withOpacity(0.4), fontWeight: FontWeight.w900, fontSize: 9, letterSpacing: 1)),
+                  Text(subtitle, style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontWeight: FontWeight.w900, fontSize: 9, letterSpacing: 1)),
                 ],
               ),
             ),
-            Icon(Iconsax.arrow_right_3, size: 16, color: Colors.white.withOpacity(0.2)),
+            Icon(Iconsax.arrow_right_3, size: 16, color: Colors.white.withValues(alpha: 0.2)),
           ],
         ),
       ),
@@ -122,7 +122,7 @@ class HelpGlassmorphism extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.only(top: 8, bottom: 16),
-            child: Text(answer, style: TextStyle(color: Colors.white.withOpacity(0.5), fontWeight: FontWeight.w500, fontSize: 13, height: 1.5)),
+            child: Text(answer, style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontWeight: FontWeight.w500, fontSize: 13, height: 1.5)),
           ),
         ],
       ),
@@ -138,7 +138,7 @@ class HelpGlassmorphism extends StatelessWidget {
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
         child: Container(
           height: MediaQuery.of(context).size.height * 0.7,
-          decoration: BoxDecoration(color: Color(0xFF1E1E2E).withOpacity(0.9), borderRadius: const BorderRadius.vertical(top: Radius.circular(32))),
+          decoration: BoxDecoration(color: Color(0xFF1E1E2E).withValues(alpha: 0.9), borderRadius: const BorderRadius.vertical(top: Radius.circular(32))),
           padding: const EdgeInsets.all(32),
           child: ListView(
             children: [
@@ -161,7 +161,7 @@ class HelpGlassmorphism extends StatelessWidget {
       builder: (context) => BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
         child: Container(
-          decoration: BoxDecoration(color: Color(0xFF1E1E2E).withOpacity(0.9), borderRadius: const BorderRadius.vertical(top: Radius.circular(32))),
+          decoration: BoxDecoration(color: Color(0xFF1E1E2E).withValues(alpha: 0.9), borderRadius: const BorderRadius.vertical(top: Radius.circular(32))),
           padding: const EdgeInsets.all(32),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -177,7 +177,7 @@ class HelpGlassmorphism extends StatelessWidget {
                 height: 60,
                 child: TextButton(
                   onPressed: () => Navigator.pop(context),
-                  style: TextButton.styleFrom(backgroundColor: Colors.white.withOpacity(0.1), foregroundColor: Colors.white70, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
+                  style: TextButton.styleFrom(backgroundColor: Colors.white.withValues(alpha: 0.1), foregroundColor: Colors.white70, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
                   child: const Text('DISMISS', style: TextStyle(fontWeight: FontWeight.bold)),
                 ),
               ),
@@ -193,13 +193,13 @@ class HelpGlassmorphism extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 16),
       child: Row(
         children: [
-          Container(padding: const EdgeInsets.all(12), decoration: BoxDecoration(color: Colors.white.withOpacity(0.1), borderRadius: BorderRadius.circular(12)), child: Icon(icon, color: color, size: 24)),
+          Container(padding: const EdgeInsets.all(12), decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)), child: Icon(icon, color: color, size: 24)),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: TextStyle(color: Colors.white.withOpacity(0.4), fontWeight: FontWeight.w900, fontSize: 10, letterSpacing: 1)),
+                Text(title, style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontWeight: FontWeight.w900, fontSize: 10, letterSpacing: 1)),
                 const SizedBox(height: 2),
                 Text(subtitle, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14)),
               ],

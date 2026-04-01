@@ -4,11 +4,11 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import '../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
+import '../../../../../common/ui_patterns/pattern_tokens.dart';
+import '../../../../../common/ui_patterns/ui_style.dart';
 import '../../controllers/student_detail_controller.dart';
 import '../../../../models/student_model.dart';
-import '../../../../common/utils/constants/api_constants.dart';
+import '../../../../../common/utils/constants/api_constants.dart';
 
 class StudentDetailMaterial3 extends StatelessWidget {
   final StudentDetailController controller;
@@ -88,9 +88,9 @@ class StudentDetailMaterial3 extends StatelessWidget {
         const SizedBox(height: 12),
         Row(
            children: [
-              Expanded(child: _m3StatCard(theme, 'PRESENT', '${controller.presentCount}', Iconsax.verify, Colors.green.withOpacity(0.1), textColor: Colors.green)),
+              Expanded(child: _m3StatCard(theme, 'PRESENT', '${controller.presentCount}', Iconsax.verify, Colors.green.withValues(alpha: 0.1), textColor: Colors.green)),
               const SizedBox(width: 12),
-              Expanded(child: _m3StatCard(theme, 'ABSENT', '${controller.absentCount}', Iconsax.close_circle, Colors.red.withOpacity(0.1), textColor: Colors.red)),
+              Expanded(child: _m3StatCard(theme, 'ABSENT', '${controller.absentCount}', Iconsax.close_circle, Colors.red.withValues(alpha: 0.1), textColor: Colors.red)),
            ],
         ),
       ],
@@ -137,10 +137,10 @@ class StudentDetailMaterial3 extends StatelessWidget {
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 child: ListTile(
                    onTap: () => _updateRec(theme, rec['session'].id, status, rec['remarks']),
-                   leading: CircleAvatar(backgroundColor: color.withOpacity(0.1), child: Icon(_getIcon(status), color: color, size: 18)),
+                   leading: CircleAvatar(backgroundColor: color.withValues(alpha: 0.1), child: Icon(_getIcon(status), color: color, size: 18)),
                    title: Text(DateFormat('EEEE, MMM d').format(rec['session'].date), style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold)),
                    subtitle: Text('${rec['session'].startTime} - ${rec['session'].endTime}', style: theme.textTheme.labelSmall),
-                   trailing: Chip(label: Text(status.toUpperCase(), style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w900)), backgroundColor: color.withOpacity(0.1), side: BorderSide.none),
+                   trailing: Chip(label: Text(status.toUpperCase(), style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w900)), backgroundColor: color.withValues(alpha: 0.1), side: BorderSide.none),
                 ),
               );
             },

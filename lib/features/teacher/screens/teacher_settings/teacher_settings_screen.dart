@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../common/ui_patterns/pattern_scaffold.dart';
-import '../../../common/ui_patterns/ui_style.dart';
-import '../../../common/ui_patterns/ui_style_controller.dart';
-import '../../../services/language_service.dart';
-import '../controllers/teacher_profile_controller.dart';
-import 'variants/settings/settings_corporate.dart';
-import 'variants/settings/settings_minimalist.dart';
-import 'variants/settings/settings_glassmorphism.dart';
-import 'variants/settings/settings_neumorphism.dart';
-import 'variants/settings/settings_material3.dart';
-import 'variants/settings/settings_cupertino.dart';
-import 'variants/settings/settings_cyberpunk.dart';
-import 'variants/settings/settings_brutalist.dart';
-import 'variants/settings/settings_academic.dart';
-import 'variants/settings/settings_fluent.dart';
+import '../../../../common/ui_patterns/pattern_scaffold.dart';
+import '../../../../common/ui_patterns/ui_style.dart';
+import '../../../../common/ui_patterns/ui_style_controller.dart';
+import '../../../../services/language_service.dart';
+import '../../controllers/teacher_profile_controller.dart';
+import 'variants/settings_corporate.dart';
+import 'variants/settings_minimalist.dart';
+import 'variants/settings_glassmorphism.dart';
+import 'variants/settings_neumorphism.dart';
+import 'variants/settings_material3.dart';
+import 'variants/settings_cupertino.dart';
+import 'variants/settings_cyberpunk.dart';
+import 'variants/settings_brutalist.dart';
+import 'variants/settings_academic.dart';
+import 'variants/settings_fluent.dart';
 
 class TeacherSettingsScreen extends StatelessWidget {
   const TeacherSettingsScreen({super.key});

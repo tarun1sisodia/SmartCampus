@@ -1,8 +1,9 @@
+import 'package:smart_campus/common/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
+import '../../../../../common/ui_patterns/pattern_tokens.dart';
+import '../../../../../common/ui_patterns/ui_style.dart';
 import '../../controllers/session_details_controller.dart';
 import '../../../common/utils/constants/sized.dart';
 
@@ -20,7 +21,7 @@ class SessionDetailsMinimalist extends StatelessWidget {
       color: const Color(0xFFF8FAFC),
       child: Obx(() {
         if (controller.isLoading.value) {
-          return Center(child: CircularProgressIndicator(color: tokens['primary']));
+          return Center(child: CircularProgressIndicator(color: TColors.primary));
         }
 
         if (controller.session.value == null) {
@@ -46,7 +47,7 @@ class SessionDetailsMinimalist extends StatelessWidget {
     );
   }
 
-  Widget _buildMinimalistHeader(Map<String, dynamic> tokens) {
+  Widget _buildMinimalistHeader(PatternTokens tokens) {
     final session = controller.session.value!;
     final isActive = controller.isSessionActive();
 
@@ -55,7 +56,7 @@ class SessionDetailsMinimalist extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 15, offset: const Offset(0, 8))],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 15, offset: const Offset(0, 8))],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,7 +68,7 @@ class SessionDetailsMinimalist extends StatelessWidget {
               if (isActive)
                 Container(
                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                   decoration: BoxDecoration(color: const Color(0xFF10B981).withOpacity(0.1), borderRadius: BorderRadius.circular(10)),
+                   decoration: BoxDecoration(color: const Color(0xFF10B981).withValues(alpha: 0.1), borderRadius: BorderRadius.circular(10)),
                    child: const Text('ACTIVE', style: TextStyle(color: Color(0xFF10B981), fontWeight: FontWeight.w800, fontSize: 10)),
                 ),
             ],
@@ -77,11 +78,11 @@ class SessionDetailsMinimalist extends StatelessWidget {
           const SizedBox(height: 20),
           Row(
             children: [
-              Icon(Iconsax.calendar_1, size: 14, color: tokens['primary']),
+              Icon(Iconsax.calendar_1, size: 14, color: TColors.primary),
               const SizedBox(width: 8),
               Text(controller.formatDate(session.date), style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 11, color: Color(0xFF475569))),
               const Spacer(),
-              Icon(Iconsax.clock, size: 14, color: tokens['primary']),
+              Icon(Iconsax.clock, size: 14, color: TColors.primary),
               const SizedBox(width: 8),
               Text('${session.startTime} - ${session.endTime}', style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 11, color: Color(0xFF475569))),
             ],
@@ -91,7 +92,7 @@ class SessionDetailsMinimalist extends StatelessWidget {
     );
   }
 
-  Widget _buildStatsRow(Map<String, dynamic> tokens) {
+  Widget _buildStatsRow(PatternTokens tokens) {
     final stats = controller.attendanceStats.value;
     return Row(
        children: [
@@ -120,7 +121,7 @@ class SessionDetailsMinimalist extends StatelessWidget {
     );
   }
 
-  Widget _buildActionChips(Map<String, dynamic> tokens) {
+  Widget _buildActionChips(PatternTokens tokens) {
     final isActive = controller.isSessionActive();
     return Row(
       children: [
@@ -129,7 +130,7 @@ class SessionDetailsMinimalist extends StatelessWidget {
             onTap: isActive ? controller.generateQRCode : null,
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 14),
-              decoration: BoxDecoration(color: tokens['primary'], borderRadius: BorderRadius.circular(12)),
+              decoration: BoxDecoration(color: TColors.primary, borderRadius: BorderRadius.circular(12)),
               child: const Row(mainAxisAlignment: MainAxisAlignment.center, children: [Icon(Iconsax.scan, color: Colors.white, size: 14), SizedBox(width: 8), Text('QR Link', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 11))]),
             ),
           ),
@@ -147,7 +148,7 @@ class SessionDetailsMinimalist extends StatelessWidget {
     );
   }
 
-  Widget _buildMinimalistRoster(Map<String, dynamic> tokens) {
+  Widget _buildMinimalistRoster(PatternTokens tokens) {
     final records = controller.attendanceRecords;
     if (records.isEmpty) {
       return Container(
@@ -169,7 +170,7 @@ class SessionDetailsMinimalist extends StatelessWidget {
           child: ListTile(
              contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
              leading: CircleAvatar(
-               backgroundColor: record.isPresent ? const Color(0xFF10B981).withOpacity(0.1) : const Color(0xFFEF4444).withOpacity(0.1),
+               backgroundColor: record.isPresent ? const Color(0xFF10B981).withValues(alpha: 0.1) : const Color(0xFFEF4444).withValues(alpha: 0.1),
                child: Icon(record.isPresent ? Iconsax.verify : Iconsax.close_circle, color: record.isPresent ? const Color(0xFF10B981) : const Color(0xFFEF4444), size: 20),
              ),
              title: Text(record.studentName, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: Color(0xFF1E293B))),

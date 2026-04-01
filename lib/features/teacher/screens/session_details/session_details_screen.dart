@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../controllers/session_details_controller.dart';
-import '../../../common/ui_patterns/pattern_scaffold.dart';
-import '../../../common/ui_patterns/ui_style_controller.dart';
-import '../../../common/ui_patterns/ui_style.dart';
-import 'variants/session_details/session_details_corporate.dart';
-import 'variants/session_details/session_details_minimalist.dart';
-import 'variants/session_details/session_details_glassmorphism.dart';
-import 'variants/session_details/session_details_neumorphic.dart';
-import 'variants/session_details/session_details_material3.dart';
-import 'variants/session_details/session_details_cupertino.dart';
-import 'variants/session_details/session_details_cyberpunk.dart';
-import 'variants/session_details/session_details_brutalist.dart';
-import 'variants/session_details/session_details_academic.dart';
-import 'variants/session_details/session_details_fluent.dart';
+import '../../controllers/session_details_controller.dart';
+import '../../../../common/ui_patterns/pattern_scaffold.dart';
+import '../../../../common/ui_patterns/ui_style_controller.dart';
+import '../../../../common/ui_patterns/ui_style.dart';
+import 'variants/session_details_corporate.dart';
+import 'variants/session_details_minimalist.dart';
+import 'variants/session_details_glassmorphism.dart';
+import 'variants/session_details_neumorphic.dart';
+import 'variants/session_details_material3.dart';
+import 'variants/session_details_cupertino.dart';
+import 'variants/session_details_cyberpunk.dart';
+import 'variants/session_details_brutalist.dart';
+import 'variants/session_details_academic.dart';
+import 'variants/session_details_fluent.dart';
 
 class SessionDetailsScreen extends StatelessWidget {
   final SessionDetailsController controller = Get.put(SessionDetailsController());

@@ -1,13 +1,14 @@
+import 'package:smart_campus/common/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
+import '../../../../../common/ui_patterns/pattern_tokens.dart';
+import '../../../../../common/ui_patterns/ui_style.dart';
 import '../../controllers/student_controller.dart';
-import '../../../../common/widgets/student_avatar.dart';
+import '../../../../../common/widgets/student_avatar.dart';
 import '../../../../models/class_model.dart';
-import '../../../../common/utils/constants/sized.dart';
+import '../../../../../common/utils/constants/sized.dart';
 
 class AddStudentMinimalist extends StatelessWidget {
   final StudentController controller;
@@ -23,7 +24,7 @@ class AddStudentMinimalist extends StatelessWidget {
       color: const Color(0xFFF8FAFC),
       child: Obx(() {
         if (controller.isLoading.value) {
-           return Center(child: CircularProgressIndicator(color: tokens['primary']));
+           return Center(child: CircularProgressIndicator(color: TColors.primary));
         }
 
         if (controller.students.isEmpty) {
@@ -49,7 +50,7 @@ class AddStudentMinimalist extends StatelessWidget {
     );
   }
 
-  Widget _buildMinimalistEmpty(BuildContext context, Map<String, dynamic> tokens) {
+  Widget _buildMinimalistEmpty(BuildContext context, PatternTokens tokens) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(48),
@@ -64,7 +65,7 @@ class AddStudentMinimalist extends StatelessWidget {
               onPressed: () => _showAddDialog(context, tokens),
               icon: const Icon(Iconsax.add, size: 18),
               label: const Text('Add Student Manually'),
-              style: ElevatedButton.styleFrom(backgroundColor: tokens['primary'], foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14)),
+              style: ElevatedButton.styleFrom(backgroundColor: TColors.primary, foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14)),
             ),
           ],
         ),
@@ -72,7 +73,7 @@ class AddStudentMinimalist extends StatelessWidget {
     );
   }
 
-  Widget _buildMinimalistStudentRow(BuildContext context, dynamic student, Map<String, dynamic> tokens) {
+  Widget _buildMinimalistStudentRow(BuildContext context, dynamic student, PatternTokens tokens) {
     final isSelected = controller.selectedStudentIds.contains(student.id);
     final isSelectionMode = controller.isSelectionMode.value;
 
@@ -81,8 +82,8 @@ class AddStudentMinimalist extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10, offset: const Offset(0, 4))],
-        border: Border.all(color: isSelected ? tokens['primary'] : Colors.transparent, width: 2),
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 10, offset: const Offset(0, 4))],
+        border: Border.all(color: isSelected ? TColors.primary : Colors.transparent, width: 2),
       ),
       child: ListTile(
          onTap: () => isSelectionMode ? controller.toggleStudentSelection(student.id) : null,
@@ -105,16 +106,16 @@ class AddStudentMinimalist extends StatelessWidget {
     );
   }
 
-  Widget _buildMinimalistCheckbox(bool isSelected, Map<String, dynamic> tokens) {
+  Widget _buildMinimalistCheckbox(bool isSelected, PatternTokens tokens) {
     return Container(
       width: 24,
       height: 24,
-      decoration: BoxDecoration(color: isSelected ? tokens['primary'] : const Color(0xFFF1F5F9), borderRadius: BorderRadius.circular(8)),
+      decoration: BoxDecoration(color: isSelected ? TColors.primary : const Color(0xFFF1F5F9), borderRadius: BorderRadius.circular(8)),
       child: isSelected ? const Icon(Icons.check, size: 16, color: Colors.white) : null,
     );
   }
 
-  void _showAddDialog(BuildContext context, Map<String, dynamic> tokens) {
+  void _showAddDialog(BuildContext context, PatternTokens tokens) {
     controller.nameController.clear();
     controller.rollNumberController.clear();
     controller.clearSelectedImage();
@@ -135,7 +136,7 @@ class AddStudentMinimalist extends StatelessWidget {
                         radius: 44,
                         backgroundColor: const Color(0xFFF1F5F9),
                         backgroundImage: controller.selectedImage.value != null ? FileImage(controller.selectedImage.value!) : null,
-                        child: controller.selectedImage.value == null ? Icon(Iconsax.camera, color: tokens['primary'], size: 28) : null,
+                        child: controller.selectedImage.value == null ? Icon(Iconsax.camera, color: TColors.primary, size: 28) : null,
                      ),
                   )),
                   const SizedBox(height: 24),
@@ -154,7 +155,7 @@ class AddStudentMinimalist extends StatelessWidget {
                      Get.back();
                   }
                },
-               style: ElevatedButton.styleFrom(backgroundColor: tokens['primary'], elevation: 0, padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12)),
+               style: ElevatedButton.styleFrom(backgroundColor: TColors.primary, elevation: 0, padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12)),
                child: const Text('Add to Roster'),
             ),
          ],
@@ -178,7 +179,7 @@ class AddStudentMinimalist extends StatelessWidget {
     );
   }
 
-  void _showPickerOptions(BuildContext context, Map<String, dynamic> tokens) {
+  void _showPickerOptions(BuildContext context, PatternTokens tokens) {
      Get.bottomSheet(
         Container(
            padding: const EdgeInsets.all(32),

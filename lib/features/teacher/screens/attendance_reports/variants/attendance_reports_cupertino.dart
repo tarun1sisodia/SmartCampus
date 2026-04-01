@@ -2,9 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' show Colors, Divider, Icons, InkWell, Color, ColorScheme, Theme, ThemeData, CircleAvatar, TextButton, FontWeight, TextStyle, BorderRadius, Radius, Offset, BoxShadow, BoxDecoration, Border, BorderSide, Widget, EdgeInsets, Column, Row, Expanded, SizedBox, BuildContext, StatelessWidget, Center, ListView, Stack, Positioned, Obx, Get, IconData, Icon, MainAxisAlignment, CrossAxisAlignment, MainAxisSize, VoidCallback, Spacer, DateTimeRange, showDateRangePicker;
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
-import '../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
-import '../../controllers/attendance_reports_controller.dart';
+import 'package:smart_campus/common/ui_patterns/pattern_tokens.dart';
+import 'package:smart_campus/common/ui_patterns/ui_style.dart';
+import 'package:smart_campus/features/teacher/controllers/attendance_reports_controller.dart';
+import 'package:smart_campus/common/utils/constants/colors.dart';
 
 class AttendanceReportsCupertino extends StatelessWidget {
   final AttendanceReportsController controller;
@@ -21,7 +22,7 @@ class AttendanceReportsCupertino extends StatelessWidget {
         slivers: [
           CupertinoSliverNavigationBar(
             largeTitle: const Text('REPORTS', style: TextStyle(letterSpacing: -0.5, fontWeight: FontWeight.w800)),
-            backgroundColor: const Color(0xFFF2F2F7).withOpacity(0.8),
+            backgroundColor: const Color(0xFFF2F2F7).withValues(alpha: 0.8),
             border: null,
             trailing: CupertinoButton(
               padding: EdgeInsets.zero,
@@ -114,7 +115,7 @@ class AttendanceReportsCupertino extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10)],
       ),
       child: Column(
         children: [
@@ -182,8 +183,9 @@ class AttendanceReportsCupertino extends StatelessWidget {
 
   Widget _buildIosRow(dynamic student, Map<String, dynamic> stats) {
     final percentage = stats['attendancePercentage'] ?? 0.0;
-    return ListTile(
+    return _ListTile(
       onTap: () => controller.navigateToStudentDetail(student),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       leading: Container(
         width: 40,
         height: 40,
@@ -235,5 +237,48 @@ class AttendanceReportsCupertino extends StatelessWidget {
       controller.endDate.value = picked.end;
       controller.loadAttendanceData();
     }
+  }
+}
+
+class _ListTile extends StatelessWidget {
+  final Widget? leading;
+  final Widget title;
+  final Widget? subtitle;
+  final Widget? trailing;
+  final VoidCallback? onTap;
+  final EdgeInsetsGeometry contentPadding;
+
+  const _ListTile({
+    this.leading,
+    required this.title,
+    this.subtitle,
+    this.trailing,
+    this.onTap,
+    required this.contentPadding,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: contentPadding,
+        child: Row(
+          children: [
+            if (leading != null) ...[leading!, const SizedBox(width: 16)],
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  title,
+                  if (subtitle != null) ...[const SizedBox(height: 2), subtitle!],
+                ],
+              ),
+            ),
+            if (trailing != null) trailing!,
+          ],
+        ),
+      ),
+    );
   }
 }

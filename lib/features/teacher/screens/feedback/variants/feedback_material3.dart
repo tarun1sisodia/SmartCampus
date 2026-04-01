@@ -37,7 +37,7 @@ class FeedbackMaterial3 extends StatelessWidget {
                     final isSel = index < controller.rating.value;
                     return IconButton.filledTonal(
                       onPressed: () => controller.setRating(index + 1),
-                      icon: Icon(isSel ? Iconsax.star1 : Iconsax.star, color: isSel ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant.withOpacity(0.3), size: 28),
+                      icon: Icon(isSel ? Iconsax.star1 : Iconsax.star, color: isSel ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.3), size: 28),
                       style: IconButton.styleFrom(
                         backgroundColor: isSel ? theme.colorScheme.primaryContainer : Colors.transparent,
                       ),
@@ -55,8 +55,8 @@ class FeedbackMaterial3 extends StatelessWidget {
                   style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                   decoration: InputDecoration(
                     hintText: 'Share your detailed feedback here...',
-                    hintStyle: TextStyle(color: theme.colorScheme.onSurfaceVariant.withOpacity(0.5), fontSize: 14),
-                    filled: true, fillColor: theme.colorScheme.surfaceContainerHighest.withOpacity(0.3),
+                    hintStyle: TextStyle(color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5), fontSize: 14),
+                    filled: true, fillColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
                     enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
                     focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide(color: theme.colorScheme.primary, width: 1.5)),

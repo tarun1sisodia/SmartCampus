@@ -78,7 +78,7 @@ class HelpMaterial3 extends StatelessWidget {
   Widget _buildM3Category(ThemeData theme, {required String title, required IconData icon, required Color color, required VoidCallback onTap}) {
     return Card(
       elevation: 0,
-      color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.3),
+      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: InkWell(
         onTap: onTap,
@@ -130,7 +130,7 @@ class HelpMaterial3 extends StatelessWidget {
             controller: scrollController,
             padding: const EdgeInsets.all(24),
             children: [
-              Center(child: Container(width: 40, height: 4, decoration: BoxDecoration(color: theme.colorScheme.onSurfaceVariant.withOpacity(0.2), borderRadius: BorderRadius.circular(2)))),
+              Center(child: Container(width: 40, height: 4, decoration: BoxDecoration(color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(2)))),
               const SizedBox(height: 32),
               Text('FAQs', style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
               const SizedBox(height: 32),
@@ -179,7 +179,7 @@ class HelpMaterial3 extends StatelessWidget {
   Widget _buildContactTile(ThemeData theme, {required IconData icon, required String title, required String subtitle, required Color color}) {
     return ListTile(
       contentPadding: EdgeInsets.zero,
-      leading: CircleAvatar(backgroundColor: color.withOpacity(0.1), child: Icon(icon, color: color, size: 20)),
+      leading: CircleAvatar(backgroundColor: color.withValues(alpha: 0.1), child: Icon(icon, color: color, size: 20)),
       title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
       subtitle: Text(subtitle, style: theme.textTheme.bodySmall?.copyWith(fontWeight: FontWeight.bold)),
     );

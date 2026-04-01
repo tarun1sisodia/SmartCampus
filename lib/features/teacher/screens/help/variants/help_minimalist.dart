@@ -44,7 +44,7 @@ class HelpMinimalist extends StatelessWidget {
             onTap: () {},
           ),
           const SizedBox(height: 48),
-          Text('Key Topics', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: Colors.black.withOpacity(0.6))),
+          Text('Key Topics', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: Colors.black.withValues(alpha: 0.6))),
           const SizedBox(height: 24),
           _buildFAQItem(
             question: 'How do I mark attendance?',
@@ -73,7 +73,7 @@ class HelpMinimalist extends StatelessWidget {
           children: [
             Container(
               padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(color: color.withOpacity(0.08), borderRadius: BorderRadius.circular(16)),
+              decoration: BoxDecoration(color: color.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(16)),
               child: Icon(icon, color: color, size: 28),
             ),
             const SizedBox(width: 20),
@@ -83,11 +83,11 @@ class HelpMinimalist extends StatelessWidget {
                 children: [
                   Text(title, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16, color: Colors.black87)),
                   const SizedBox(height: 4),
-                  Text(subtitle, style: TextStyle(fontWeight: FontWeight.w500, fontSize: 12, color: Colors.black.withOpacity(0.3))),
+                  Text(subtitle, style: TextStyle(fontWeight: FontWeight.w500, fontSize: 12, color: Colors.black.withValues(alpha: 0.3))),
                 ],
               ),
             ),
-            Icon(Iconsax.arrow_right_3, size: 18, color: Colors.black.withOpacity(0.1)),
+            Icon(Iconsax.arrow_right_3, size: 18, color: Colors.black.withValues(alpha: 0.1)),
           ],
         ),
       ),
@@ -107,7 +107,7 @@ class HelpMinimalist extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.only(top: 8, bottom: 24),
-            child: Text(answer, style: TextStyle(fontWeight: FontWeight.w500, fontSize: 13, color: Colors.black.withOpacity(0.4), height: 1.6)),
+            child: Text(answer, style: TextStyle(fontWeight: FontWeight.w500, fontSize: 13, color: Colors.black.withValues(alpha: 0.4), height: 1.6)),
           ),
         ],
       ),
@@ -179,7 +179,7 @@ class HelpMinimalist extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 24),
       child: Row(
         children: [
-          Container(padding: const EdgeInsets.all(12), decoration: BoxDecoration(color: color.withOpacity(0.08), borderRadius: BorderRadius.circular(12)), child: Icon(icon, color: color, size: 24)),
+          Container(padding: const EdgeInsets.all(12), decoration: BoxDecoration(color: color.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(12)), child: Icon(icon, color: color, size: 24)),
           const SizedBox(width: 16),
           Expanded(
             child: Column(

@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../controllers/attendance_controller.dart';
-import '../../../common/utils/helpers/snackbar_helper.dart';
-import '../../../common/ui_patterns/pattern_scaffold.dart';
-import '../../../common/ui_patterns/ui_style_controller.dart';
-import '../../../common/ui_patterns/ui_style.dart';
-import 'variants/mark_attendance/mark_attendance_corporate.dart';
-import 'variants/mark_attendance/mark_attendance_minimalist.dart';
-import 'variants/mark_attendance/mark_attendance_glassmorphism.dart';
-import 'variants/mark_attendance/mark_attendance_neumorphic.dart';
-import 'variants/mark_attendance/mark_attendance_material3.dart';
-import 'variants/mark_attendance/mark_attendance_cupertino.dart';
-import 'variants/mark_attendance/mark_attendance_cyberpunk.dart';
-import 'variants/mark_attendance/mark_attendance_brutalist.dart';
-import 'variants/mark_attendance/mark_attendance_academic.dart';
-import 'variants/mark_attendance/mark_attendance_fluent.dart';
+import '../../controllers/attendance_controller.dart';
+import '../../../../common/utils/helpers/snackbar_helper.dart';
+import '../../../../common/ui_patterns/pattern_scaffold.dart';
+import '../../../../common/ui_patterns/ui_style_controller.dart';
+import '../../../../common/ui_patterns/ui_style.dart';
+import 'variants/mark_attendance_corporate.dart';
+import 'variants/mark_attendance_minimalist.dart';
+import 'variants/mark_attendance_glassmorphism.dart';
+import 'variants/mark_attendance_neumorphic.dart';
+import 'variants/mark_attendance_material3.dart';
+import 'variants/mark_attendance_cupertino.dart';
+import 'variants/mark_attendance_cyberpunk.dart';
+import 'variants/mark_attendance_brutalist.dart';
+import 'variants/mark_attendance_academic.dart';
+import 'variants/mark_attendance_fluent.dart';
 
 class MarkAttendanceScreen extends StatelessWidget {
   final attendanceController = Get.find<AttendanceController>();

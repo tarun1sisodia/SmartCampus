@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import '../../../../../app/theme/theme_controller.dart';
 import '../../../../app/routes/app_routes.dart';
 import '../../../../app/theme/theme_configs.dart';
 import '../../../../app/theme/theme_controller.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
-import '../../../../common/ui_patterns/ui_style_controller.dart';
+import '../../../../../common/ui_patterns/ui_style.dart';
+import '../../../../../common/ui_patterns/ui_style_controller.dart';
 import '../../../../services/auth_service.dart';
 import '../../../../services/storage_service.dart';
 import '../../controllers/teacher_profile_controller.dart';
@@ -72,7 +73,7 @@ class SettingsFluent extends StatelessWidget {
       final user = controller.user.value;
       return Container(
         padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.black.withOpacity(0.05)), boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10, offset: const Offset(0, 4))]),
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.black.withValues(alpha: 0.05)), boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 10, offset: const Offset(0, 4))]),
         child: Row(
           children: [
             Container(
@@ -109,7 +110,7 @@ class SettingsFluent extends StatelessWidget {
           child: Text(title, style: const TextStyle(color: Color(0xFF605E5C), fontWeight: FontWeight.bold, fontSize: 11, letterSpacing: 0.5)),
         ),
         Container(
-          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.black.withOpacity(0.05))),
+          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.black.withValues(alpha: 0.05))),
           child: Column(children: items),
         ),
       ],
@@ -118,7 +119,7 @@ class SettingsFluent extends StatelessWidget {
 
   Widget _buildFluentItem(String title, IconData icon, {Widget? trailing, VoidCallback? onTap}) {
     return Container(
-      decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.black.withOpacity(0.02)))),
+      decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.black.withValues(alpha: 0.02)))),
       child: ListTile(
         onTap: onTap,
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
@@ -149,7 +150,7 @@ class SettingsFluent extends StatelessWidget {
                   onTap: () => tc.setTheme(index),
                   child: Container(
                     width: 44, height: 44, margin: const EdgeInsets.only(right: 12),
-                    decoration: BoxDecoration(color: theme.primary, borderRadius: BorderRadius.circular(4), border: sel ? Border.all(color: Colors.black, width: 2) : Border.all(color: Colors.black.withOpacity(0.1))),
+                    decoration: BoxDecoration(color: theme.primary, borderRadius: BorderRadius.circular(4), border: sel ? Border.all(color: Colors.black, width: 2) : Border.all(color: Colors.black.withValues(alpha: 0.1))),
                     child: sel ? const Icon(Icons.check, color: Colors.white, size: 20) : null,
                   ),
                 );
@@ -183,7 +184,7 @@ class SettingsFluent extends StatelessWidget {
                   onTap: () => uc.setStyle(style),
                   child: Container(
                     width: 80, margin: const EdgeInsets.only(right: 12),
-                    decoration: BoxDecoration(color: sel ? const Color(0xFF0078D4) : Colors.white, borderRadius: BorderRadius.circular(4), border: Border.all(color: Colors.black.withOpacity(0.05))),
+                    decoration: BoxDecoration(color: sel ? const Color(0xFF0078D4) : Colors.white, borderRadius: BorderRadius.circular(4), border: Border.all(color: Colors.black.withValues(alpha: 0.05))),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

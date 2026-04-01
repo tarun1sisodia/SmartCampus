@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
-import '../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../common/ui_patterns/ui_style.dart';
+import '../../../../../common/ui_patterns/pattern_tokens.dart';
+import '../../../../../common/ui_patterns/ui_style.dart';
 import '../../controllers/all_sessions_controller.dart';
 import '../../controllers/attendance_controller.dart';
 import '../carousel_attendance_screen.dart';
 import '../../../app/bindings/app_bindings.dart';
+import '../../../../../common/utils/constants/colors.dart';
 
 class AllSessionsMinimalist extends StatelessWidget {
   final AllSessionsController controller;
@@ -27,7 +28,7 @@ class AllSessionsMinimalist extends StatelessWidget {
           Expanded(
             child: Obx(() {
               if (controller.isLoading.value && controller.allSessions.isEmpty) {
-                return Center(child: CircularProgressIndicator(color: tokens['primary']));
+                return const Center(child: CircularProgressIndicator(color: TColors.primary));
               }
 
               if (controller.filteredSessions.isEmpty) {
@@ -55,7 +56,7 @@ class AllSessionsMinimalist extends StatelessWidget {
     );
   }
 
-  Widget _buildMinimalSearch(Map<String, dynamic> tokens) {
+  Widget _buildMinimalSearch(PatternTokens tokens) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       decoration: const BoxDecoration(
@@ -88,7 +89,7 @@ class AllSessionsMinimalist extends StatelessWidget {
     );
   }
 
-  Widget _buildMinimalistSessionCard(dynamic session, Map<String, dynamic> tokens) {
+  Widget _buildMinimalistSessionCard(dynamic session, PatternTokens tokens) {
     final isSelected = controller.selectedSessionIds.contains(session.id);
     final isRunning = controller.isSessionRunning(session);
 
@@ -97,8 +98,8 @@ class AllSessionsMinimalist extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 10, offset: const Offset(0, 4))],
-        border: Border.all(color: isSelected ? tokens['primary'] : Colors.transparent, width: 2),
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 10, offset: const Offset(0, 4))],
+        border: Border.all(color: isSelected ? TColors.primary : Colors.transparent, width: 2),
       ),
       child: Theme(
         data: Theme.of(Get.context!).copyWith(dividerColor: Colors.transparent),
@@ -107,11 +108,11 @@ class AllSessionsMinimalist extends StatelessWidget {
           leading: Container(
             width: 44,
             height: 44,
-            decoration: BoxDecoration(color: tokens['primary'].withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
+            decoration: BoxDecoration(color: TColors.primary.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
             child: Center(
               child: Text(
                 DateFormat('d').format(session.date),
-                style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16, color: tokens['primary']),
+                style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16, color: TColors.primary),
               ),
             ),
           ),
@@ -126,7 +127,7 @@ class AllSessionsMinimalist extends StatelessWidget {
           trailing: Container(
             width: 8,
             height: 8,
-            decoration: BoxDecoration(color: isRunning ? const Color(0xFF10B981) : Colors.red.withOpacity(0.3), shape: BoxShape.circle),
+            decoration: BoxDecoration(color: isRunning ? const Color(0xFF10B981) : Colors.red.withValues(alpha: 0.3), shape: BoxShape.circle),
           ),
           children: [
             Padding(
@@ -142,9 +143,9 @@ class AllSessionsMinimalist extends StatelessWidget {
                       Expanded(
                         child: TextButton.icon(
                           onPressed: () => _onMark(session),
-                          icon: Icon(Iconsax.clipboard_text, size: 16, color: tokens['primary']),
-                          label: Text('Open Session', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12, color: tokens['primary'])),
-                          style: TextButton.styleFrom(backgroundColor: tokens['primary'].withOpacity(0.05), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+                          icon: const Icon(Iconsax.clipboard_text, size: 16, color: TColors.primary),
+                          label: const Text('Open Session', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12, color: TColors.primary)),
+                          style: TextButton.styleFrom(backgroundColor: TColors.primary.withValues(alpha: 0.05), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
                         ),
                       ),
                       const SizedBox(width: 8),

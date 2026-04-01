@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../../../../../common/ui_patterns/pattern_tokens.dart';
-import '../../../../../common/ui_patterns/ui_style.dart';
-import '../../../../../models/class_model.dart';
-import '../../../controllers/class_controller.dart';
-import '../../add_student_screen.dart';
-import '../../attendance_screen.dart';
+import 'package:smart_campus/common/ui_patterns/pattern_tokens.dart';
+import 'package:smart_campus/common/ui_patterns/ui_style.dart';
+import 'package:smart_campus/models/class_model.dart';
+import 'package:smart_campus/features/teacher/controllers/class_controller.dart';
+import 'package:smart_campus/features/teacher/screens/add_student/add_student_screen.dart';
+import 'package:smart_campus/features/teacher/screens/attendance/attendance_screen.dart';
 
 class ClassListMinimalist extends StatelessWidget {
   final ClassController controller;
@@ -53,7 +53,7 @@ class ClassListMinimalist extends StatelessWidget {
     );
   }
 
-  Widget _buildSearchArea(Map<String, dynamic> tokens) {
+  Widget _buildSearchArea(PatternTokens tokens) {
     return Padding(
       padding: const EdgeInsets.all(24.0),
       child: Container(
@@ -62,7 +62,7 @@ class ClassListMinimalist extends StatelessWidget {
           borderRadius: BorderRadius.circular(32),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.03),
+              color: Colors.black.withValues(alpha: 0.03),
               blurRadius: 20,
               offset: const Offset(0, 10),
             ),
@@ -73,7 +73,7 @@ class ClassListMinimalist extends StatelessWidget {
           style: const TextStyle(fontWeight: FontWeight.w600, color: Color(0xFF1E293B)),
           decoration: InputDecoration(
             hintText: 'Search your classes...',
-            hintStyle: TextStyle(color: const Color(0xFF1E293B).withOpacity(0.3), fontWeight: FontWeight.w600),
+            hintStyle: TextStyle(color: const Color(0xFF1E293B).withValues(alpha: 0.3), fontWeight: FontWeight.w600),
             prefixIcon: const Icon(Iconsax.search_normal, color: Color(0xFF64748B), size: 20),
             border: InputBorder.none,
             contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
@@ -83,7 +83,7 @@ class ClassListMinimalist extends StatelessWidget {
     );
   }
 
-  Widget _buildClassCard(BuildContext context, ClassModel classItem, bool isSelected, Map<String, dynamic> tokens) {
+  Widget _buildClassCard(BuildContext context, ClassModel classItem, bool isSelected, PatternTokens tokens) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
@@ -92,7 +92,7 @@ class ClassListMinimalist extends StatelessWidget {
         border: isSelected ? Border.all(color: const Color(0xFF3B82F6), width: 2) : null,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 24,
             offset: const Offset(0, 8),
           ),
@@ -189,7 +189,7 @@ class ClassListMinimalist extends StatelessWidget {
     );
   }
 
-  Widget _buildEmptyState(Map<String, dynamic> tokens) {
+  Widget _buildEmptyState(PatternTokens tokens) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -203,7 +203,7 @@ class ClassListMinimalist extends StatelessWidget {
     );
   }
 
-  Widget _buildLoadMore(Map<String, dynamic> tokens) {
+  Widget _buildLoadMore(PatternTokens tokens) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 24),
