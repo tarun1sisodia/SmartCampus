@@ -51,7 +51,7 @@ dependencies:
   percent_indicator: ^4.2.5
   csv: ^6.0.0
   table_calendar: ^3.2.0
-  carousel_slider: ^5.1.1
+  carousel_slider: ^5.1.2
 
   pdf: ^3.7.0
   file_picker: ^10.3.6
