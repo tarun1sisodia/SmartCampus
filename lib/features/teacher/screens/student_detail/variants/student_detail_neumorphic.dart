@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
-import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
+import 'package:flutter_inset_shadow/flutter_inset_shadow.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
-import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
+import 'package:flutter_inset_shadow/flutter_inset_shadow.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:smart_campus/common/utils/constants/image_strings.dart';
