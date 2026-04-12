@@ -1,0 +1,103 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+react_native_app/
+# IntelliJ related  
+*.iml
+*.ipr
+*.iws
+.idea/
+node_modules/
+server/
+server/.env
+.github/workflows/snyk-security.yml
+.github/dependabot.yml
+
+
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+# Symbolication related
+app.*.symbols
+
+# Keep only flutter-apk folder and ignore rest of build
+build/
+!build/app/outputs/flutter-apk/
+
+# Obfuscation related
+app.*.map.json
+
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release
+prod-ca-2021.crt
+# Environment variables
+.env
+.env copy
+# Signing
+android/key.properties
+android/*.properties
+!android/key.properties.example
+**/*.jks
+**/*.keystore
+
+# AI Assistant Rules
+.clinerules/byterover-rules.md
+.kilocode/rules/byterover-rules.md
+.roo/rules/byterover-rules.md
+.windsurf/rules/byterover-rules.md
+.cursor/rules/byterover-rules.mdc
+.kiro/steering/byterover-rules.md
+.qoder/rules/byterover-rules.md
+.augment/rules/byterover-rules.md
+
+# Large/Unnecessary project artifacts
+bundletool.jar
+sentry-wizard
+
+# Shorebird related
+.shorebird/
+
+# Project Analysis and Generated Documentation
+implementation_planAPP.md
+scaling_app.md
+flutter_build_guide.md
+packages_and_requirements.md
+
+# Platform-specific Ephemeral Build Files
+linux/flutter/ephemeral/
+windows/flutter/ephemeral/
+macos/Flutter/ephemeral/
+
+# Supabase CLI Temporary Files
+supabase/.temp/
+# Sentry native symbols
+.sentry-native
+
+# Flutter/IntelliJ metadata
+.metadata
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# Analysis docs
+packages_and_requirements.md
