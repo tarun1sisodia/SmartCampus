@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-
+import 'package:flutter/material.dart';
+import 'core/services/secure_storage_service.dart';
 import 'app/routes/app_routes.dart';
 import 'common/utils/constants/colors.dart';
 import 'common/utils/helpers/helper_function.dart';
@@ -12,7 +12,6 @@ import 'features/teacher/screens/all_sessions_screen.dart';
 import 'features/teacher/screens/calendar_screen.dart';
 import 'features/teacher/screens/class_list_screen.dart';
 import 'features/teacher/screens/dashboard_screen.dart';
-import 'package:flutter/material.dart';
 
 class NavigationMenu extends StatelessWidget {
   const NavigationMenu({super.key});
@@ -25,54 +24,44 @@ class NavigationMenu extends StatelessWidget {
     final controller = Get.put(NavigationController());
     //print('NavigationController initialized.');
 
-    // Check if user is authenticated
-    final currentUser = Supabase.instance.client.auth.currentUser;
-    //print('Current user: $currentUser');
-    if (currentUser == null) {
-      //print('User not logged in. Showing login prompt.');
-      return Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Iconsax.user_minus,
-                size: 64,
-                color: Theme.of(context).primaryColor,
-              ),
-              const SizedBox(height: 24),
-              Text(
-                'SESSION EXPIRED',
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: 1.0,
-                    ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Please log in to access the app',
-                style: Theme.of(context).textTheme.bodyLarge,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 32),
-              SizedBox(
-                width: 200,
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: () {
-                    //print('Navigating to login screen...');
-                    Get.offAllNamed(AppRoutes.login);
-                  },
-                  child: const Text('GO TO LOGIN'),
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
+    return FutureBuilder<String?>(
+      future: SecureStorageService.getAccessToken(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(body: Center(child: CircularProgressIndicator()));
+        }
 
-    return Scaffold(
+        final token = snapshot.data;
+        if (token == null) {
+          return Scaffold(
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Iconsax.user_minus, size: 64, color: Theme.of(context).primaryColor),
+                  const SizedBox(height: 24),
+                  Text('SESSION EXPIRED', style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w900)),
+                  const SizedBox(height: 32),
+                  SizedBox(
+                    width: 200,
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: () => Get.offAllNamed(AppRoutes.login),
+                      child: const Text('GO TO LOGIN'),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+
+        return _buildMainScaffold(context, dark, controller);
+      },
+    );
+  }
+
+  Widget _buildMainScaffold(BuildContext context, bool dark, NavigationController controller) {
       bottomNavigationBar: Obx(() {
         //print('Building bottom navigation bar...');
         return Container(
@@ -125,6 +114,7 @@ class NavigationMenu extends StatelessWidget {
         // 'Displaying screen with index: ${controller.selectedIndex.value}');
         return controller.screens[controller.selectedIndex.value];
       }),
+    );
     );
   }
 

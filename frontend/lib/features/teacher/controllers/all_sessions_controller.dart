@@ -1,22 +1,17 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:dio/dio.dart';
+import '../../../../core/api/api_client.dart';
 import '../../../models/class_model.dart';
 import '../../../models/attendance_session_model.dart';
-import '../../../services/class_service.dart';
-import '../../../services/attendance_service.dart';
-import '../../../services/realtime_service.dart';
 import '../../../common/utils/helpers/snackbar_helper.dart';
 import 'attendance_controller.dart';
 import 'dart:async';
 
-class AllSessionsController extends GetxController {
-  final attendanceService = AttendanceService();
-  final classService = ClassService();
+  // Removed classService, attendanceService, and realtimeService dependencies
   late final AttendanceController attendanceController;
-  late final RealtimeService realtimeService;
 
   final isLoading = false.obs;
   final allSessions = <AttendanceSessionWithClass>[].obs;
@@ -50,9 +45,6 @@ class AllSessionsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    debugPrint('AllSessionsController initialized');
-
-    // Initialize the attendanceController here
     if (Get.isRegistered<AttendanceController>()) {
       attendanceController = Get.find<AttendanceController>();
     } else {
@@ -60,24 +52,14 @@ class AllSessionsController extends GetxController {
     }
 
     scrollController.addListener(_onScroll);
-    _initializeRealtimeService();
     loadAllSessions();
-    loadClasses();
   }
 
   @override
   void onClose() {
-    debugPrint('AllSessionsController disposed');
     searchController.dispose();
     scrollController.removeListener(_onScroll);
     scrollController.dispose();
-
-    // Cancel all stream subscriptions
-    for (var subscription in _subscriptions) {
-      subscription.cancel();
-    }
-    _subscriptions.clear();
-
     super.onClose();
   }
 
@@ -234,64 +216,37 @@ class AllSessionsController extends GetxController {
   Future<void> loadAllSessions({bool reset = true}) async {
     try {
       if (reset) {
-        debugPrint('Loading all sessions (Reset)...');
         isLoading.value = true;
         _offset = 0;
         hasMoreSessions.value = true;
         allSessions.clear();
       } else {
         if (isLoading.value || isLoadingMore.value || !hasMoreSessions.value) return;
-        debugPrint('Loading more sessions (Offset: $_offset)...');
         isLoadingMore.value = true;
       }
 
-      final currentUser = Supabase.instance.client.auth.currentUser;
-      if (currentUser == null) {
-        debugPrint('No user logged in');
-        TSnackBar.showError(message: 'You must be logged in to view sessions');
-        return;
-      }
-
-      // Ensure classes are loaded first for mapping
-      if (classes.isEmpty) {
-        await loadClasses();
-      }
-
-      // Create a map for quick class lookup
-      final classMap = {for (var c in classes) c.id: c};
-
-      final sessions = await attendanceService.getSessionsForTeacher(
-        teacherId: currentUser.id,
-        limit: _pageSize,
-        offset: _offset,
+      final response = await ApiClient.dio.get(
+        '/attendance/sessions',
+        queryParameters: {
+          'limit': _pageSize,
+          'offset': _offset,
+        },
       );
 
-      final List<AttendanceSessionWithClass> mappedSessions = sessions.map((session) {
-        final classModel = classMap[session.classId];
-        
-        return AttendanceSessionWithClass(
-          id: session.id,
-          classId: session.classId,
-          date: session.date,
-          startTime: session.startTime,
-          endTime: session.endTime,
-          createdBy: session.createdBy,
-          createdAt: session.createdAt,
-          // Fallback to session fields if classModel is not found
-          className: classModel?.courseName ?? session.courseName,
-          subjectName: classModel?.subjectName ?? session.subjectName,
-          classModel: classModel ?? ClassModel(
-            id: session.classId,
-            teacherId: currentUser.id,
-            subjectId: '',
-            courseId: '',
-            semester: session.semester ?? 0,
-            section: session.section,
-          ),
-          status: session.status,
-          closedAt: session.closedAt,
-        );
-      }).toList();
+      final List sessions = response.data['data'];
+      final mappedSessions = sessions.map((s) => AttendanceSessionWithClass(
+        id: s['id'],
+        classId: s['classId'],
+        date: DateTime.parse(s['date']),
+        startTime: s['startTime'],
+        endTime: s['endTime'],
+        createdBy: s['createdBy'],
+        className: s['class']?['course']?['name'],
+        subjectName: s['class']?['subject']?['name'],
+        classModel: ClassModel.fromJson(s['class']),
+        status: s['status'],
+        closedAt: s['closedAt'] != null ? DateTime.parse(s['closedAt']) : null,
+      )).toList();
 
       if (reset) {
         allSessions.assignAll(mappedSessions);
@@ -301,19 +256,14 @@ class AllSessionsController extends GetxController {
 
       _offset = allSessions.length;
       hasMoreSessions.value = sessions.length == _pageSize;
-      
-      // Initial filter apply
       filterSessions();
       lastUpdated.value = DateTime.now();
-      
     } catch (e, stackTrace) {
-      Sentry.captureException(e, stackTrace: stackTrace);
-      debugPrint('Error loading sessions: $e');
-      TSnackBar.showError(message: 'Failed to load sessions: ${e.toString()}');
+      await Sentry.captureException(e, stackTrace: stackTrace);
+      TSnackBar.showError(message: 'Failed to load sessions: $e');
     } finally {
       isLoading.value = false;
       isLoadingMore.value = false;
-      debugPrint('Finished loading sessions');
     }
   }
 

@@ -5,13 +5,19 @@ class ApiConstants {
     //print('ApiConstants initialized');
   }
 
-  static String get url => _requireEnv('SUPABASE_URL');
-
-  static String get anonKey => _requireEnv('SUPABASE_ANON_KEY');
+  static String get backendBaseUrl => dotenv.env['BACKEND_BASE_URL'] ?? 'http://10.0.2.2:5000/api/v1';
+  static String get socketUrl => dotenv.env['SOCKET_URL'] ?? 'http://10.0.2.2:5000';
 
   static String? get sentryDsn {
     final value = dotenv.env['SENTRY_DSN']?.trim();
     return value == null || value.isEmpty ? null : value;
+  }
+
+  static bool isExternalImage(String? url) {
+    if (url == null || url.isEmpty) return false;
+    final uri = Uri.tryParse(url);
+    if (uri == null) return false;
+    return uri.isAbsolute;
   }
 
   static String optimizeImageUrl(
@@ -22,12 +28,6 @@ class ApiConstants {
   }) {
     final uri = Uri.tryParse(url);
     if (uri == null) {
-      return url;
-    }
-
-    final isSupabaseStorage =
-        uri.host.contains('supabase.co') && uri.path.contains('/storage/');
-    if (!isSupabaseStorage) {
       return url;
     }
 

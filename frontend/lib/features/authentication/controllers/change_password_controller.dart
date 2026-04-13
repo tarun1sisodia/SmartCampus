@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../../../core/api/api_client.dart';
 import '../../../common/utils/helpers/snackbar_helper.dart';
 
 class ChangePasswordController extends GetxController {
@@ -24,8 +24,8 @@ class ChangePasswordController extends GetxController {
   // Password matching indicator
   final doPasswordsMatch = true.obs;
 
-  // Supabase client
-  final supabase = Supabase.instance.client;
+  // Removed Supabase client dependency
+
 
   @override
   void onInit() {
@@ -162,44 +162,17 @@ class ChangePasswordController extends GetxController {
     return true;
   }
 
-  // password
+  // Change password method
   Future<void> changePassword() async {
-    //printnt('Attempting to change password');
     if (!validateFields()) return;
 
     try {
       isLoading.value = true;
 
-      // Get current user
-      final user = supabase.auth.currentUser;
-      if (user == null) {
-        TSnackBar.showError(
-          message: 'You must be logged in to change your password',
-        );
-        return;
-      }
-
-      // First verify the current password by attempting to sign in
-      try {
-        final response = await supabase.auth.signInWithPassword(
-          email: user.email!,
-          password: currentPasswordController.text,
-        );
-
-        if (response.user == null) {
-          TSnackBar.showError(message: 'Current password is incorrect');
-          return;
-        }
-      } catch (e, stackTrace) {
-        await Sentry.captureException(e, stackTrace: stackTrace);
-        TSnackBar.showError(message: 'Current password is incorrect');
-        return;
-      }
-
-      // password
-      await supabase.auth.updateUser(
-        UserAttributes(password: newPasswordController.text),
-      );
+      await ApiClient.dio.post('/users/change-password', data: {
+        'oldPassword': currentPasswordController.text,
+        'newPassword': newPasswordController.text,
+      });
 
       // Clear fields
       currentPasswordController.clear();
@@ -211,14 +184,21 @@ class ChangePasswordController extends GetxController {
       passwordStrengthText.value = '';
       passwordStrengthColor.value = Colors.grey;
 
-      // Show success message
       TSnackBar.showSuccess(
         message: 'Password changed successfully',
         title: 'Success',
       );
 
-      // Navigate back
       Get.back();
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
+      TSnackBar.showError(
+        message: 'Failed to change password: ${e.toString()}',
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
     } catch (e, stackTrace) {
       await Sentry.captureException(e, stackTrace: stackTrace);
       TSnackBar.showError(

@@ -1,16 +1,8 @@
-import 'package:flutter/widgets.dart';
-import 'package:get/get.dart';
-import 'package:sentry_flutter/sentry_flutter.dart';
-import 'dart:async';
-import '../../../models/student_model.dart';
-import '../../../services/attendance_service.dart';
 import '../../../common/utils/helpers/snackbar_helper.dart';
 import 'attendance_controller.dart';
 
 class CarouselAttendanceController extends GetxController {
-  final AttendanceController attendanceController =
-      Get.find<AttendanceController>();
-  final attendanceService = AttendanceService();
+  final AttendanceController attendanceController = Get.find<AttendanceController>();
 
   // Carousel related variables
   final currentIndex = 0.obs;
@@ -36,27 +28,12 @@ class CarouselAttendanceController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-
-    // Listen to changes in the students list to update statistics
     ever(attendanceController.students, (_) => updateStatistics());
-
-    // Listen to changes in session ID to start/stop timer
-    ever(attendanceController.currentSessionId, (_) {
-      if (attendanceController.currentSessionId.value.isNotEmpty) {
-        _initializeSessionTimer();
-      } else {
-        _stopTimer();
-      }
-    });
-
-    // Delay loading students until after the build phase
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      // Load students for the current session if a session ID is already set
-      if (attendanceController.currentSessionId.value.isNotEmpty) {
-        attendanceController.loadStudentsForSession();
-        _initializeSessionTimer();
-      }
-    });
+    
+    // Load data if session is active
+    if (attendanceController.currentSessionId.value.isNotEmpty) {
+      _initializeSessionTimer();
+    }
   }
 
   @override
@@ -304,14 +281,10 @@ class CarouselAttendanceController extends GetxController {
     try {
       isSubmitting.value = true;
       await attendanceController.submitAttendance();
-      //replace the current screen only.. so back can't be performed
-      // Get.off(() =>AttendanceReportsScreen()); // Return to previous screen after submission
-      Get.offNamed('/attendance-reports'); // Navigate to attendance reports screen
+      Get.offNamed('/attendance-reports');
     } catch (e, stackTrace) {
-      Sentry.captureException(e, stackTrace: stackTrace);
-      TSnackBar.showError(
-        message: 'Failed to submit attendance: ${e.toString()}',
-      );
+      await Sentry.captureException(e, stackTrace: stackTrace);
+      TSnackBar.showError(message: 'Submission failed: $e');
     } finally {
       isSubmitting.value = false;
     }

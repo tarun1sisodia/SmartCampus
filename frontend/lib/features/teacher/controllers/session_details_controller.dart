@@ -2,13 +2,14 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:dio/dio.dart';
+import '../../../../core/api/api_client.dart';
 import '../../../models/attendance_session_model.dart';
-import '../../../services/attendance_service.dart';
 import '../../../common/utils/helpers/snackbar_helper.dart';
 import '../models/attendance_ui_models.dart';
 
 class SessionDetailsController extends GetxController {
-  final AttendanceService attendanceService = AttendanceService();
+  // Removed AttendanceService dependency
 
   final isLoading = true.obs;
   final session = Rx<AttendanceSessionModel?>(null);
@@ -35,21 +36,29 @@ class SessionDetailsController extends GetxController {
   Future<void> loadSessionDetails(String sessionId) async {
     try {
       isLoading.value = true;
+      final response = await ApiClient.dio.get('/attendance/session/$sessionId');
+      
+      if (response.statusCode == 200) {
+        final data = response.data['data'];
+        session.value = AttendanceSessionModel.fromJson(data);
+        
+        final List records = data['records'] ?? [];
+        attendanceRecords.assignAll(records.map((r) => AttendanceRecord(
+          id: r['id'],
+          studentId: r['student']['id'],
+          studentName: r['student']['name'],
+          isPresent: r['status'] == 'present',
+        )).toList());
 
-      // Load session details
-      final sessionData = await attendanceService.getSessionById(sessionId);
-      session.value = sessionData;
-
-      // Load attendance records
-      await loadAttendanceRecords(sessionId);
-
-      // Calculate attendance stats
-      _calculateAttendanceStats();
+        attendanceStats.value = AttendanceStats(
+          total: data['stats']?['total'] ?? 0,
+          present: data['stats']?['present'] ?? 0,
+          absent: data['stats']?['absent'] ?? 0,
+        );
+      }
     } catch (e, stackTrace) {
       await Sentry.captureException(e, stackTrace: stackTrace);
-      ///print('Error loading session details: $e');
-      TSnackBar.showError(
-          message: 'Failed to load session details: ${e.toString()}');
+      TSnackBar.showError(message: 'Failed to load details: $e');
     } finally {
       isLoading.value = false;
     }
@@ -136,7 +145,7 @@ class SessionDetailsController extends GetxController {
 
   bool isSessionActive() {
     if (session.value == null) return false;
-    return attendanceService.isSessionActive(session.value!);
+    return session.value!.status == 'open';
   }
 
   String formatDate(DateTime date) {

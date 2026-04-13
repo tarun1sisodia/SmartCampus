@@ -4,7 +4,7 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   file_selector_linux
-  gtk
+  flutter_secure_storage_linux
   sentry_flutter
   url_launcher_linux
 )

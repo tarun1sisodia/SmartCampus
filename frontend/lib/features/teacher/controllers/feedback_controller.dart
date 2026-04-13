@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:get/get.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '../../../common/utils/helpers/snackbar_helper.dart';
@@ -70,93 +69,26 @@ class FeedbackController extends GetxController {
   }
 
   Future<void> submitFeedback() async {
-    //printnt('Submitting feedback');
     if (rating.value == 0) {
-      //printnt('Rating is required before submitting');
-      Get.snackbar(
-        'Rating Required',
-        'Please provide a rating before submitting',
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      TSnackBar.showWarning(message: 'Please provide a rating before submitting');
       return;
     }
 
     isSubmitting.value = true;
-
     try {
-      // Use the current user's email or 'anonymous' if not available
-      final userEmail = _storageService.getUserEmail() ?? 'anonymous';
-      //printnt('User email: $userEmail');
-
-      // Get the current user ID from Supabase if available
-      String userId = 'anonymous';
-      final currentUser = Supabase.instance.client.auth.currentUser;
-      if (currentUser != null) {
-        userId = currentUser.id;
-      }
-      //printnt('User ID: $userId');
-
-      final feedbackData = {
-        'user_id': userId,
-        'user_email': userEmail,
+      await ApiClient.dio.post('/feedback', data: {
         'rating': rating.value,
         'feedback': feedbackText.value,
-        'created_at': DateTime.now().toIso8601String(),
-      };
-      // Only add user_email if it's not anonymous (to avoid potential column issues)
-      if (userEmail != 'anonymous') {
-        feedbackData['user_email'] = userEmail;
-      }
+      });
 
-      // Submit the feedback
-      await Supabase.instance.client.from('user_feedback').insert(feedbackData);
-
-      //printnt('Feedback submitted successfully');
       _feedbackService.markFeedbackAsSubmitted();
-      Get.back(); // Close dialog
-
-      TSnackBar.showSuccess(
-        message: 'Your feedback has been submitted successfully.',
-        title: 'Thank You!',
-      );
+      Get.back();
+      TSnackBar.showSuccess(message: 'Your feedback has been submitted successfully.', title: 'Thank You!');
     } catch (e, stackTrace) {
-      //printnt('Error submitting feedback: $e');
-
-      // Try a fallback approach without user_email if that was the issue
-      if (e.toString().contains('user_email')) {
-        try {
-          final userId =
-              Supabase.instance.client.auth.currentUser?.id ?? 'anonymous';
-          await Supabase.instance.client.from('user_feedback').insert({
-            'user_id': userId,
-            'rating': rating.value,
-            'feedback': feedbackText.value,
-            'created_at': DateTime.now().toIso8601String(),
-          });
-
-          //printnt('Feedback submitted successfully with fallback approach');
-          _feedbackService.markFeedbackAsSubmitted();
-          Get.back(); // Close dialog
-
-          TSnackBar.showSuccess(
-            message: 'Your feedback has been submitted successfully.',
-            title: 'Thank You!',
-          );
-          return;
-        } catch (fallbackError, fallbackStackTrace) {
-          await Sentry.captureException(fallbackError,
-              stackTrace: fallbackStackTrace);
-          //printnt('Fallback approach also failed: $fallbackError');
-        }
-      }
-
       await Sentry.captureException(e, stackTrace: stackTrace);
-      TSnackBar.showError(
-        message: 'Failed to submit feedback. Please try again later.',
-      );
+      TSnackBar.showError(message: 'Failed to submit feedback. Please try again later.');
     } finally {
       isSubmitting.value = false;
-      //printnt('Feedback submission process completed');
     }
   }
 

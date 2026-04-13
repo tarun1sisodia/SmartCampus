@@ -2,13 +2,12 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:dio/dio.dart';
+import '../../../../core/api/api_client.dart';
+import '../../../../core/services/offline_sync_service.dart';
 import '../../../models/class_model.dart';
 import '../../../models/student_model.dart';
 import '../../../models/attendance_session_model.dart';
-import '../../../services/class_service.dart';
-import '../../../services/student_service.dart';
-import '../../../services/attendance_service.dart';
 import '../../../common/utils/helpers/snackbar_helper.dart';
 
 class AttendanceController extends GetxController {
@@ -56,57 +55,15 @@ class AttendanceController extends GetxController {
   // load attendance sessions
 
   Future<void> loadAttendanceSessions(String classId) async {
-    await loadAttendanceSessionsPage(classId, reset: true);
-  }
-
-  Future<void> loadAttendanceSessionsPage(
-    String classId, {
-    bool reset = false,
-  }) async {
     try {
-      //printnt('Loading attendance sessions for class: $classId');
-      if (reset) {
-        isLoading.value = true;
-        _sessionOffset = 0;
-        hasMoreSessions.value = true;
-      } else {
-        if (isLoading.value ||
-            isLoadingMoreSessions.value ||
-            !hasMoreSessions.value) {
-          return;
-        }
-        isLoadingMoreSessions.value = true;
-      }
-
-      final sessions = await attendanceService.getAttendanceSessions(
-        classId,
-        limit: _sessionPageSize,
-        offset: _sessionOffset,
-      );
-      //printnt('Loaded ${sessions.length} attendance sessions');
-      if (reset) {
-        attendanceSessions.assignAll(sessions);
-      } else {
-        attendanceSessions.addAll(sessions);
-      }
-      _sessionOffset = attendanceSessions.length;
-      hasMoreSessions.value = sessions.length == _sessionPageSize;
-
-      if (reset) {
-        await loadStudentsForClass();
-      }
-    } catch (e, stackTrace) {
-      Sentry.captureException(e, stackTrace: stackTrace);
-      //printnt('Error loading attendance sessions: $e');
-      TSnackBar.showError(
-        message: 'Failed to load attendance sessions: ${e.toString()}',
-      );
+      isLoading.value = true;
+      final response = await ApiClient.dio.get('/attendance/sessions?classId=$classId');
+      final data = response.data['data'] as List;
+      attendanceSessions.assignAll(data.map((s) => AttendanceSessionModel.fromJson(s)).toList());
+    } catch (e) {
+      TSnackBar.showError(message: 'Failed to load sessions: $e');
     } finally {
-      if (reset) {
-        isLoading.value = false;
-      } else {
-        isLoadingMoreSessions.value = false;
-      }
+      isLoading.value = false;
     }
   }
 
@@ -296,59 +253,29 @@ class AttendanceController extends GetxController {
   // the submitAttendance method
 
   Future<void> submitAttendance() async {
+    final payload = {
+      'sessionId': currentSessionId.value,
+      'attendance': students.map((s) => {
+        'studentId': s.id,
+        'status': s.attendanceStatus ?? 'absent',
+        'remarks': '',
+      }).toList(),
+    };
+
     try {
       isLoading.value = true;
-
-      if (currentSessionId.value.isEmpty) {
-        //printnt('No session selected, cannot submit attendance');
-        TSnackBar.showError(message: 'No session selected');
-        return;
+      await ApiClient.dio.post('/attendance/mark', data: payload);
+      TSnackBar.showSuccess(message: 'Attendance submitted successfully');
+      Get.back();
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.connectionTimeout || e.type == DioExceptionType.unknown) {
+        // Save to offline queue
+        await OfflineSyncService.addPendingAttendance(payload);
+        TSnackBar.showInfo(message: 'Offline: Attendance queued for sync');
+        Get.back();
+      } else {
+        TSnackBar.showError(message: 'Submission failed: ${e.response?.data['message'] ?? e.message}');
       }
-
-      //printnt('Submitting attendance for session: ${currentSessionId.value}');
-
-      // Prepare attendance records
-      final records = students
-          .map(
-            (student) => {
-              'student_id': student.id,
-              'status': student.attendanceStatus ?? 'absent',
-              'remarks': '',
-            },
-          )
-          .toList();
-
-      //printnt('Submitting ${records.length} attendance records');
-
-      // Submit attendance records
-      await attendanceService.submitBulkAttendance(
-        sessionId: currentSessionId.value,
-        records: records,
-      );
-
-      // await allSessionsController.closeSession(currentSessionId.value);
-      // Show success message and navigate back
-      TSnackBar.showSuccess(
-        message: 'Attendance submitted and session closed successfully',
-        title: 'Success',
-      );
-      if (Get.context != null) {
-        Navigator.of(Get.context!).pop();
-      }
-
-      // Close the session after submitting attendance
-      await attendanceService.closeAttendanceSession(currentSessionId.value);
-
-      // Reload the attendance sessions to reflect the updated status
-      if (selectedClass.value != null) {
-        await loadAttendanceSessions(selectedClass.value!.id);
-      }
-    } catch (e, stackTrace) {
-      Sentry.captureException(e, stackTrace: stackTrace);
-      //printnt('Error submitting attendance: $e');
-      TSnackBar.showError(
-        message: 'Failed to submit attendance: ${e.toString()}',
-      );
     } finally {
       isLoading.value = false;
     }

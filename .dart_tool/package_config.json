@@ -314,12 +314,6 @@
       "languageVersion": "2.12"
     },
     {
-      "name": "flutter_inset_shadow",
-      "rootUri": "file:///home/shit/.pub-cache/hosted/pub.dev/flutter_inset_shadow-2.0.3",
-      "packageUri": "lib/",
-      "languageVersion": "2.14"
-    },
-    {
       "name": "flutter_launcher_icons",
       "rootUri": "file:///home/shit/.pub-cache/hosted/pub.dev/flutter_launcher_icons-0.14.4",
       "packageUri": "lib/",

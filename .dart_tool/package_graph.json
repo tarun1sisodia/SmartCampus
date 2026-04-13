@@ -16,7 +16,6 @@
         "file_picker",
         "flutter",
         "flutter_dotenv",
-        "flutter_inset_shadow",
         "flutter_slidable",
         "get",
         "get_storage",
@@ -133,13 +132,6 @@
         "stream_channel",
         "test_api",
         "vector_math"
-      ]
-    },
-    {
-      "name": "flutter_inset_shadow",
-      "version": "2.0.3",
-      "dependencies": [
-        "flutter"
       ]
     },
     {

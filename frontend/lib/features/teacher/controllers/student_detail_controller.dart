@@ -1,20 +1,15 @@
 import 'dart:io';
-
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
-
+import 'package:dio/dio.dart';
+import '../../../../core/api/api_client.dart';
 import '../../../common/utils/helpers/snackbar_helper.dart';
 import '../../../models/class_model.dart';
 import '../../../models/student_model.dart';
-import '../../../services/attendance_service.dart';
-import '../../../services/class_service.dart';
-import '../../../services/student_service.dart';
 
 class StudentDetailController extends GetxController {
-  final attendanceService = AttendanceService();
-  final classService = ClassService();
-  final studentService = StudentService();
+  // Removed AttendanceService, ClassService, and StudentService dependencies
 
   final isLoading = false.obs;
   final student = Rxn<StudentModel>();
@@ -42,60 +37,27 @@ class StudentDetailController extends GetxController {
 
   // Load student data
   Future<void> loadStudentData([String? studentId, String? classId]) async {
-    ///print('Loading student data: studentId=$studentId, classId=$classId');
     try {
       isLoading.value = true;
-
       final studentIdToUse = studentId ?? student.value?.id;
-      final classIdToUse = classId ?? classModel.value?.id;
+      if (studentIdToUse == null) return;
 
-      if (studentIdToUse == null || classIdToUse == null) {
-        ///print('Error: Student or class information is missing');
-        TSnackBar.showError(message: 'Student or class information is missing');
-        return;
-      }
-
-      // Load class details
-      ///print('Fetching class details for classId=$classIdToUse');
-      final classDetails = await classService.getClassById(classIdToUse);
-      classModel.value = classDetails;
-
-      ///print('Class details loaded: ${classDetails.toJson()}');
-
-      // Load attendance statistics
-      ///print('Fetching attendance stats for studentId=$studentIdToUse, classId=$classIdToUse');
-      final stats = await attendanceService.getAttendanceStatsForStudent(
-        classId: classIdToUse,
-        studentId: studentIdToUse,
-      );
-
-      totalSessions.value = stats['totalSessions'] ?? 0;
-      presentCount.value = stats['presentCount'] ?? 0;
-      absentCount.value = stats['absentCount'] ?? 0;
-      lateCount.value = stats['lateCount'] ?? 0;
-      attendancePercentage.value = stats['attendancePercentage'] ?? 0.0;
-
-      ///print('Attendance stats loaded: $stats');
-
-      // Load attendance history
-      ///print('Fetching attendance history for studentId=$studentIdToUse, classId=$classIdToUse');
-      final history = await attendanceService.getStudentAttendanceHistory(
-        classId: classIdToUse,
-        studentId: studentIdToUse,
-      );
-
-      attendanceHistory.assignAll(history);
-
-      ///print('Attendance history loaded: $history');
+      final response = await ApiClient.dio.get('/attendance/student/$studentIdToUse');
+      final data = response.data['data'];
+      
+      totalSessions.value = data['totalSessions'] ?? 0;
+      presentCount.value = data['presentCount'] ?? 0;
+      absentCount.value = data['absentCount'] ?? 0;
+      lateCount.value = data['lateCount'] ?? 0;
+      attendancePercentage.value = (data['attendancePercentage'] ?? 0.0).toDouble();
+      
+      // Assume historical records are included or fetch separately
+      attendanceHistory.assignAll(List<Map<String, dynamic>>.from(data['history'] ?? []));
     } catch (e, stackTrace) {
       await Sentry.captureException(e, stackTrace: stackTrace);
-      ///print('Error loading student data: ${e.toString()}');
-      TSnackBar.showError(
-          message: 'Failed to load student data: ${e.toString()}');
+      TSnackBar.showError(message: 'Failed to load student data: $e');
     } finally {
       isLoading.value = false;
-
-      ///print('Finished loading student data');
     }
   }
 
@@ -164,42 +126,19 @@ class StudentDetailController extends GetxController {
   // Method to update student image
   Future<void> updateStudentImage() async {
     try {
-      if (selectedImage.value == null || student.value == null) {
-        ///print('No image selected or student information is missing');
-        TSnackBar.showError(
-            message: 'No image selected or student information is missing');
-        return;
-      }
-
+      if (selectedImage.value == null || student.value == null) return;
       isImageUploading.value = true;
 
-      final imageUrl = await studentService.updateStudentImage(
-        studentId: student.value!.id,
-        imageFile: selectedImage.value!,
-        rollNumber: student.value!.rollNumber,
-      );
+      final formData = FormData.fromMap({
+        'photo': await MultipartFile.fromFile(selectedImage.value!.path, filename: 'student.jpg'),
+      });
 
-      if (imageUrl != null) {
-        // the student model with the new image URL
-        student.value = StudentModel(
-          id: student.value!.id,
-          name: student.value!.name,
-          rollNumber: student.value!.rollNumber,
-          classId: student.value!.classId,
-          imageUrl: imageUrl,
-          createdAt: student.value!.createdAt,
-          updatedAt: DateTime.now(),
-          attendanceStatus: student.value!.attendanceStatus,
-        );
-
-        selectedImage.value = null;
-        TSnackBar.showSuccess(message: 'Student image updated successfully');
-      }
+      await ApiClient.dio.post('/students/${student.value!.id}/photo', data: formData);
+      await loadStudentData();
+      TSnackBar.showSuccess(message: 'Student image updated successfully');
     } catch (e, stackTrace) {
       await Sentry.captureException(e, stackTrace: stackTrace);
-      ///print('Error updating student image: ${e.toString()}');
-      TSnackBar.showError(
-          message: 'Failed to update student image: ${e.toString()}');
+      TSnackBar.showError(message: 'Upload failed: $e');
     } finally {
       isImageUploading.value = false;
     }
