@@ -5,7 +5,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../common/widgets/student_avatar.dart';
 import '../../../models/class_model.dart';
-import '../../../common/utils/constants/sized.dart';
 import '../../../common/utils/constants/colors.dart';
 import '../controllers/student_controller.dart';
 import '../../../common/utils/helpers/snackbar_helper.dart';

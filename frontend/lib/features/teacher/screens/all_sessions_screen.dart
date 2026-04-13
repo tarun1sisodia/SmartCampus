@@ -9,9 +9,7 @@ import '../../../common/utils/helpers/snackbar_helper.dart';
 import '../controllers/all_sessions_controller.dart';
 import '../controllers/attendance_controller.dart';
 import '../screens/carousel_attendance_screen.dart';
-import '../../../common/utils/constants/colors.dart';
 import '../../../common/utils/constants/sized.dart';
-import '../../../common/utils/helpers/helper_function.dart';
 
 class AllSessionsScreen extends StatelessWidget {
   final attendanceController = Get.put(AttendanceController());

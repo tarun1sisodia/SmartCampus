@@ -419,7 +419,7 @@ class ClassListScreen extends StatelessWidget {
                 children: [
                   DropdownButtonFormField<SubjectModel>(
                     decoration: const InputDecoration(labelText: 'SUBJECT'),
-                    value: classController.selectedSubject.value,
+                    initialValue: classController.selectedSubject.value,
                     items: classController.subjects.map((s) => DropdownMenuItem(value: s, child: Text(s.name.toUpperCase()))).toList(),
                     onChanged: (v) {
                       classController.selectedSubject.value = v;
@@ -429,7 +429,7 @@ class ClassListScreen extends StatelessWidget {
                   const SizedBox(height: 16),
                   DropdownButtonFormField<dynamic>(
                     decoration: const InputDecoration(labelText: 'COURSE'),
-                    value: classController.selectedCourse.value,
+                    initialValue: classController.selectedCourse.value,
                     items: classController.courses.map((c) => DropdownMenuItem(value: c, child: Text(c.name.toString().toUpperCase()))).toList(),
                     onChanged: (v) {
                       classController.selectedCourse.value = v;

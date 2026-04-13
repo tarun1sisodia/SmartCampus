@@ -4,11 +4,8 @@ import 'package:iconsax/iconsax.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../app/routes/app_routes.dart';
 import '../../../common/utils/constants/colors.dart';
-import '../../../common/utils/constants/text_strings.dart';
-import '../../../common/utils/device/device_utility.dart';
 import '../../../common/widgets/student_avatar.dart';
 import '../controllers/attendance_controller.dart';
-import '../../../common/utils/constants/sized.dart';
 import '../../../common/utils/helpers/snackbar_helper.dart';
 
 class MarkAttendanceScreen extends StatelessWidget {
