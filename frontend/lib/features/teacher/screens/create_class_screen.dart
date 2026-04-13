@@ -150,7 +150,7 @@ class CreateClassScreen extends StatelessWidget {
         Text(label, style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 10, color: TColors.slate600, letterSpacing: 1.0)),
         const SizedBox(height: 8),
         DropdownButtonFormField<T>(
-          value: value,
+          initialValue: value,
           items: items,
           onChanged: onChanged,
           icon: const Icon(Iconsax.arrow_down_1, color: TColors.executiveNavy),

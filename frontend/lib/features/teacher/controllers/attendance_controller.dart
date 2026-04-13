@@ -25,7 +25,7 @@ class AttendanceController extends GetxController {
   final attendanceSessions = <AttendanceSessionModel>[].obs;
   final hasMoreSessions = true.obs;
   final isLoadingMoreSessions = false.obs;
-  int _sessionOffset = 0;
+  final int _sessionOffset = 0;
 
   final hasMoreStudents = true.obs;
   final isLoadingMoreStudents = false.obs;

@@ -28,7 +28,8 @@ class NavigationMenu extends StatelessWidget {
       future: SecureStorageService.getAccessToken(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(body: Center(child: CircularProgressIndicator()));
+          return const Scaffold(
+              body: Center(child: CircularProgressIndicator()));
         }
 
         final token = snapshot.data;
@@ -38,9 +39,14 @@ class NavigationMenu extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Iconsax.user_minus, size: 64, color: Theme.of(context).primaryColor),
+                  Icon(Iconsax.user_minus,
+                      size: 64, color: Theme.of(context).primaryColor),
                   const SizedBox(height: 24),
-                  Text('SESSION EXPIRED', style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w900)),
+                  Text('SESSION EXPIRED',
+                      style: Theme.of(context)
+                          .textTheme
+                          .headlineMedium
+                          ?.copyWith(fontWeight: FontWeight.w900)),
                   const SizedBox(height: 32),
                   SizedBox(
                     width: 200,
@@ -61,61 +67,62 @@ class NavigationMenu extends StatelessWidget {
     );
   }
 
-  Widget _buildMainScaffold(BuildContext context, bool dark, NavigationController controller) {
-      bottomNavigationBar: Obx(() {
-        //print('Building bottom navigation bar...');
-        return Container(
-          height: 80,
-          decoration: BoxDecoration(
-            color: dark
-                ? Theme.of(context).scaffoldBackgroundColor
-                : Theme.of(context).scaffoldBackgroundColor,
-            border: Border(
-              top: BorderSide(
-                color: dark ? TColors.slate700 : TColors.slate400,
-                width: 1.5,
-              ),
+  Widget _buildMainScaffold(
+      BuildContext context, bool dark, NavigationController controller) {
+    bottomNavigationBar:
+    Obx(() {
+      //print('Building bottom navigation bar...');
+      return Container(
+        height: 80,
+        decoration: BoxDecoration(
+          color: dark
+              ? Theme.of(context).scaffoldBackgroundColor
+              : Theme.of(context).scaffoldBackgroundColor,
+          border: Border(
+            top: BorderSide(
+              color: dark ? TColors.slate700 : TColors.slate400,
+              width: 1.5,
             ),
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildNavItem(context, 0, Iconsax.home, 'Home', dark, controller),
-              _buildNavItem(
-                context,
-                1,
-                Iconsax.book_1,
-                'Classes',
-                dark,
-                controller,
-              ),
-              _buildNavItem(
-                context,
-                2,
-                Iconsax.timer_1,
-                'Sessions',
-                dark,
-                controller,
-              ),
-              _buildNavItem(
-                context,
-                3,
-                Iconsax.calendar,
-                'Calendar',
-                dark,
-                controller,
-              ),
-            ],
-          ),
-        );
-      }),
-      body: Obx(() {
-        //print(
-        // 'Displaying screen with index: ${controller.selectedIndex.value}');
-        return controller.screens[controller.selectedIndex.value];
-      }),
-    );
-    );
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            _buildNavItem(context, 0, Iconsax.home, 'Home', dark, controller),
+            _buildNavItem(
+              context,
+              1,
+              Iconsax.book_1,
+              'Classes',
+              dark,
+              controller,
+            ),
+            _buildNavItem(
+              context,
+              2,
+              Iconsax.timer_1,
+              'Sessions',
+              dark,
+              controller,
+            ),
+            _buildNavItem(
+              context,
+              3,
+              Iconsax.calendar,
+              'Calendar',
+              dark,
+              controller,
+            ),
+          ],
+        ),
+      );
+    });
+    body:
+    Obx(() {
+      //print(
+      // 'Displaying screen with index: ${controller.selectedIndex.value}');
+      return controller.screens[controller.selectedIndex.value];
+    });
   }
 
   Widget _buildNavItem(
@@ -138,10 +145,10 @@ class NavigationMenu extends StatelessWidget {
       child: Container(
         width: 80,
         decoration: BoxDecoration(
-          color: isSelected 
-              ? (dark ? TColors.slate800 : TColors.blue100) 
+          color: isSelected
+              ? (dark ? TColors.slate800 : TColors.blue100)
               : Colors.transparent,
-          border: isSelected 
+          border: isSelected
               ? Border.all(color: Theme.of(context).primaryColor, width: 1.5)
               : null,
           borderRadius: BorderRadius.circular(4),
@@ -180,7 +187,6 @@ class NavigationMenu extends StatelessWidget {
         ),
       ),
     );
-
   }
 }
 

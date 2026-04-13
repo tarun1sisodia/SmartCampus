@@ -5,6 +5,7 @@ plugins {
     id("com.android.application")
     id("kotlin-android")
     id("dev.flutter.flutter-gradle-plugin")
+    id("com.google.gms.google-services")
 }
 
 // Simple keystore properties loading
@@ -16,8 +17,8 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace = "com.smartcampus.attendance"
-    compileSdk = 36
-    ndkVersion = "28.2.13676358"
+    compileSdk = 35
+    ndkVersion = "27.0.12077973"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -30,8 +31,8 @@ android {
 
     defaultConfig {
         applicationId = "com.smartcampus.attendance"
-        minSdk = flutter.minSdkVersion
-        targetSdk = 36
+        minSdk = 24
+        targetSdk = 35
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
@@ -84,6 +85,7 @@ dependencies {
     implementation("com.google.android.play:app-update-ktx:2.1.0")
     implementation("com.google.android.play:review:2.0.1")
     implementation("com.google.android.play:review-ktx:2.0.1")
+    implementation("com.google.android.play:core-common:2.0.4")
     
     // Explicitly add Google Play Services Tasks to ensure com.google.android.play.core.tasks.* compatibility
     implementation("com.google.android.gms:play-services-tasks:18.2.0")

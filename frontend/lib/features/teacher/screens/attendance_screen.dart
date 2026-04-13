@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
-import '../../../app/bindings/app_bindings.dart';
 import '../../../common/utils/constants/colors.dart';
 import '../../../common/utils/constants/text_strings.dart';
 import '../../../common/utils/helpers/snackbar_helper.dart';
 import '../controllers/attendance_controller.dart';
 import '../../../models/class_model.dart';
-import '../../../common/utils/constants/sized.dart';
 import 'carousel_attendance_screen.dart';
 import 'mark_attendance_screen.dart';
 

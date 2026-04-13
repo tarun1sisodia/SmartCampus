@@ -9,7 +9,6 @@ import '../../../common/utils/helpers/helper_function.dart';
 import '../../../app/routes/app_routes.dart';
 import '../../../navigation_menu.dart';
 import '../../../services/storage_service.dart';
-import '../../../services/biometric_auth_service.dart';
 import '../../../core/services/auth_controller.dart';
 import 'dart:io';
 

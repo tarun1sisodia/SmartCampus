@@ -1,7 +1,5 @@
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart';
-import 'package:intl/intl.dart';
-import 'package:dio/dio.dart';
 import '../../../../core/api/api_client.dart';
 import '../../../common/utils/helpers/snackbar_helper.dart';
 import '../../../models/attendance_session_model.dart';

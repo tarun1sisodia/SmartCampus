@@ -32,26 +32,29 @@ class CustomButton extends StatelessWidget {
             ),
           )
         : Text(
-            text,
+            text.toUpperCase(),
             style: TextStyle(
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w900,
               color: textColor ?? Colors.white,
+              letterSpacing: 1.0,
             ),
           );
 
     return SizedBox(
-      width: isFullWidth ? double.infinity : null,
-      height: 50,
-      child: ElevatedButton(
-        onPressed: isLoading ? null : onPressed,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: color ?? theme.primaryColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+        width: isFullWidth ? double.infinity : null,
+        height: 50,
+        child: ElevatedButton(
+          onPressed: isLoading ? null : onPressed,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: color ?? theme.primaryColor,
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(4),
+              side: const BorderSide(color: Colors.white, width: 1.5),
+            ),
           ),
+          child: child,
         ),
-        child: child,
-      ),
-    );
+      );
   }
 }

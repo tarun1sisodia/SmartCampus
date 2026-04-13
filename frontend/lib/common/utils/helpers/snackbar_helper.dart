@@ -117,7 +117,7 @@ class TSnackBar {
                     onPressed: onActionPressed,
                   )
                 : null,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
             margin: const EdgeInsets.all(10),
             duration: duration,
           ),

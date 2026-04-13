@@ -12,6 +12,7 @@ class TColors {
   static const Color executiveNavy = Color(0xFF1E3A8A); // blue-900
   static const Color deepOceanCyan = Color(0xFF22D3EE); // cyan-400
   static const Color slate50 = Color(0xFFF8FAFC);
+  static const Color slate100 = Color(0xFFF1F5F9);
   static const Color slate200 = Color(0xFFE2E8F0);
   static const Color slate300 = Color(0xFFCBD5E1);
   static const Color slate400 = Color(0xFF94A3B8);
@@ -21,18 +22,20 @@ class TColors {
   static const Color slate800 = Color(0xFF1E293B);
   static const Color slate900 = Color(0xFF0F172A);
   static const Color slate950 = Color(0xFF020617);
+  static const Color slate1000 = Color(0xFF020617);
   static const Color blue100 = Color(0xFFDBEAFE);
   static const Color rose500 = Color(0xFFF43F5E); // Danger action
+  static const Color cyan400 = Color(0xFF22D3EE);
 
   // PRIMARY COLOR PALETTE - Core brand colors
-  static const Color primary = executiveNavy;
-  static const Color primaryDark = slate900;
-  static const Color primaryLight = blue100;
+  static const Color primary = Color(0xFF3B82F6);
+  static const Color primaryDark = Color(0xFF2563EB);
+  static const Color primaryLight = Color(0xFFDBEAFE);
 
   // SECONDARY COLOR PALETTE - Complementary colors
-  static const Color secondary = deepOceanCyan;
-  static const Color secondaryDark = Color(0xFF0891B2);
-  static const Color secondaryLight = Color(0xFF67E8F9);
+  static const Color secondary = Color(0xFF6366F1);
+  static const Color secondaryDark = Color(0xFF4F46E5);
+  static const Color secondaryLight = Color(0xFFA5B4FC);
 
   // ACCENT COLOR - For highlights and emphasis
   static const Color accent = deepOceanCyan;

@@ -1,4 +1,3 @@
-import '../../features/teacher/controllers/all_sessions_controller.dart';
 import '../../features/teacher/controllers/feedback_controller.dart';
 import '../../features/teacher/controllers/teacher_profile_controller.dart';
 
@@ -10,7 +9,6 @@ import '../../features/teacher/controllers/attendance_controller.dart';
 import '../../features/teacher/controllers/attendance_reports_controller.dart';
 import '../../features/teacher/controllers/carousel_attendance_controller.dart';
 import '../../features/teacher/controllers/dashboard_controller.dart';
-import '../../features/teacher/controllers/student_detail_controller.dart';
 import 'package:get/get.dart';
 
 import '../../navigation_menu.dart';

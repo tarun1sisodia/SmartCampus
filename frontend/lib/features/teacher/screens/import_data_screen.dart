@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../../common/utils/constants/colors.dart';
-import '../../../common/utils/constants/sized.dart';
 import '../../../common/utils/helpers/snackbar_helper.dart';
 
 class ImportDataScreen extends StatelessWidget {

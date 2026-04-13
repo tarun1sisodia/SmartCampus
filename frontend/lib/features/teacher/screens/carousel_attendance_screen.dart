@@ -3,14 +3,12 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import '../../../common/utils/constants/colors.dart';
-import '../../../common/utils/constants/text_strings.dart';
 import '../../../common/utils/device/device_utility.dart';
 import '../../../common/utils/helpers/snackbar_helper.dart';
 import '../controllers/carousel_attendance_controller.dart';
 import '../widgets/session_timer_widget.dart';
 import '../widgets/swipeable_student_card.dart';
 import '../widgets/attendance_action_buttons.dart';
-import '../../../common/utils/constants/sized.dart';
 import 'class_list_screen.dart';
 
 class CarouselAttendanceScreen extends StatelessWidget {
