@@ -6,8 +6,6 @@ import '../../../app/routes/app_routes.dart';
 import '../../../app/theme/theme_configs.dart';
 import '../../../app/theme/theme_controller.dart';
 import '../../../common/utils/constants/colors.dart';
-import '../../../common/utils/constants/sized.dart';
-import '../../../common/utils/constants/text_strings.dart';
 import '../../../common/utils/helpers/snackbar_helper.dart';
 import '../../../common/widgets/sharp_toggle.dart';
 import '../../../services/auth_service.dart';

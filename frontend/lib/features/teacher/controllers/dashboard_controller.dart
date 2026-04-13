@@ -69,8 +69,9 @@ class DashboardController extends GetxController {
   void initializeGreeting() {
     final hour = DateTime.now().hour;
     String baseGreeting = 'Good Evening';
-    if (hour < 12) baseGreeting = 'Good Morning';
-    else if (hour < 17) baseGreeting = 'Good Afternoon';
+    if (hour < 12) {
+      baseGreeting = 'Good Morning';
+    } else if (hour < 17) baseGreeting = 'Good Afternoon';
 
     final messages = ['Welcome back', 'Great to see you again', 'Hope classes go well'];
     final message = messages[Random().nextInt(messages.length)];

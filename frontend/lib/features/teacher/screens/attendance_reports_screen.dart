@@ -155,7 +155,7 @@ class AttendanceReportsScreen extends StatelessWidget {
               ),
               isExpanded: true,
               icon: const Icon(Iconsax.arrow_down_1, color: TColors.executiveNavy),
-              value: reportsController.selectedClassId.value,
+              initialValue: reportsController.selectedClassId.value,
               items: reportsController.classes.map((classItem) {
                 return DropdownMenuItem<String>(
                   value: classItem.id,

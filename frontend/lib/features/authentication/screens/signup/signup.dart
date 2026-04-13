@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../common/utils/constants/colors.dart';
 import '../../../../common/utils/constants/sized.dart';
 import '../../../../common/utils/constants/text_strings.dart';
 import 'singup_widgets/signup_form.dart';

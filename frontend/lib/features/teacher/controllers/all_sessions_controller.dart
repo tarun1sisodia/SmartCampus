@@ -31,7 +31,7 @@ import 'dart:async';
   // Pagination
   final hasMoreSessions = true.obs;
   final isLoadingMore = false.obs;
-  static const int _pageSize = 20;
+  const int _pageSize = 20;
   int _offset = 0;
   final scrollController = ScrollController();
 

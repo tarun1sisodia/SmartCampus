@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import '../../../../common/utils/constants/colors.dart';
 
 class StatsOverview extends StatelessWidget {
   final int totalClasses;
@@ -16,48 +17,43 @@ class StatsOverview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Colors.blue.shade700, Colors.blue.shade400],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.blue.withOpacity(0.3),
-            blurRadius: 10,
-            offset: const Offset(0, 5),
-          ),
-        ],
+        color: TColors.slate900,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: TColors.executiveNavy, width: 2.0),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildStat('Total Classes', totalClasses.toString()),
-              const SizedBox(height: 16),
-              _buildStat('Total Students', totalStudents.toString()),
-            ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildStat('TOTAL CLASSES', totalClasses.toString()),
+                const SizedBox(height: 24),
+                _buildStat('TOTAL STUDENTS', totalStudents.toString()),
+              ],
+            ),
           ),
           CircularPercentIndicator(
-            radius: 50.0,
-            lineWidth: 10.0,
+            radius: 54.0,
+            lineWidth: 16.0,
             percent: averageAttendance,
             center: Text(
               "${(averageAttendance * 100).toInt()}%",
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white),
+              style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 22, color: Colors.white),
             ),
-            footer: const Text(
-              "Avg Attendance",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Colors.white70),
+            footer: const Padding(
+              padding: EdgeInsets.only(top: 8.0),
+              child: Text(
+                "AVG ATTENDANCE",
+                style: TextStyle(fontWeight: FontWeight.w900, fontSize: 10, color: Colors.white70, letterSpacing: 0.5),
+              ),
             ),
-            circularStrokeCap: CircularStrokeCap.round,
-            progressColor: Colors.white,
-            backgroundColor: Colors.white24,
+            circularStrokeCap: CircularStrokeCap.butt, //butt is sharp
+            progressColor: TColors.cyan400,
+            backgroundColor: Colors.white.withOpacity(0.1),
             animation: true,
           ),
         ],
@@ -69,8 +65,9 @@ class StatsOverview extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(color: Colors.white70, fontSize: 14)),
-        Text(value, style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
+        Text(label, style: const TextStyle(color: Colors.white70, fontSize: 10, fontWeight: FontWeight.w800, letterSpacing: 1.0)),
+        const SizedBox(height: 4),
+        Text(value, style: const TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.w900, letterSpacing: -0.5)),
       ],
     );
   }

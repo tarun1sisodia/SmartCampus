@@ -142,7 +142,7 @@ class DashboardScreen extends StatelessWidget {
                     attendance: "ATTENDANCE: ${stats != null ? (stats['averageAttendance'] as double).toStringAsFixed(1) : '0.0'}%",
                   ),
                 );
-              }).toList(),
+              }),
             ],
           ),
         ),
@@ -221,7 +221,7 @@ class DashboardScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "HI, ${user?.name?.split(' ').first.toUpperCase() ?? 'TARUN'}",
+                  "HI, ${user?.name.split(' ').first.toUpperCase() ?? 'TARUN'}",
                   style: const TextStyle(
                     color: TColors.slate900,
                     fontSize: 22,

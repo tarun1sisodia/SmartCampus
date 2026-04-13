@@ -272,134 +272,112 @@ class AllSessionsScreen extends StatelessWidget {
                   final isSelected = allSessionsController.selectedSessionIds
                       .contains(session.id);
 
-                  return GestureDetector(
-                    onLongPress: () {
-                      // Enter selection mode on long press
-                      if (!allSessionsController.isSelectionMode.value) {
-                        allSessionsController.toggleSelectionMode(session.id);
-                      }
-                    },
-                    onTap: () {
-                      // Toggle selection if in selection mode
-                      if (allSessionsController.isSelectionMode.value) {
-                        allSessionsController
-                            .toggleSessionSelection(session.id);
-                      }
-                    },
-                    child: Card(
-                      margin: const EdgeInsets.only(
-                        bottom: TSizes.spaceBtwItems,
-                      ),
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                          TSizes.cardRadiusMd,
+                    return GestureDetector(
+                      onLongPress: () {
+                        if (!allSessionsController.isSelectionMode.value) {
+                          allSessionsController.toggleSelectionMode(session.id);
+                        }
+                      },
+                      onTap: () {
+                        if (allSessionsController.isSelectionMode.value) {
+                          allSessionsController
+                              .toggleSessionSelection(session.id);
+                        }
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.only(
+                          bottom: TSizes.spaceBtwItems,
                         ),
-                        // border when selected
-                        side: isSelected
-                            ? BorderSide(
-                                color: Theme.of(context).colorScheme.primary,
-                                width: 2,
-                              )
-                            : BorderSide(
-                                color: Theme.of(context).colorScheme.outlineVariant,
-                                width: 1.5,
-                              ),
-                      ),
-                      child: ExpansionTile(
-                        // Disable expansion when in selection mode
-                        onExpansionChanged:
-                            allSessionsController.isSelectionMode.value
-                                ? (_) => false
-                                : null,
-                        leading: Stack(
-                          children: [
-                            CircleAvatar(
-                              backgroundColor: Theme.of(context).colorScheme.primary,
-                              child: Text(
-                                DateFormat('d').format(session.date),
-                                style: TextStyle(
-                                  color: Theme.of(context).colorScheme.onPrimary,
-                                  fontWeight: FontWeight.bold,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(
+                            color: isSelected
+                                ? TColors.executiveNavy
+                                : TColors.slate400,
+                            width: isSelected ? 2.5 : 1.5,
+                          ),
+                        ),
+                        child: ExpansionTile(
+                          onExpansionChanged:
+                              allSessionsController.isSelectionMode.value
+                                  ? (_) => false
+                                  : null,
+                          leading: Stack(
+                            children: [
+                              Container(
+                                width: 44,
+                                height: 44,
+                                decoration: BoxDecoration(
+                                  color: TColors.blue100,
+                                  borderRadius: BorderRadius.circular(4),
+                                  border: Border.all(color: TColors.executiveNavy, width: 1.5),
+                                ),
+                                alignment: Alignment.center,
+                                child: Text(
+                                  DateFormat('d').format(session.date),
+                                  style: const TextStyle(
+                                    color: TColors.executiveNavy,
+                                    fontWeight: FontWeight.w900,
+                                    fontSize: 18,
+                                  ),
                                 ),
                               ),
-                            ),
-                            // Status indicator dot
-                            Builder(builder: (context) {
-                              final isRunning = allSessionsController
-                                  .isSessionRunning(session);
+                              Builder(builder: (context) {
+                                final isRunning = allSessionsController
+                                    .isSessionRunning(session);
 
-                              final isClosed = allSessionsController
-                                  .isSessionClosed(session);
-
-                              return Positioned(
-                                right: 0,
-                                bottom: 0,
-                                child: Container(
-                                  width: 10,
-                                  height: 10,
-                                  decoration: BoxDecoration(
-                                    color: isClosed
-                                        ? Colors.red
-                                        : (isRunning
-                                            ? Colors.green
-                                            : Colors.red),
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                      color: Theme.of(context).cardTheme.color ?? Colors.white,
-                                      width: 1.5,
+                                return Positioned(
+                                  right: 0,
+                                  bottom: 0,
+                                  child: Container(
+                                    width: 12,
+                                    height: 12,
+                                    decoration: BoxDecoration(
+                                      color: isRunning ? const Color(0xFF10B981) : const Color(0xFFF43F5E),
+                                      borderRadius: BorderRadius.circular(2),
+                                      border: Border.all(color: Colors.white, width: 1.5),
                                     ),
                                   ),
+                                );
+                              }),
+                            ],
+                          ),
+                          title: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  (session.className ?? 'UNKNOWN CLASS').toUpperCase(),
+                                  style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 13, letterSpacing: -0.5, color: TColors.slate900),
                                 ),
-                              );
-                            }),
-                          ],
-                        ),
-                        title: Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                session.className ?? 'Unknown Class',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleMedium
-                                    ?.copyWith(fontWeight: FontWeight.bold),
                               ),
-                            ),
-                            if (allSessionsController.isSessionClosed(session))
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                  vertical: 2,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.red,
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: const Text(
-                                  'Closed',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.bold,
+                              if (allSessionsController.isSessionClosed(session))
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFF43F5E),
+                                    borderRadius: BorderRadius.circular(2),
+                                  ),
+                                  child: const Text(
+                                    'CLOSED',
+                                    style: TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.w900),
                                   ),
                                 ),
+                            ],
+                          ),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                (session.subjectName ?? 'UNKNOWN SUBJECT').toUpperCase(),
+                                style: const TextStyle(color: TColors.slate600, fontWeight: FontWeight.w800, fontSize: 11, letterSpacing: 0.5),
                               ),
-                          ],
-                        ),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              session.subjectName ?? 'Unknown Subject',
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            ),
-                            Text(
-                              formattedDate,
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ],
-                        ),
+                              Text(
+                                DateFormat('EEE, MMM d, yyyy').format(session.date).toUpperCase(),
+                                style: const TextStyle(color: TColors.slate500, fontWeight: FontWeight.w700, fontSize: 10),
+                              ),
+                            ],
+                          ),
                         children: [
                           Padding(
                             padding: const EdgeInsets.all(TSizes.md),

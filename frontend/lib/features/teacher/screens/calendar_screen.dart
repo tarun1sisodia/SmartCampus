@@ -72,20 +72,20 @@ class CalendarScreen extends StatelessWidget {
       if (activeCount == 0) return const SizedBox.shrink();
 
       return Container(
-        margin: const EdgeInsets.all(8.0),
-        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
+        margin: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
         decoration: BoxDecoration(
-          color: Colors.green.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(TSizes.borderRadiusMd),
-          border: Border.all(color: Colors.green.withValues(alpha: 0.3)),
+          color: const Color(0xFFECFDF5), // emerald-50
+          borderRadius: BorderRadius.circular(4),
+          border: Border.all(color: const Color(0xFF10B981), width: 1.5),
         ),
         child: Row(
           children: [
-            const CircleAvatar(radius: 4, backgroundColor: Colors.green),
-            const SizedBox(width: 10),
+            Container(width: 8, height: 8, decoration: BoxDecoration(color: const Color(0xFF10B981), borderRadius: BorderRadius.circular(2))),
+            const SizedBox(width: 12),
             Text(
-              '$activeCount Live ${activeCount == 1 ? 'Session' : 'Sessions'}',
-              style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.green),
+              '$activeCount LIVE ${activeCount == 1 ? 'SESSION' : 'SESSIONS'}',
+              style: const TextStyle(fontWeight: FontWeight.w900, color: Color(0xFF065F46), fontSize: 11, letterSpacing: 0.5),
             ),
           ],
         ),
@@ -94,47 +94,60 @@ class CalendarScreen extends StatelessWidget {
   }
 
   Widget _buildCalendar(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return Obx(() => TableCalendar(
-          firstDay: DateTime.utc(2020, 1, 1),
-          lastDay: DateTime.utc(2030, 12, 31),
-          focusedDay: controller.focusedDay.value,
-          calendarFormat: controller.calendarFormat.value,
-          selectedDayPredicate: (day) => isSameDay(controller.selectedDay.value, day),
-          onDaySelected: (sel, foc) {
-            controller.selectedDay.value = sel;
-            controller.focusedDay.value = foc;
-          },
-          onFormatChanged: (f) => controller.calendarFormat.value = f,
-          onPageChanged: (f) => controller.focusedDay.value = f,
-          eventLoader: (day) => controller.getSessionsForDay(day),
-          calendarStyle: CalendarStyle(
-            markerDecoration: BoxDecoration(color: colorScheme.primary, shape: BoxShape.circle),
-            todayDecoration: BoxDecoration(color: colorScheme.primary.withValues(alpha: 0.2), shape: BoxShape.circle),
-            selectedDecoration: BoxDecoration(color: colorScheme.primary, shape: BoxShape.circle),
-            todayTextStyle: TextStyle(color: colorScheme.primary, fontWeight: FontWeight.bold),
-          ),
-          headerStyle: HeaderStyle(
-            formatButtonTextStyle: TextStyle(color: colorScheme.primary, fontWeight: FontWeight.bold),
-            formatButtonDecoration: BoxDecoration(
-              border: Border.all(color: colorScheme.primary),
-              borderRadius: BorderRadius.circular(12),
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: TColors.slate400, width: 1.5),
+      ),
+      child: Obx(() => TableCalendar(
+            firstDay: DateTime.utc(2020, 1, 1),
+            lastDay: DateTime.utc(2030, 12, 31),
+            focusedDay: controller.focusedDay.value,
+            calendarFormat: controller.calendarFormat.value,
+            selectedDayPredicate: (day) => isSameDay(controller.selectedDay.value, day),
+            onDaySelected: (sel, foc) {
+              controller.selectedDay.value = sel;
+              controller.focusedDay.value = foc;
+            },
+            onFormatChanged: (f) => controller.calendarFormat.value = f,
+            onPageChanged: (f) => controller.focusedDay.value = f,
+            eventLoader: (day) => controller.getSessionsForDay(day),
+            calendarStyle: const CalendarStyle(
+              markerDecoration: BoxDecoration(color: TColors.executiveNavy, borderRadius: BorderRadius.zero),
+              todayDecoration: BoxDecoration(color: TColors.blue100, borderRadius: BorderRadius.zero),
+              selectedDecoration: BoxDecoration(color: TColors.executiveNavy, borderRadius: BorderRadius.zero),
+              todayTextStyle: TextStyle(color: TColors.executiveNavy, fontWeight: FontWeight.w900),
+              markerSize: 4.0,
             ),
-          ),
-        ));
+            headerStyle: const HeaderStyle(
+              titleTextStyle: TextStyle(fontWeight: FontWeight.w900, fontSize: 16),
+              formatButtonTextStyle: TextStyle(color: TColors.executiveNavy, fontWeight: FontWeight.w900, fontSize: 11),
+              formatButtonDecoration: BoxDecoration(
+                border: Border.all(color: TColors.executiveNavy, width: 1.5),
+                borderRadius: BorderRadius.zero,
+              ),
+              formatButtonPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+            ),
+          )),
+    );
   }
 
   Widget _buildSessionsList(BuildContext context) {
     return Obx(() {
       final sessions = controller.getSessionsForDay(controller.selectedDay.value);
       if (sessions.isEmpty) {
-        return const Expanded(child: Center(child: Text('No sessions for this day', style: TextStyle(color: Colors.grey))));
+        return const Expanded(
+          child: Center(
+            child: Text('NO SESSIONS RECORDED FOR THIS DATE', style: TextStyle(color: TColors.slate500, fontWeight: FontWeight.w800, fontSize: 11, letterSpacing: 0.5))
+          ),
+        );
       }
 
       return Expanded(
         child: ListView.builder(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(16),
           itemCount: sessions.length,
           itemBuilder: (context, index) => _buildSessionCard(context, sessions[index]),
         ),
@@ -143,45 +156,47 @@ class CalendarScreen extends StatelessWidget {
   }
 
   Widget _buildSessionCard(BuildContext context, AttendanceSessionModel session) {
-    final colorScheme = Theme.of(context).colorScheme;
     final isActive = controller.isSessionActive(session);
     final isMySession = controller.userClasses.any((cls) => cls.id == session.classId);
 
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(TSizes.cardRadiusMd),
-        side: BorderSide(
-          color: isActive ? Colors.green : (isMySession ? colorScheme.primary : colorScheme.outlineVariant),
-          width: isActive ? 2 : 1,
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(
+          color: isActive ? const Color(0xFF10B981) : (isMySession ? TColors.executiveNavy : TColors.slate400),
+          width: isActive ? 2 : 1.5,
         ),
       ),
       child: ListTile(
         contentPadding: const EdgeInsets.all(16),
         title: Text(
-          session.subjectName ?? 'Subject',
-          style: TextStyle(fontWeight: FontWeight.bold, color: isMySession ? colorScheme.primary : colorScheme.onSurface),
+          (session.subjectName ?? 'SUBJECT').toUpperCase(),
+          style: TextStyle(fontWeight: FontWeight.w900, fontSize: 14, color: isMySession ? TColors.executiveNavy : TColors.slate900, letterSpacing: -0.5),
         ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 8),
-            Text('${session.courseName ?? ""} | Semester ${session.semester ?? "?"} | Section ${session.section ?? "?"}', style: Theme.of(context).textTheme.labelMedium),
-            const SizedBox(height: 6),
-            Row(
-              children: [
-                Icon(Iconsax.clock, size: 14, color: colorScheme.onSurfaceVariant),
-                const SizedBox(width: 4),
-                Text('${session.startTime} - ${session.endTime}', style: Theme.of(context).textTheme.labelSmall),
-              ],
+            Text(
+              '${session.courseName} | SEM ${session.semester} | SEC ${session.section ?? "A"}'.toUpperCase(),
+              style: const TextStyle(fontWeight: FontWeight.w800, color: TColors.slate600, fontSize: 11, letterSpacing: 0.5),
             ),
             const SizedBox(height: 8),
-            _buildBadge(context, isMySession ? 'MY CLASS' : controller.getTeacherNameForSession(session).toUpperCase(), isMySession ? colorScheme.primary : colorScheme.secondary),
+            Row(
+              children: [
+                const Icon(Iconsax.clock, size: 14, color: TColors.slate500),
+                const SizedBox(width: 8),
+                Text('${session.startTime} - ${session.endTime}'.toUpperCase(), style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 10, color: TColors.slate500)),
+              ],
+            ),
+            const SizedBox(height: 12),
+            _buildBadge(context, isMySession ? 'MY CLASS' : controller.getTeacherNameForSession(session).toUpperCase(), isMySession ? TColors.executiveNavy : TColors.slate600),
           ],
         ),
-        trailing: const Icon(Iconsax.arrow_right_3, size: 16),
-        onTap: () => TSnackBar.showInfo(message: 'Session details coming soon!'),
+        trailing: const Icon(Iconsax.arrow_right_3, size: 20, color: TColors.slate900),
+        onTap: () => TSnackBar.showInfo(message: 'SESSION DETAILS VIEW IN DEVELOPMENT'),
       ),
     );
   }
