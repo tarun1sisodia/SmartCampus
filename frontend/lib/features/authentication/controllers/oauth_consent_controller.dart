@@ -110,8 +110,4 @@ class OAuthConsentController extends GetxController {
       isLoading.value = false;
     }
   }
-
-  // UI Facade compatibility methods
-  Future<void> grantConsent() => approve();
-  Future<void> denyConsent() => deny();
 }

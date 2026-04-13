@@ -1,6 +1,5 @@
 import '../../features/teacher/controllers/all_sessions_controller.dart';
 import '../../features/teacher/controllers/feedback_controller.dart';
-import '../../common/ui_patterns/ui_style_controller.dart';
 import '../../features/teacher/controllers/teacher_profile_controller.dart';
 
 import '../../features/authentication/controllers/change_password_controller.dart';
@@ -44,10 +43,6 @@ class AppBindings {
     // attendance controller
     if (!Get.isRegistered<AttendanceController>()) {
       Get.lazyPut<AttendanceController>(() => AttendanceController());
-    }
-    // UI Style Controller
-    if (!Get.isRegistered<UIStyleController>()) {
-      Get.put(UIStyleController(), permanent: true);
     }
   }
 

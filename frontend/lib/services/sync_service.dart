@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -7,7 +9,6 @@ import '../models/attendance_record_model.dart';
 import '../models/attendance_session_model.dart';
 import '../models/class_model.dart';
 import 'local_storage_service.dart';
-import 'connectivity_service.dart';
 import 'class_service.dart';
 import 'subject_service.dart';
 import 'course_service.dart';
@@ -21,7 +22,6 @@ class SyncService extends GetxService {
   final _supabase = Supabase.instance.client;
 
   // Inject your existing services
-  final _connectivity = Get.find<ConnectivityService>();
   final _classService = ClassService();
   final _subjectService = SubjectService();
   final _courseService = CourseService();
@@ -31,19 +31,30 @@ class SyncService extends GetxService {
   final RxBool isSyncing = false.obs;
   final RxString syncStatus = ''.obs;
   final RxDouble syncProgress = 0.0.obs;
-  
+  final RxBool isOnline = true.obs;
+
   @override
   void onInit() {
     super.onInit();
+    _checkConnectivity();
     _startPeriodicSync();
   }
 
-  // Link to ConnectivityService
-  RxBool get isOnline => _connectivity.isOnline;
+  // Check internet connectivity
+  Future<void> _checkConnectivity() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      isOnline.value = result.isNotEmpty && result[0].rawAddress.isNotEmpty;
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
+      isOnline.value = false;
+    }
+  }
 
   // Start periodic sync every 5 minutes when online
   void _startPeriodicSync() {
     Stream.periodic(const Duration(minutes: 5)).listen((_) async {
+      await _checkConnectivity();
       if (isOnline.value && !isSyncing.value) {
         await syncAllData();
       }
@@ -59,6 +70,7 @@ class SyncService extends GetxService {
       syncStatus.value = 'Starting sync...';
       syncProgress.value = 0.0;
 
+      await _checkConnectivity();
       if (!isOnline.value) {
         syncStatus.value = 'No internet connection';
         return false;
@@ -208,6 +220,9 @@ class SyncService extends GetxService {
       } catch (e, stackTrace) {
         await Sentry.captureException(e, stackTrace: stackTrace);
         debugPrint('Error uploading class ${classData['id']}: $e');
+        // Add to retry queue or mark for manual resolution
+        await _localStorage.addToSyncQueue(
+            'classes', classData['id'], 'RETRY_UPLOAD', classData);
       }
     }
   }
@@ -231,6 +246,9 @@ class SyncService extends GetxService {
       } catch (e, stackTrace) {
         await Sentry.captureException(e, stackTrace: stackTrace);
         debugPrint('Error uploading student ${studentData['id']}: $e');
+        // Add to retry queue
+        await _localStorage.addToSyncQueue(
+            'students', studentData['id'], 'RETRY_UPLOAD', studentData);
       }
     }
   }
@@ -238,37 +256,29 @@ class SyncService extends GetxService {
   Future<void> _uploadUnsyncedAttendanceSessions() async {
     final unsyncedSessions =
         await _localStorage.getUnsyncedRecords('attendance_sessions');
-    final currentUserId = _supabase.auth.currentUser?.id;
 
     for (final sessionData in unsyncedSessions) {
       try {
         final session = AttendanceSessionModel.fromJson(sessionData);
 
-        // RLS SAFETY: Verify that the teacher owns the class locally first
-        final classData = await _localStorage.getRecord('classes', 'id = ?', [session.classId]);
-        if (classData != null && classData['teacher_id'] != currentUserId) {
-          debugPrint('RLS Bypass: Skipping session ${session.id} - Teacher mismatch locally');
-          continue; 
-        }
-
-        // Create attendance session using upsert logic via service
+        // Create attendance session
         await _attendanceService.createAttendanceSession(
           classId: session.classId,
           date: session.date,
           startTime: session.startTime,
           endTime: session.endTime,
-          createdBy: session.createdBy ?? currentUserId ?? '',
+          createdBy: session.createdBy ?? '',
         );
 
         // Mark as synced
         await _localStorage.markAsSynced('attendance_sessions', session.id);
       } catch (e, stackTrace) {
         await Sentry.captureException(e, stackTrace: stackTrace);
-        debugPrint('Error uploading attendance session ${sessionData['id']}: $e');
-        // Handle specific RLS errors (42501)
-        if (e.toString().contains('42501')) {
-          debugPrint('CRITICAL: RLS Violation for session ${sessionData['id']}. Skipping to prevent sync block.');
-        }
+        debugPrint(
+            'Error uploading attendance session ${sessionData['id']}: $e');
+        // Add to retry queue
+        await _localStorage.addToSyncQueue('attendance_sessions',
+            sessionData['id'], 'RETRY_UPLOAD', sessionData);
       }
     }
   }
@@ -281,19 +291,7 @@ class SyncService extends GetxService {
       try {
         final record = AttendanceRecordModel.fromJson(recordData);
 
-        // VERIFY: Ensure the parent session is already synced on the server
-        final sessionResponse = await _supabase
-            .from('attendance_sessions')
-            .select('id')
-            .eq('id', record.sessionId)
-            .maybeSingle();
-
-        if (sessionResponse == null) {
-          debugPrint('Sync Order Delay: Session ${record.sessionId} not yet on server. Waiting for next sync cycle.');
-          continue; 
-        }
-
-        // Submit attendance (uses upsert internally)
+        // Submit attendance
         await _attendanceService.submitAttendance(
           sessionId: record.sessionId,
           studentId: record.studentId,
@@ -306,6 +304,9 @@ class SyncService extends GetxService {
       } catch (e, stackTrace) {
         await Sentry.captureException(e, stackTrace: stackTrace);
         debugPrint('Error uploading attendance record ${recordData['id']}: $e');
+        // Add to retry queue
+        await _localStorage.addToSyncQueue(
+            'attendance_records', recordData['id'], 'RETRY_UPLOAD', recordData);
       }
     }
   }
@@ -503,7 +504,7 @@ class SyncService extends GetxService {
 
   // Manual connectivity check
   Future<void> checkConnectivity() async {
-    // await _checkConnectivity(); // Deprecated
+    await _checkConnectivity();
   }
 
   // Get pending sync count

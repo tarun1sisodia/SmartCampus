@@ -3,7 +3,9 @@ import 'package:shimmer/shimmer.dart';
 import '../../../../common/utils/constants/sized.dart';
 
 class DashboardShimmer extends StatelessWidget {
-  const DashboardShimmer({super.key});
+  const DashboardShimmer({super.key, required this.context});
+
+  final BuildContext context;
 
   @override
   Widget build(BuildContext context) {

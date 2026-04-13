@@ -70,7 +70,6 @@ dependencies:
   flutter_dotenv: ^6.0.0
   sentry_flutter: ^9.16.0
   connectivity_plus: ^6.1.1
-  flutter_inset_shadow: ^2.0.3
 
 dependency_overrides:
   image: ^4.2.0
@@ -105,8 +104,8 @@ flutter:
     - assets/images/emailsuccess.json
     - assets/images/images.png
     - assets/images/searchi.json
-    - assets/logos/applogo.webp
-    - assets/logos/logo-transparent.webp
+    - assets/logos/applogo.png
+    - assets/logos/logo-transparent.png
     - assets/animations/hello_robo.json
     - assets/images/onboarding_images/
     - shorebird.yaml

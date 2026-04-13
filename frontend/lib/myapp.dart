@@ -1,5 +1,4 @@
 import 'app/theme/theme_controller.dart';
-import 'common/ui_patterns/ui_style_controller.dart';
 // import 'package:smart_campus/app/theme/theme.dart';
 
 import 'services/language_service.dart';
@@ -16,7 +15,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final languageService = Get.find<LanguageService>();
     final themeController = Get.put(ThemeController());
-    Get.put(UIStyleController());
 
     return Obx(() => GetMaterialApp(
           title: 'Smart Campus',
