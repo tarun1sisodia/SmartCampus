@@ -34,6 +34,19 @@ dependencies:
   socket_io_client: ^3.0.0
   firebase_core: ^3.10.0
   firebase_messaging: ^15.1.0
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  sqflite: ^2.4.1
+
+  # State Management & DI
+  flutter_bloc: ^8.1.6
+  bloc: ^8.1.4
+  get_it: ^8.0.2
+  equatable: ^2.0.7
+
+  # Navigation & Routing
+  go_router: ^14.7.2
+
 
   # Supabase (REMOVED)
   # supabase_flutter: ^2.10.3
@@ -71,11 +84,14 @@ dependencies:
   google_sign_in: ^7.2.0
   local_auth: ^3.0.0
   shared_preferences: ^2.5.3
-  sqflite: ^2.4.2
   sqflite_common_ffi: ">=2.3.3 <3.0.0"
+
   flutter_dotenv: ^6.0.0
   sentry_flutter: ^9.16.0
   connectivity_plus: ^6.1.1
+  fl_chart: ^0.70.0
+  workmanager: ^0.5.2
+
 
 dependency_overrides:
   image: ^4.2.0
@@ -83,8 +99,12 @@ dependency_overrides:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  build_runner: ^2.10.4
+  build_runner: any
   flutter_launcher_icons: ^0.14.4
+  hive_generator: any
+  json_serializable: any
+
+
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

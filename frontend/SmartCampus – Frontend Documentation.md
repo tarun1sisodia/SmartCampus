@@ -7,7 +7,7 @@ We have \*\*three separate frontend applications\*\*:
 |-------------|----------|-----------|-------|  
 | \*\*SuperAdmin Dashboard\*\* | Web | React / Next.js | Super Administrators (platform owners) |  
 | \*\*Organization Dashboard\*\* | Web | React / Next.js | Org Admins (school/college administrators) |  
-| \*\*Teacher App\*\* | Mobile | Flutter or React Native | Teachers (mark attendance, view analytics) |
+| \*\*Teacher App\*\* | Mobile | Flutter | Teachers (mark attendance, view analytics) |
 
 All three consume the same \*\*backend API\*\* (documented separately) but have different feature sets, UI/UX, and permissions.
 
@@ -206,7 +206,7 @@ All three consume the same \*\*backend API\*\* (documented separately) but have 
 | Option | Pros | Cons |  
 |--------|------|------|  
 | \*\*Flutter\*\* | Single codebase, excellent performance, rich UI components | Larger app size, Dart language |  
-\*\*Recommendation:\*\* Flutter (because of the carousel with student images and smooth animations).
+\*\*Recommendation:\*\* Flutter (Implementation uses BLoC for state management and GoRouter for navigation).
 
 \#\#\# 4.3 Key Features
 
@@ -251,14 +251,13 @@ All three consume the same \*\*backend API\*\* (documented separately) but have 
 
 \#\#\# 4.6 Offline Support (Critical)
 
-\*\*Algorithm:\*\*  
 1\. When marking attendance offline:  
-   \- Store attendance data in local SQLite/Hive (key: sessionId \+ timestamp).  
+   \- Store attendance data in local Sqflite database via \`PendingAttendanceDao\`.  
    \- Show “Saved offline” indicator.  
 2\. When internet is restored:  
-   \- Sync local pending attendance records to backend.  
-   \- Resolve conflicts (latest timestamp wins).  
-3\. Sync strategy: background sync (WorkManager for Android, BGTask for iOS).
+   \- \`SyncService\` (background) syncs local pending attendance records to backend.  
+   \- Conflict resolution: Last‑write‑wins based on timestamp.  
+3\. Sync strategy: Periodic background sync every 15 minutes using \`WorkManager\` (Android).
 
 \#\#\# 4.7 Push Notifications  
 \- Use Firebase Cloud Messaging (FCM) for both Flutter/RN.  
@@ -322,9 +321,11 @@ All three consume the same \*\*backend API\*\* (documented separately) but have 
 \- \*\*Local state\*\*: useState / useReducer
 
 \#\#\# 6.2 Mobile (Flutter)  
-\- \*\*Global state\*\*: Provider / Riverpod / Bloc (recommended: Bloc for complex flows)  
-\- \*\*Local persistence\*\*: Hive / SharedPreferences for auth token, SQLite for offline attendance  
-\- \*\*API client\*\*: Dio with interceptors
+\- \*\*Global state\*\*: \`flutter_bloc\` (Auth, Home, Attendance, Analytics Blocs).  
+\- \*\*Dependency Injection\*\*: \`get_it\` (Service Locator).
+\- \*\*Navigation\*\*: \`go_router\` (declarative routing with auth guards).
+\- \*\*Local persistence\*\*: \`hive\` (caching metadata), \`sqflite\` (offline database).  
+\- \*\*API client\*\*: \`dio\` with modular interceptors.
 
 \#\#\# 6.3 API Client Configuration
 
@@ -499,41 +500,43 @@ Or simpler: two separate Next.js projects in different folders.
 \#\#\# 13.2 Mobile (Flutter)
 
 \`\`\`  
-teacher\_app/  
-├── lib/  
-│   ├── main.dart  
-│   ├── app/  
-│   │   ├── routes.dart  
-│   │   └── theme.dart  
-│   ├── features/  
-│   │   ├── auth/  
-│   │   ├── home/  
-│   │   ├── session/  
-│   │   ├── attendance/  
-│   │   ├── analytics/  
-│   │   └── profile/  
-│   ├── core/  
-│   │   ├── api/  
-│   │   ├── storage/  
-│   │   ├── utils/  
-│   │   └── widgets/  
-│   └── services/  
-│       ├── notification\_service.dart  
-│       └── sync\_service.dart  
-├── assets/  
-├── pubspec.yaml  
-└── firebase\_options.dart  
+lib/
+├── app/
+│   ├── app.dart                   \# Global MultiBlocProvider & Entry Widget
+│   ├── routes.dart                \# GoRouter config with Auth guards
+│   ├── theme.dart                 \# Centralized Light/Dark themes
+│   └── dependency_injection.dart  \# GetIt service registration
+├── core/
+│   ├── api/
+│   │   ├── api_client.dart        \# Dio instance with interceptors
+│   │   ├── endpoints.dart         \# Path constants
+│   │   └── interceptors/          \# Token & Refresh logic
+│   ├── cache/
+│   │   └── hive_service.dart      \# Hive init and box management
+│   ├── database/
+│   │   ├── app_database.dart      \# Sqflite initialization
+│   │   └── dao/                   \# Data Access Objects
+│   └── services/
+│       ├── connectivity\_service.dart
+│       ├── sync\_service.dart      \# Offline-to-Online bridge
+│       └── background\_task\_service.dart \# WorkManager setup
+├── features/
+│   ├── auth/                      \# Login, Logout, Forgot Password
+│   ├── home/                      # Dashboard & Session list
+│   ├── attendance/                \# Carousel Marking & UI
+│   └── analytics/                 \# fl_chart visualizations
+├── shared/
+│   └── widgets/                   \# CustomButton, CustomTextField, etc.
+└── env/
+    └── env_config.dart            \# Dotenv wrapper
 \`\`\`
 
 \---
 
 \#\# Next Steps
 
-1\. \*\*Choose frameworks\*\* (React/Next.js for web, Flutter for mobile).  
-2\. \*\*Set up monorepo\*\* (or separate repos) – follow the repository structure from the previous answer.  
-3\. \*\*Implement the backend first\*\* (or in parallel) – API endpoints as defined.  
-4\. \*\*Create shared API client\*\* (OpenAPI / Swagger generator recommended).  
-5\. \*\*Develop shared UI component library\*\* (for web) to ensure consistency.  
-6\. \*\*Build each frontend incrementally\*\*, starting with authentication, then core features.
+1\. \*\*Teacher App Deployment\*\*: Finalize CI/CD pipeline and release initial version.
+2\. \*\*Web Dashboards\*\*: Begin implementation of SuperAdmin and OrgAdmin Dashboards.
+3\. \*\*Backend Expansion\*\*: Implement remaining analytics and report generation endpoints.
 
 This document provides everything needed to start frontend development. Feed it to an AI code generator with the prompt: \*“Based on this SmartCampus frontend specification, generate the complete code for \[SuperAdmin Dashboard / Organization Dashboard / Teacher App\] following all guidelines.”\*  
