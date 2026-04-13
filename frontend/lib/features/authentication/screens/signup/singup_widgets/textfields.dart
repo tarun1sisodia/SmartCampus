@@ -1,0 +1,70 @@
+import 'package:flutter/material.dart';
+
+class Textfields extends StatelessWidget {
+  const Textfields({
+    super.key,
+    this.suffixIcon,
+    this.expands = false,
+    required this.labelText,
+    required this.prefixIcon,
+    required this.iconColor,
+    this.controller,
+    this.validator,
+    this.obscureText = false,
+    this.keyboardType,
+    this.onChanged,
+    this.onSaved,
+  });
+
+  final String labelText;
+  final Icon prefixIcon;
+  final Widget? suffixIcon;
+  final bool expands;
+  final Color iconColor;
+  final TextEditingController? controller;
+  final String? Function(String?)? validator;
+  final bool obscureText;
+  final TextInputType? keyboardType;
+  final Function(String)? onChanged;
+  final Function(String?)? onSaved;
+
+  @override
+  Widget build(BuildContext context) {
+
+    // Get the current theme's InputDecorationTheme
+    final inputTheme = Theme.of(context).inputDecorationTheme;
+
+    return TextFormField(
+      controller: controller,
+      expands: expands,
+      obscureText: obscureText,
+      keyboardType: keyboardType,
+      validator: validator,
+      onChanged: onChanged,
+      onSaved: onSaved,
+      style: const TextStyle(
+        fontWeight: FontWeight.w600,
+      ),
+      decoration: InputDecoration(
+        // Apply all theme properties
+        border: inputTheme.border,
+        enabledBorder: inputTheme.enabledBorder,
+        focusedBorder: inputTheme.focusedBorder,
+        errorBorder: inputTheme.errorBorder,
+        focusedErrorBorder: inputTheme.focusedErrorBorder,
+        filled: inputTheme.filled,
+        fillColor: inputTheme.fillColor,
+        contentPadding: inputTheme.contentPadding,
+        hintStyle: inputTheme.hintStyle,
+        labelStyle: inputTheme.labelStyle,
+        errorStyle: inputTheme.errorStyle,
+        floatingLabelStyle: inputTheme.floatingLabelStyle,
+
+        // Custom properties for this specific field
+        labelText: labelText,
+        prefixIcon: prefixIcon,
+        suffixIcon: suffixIcon,
+      ),
+    );
+  }
+}

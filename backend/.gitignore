@@ -1,0 +1,47 @@
+# Dependencies  
+node_modules/  
+package-lock.json  
+yarn.lock
+
+# Environment  
+.env  
+.env.local  
+.env.*  
+!.env.example
+# Logs  
+logs/  
+*.log  
+npm-debug.log*
+
+# Database dumps  
+*.gz  
+dump/  
+backups/
+
+# Uploads (student photos)  
+uploads/  
+temp/
+
+# Coverage  
+coverage/  
+.nyc_output/
+
+# IDE  
+.vscode/  
+.idea/  
+*.swp  
+*.swo
+
+# OS  
+.DS_Store  
+Thumbs.db
+
+# Build  
+dist/  
+build/
+
+# Secrets  
+*.pem  
+*.key  
+*.cert  
+smartcampus-firebase-adminsdk.json
