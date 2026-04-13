@@ -1,4 +1,10 @@
-require('dotenv').config();
+const path = require('path');
+const dotenv = require('dotenv');
+
+// Load environment-specific .env file
+const envFile = process.env.NODE_ENV ? `.env.${process.env.NODE_ENV}` : '.env';
+dotenv.config({ path: path.join(__dirname, envFile) });
+
 const app = require('./src/app');
 const connectDB = require('./src/config/database');
 const logger = require('./src/config/logger');
