@@ -1,8 +1,8 @@
-const backupService = require('../../src/services/backup.service');
-const BackupRecord = require('../../src/models/BackupRecord.model');
-const { uploadFile } = require('../../src/utils/s3Client');
-const child_process = require('child_process');
-const fs = require('fs');
+import backupService from '../../src/services/backup.service.js';
+import BackupRecord from '../../src/models/BackupRecord.model.js';
+import {  uploadFile  } from '../../src/utils/s3Client.js';
+import child_process from 'child_process';
+import fs from 'fs';
 
 jest.mock('../../src/models/BackupRecord.model');
 jest.mock('../../src/utils/s3Client');

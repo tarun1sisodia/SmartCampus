@@ -1,15 +1,15 @@
-const studentService = require('../services/student.service');
-const csvParser = require('../utils/csvParser');
-const { sendSuccess } = require('../utils/apiResponse');
-const Student = require('../models/Student.model');
+import studentService from '../services/student.service.js';
+import csvParser from '../utils/csvParser.js';
+import {  sendSuccess  } from '../utils/apiResponse.js';
+import Student from '../models/Student.model.js';
+import fs from 'fs';
 
-exports.bulkImport = async (req, res, next) => {
+export const bulkImport = async (req, res, next) => {
   try {
     if (!req.file) throw Object.assign(new Error('No file uploaded'), { status: 400 });
     
     // We expect Multer to have saved it or parsed to buffer (if memory storage)
     // For disk storage, we read it
-    const fs = require('fs');
     const buffer = fs.readFileSync(req.file.path);
     
     const parsedData = await csvParser.parseCSV(buffer);
@@ -25,7 +25,7 @@ exports.bulkImport = async (req, res, next) => {
   }
 };
 
-exports.list = async (req, res, next) => {
+export const list = async (req, res, next) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
@@ -46,7 +46,7 @@ exports.list = async (req, res, next) => {
   }
 };
 
-exports.create = async (req, res, next) => {
+export const create = async (req, res, next) => {
   try {
     const orgId = req.scope.organisationId || req.body.organisationId;
     const student = await Student.create({ ...req.body, organisation: orgId });
@@ -56,7 +56,7 @@ exports.create = async (req, res, next) => {
   }
 };
 
-exports.getById = async (req, res, next) => {
+export const getById = async (req, res, next) => {
   try {
     let q = { _id: req.params.id };
     if (!req.scope.isSuperAdmin) q.organisation = req.scope.organisationId;
@@ -68,7 +68,7 @@ exports.getById = async (req, res, next) => {
   }
 };
 
-exports.update = async (req, res, next) => {
+export const update = async (req, res, next) => {
   try {
     let q = { _id: req.params.id };
     if (!req.scope.isSuperAdmin) q.organisation = req.scope.organisationId;
@@ -79,7 +79,7 @@ exports.update = async (req, res, next) => {
   }
 };
 
-exports.delete = async (req, res, next) => {
+export const deleteFn = async (req, res, next) => {
   try {
     let q = { _id: req.params.id };
     if (!req.scope.isSuperAdmin) q.organisation = req.scope.organisationId;
@@ -90,7 +90,7 @@ exports.delete = async (req, res, next) => {
   }
 };
 
-exports.uploadPhoto = async (req, res, next) => {
+export const uploadPhoto = async (req, res, next) => {
   try {
     if (!req.file) throw new Error('No photo uploaded');
     const result = await studentService.uploadPhoto(req.params.id, req.file.buffer, req.file.mimetype);
@@ -100,7 +100,7 @@ exports.uploadPhoto = async (req, res, next) => {
   }
 };
 
-exports.deletePhoto = async (req, res, next) => {
+export const deletePhoto = async (req, res, next) => {
   try {
     const result = await studentService.deletePhoto(req.params.id);
     sendSuccess(res, result);
@@ -108,3 +108,5 @@ exports.deletePhoto = async (req, res, next) => {
     next(err);
   }
 };
+
+export default { bulkImport, list, create, getById, update, delete: deleteFn, uploadPhoto, deletePhoto };

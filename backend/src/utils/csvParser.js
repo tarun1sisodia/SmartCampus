@@ -1,7 +1,7 @@
-const csv = require('csv-parser');
-const { Readable } = require('stream');
+import csv from 'csv-parser';
+import {  Readable  } from 'stream';
 
-exports.parseCSV = (buffer) => {
+export const parseCSV = (buffer) => {
   return new Promise((resolve, reject) => {
     const results = [];
     const stream = Readable.from(buffer);
@@ -13,3 +13,5 @@ exports.parseCSV = (buffer) => {
       .on('error', (error) => reject(error));
   });
 };
+
+export default { parseCSV };

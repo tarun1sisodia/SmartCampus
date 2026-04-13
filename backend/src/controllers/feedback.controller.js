@@ -1,7 +1,7 @@
-const Feedback = require('../models/Feedback.model');
-const { sendSuccess } = require('../utils/apiResponse');
+import Feedback from '../models/Feedback.model.js';
+import {  sendSuccess  } from '../utils/apiResponse.js';
 
-exports.submit = async (req, res, next) => {
+export const submit = async (req, res, next) => {
   try {
     const { rating, comment } = req.body;
     await Feedback.create({
@@ -15,3 +15,5 @@ exports.submit = async (req, res, next) => {
     next(err);
   }
 };
+
+export default { submit };

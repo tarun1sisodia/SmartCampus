@@ -1,7 +1,7 @@
-const logger = require('../config/logger');
-const { Sentry } = require('../utils/sentry');
+import logger from '../config/logger.js';
+import {  Sentry  } from '../utils/sentry.js';
 
-module.exports = (err, req, res, next) => {
+export default (err, req, res, next) => {
   Sentry.captureException(err);
   logger.error(`${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
 

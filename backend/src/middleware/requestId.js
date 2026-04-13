@@ -1,6 +1,6 @@
-const crypto = require('crypto');
+import crypto from 'crypto';
 
-module.exports = (req, res, next) => {
+export default (req, res, next) => {
   req.id = req.headers['x-request-id'] || crypto.randomUUID();
   res.setHeader('X-Request-Id', req.id);
   next();

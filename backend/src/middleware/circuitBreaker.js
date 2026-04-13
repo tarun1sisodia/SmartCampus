@@ -1,6 +1,6 @@
-const CircuitBreaker = require('opossum');
+import CircuitBreaker from 'opossum';
 
-module.exports = (asyncFunction, fallbackFunction) => {
+export default (asyncFunction, fallbackFunction) => {
   const breaker = new CircuitBreaker(asyncFunction, {
     timeout: 5000,
     errorThresholdPercentage: 50,

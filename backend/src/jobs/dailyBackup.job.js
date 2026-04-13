@@ -1,8 +1,8 @@
-const { backupQueue } = require('../config/bull');
-const backupService = require('../services/backup.service');
-const redisClient = require('../config/redis');
+import {  backupQueue  } from '../config/bull.js';
+import backupService from '../services/backup.service.js';
+import redisClient from '../config/redis.js';
 
-exports.setupDailyBackup = () => {
+export const setupDailyBackup = () => {
   backupQueue.process('daily-backup', async (job) => {
     // Acquire distributed lock to ensure only one worker runs this
     const lockKey = 'lock:daily-backup';
@@ -23,3 +23,5 @@ exports.setupDailyBackup = () => {
 
   backupQueue.add('daily-backup', {}, { repeat: { cron: '0 2 * * *' } });
 };
+
+export default { setupDailyBackup };

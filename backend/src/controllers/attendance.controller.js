@@ -1,9 +1,9 @@
-const attendanceService = require('../services/attendance.service');
-const { sendSuccess } = require('../utils/apiResponse');
-const Session = require('../models/Session.model');
-const Attendance = require('../models/Attendance.model');
+import attendanceService from '../services/attendance.service.js';
+import {  sendSuccess  } from '../utils/apiResponse.js';
+import Session from '../models/Session.model.js';
+import Attendance from '../models/Attendance.model.js';
 
-exports.createSession = async (req, res, next) => {
+export const createSession = async (req, res, next) => {
   try {
     const session = await Session.create({
       ...req.body,
@@ -16,7 +16,7 @@ exports.createSession = async (req, res, next) => {
   }
 };
 
-exports.listSessions = async (req, res, next) => {
+export const listSessions = async (req, res, next) => {
   try {
     const query = {};
     if (!req.scope.isSuperAdmin) query.organisation = req.scope.organisationId;
@@ -31,7 +31,7 @@ exports.listSessions = async (req, res, next) => {
   }
 };
 
-exports.markBulk = async (req, res, next) => {
+export const markBulk = async (req, res, next) => {
   try {
     const { sessionId, attendance } = req.body;
     const isSuperAdmin = req.user.role === 'super_admin';
@@ -52,7 +52,7 @@ exports.markBulk = async (req, res, next) => {
   }
 };
 
-exports.getBySession = async (req, res, next) => {
+export const getBySession = async (req, res, next) => {
   try {
     const query = { session: req.params.sessionId };
     if (!req.scope.isSuperAdmin) query.organisation = req.scope.organisationId;
@@ -63,7 +63,7 @@ exports.getBySession = async (req, res, next) => {
   }
 };
 
-exports.studentSummary = async (req, res, next) => {
+export const studentSummary = async (req, res, next) => {
   try {
     const isSuperAdmin = req.user.role === 'super_admin';
     const parsedSem = req.query.semesterId ? String(req.query.semesterId) : null;
@@ -79,7 +79,7 @@ exports.studentSummary = async (req, res, next) => {
   }
 };
 
-exports.syncOffline = async (req, res, next) => {
+export const syncOffline = async (req, res, next) => {
   try {
     const { records } = req.body;
     const isSuperAdmin = req.user.role === 'super_admin'; // though unlikely for teacher
@@ -92,7 +92,7 @@ exports.syncOffline = async (req, res, next) => {
   }
 };
 
-exports.listSessionsByMonth = async (req, res, next) => {
+export const listSessionsByMonth = async (req, res, next) => {
   try {
     const { month } = req.query; // Format YYYY-MM
     const isSuperAdmin = req.user.role === 'super_admin';
@@ -104,3 +104,5 @@ exports.listSessionsByMonth = async (req, res, next) => {
     next(err);
   }
 };
+
+export default { createSession, listSessions, markBulk, getBySession, studentSummary, syncOffline, listSessionsByMonth };

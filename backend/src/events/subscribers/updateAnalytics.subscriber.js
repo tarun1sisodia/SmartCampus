@@ -1,15 +1,17 @@
-const eventBus = require('../../services/eventBus.service');
+import eventBus from '../../services/eventBus.service.js';
 // Real implementation would safely require the CQRS view updater, avoiding cyclic dependencies:
-// const { refreshAttendanceSummary } = require('../../cqrs/materializedViews/attendanceSummary.view');
+// import {  refreshAttendanceSummary  } from '../../cqrs/materializedViews/attendanceSummary.view.js';
 
-exports.setup = () => {
+export const setup = () => {
   eventBus.registerHandler('attendance.marked', async (data) => {
     try {
       // Deferring require to avoid circular dependencies during initialization
-      const { refreshAttendanceSummary } = require('../../cqrs/materializedViews/attendanceSummary.view');
-      await refreshAttendanceSummary(data);
+      const module = await import('../../cqrs/materializedViews/attendanceSummary.view.js');
+      await module.refreshAttendanceSummary(data);
     } catch (err) {
       console.error('Failed to update analytics from event:', err);
     }
   });
 };
+
+export default { setup };

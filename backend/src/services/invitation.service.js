@@ -1,9 +1,12 @@
-const User = require('../models/User.model');
-const crypto = require('crypto');
-const emailService = require('./email.service');
-const eventBus = require('./eventBus.service');
+import User from '../models/User.model.js';
+import crypto from 'crypto';
+import emailService from './email.service.js';
+import eventBus from './eventBus.service.js';
+import { generateAccessToken, generateRefreshToken } from '../utils/generateToken.js';
+import RefreshToken from '../models/RefreshToken.model.js';
+import bcrypt from 'bcrypt';
 
-exports.createInvite = async (inviterId, targetEmail, role, organisationId, name) => {
+export const createInvite = async (inviterId, targetEmail, role, organisationId, name) => {
   const existingUser = await User.findOne({ email: targetEmail });
   
   if (existingUser && existingUser.isActive) {
@@ -43,7 +46,7 @@ exports.createInvite = async (inviterId, targetEmail, role, organisationId, name
   return user;
 };
 
-exports.acceptInvite = async (token, password, name) => {
+export const acceptInvite = async (token, password, name) => {
   const user = await User.findOne({ 
     inviteToken: token, 
     isActive: false, 
@@ -62,13 +65,10 @@ exports.acceptInvite = async (token, password, name) => {
 
   await user.save();
   
-  const { generateAccessToken, generateRefreshToken } = require('../utils/generateToken');
   const accessToken = generateAccessToken(user);
   const refreshToken = generateRefreshToken(user);
 
   // Store refresh token
-  const RefreshToken = require('../models/RefreshToken.model');
-  const bcrypt = require('bcrypt');
   const hashedRToken = await bcrypt.hash(refreshToken, 10);
   const expires = new Date();
   expires.setDate(expires.getDate() + 7);
@@ -76,3 +76,5 @@ exports.acceptInvite = async (token, password, name) => {
 
   return { tokens: { accessToken, refreshToken }, user: user.toJSON() };
 };
+
+export default { createInvite, acceptInvite };

@@ -1,11 +1,11 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const backupController = require('../../controllers/backup.controller');
-const auth = require('../../middleware/auth.middleware');
-const rbac = require('../../middleware/rbac.middleware');
+import backupController from '../../controllers/backup.controller.js';
+import auth from '../../middleware/auth.middleware.js';
+import rbac from '../../middleware/rbac.middleware.js';
 
 router.post('/create', auth, rbac('super_admin'), backupController.create);
 router.get('/list', auth, rbac('super_admin'), backupController.list);
 router.post('/restore/:backupId', auth, rbac('super_admin'), backupController.restore);
 
-module.exports = router;
+export default router;

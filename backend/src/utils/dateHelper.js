@@ -1,12 +1,14 @@
-const dayjs = require('dayjs');
+import dayjs from 'dayjs';
 
-exports.formatDate = (date) => {
+export const formatDate = (date) => {
   return dayjs(date).format('YYYY-MM-DD');
 };
 
-exports.getCurrentSemester = (date, semestersList) => {
+export const getCurrentSemester = (date, semestersList) => {
   const targetDate = dayjs(date);
   return semestersList.find(s => 
     targetDate.isAfter(dayjs(s.startDate)) && targetDate.isBefore(dayjs(s.endDate))
   );
 };
+
+export default { formatDate, getCurrentSemester };

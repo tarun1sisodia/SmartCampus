@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const studentSchema = new Schema({
@@ -22,4 +22,4 @@ const studentSchema = new Schema({
 studentSchema.index({ organisation: 1, rollNumber: 1 }, { unique: true });
 studentSchema.index({ organisation: 1, course: 1 });
 
-module.exports = mongoose.model('Student', studentSchema);
+export default mongoose.model('Student', studentSchema);

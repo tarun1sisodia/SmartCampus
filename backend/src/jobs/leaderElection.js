@@ -1,7 +1,7 @@
 // Alternatively handled directly inside the job process with redis locks like in dailyBackup.job.js
-const redisClient = require('../config/redis');
+import redisClient from '../config/redis.js';
 
-exports.startLeaderElection = () => {
+export const startLeaderElection = () => {
   setInterval(async () => {
     const lock = await redisClient.set('leader:backup', 'node', 'NX', 'EX', 60);
     if (lock) {
@@ -10,3 +10,5 @@ exports.startLeaderElection = () => {
     }
   }, 30000);
 };
+
+export default { startLeaderElection };

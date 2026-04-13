@@ -1,6 +1,11 @@
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+import multer from 'multer';
+import path from 'path';
+import fs from 'fs';
 
 // Ensure uploads directory exists
 const uploadDir = path.join(__dirname, '../../uploads');
@@ -35,4 +40,4 @@ const upload = multer({
   fileFilter
 });
 
-module.exports = upload;
+export default upload;

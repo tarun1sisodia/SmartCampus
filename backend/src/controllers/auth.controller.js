@@ -1,7 +1,7 @@
-const authService = require('../services/auth.service');
-const { sendSuccess } = require('../utils/apiResponse');
+import authService from '../services/auth.service.js';
+import {  sendSuccess  } from '../utils/apiResponse.js';
 
-exports.login = async (req, res, next) => {
+export const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const { accessToken, refreshToken, user } = await authService.login(email, password);
@@ -19,7 +19,7 @@ exports.login = async (req, res, next) => {
   }
 };
 
-exports.refresh = async (req, res, next) => {
+export const refresh = async (req, res, next) => {
   try {
     const token = req.cookies.refreshToken || req.body.refreshToken;
     if (!token) throw Object.assign(new Error('No refresh token'), { status: 401 });
@@ -39,7 +39,7 @@ exports.refresh = async (req, res, next) => {
   }
 };
 
-exports.logout = async (req, res, next) => {
+export const logout = async (req, res, next) => {
   try {
     const token = req.cookies.refreshToken || req.body.refreshToken;
     if (token) {
@@ -52,7 +52,7 @@ exports.logout = async (req, res, next) => {
   }
 };
 
-exports.registerSuperAdmin = async (req, res, next) => {
+export const registerSuperAdmin = async (req, res, next) => {
   try {
     // Only available during initial setup, usually handled by seed script
     sendSuccess(res, { message: 'Use seed script for super admin creation' });
@@ -61,7 +61,7 @@ exports.registerSuperAdmin = async (req, res, next) => {
   }
 };
 
-exports.forgotPassword = async (req, res, next) => {
+export const forgotPassword = async (req, res, next) => {
   try {
     const { email } = req.body;
     const result = await authService.forgotPassword(email);
@@ -71,7 +71,7 @@ exports.forgotPassword = async (req, res, next) => {
   }
 };
 
-exports.resetPassword = async (req, res, next) => {
+export const resetPassword = async (req, res, next) => {
   try {
     const { token, newPassword } = req.body;
     const result = await authService.resetPassword(token, newPassword);
@@ -80,3 +80,5 @@ exports.resetPassword = async (req, res, next) => {
     next(err);
   }
 };
+
+export default { login, refresh, logout, registerSuperAdmin, forgotPassword, resetPassword };

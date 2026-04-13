@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 // CQRS read model (Materialized View)
@@ -22,4 +22,4 @@ attendanceSummarySchema.index({ organisation: 1, student: 1, semester: 1 });
 // Ensure we don't have duplicates for the same student returning for the same session
 attendanceSummarySchema.index({ session: 1, student: 1 }, { unique: true });
 
-module.exports = mongoose.model('AttendanceSummary', attendanceSummarySchema);
+export default mongoose.model('AttendanceSummary', attendanceSummarySchema);

@@ -1,20 +1,20 @@
-const path = require('path');
-const dotenv = require('dotenv');
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
-// Load environment-specific .env file
-const envFile = process.env.NODE_ENV ? `.env.${process.env.NODE_ENV}` : '.env';
-dotenv.config({ path: path.join(__dirname, envFile) });
+import './src/config/env.js'; // MUST be the very first import to populate process.env safely
 
-const app = require('./src/app');
-const connectDB = require('./src/config/database');
-const logger = require('./src/config/logger');
-const { initSocket } = require('./src/socket');
+import app from './src/app.js';
+import connectDB from './src/config/database.js';
+import logger from './src/config/logger.js';
+import {  initSocket  } from './src/socket/index.js';
 
 // Subscriptions & background routines
-const updateAnalyticsSubscriber = require('./src/events/subscribers/updateAnalytics.subscriber');
-const sendNotificationSubscriber = require('./src/events/subscribers/sendNotification.subscriber');
-const { setupDailyBackup } = require('./src/jobs/dailyBackup.job');
-const { setupSendReminders } = require('./src/jobs/sendReminders.job');
+import updateAnalyticsSubscriber from './src/events/subscribers/updateAnalytics.subscriber.js';
+import sendNotificationSubscriber from './src/events/subscribers/sendNotification.subscriber.js';
+import {  setupDailyBackup  } from './src/jobs/dailyBackup.job.js';
+import {  setupSendReminders  } from './src/jobs/sendReminders.job.js';
 
 const PORT = process.env.PORT || 5000;
 

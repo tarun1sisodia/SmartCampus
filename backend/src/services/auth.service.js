@@ -1,15 +1,15 @@
-const User = require('../models/User.model');
-const RefreshToken = require('../models/RefreshToken.model');
-const { comparePassword } = require('../utils/hashPassword');
-const { generateAccessToken, generateRefreshToken } = require('../utils/generateToken');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
-const crypto = require('crypto');
-const emailService = require('./email.service');
+import User from '../models/User.model.js';
+import RefreshToken from '../models/RefreshToken.model.js';
+import {  comparePassword  } from '../utils/hashPassword.js';
+import {  generateAccessToken, generateRefreshToken  } from '../utils/generateToken.js';
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
+import crypto from 'crypto';
+import emailService from './email.service.js';
 
 const REFRESH_TOKEN_SECRET = process.env.JWT_REFRESH_SECRET || 'refresh-secret-key';
 
-exports.login = async (email, password) => {
+export const login = async (email, password) => {
   const user = await User.findOne({ email, isActive: true }).select('+password');
   if (!user) throw new Error('Invalid credentials');
 
@@ -36,7 +36,7 @@ exports.login = async (email, password) => {
   return { accessToken, refreshToken, user: userObj };
 };
 
-exports.refreshAccessToken = async (oldRefreshToken) => {
+export const refreshAccessToken = async (oldRefreshToken) => {
   const decoded = jwt.decode(oldRefreshToken);
   if (!decoded || !decoded.sub) throw new Error('Invalid refresh token');
 
@@ -75,7 +75,7 @@ exports.refreshAccessToken = async (oldRefreshToken) => {
   return { accessToken: newAccessToken, refreshToken: newRefreshToken };
 };
 
-exports.logout = async (refreshToken) => {
+export const logout = async (refreshToken) => {
   const decoded = jwt.decode(refreshToken);
   if (!decoded || !decoded.sub) return;
 
@@ -88,7 +88,7 @@ exports.logout = async (refreshToken) => {
   }
 };
 
-exports.forgotPassword = async (email) => {
+export const forgotPassword = async (email) => {
   const user = await User.findOne({ email, isActive: true });
   if (!user) throw new Error('No user found with this email');
   const resetToken = crypto.randomBytes(32).toString('hex');
@@ -99,7 +99,7 @@ exports.forgotPassword = async (email) => {
   return { message: 'Reset link sent' };
 };
 
-exports.resetPassword = async (token, newPassword) => {
+export const resetPassword = async (token, newPassword) => {
   const user = await User.findOne({
     resetPasswordToken: token,
     resetPasswordExpires: { $gt: Date.now() }
@@ -111,3 +111,5 @@ exports.resetPassword = async (token, newPassword) => {
   await user.save();
   return { message: 'Password updated' };
 };
+
+export default { login, refreshAccessToken, logout, forgotPassword, resetPassword };

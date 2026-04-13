@@ -1,11 +1,11 @@
-const express = require('express');
-const helmet = require('helmet');
-const cors = require('cors');
-const morgan = require('morgan');
-const cookieParser = require('cookie-parser');
-const requestId = require('./middleware/requestId');
-const errorHandler = require('./middleware/errorHandler');
-const routes = require('./routes/v1');
+import express from 'express';
+import helmet from 'helmet';
+import cors from 'cors';
+import morgan from 'morgan';
+import cookieParser from 'cookie-parser';
+import requestId from './middleware/requestId.js';
+import errorHandler from './middleware/errorHandler.js';
+import routes from './routes/v1/index.js';
 
 const app = express();
 
@@ -30,4 +30,4 @@ app.use((req, res, next) => {
 // Global Error Handler
 app.use(errorHandler);
 
-module.exports = app;
+export default app;

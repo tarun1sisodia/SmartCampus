@@ -1,4 +1,4 @@
-const { S3Client, PutObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
+import {  S3Client, PutObjectCommand, DeleteObjectCommand  } from '@aws-sdk/client-s3';
 
 let s3Client;
 
@@ -12,7 +12,7 @@ if (process.env.AWS_REGION && process.env.AWS_ACCESS_KEY_ID && process.env.AWS_S
   });
 }
 
-exports.uploadFile = async (bucket, key, fileBuffer, mimetype) => {
+export const uploadFile = async (bucket, key, fileBuffer, mimetype) => {
   if (!s3Client) {
     console.warn('S3 is not configured. Mocking upload.');
     return `https://${bucket}.s3.amazonaws.com/${key}`;
@@ -29,7 +29,7 @@ exports.uploadFile = async (bucket, key, fileBuffer, mimetype) => {
   return `https://${bucket}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
 };
 
-exports.deleteFile = async (bucket, key) => {
+export const deleteFile = async (bucket, key) => {
   if (!s3Client) {
     console.warn('S3 is not configured. Mocking delete.');
     return true;
@@ -43,3 +43,5 @@ exports.deleteFile = async (bucket, key) => {
   await s3Client.send(command);
   return true;
 };
+
+export default { uploadFile, deleteFile };

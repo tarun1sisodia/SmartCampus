@@ -1,9 +1,9 @@
-const { z } = require('zod');
-const { Types } = require('mongoose');
+import {  z  } from 'zod';
+import {  Types  } from 'mongoose';
 
 const objectIdSchema = z.custom((val) => Types.ObjectId.isValid(val), "Invalid ObjectId");
 
-exports.markAttendanceSchema = z.object({
+export const markAttendanceSchema = z.object({
   sessionId: objectIdSchema,
   attendance: z.array(z.object({
     studentId: objectIdSchema,
@@ -11,3 +11,5 @@ exports.markAttendanceSchema = z.object({
     remarks: z.string().optional()
   }))
 });
+
+export default { markAttendanceSchema };

@@ -1,6 +1,8 @@
-const { z } = require('zod');
+import {  z  } from 'zod';
 
-exports.feedbackSchema = z.object({
+export const feedbackSchema = z.object({
   rating: z.number().min(1).max(5),
   comment: z.string().optional()
 });
+
+export default { feedbackSchema };

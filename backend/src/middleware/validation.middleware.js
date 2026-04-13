@@ -1,4 +1,4 @@
-module.exports = (schema) => (req, res, next) => {
+export default (schema) => (req, res, next) => {
   try {
     // Only pass req properties so no implicit coercion breaks things unless specified in schema
     schema.parse(req.body);

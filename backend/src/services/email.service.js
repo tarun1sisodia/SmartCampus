@@ -1,6 +1,6 @@
-const { emailQueue } = require('../config/bull');
+import {  emailQueue  } from '../config/bull.js';
 
-exports.sendInviteEmail = async (to, token, inviterName) => {
+export const sendInviteEmail = async (to, token, inviterName) => {
   const inviteLink = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/accept-invite?token=${token}`;
   
   const htmlContent = `
@@ -20,7 +20,7 @@ exports.sendInviteEmail = async (to, token, inviterName) => {
   return job.id;
 };
 
-exports.sendBulkEmail = async (recipients, subject, html) => {
+export const sendBulkEmail = async (recipients, subject, html) => {
   for (const recipient of recipients) {
     await emailQueue.add({
       to: recipient,
@@ -30,7 +30,7 @@ exports.sendBulkEmail = async (recipients, subject, html) => {
   }
 };
 
-exports.sendPasswordResetEmail = async (to, token) => {
+export const sendPasswordResetEmail = async (to, token) => {
   const resetLink = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/reset-password?token=${token}`;
   
   const htmlContent = `
@@ -48,3 +48,5 @@ exports.sendPasswordResetEmail = async (to, token) => {
 
   return job.id;
 };
+
+export default { sendInviteEmail, sendBulkEmail, sendPasswordResetEmail };

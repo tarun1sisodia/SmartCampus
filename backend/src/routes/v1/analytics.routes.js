@@ -1,12 +1,12 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const analyticsController = require('../../controllers/analytics.controller');
-const auth = require('../../middleware/auth.middleware');
-const orgScope = require('../../middleware/orgScope.middleware');
-const rbac = require('../../middleware/rbac.middleware');
+import analyticsController from '../../controllers/analytics.controller.js';
+import auth from '../../middleware/auth.middleware.js';
+import orgScope from '../../middleware/orgScope.middleware.js';
+import rbac from '../../middleware/rbac.middleware.js';
 
 router.get('/class/:courseId', auth, orgScope, analyticsController.classReport);
 router.get('/student/:studentId', auth, orgScope, analyticsController.studentTrend);
 router.get('/teacher/:teacherId', auth, rbac('super_admin', 'org_admin'), orgScope, analyticsController.teacherPerformance);
 
-module.exports = router;
+export default router;

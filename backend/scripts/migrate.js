@@ -1,8 +1,14 @@
-require('dotenv').config();
-const fs = require('fs');
-const path = require('path');
-const mongoose = require('mongoose');
-const connectDB = require('../src/config/database');
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+import dotenv from 'dotenv';
+dotenv.config();
+import fs from 'fs';
+import path from 'path';
+import mongoose from 'mongoose';
+import connectDB from '../src/config/database.js';
 
 // Internal migration model to track versions
 const migrationSchema = new mongoose.Schema({

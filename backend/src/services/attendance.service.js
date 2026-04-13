@@ -1,9 +1,10 @@
-const Session = require('../models/Session.model');
-const Attendance = require('../models/Attendance.model');
-const Student = require('../models/Student.model');
-const eventBus = require('./eventBus.service');
+import Session from '../models/Session.model.js';
+import AttendanceSummary from '../models/AttendanceSummary.model.js';
+import Attendance from '../models/Attendance.model.js';
+import Student from '../models/Student.model.js';
+import eventBus from './eventBus.service.js';
 
-exports.markBulk = async (sessionId, attendanceArray, teacherId, organisationId, isSuperAdmin) => {
+export const markBulk = async (sessionId, attendanceArray, teaciherId, organisationId, isSuperAdmin) => {
   const session = await Session.findById(sessionId);
   if (!session) throw new Error('Session not found');
 
@@ -50,9 +51,8 @@ exports.markBulk = async (sessionId, attendanceArray, teacherId, organisationId,
   return { updatedCount };
 };
 
-exports.getStudentSummary = async (studentId, organisationId, isSuperAdmin, semesterId) => {
+export const getStudentSummary = async (studentId, organisationId, isSuperAdmin, semesterId) => {
   // Simple fallback logic since actual caching or full aggregation is specific for CQRS
-  const AttendanceSummary = require('../models/AttendanceSummary.model');
   const query = { student: studentId };
   if (!isSuperAdmin) query.organisation = organisationId;
   if (semesterId) query.semester = semesterId;
@@ -72,7 +72,7 @@ exports.getStudentSummary = async (studentId, organisationId, isSuperAdmin, seme
   return { result, total, percentage: total > 0 ? (present / total) * 100 : 0 };
 };
 
-exports.syncOffline = async (teacherId, offlineRecords, organisationId) => {
+export const syncOffline = async (teacherId, offlineRecords, organisationId) => {
   const results = [];
   for (const record of offlineRecords) {
     try {
@@ -101,7 +101,7 @@ exports.syncOffline = async (teacherId, offlineRecords, organisationId) => {
   return results;
 };
 
-exports.getSessionsByMonth = async (teacherId, yearMonth, organisationId, isSuperAdmin) => {
+export const getSessionsByMonth = async (teacherId, yearMonth, organisationId, isSuperAdmin) => {
   const [year, month] = yearMonth.split('-');
   const start = new Date(year, month - 1, 1);
   const end = new Date(year, month, 0, 23, 59, 59);
@@ -109,3 +109,5 @@ exports.getSessionsByMonth = async (teacherId, yearMonth, organisationId, isSupe
   if (!isSuperAdmin) query.organisation = organisationId;
   return await Session.find(query).populate('subject course semester section').sort('date');
 };
+
+export default { markBulk, getStudentSummary, syncOffline, getSessionsByMonth };

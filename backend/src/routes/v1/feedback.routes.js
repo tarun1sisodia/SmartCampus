@@ -1,10 +1,10 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const feedbackController = require('../../controllers/feedback.controller');
-const auth = require('../../middleware/auth.middleware');
-const validate = require('../../middleware/validation.middleware');
-const { feedbackSchema } = require('../../validators/feedback.validator');
+import feedbackController from '../../controllers/feedback.controller.js';
+import auth from '../../middleware/auth.middleware.js';
+import validate from '../../middleware/validation.middleware.js';
+import {  feedbackSchema  } from '../../validators/feedback.validator.js';
 
 router.post('/', auth, validate(feedbackSchema), feedbackController.submit);
 
-module.exports = router;
+export default router;

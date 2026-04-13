@@ -1,13 +1,13 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const userController = require('../../controllers/user.controller');
-const auth = require('../../middleware/auth.middleware');
-const rbac = require('../../middleware/rbac.middleware');
-const orgScope = require('../../middleware/orgScope.middleware');
-const validate = require('../../middleware/validation.middleware');
-const upload = require('../../config/multer');
-const { inviteSchema, acceptInviteSchema } = require('../../validators/auth.validator');
-const { changePasswordSchema } = require('../../validators/auth.validator');
+import userController from '../../controllers/user.controller.js';
+import auth from '../../middleware/auth.middleware.js';
+import rbac from '../../middleware/rbac.middleware.js';
+import orgScope from '../../middleware/orgScope.middleware.js';
+import validate from '../../middleware/validation.middleware.js';
+import upload from '../../config/multer.js';
+import {  inviteSchema, acceptInviteSchema  } from '../../validators/auth.validator.js';
+import {  changePasswordSchema  } from '../../validators/auth.validator.js';
 
 router.post('/invite', auth, rbac('super_admin', 'org_admin'), orgScope, validate(inviteSchema), userController.sendInvite);
 router.post('/accept-invite', validate(acceptInviteSchema), userController.acceptInvite);
@@ -19,4 +19,4 @@ router.post('/change-password', auth, validate(changePasswordSchema), userContro
 router.post('/me/photo', auth, upload.single('photo'), userController.uploadProfilePhoto);
 router.delete('/me/photo', auth, userController.deleteProfilePhoto);
 
-module.exports = router;
+export default router;

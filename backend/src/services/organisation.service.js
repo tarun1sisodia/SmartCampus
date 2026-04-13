@@ -1,6 +1,6 @@
-const Organisation = require('../models/Organisation.model');
+import Organisation from '../models/Organisation.model.js';
 
-exports.createOrganisation = async (data, superAdminId) => {
+export const createOrganisation = async (data, superAdminId) => {
   if (data.domain) {
     const existing = await Organisation.findOne({ domain: data.domain });
     if (existing) throw new Error('Organisation with this domain already exists');
@@ -10,7 +10,7 @@ exports.createOrganisation = async (data, superAdminId) => {
   return await Organisation.create(data);
 };
 
-exports.listOrganisations = async (filters, page, limit) => {
+export const listOrganisations = async (filters, page, limit) => {
   const query = {};
   if (filters.status) query.status = filters.status;
   if (filters.type) query.type = filters.type;
@@ -22,7 +22,7 @@ exports.listOrganisations = async (filters, page, limit) => {
   return { data, total, page, limit };
 };
 
-exports.suspendOrganisation = async (orgId) => {
+export const suspendOrganisation = async (orgId) => {
   const org = await Organisation.findById(orgId);
   if (!org) throw new Error('Organisation not found');
 
@@ -30,8 +30,10 @@ exports.suspendOrganisation = async (orgId) => {
   await org.save();
 
   // Could also deactivate all users in that organisation
-  // const User = require('../models/User.model');
+  // import User from '../models/User.model.js';
   // await User.updateMany({ organisation: orgId }, { isActive: false });
 
   return org;
 };
+
+export default { createOrganisation, listOrganisations, suspendOrganisation };

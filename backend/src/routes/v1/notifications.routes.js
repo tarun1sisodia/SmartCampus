@@ -1,8 +1,8 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const notificationController = require('../../controllers/notification.controller');
-const auth = require('../../middleware/auth.middleware');
+import notificationController from '../../controllers/notification.controller.js';
+import auth from '../../middleware/auth.middleware.js';
 
 router.post('/register-token', auth, notificationController.registerToken);
 
-module.exports = router;
+export default router;

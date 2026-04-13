@@ -1,4 +1,4 @@
-const Sentry = require("@sentry/node");
+import * as Sentry from '@sentry/node';
 
 Sentry.init({
   dsn: process.env.SENTRY_DSN || "",
@@ -6,6 +6,4 @@ Sentry.init({
   tracesSampleRate: 1.0,
 });
 
-module.exports = {
-  Sentry
-};
+export { Sentry };

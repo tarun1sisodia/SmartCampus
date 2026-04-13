@@ -1,6 +1,6 @@
-const AttendanceSummary = require('../../models/AttendanceSummary.model');
+import AttendanceSummary from '../../models/AttendanceSummary.model.js';
 
-exports.handle = async (query) => {
+export const handle = async (query) => {
   const { courseId, semesterId, sectionId, organisationId, isSuperAdmin } = query;
   
   const filter = {};
@@ -26,3 +26,5 @@ exports.handle = async (query) => {
   
   return result;
 };
+
+export default { handle };

@@ -1,6 +1,8 @@
-const studentService = require('../../services/student.service');
+import studentService from '../../services/student.service.js';
 
-exports.handle = async (command) => {
+export const handle = async (command) => {
   const { studentsArray, organisationId, requesterId } = command;
   return await studentService.bulkImport(studentsArray, organisationId, requesterId);
 };
+
+export default { handle };

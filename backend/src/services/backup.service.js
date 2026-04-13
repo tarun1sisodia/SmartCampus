@@ -1,13 +1,13 @@
-const BackupRecord = require('../models/BackupRecord.model');
+import BackupRecord from '../models/BackupRecord.model.js';
 // Actual system command runners like 'exec' to run mongodump
-const { exec } = require('child_process');
-const util = require('util');
+import {  exec  } from 'child_process';
+import util from 'util';
 const execPromise = util.promisify(exec);
-const { uploadFile } = require('../utils/s3Client');
-const path = require('path');
-const fs = require('fs');
+import {  uploadFile  } from '../utils/s3Client.js';
+import path from 'path';
+import fs from 'fs';
 
-exports.createFullBackup = async (triggeredBy, organisationId = null) => {
+export const createFullBackup = async (triggeredBy, organisationId = null) => {
   const timestamp = new Date().getTime();
   const filename = `backup_${timestamp}.gz`;
   const localFilePath = path.join('/tmp', filename);
@@ -48,3 +48,5 @@ exports.createFullBackup = async (triggeredBy, organisationId = null) => {
     throw err;
   }
 };
+
+export default { createFullBackup };

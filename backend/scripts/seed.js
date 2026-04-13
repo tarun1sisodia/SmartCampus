@@ -1,6 +1,7 @@
-require('dotenv').config();
-const mongoose = require('mongoose');
-const User = require('../src/models/User.model');
+import dotenv from 'dotenv';
+dotenv.config();
+import mongoose from 'mongoose';
+import User from '../src/models/User.model.js';
 
 async function seed() {
   await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/smartcampus');

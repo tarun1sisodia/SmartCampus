@@ -1,7 +1,8 @@
-const orgService = require('../services/organisation.service');
-const { sendSuccess } = require('../utils/apiResponse');
+import orgService from '../services/organisation.service.js';
+import {  sendSuccess  } from '../utils/apiResponse.js';
+import Organisation from '../models/Organisation.model.js';
 
-exports.create = async (req, res, next) => {
+export const create = async (req, res, next) => {
   try {
     const org = await orgService.createOrganisation(req.body, req.user.id);
     sendSuccess(res, org, 201);
@@ -10,7 +11,7 @@ exports.create = async (req, res, next) => {
   }
 };
 
-exports.list = async (req, res, next) => {
+export const list = async (req, res, next) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
@@ -23,9 +24,9 @@ exports.list = async (req, res, next) => {
   }
 };
 
-exports.get = async (req, res, next) => {
+export const get = async (req, res, next) => {
   try {
-    const org = await require('../models/Organisation.model').findById(req.params.orgId);
+    const org = await Organisation.findById(req.params.orgId);
     if (!org) throw Object.assign(new Error('Not found'), { status: 404 });
     sendSuccess(res, org);
   } catch (err) {
@@ -33,7 +34,7 @@ exports.get = async (req, res, next) => {
   }
 };
 
-exports.update = async (req, res, next) => {
+export const update = async (req, res, next) => {
   try {
     if (req.body.status === 'suspended') {
       const org = await orgService.suspendOrganisation(req.params.orgId);
@@ -41,10 +42,11 @@ exports.update = async (req, res, next) => {
     }
     
     // Normal update operations
-    const Organisation = require('../models/Organisation.model');
     const org = await Organisation.findByIdAndUpdate(req.params.orgId, req.body, { new: true });
     sendSuccess(res, org);
   } catch (err) {
     next(err);
   }
 };
+
+export default { create, list, get, update };

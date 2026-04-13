@@ -1,11 +1,11 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const attendanceController = require('../../controllers/attendance.controller');
-const auth = require('../../middleware/auth.middleware');
-const rbac = require('../../middleware/rbac.middleware');
-const orgScope = require('../../middleware/orgScope.middleware');
-const validate = require('../../middleware/validation.middleware');
-const { markAttendanceSchema } = require('../../validators/attendance.validator');
+import attendanceController from '../../controllers/attendance.controller.js';
+import auth from '../../middleware/auth.middleware.js';
+import rbac from '../../middleware/rbac.middleware.js';
+import orgScope from '../../middleware/orgScope.middleware.js';
+import validate from '../../middleware/validation.middleware.js';
+import {  markAttendanceSchema  } from '../../validators/attendance.validator.js';
 
 router.post('/sessions', auth, rbac('teacher', 'super_admin'), orgScope, attendanceController.createSession);
 router.get('/sessions', auth, orgScope, attendanceController.listSessions);
@@ -16,4 +16,4 @@ router.get('/student/:studentId', auth, orgScope, attendanceController.studentSu
 router.post('/sync', auth, rbac('teacher'), attendanceController.syncOffline);
 router.get('/sessions/month', auth, attendanceController.listSessionsByMonth);
 
-module.exports = router;
+export default router;

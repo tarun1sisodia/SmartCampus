@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
 
@@ -21,7 +21,6 @@ const organisationSchema = new Schema({
   timestamps: true 
 });
 
-organisationSchema.index({ domain: 1 });
 organisationSchema.index({ status: 1 });
 
-module.exports = mongoose.model('Organisation', organisationSchema);
+export default mongoose.model('Organisation', organisationSchema);

@@ -1,6 +1,8 @@
-const attendanceService = require('../../services/attendance.service');
+import attendanceService from '../../services/attendance.service.js';
 
-exports.handle = async (command) => {
+export const handle = async (command) => {
   const { sessionId, attendanceArray, teacherId, organisationId, isSuperAdmin } = command;
   return await attendanceService.markBulk(sessionId, attendanceArray, teacherId, organisationId, isSuperAdmin);
 };
+
+export default { handle };

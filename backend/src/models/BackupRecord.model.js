@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const backupRecordSchema = new Schema({
@@ -14,4 +14,4 @@ const backupRecordSchema = new Schema({
   timestamps: true
 });
 
-module.exports = mongoose.model('BackupRecord', backupRecordSchema);
+export default mongoose.model('BackupRecord', backupRecordSchema);

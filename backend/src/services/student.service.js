@@ -1,9 +1,9 @@
-const Student = require('../models/Student.model');
-const mongoose = require('mongoose');
-const eventBus = require('./eventBus.service');
-const s3Client = require('../utils/s3.util');
+import Student from '../models/Student.model.js';
+import mongoose from 'mongoose';
+import eventBus from './eventBus.service.js';
+import s3Client from '../utils/s3.util.js';
 
-exports.bulkImport = async (studentsArray, organisationId, requesterId) => {
+export const bulkImport = async (studentsArray, organisationId, requesterId) => {
   const session = await mongoose.startSession();
   session.startTransaction();
 
@@ -51,7 +51,7 @@ exports.bulkImport = async (studentsArray, organisationId, requesterId) => {
   }
 };
 
-exports.listStudents = async (filters, organisationId, isSuperAdmin, page, limit) => {
+export const listStudents = async (filters, organisationId, isSuperAdmin, page, limit) => {
   const query = {};
   if (!isSuperAdmin) query.organisation = organisationId;
   
@@ -73,14 +73,14 @@ exports.listStudents = async (filters, organisationId, isSuperAdmin, page, limit
   return { data, total, page, limit };
 };
 
-exports.uploadPhoto = async (studentId, fileBuffer, mimetype) => {
+export const uploadPhoto = async (studentId, fileBuffer, mimetype) => {
   const key = `students/${studentId}/photo-${Date.now()}.jpg`;
   const url = await s3Client.uploadFile(process.env.S3_PHOTO_BUCKET || 'smartcampus-photos', key, fileBuffer, mimetype);
   await Student.findByIdAndUpdate(studentId, { photo: url });
   return { url };
 };
 
-exports.deletePhoto = async (studentId) => {
+export const deletePhoto = async (studentId) => {
   const student = await Student.findById(studentId);
   if (student && student.photo) {
     const keyMatch = student.photo.match(/amazonaws\.com\/(.+)$/);
@@ -92,3 +92,5 @@ exports.deletePhoto = async (studentId) => {
   }
   return { message: 'Photo deleted' };
 };
+
+export default { bulkImport, listStudents, uploadPhoto, deletePhoto };

@@ -1,8 +1,9 @@
-const userService = require('../services/user.service');
-const invitationService = require('../services/invitation.service');
-const { sendSuccess } = require('../utils/apiResponse');
+import userService from '../services/user.service.js';
+import invitationService from '../services/invitation.service.js';
+import {  sendSuccess  } from '../utils/apiResponse.js';
+import User from '../models/User.model.js';
 
-exports.listTeachers = async (req, res, next) => {
+export const listTeachers = async (req, res, next) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
@@ -15,7 +16,7 @@ exports.listTeachers = async (req, res, next) => {
   }
 };
 
-exports.deactivate = async (req, res, next) => {
+export const deactivate = async (req, res, next) => {
   try {
     const isSuperAdmin = req.user.role === 'super_admin';
     const result = await userService.deactivateUser(
@@ -31,7 +32,7 @@ exports.deactivate = async (req, res, next) => {
 };
 
 // Invitation specific routes mapped into users router in spec
-exports.sendInvite = async (req, res, next) => {
+export const sendInvite = async (req, res, next) => {
   try {
     const { email, role, name } = req.body;
     // Assuming you can only invite within your own organisation unless super admin
@@ -45,7 +46,7 @@ exports.sendInvite = async (req, res, next) => {
   }
 };
 
-exports.acceptInvite = async (req, res, next) => {
+export const acceptInvite = async (req, res, next) => {
   try {
     const { token, password, name } = req.body;
     const result = await invitationService.acceptInvite(token, password, name);
@@ -63,10 +64,9 @@ exports.acceptInvite = async (req, res, next) => {
   }
 };
 
-exports.resendInvite = async (req, res, next) => {
+export const resendInvite = async (req, res, next) => {
   try {
     // Requires User fetch to resend
-    const User = require('../models/User.model');
     const userToresend = await User.findById(req.params.userId);
     if (!userToresend || userToresend.isActive) throw new Error('User not pending invitation');
     
@@ -83,7 +83,7 @@ exports.resendInvite = async (req, res, next) => {
   }
 };
 
-exports.changePassword = async (req, res, next) => {
+export const changePassword = async (req, res, next) => {
   try {
     const { oldPassword, newPassword } = req.body;
     const result = await userService.changePassword(req.user.id, oldPassword, newPassword);
@@ -93,7 +93,7 @@ exports.changePassword = async (req, res, next) => {
   }
 };
 
-exports.uploadProfilePhoto = async (req, res, next) => {
+export const uploadProfilePhoto = async (req, res, next) => {
   try {
     if (!req.file) throw new Error('No photo uploaded');
     const result = await userService.uploadProfilePhoto(req.user.id, req.file.buffer, req.file.mimetype);
@@ -103,7 +103,7 @@ exports.uploadProfilePhoto = async (req, res, next) => {
   }
 };
 
-exports.deleteProfilePhoto = async (req, res, next) => {
+export const deleteProfilePhoto = async (req, res, next) => {
   try {
     const result = await userService.deleteProfilePhoto(req.user.id);
     sendSuccess(res, result);
@@ -111,3 +111,5 @@ exports.deleteProfilePhoto = async (req, res, next) => {
     next(err);
   }
 };
+
+export default { listTeachers, deactivate, sendInvite, acceptInvite, resendInvite, changePassword, uploadProfilePhoto, deleteProfilePhoto };

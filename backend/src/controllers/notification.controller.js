@@ -1,7 +1,7 @@
-const notificationService = require('../services/notification.service');
-const { sendSuccess } = require('../utils/apiResponse');
+import notificationService from '../services/notification.service.js';
+import {  sendSuccess  } from '../utils/apiResponse.js';
 
-exports.registerToken = async (req, res, next) => {
+export const registerToken = async (req, res, next) => {
   try {
     const { fcmToken, deviceId } = req.body;
     await notificationService.registerToken(req.user.id, fcmToken, deviceId);
@@ -10,3 +10,5 @@ exports.registerToken = async (req, res, next) => {
     next(err);
   }
 };
+
+export default { registerToken };

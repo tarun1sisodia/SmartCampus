@@ -1,8 +1,10 @@
-const { z } = require('zod');
+import {  z  } from 'zod';
 
-exports.createOrgSchema = z.object({
+export const createOrgSchema = z.object({
   name: z.string().min(2),
   type: z.enum(['school', 'college']),
   domain: z.string().optional(),
   contactEmail: z.string().email()
 });
+
+export default { createOrgSchema };

@@ -1,8 +1,8 @@
-const { Server } = require('socket.io');
+import {  Server  } from 'socket.io';
 
 let io;
 
-exports.initSocket = (server) => {
+export const initSocket = (server) => {
   io = new Server(server, { 
     cors: { origin: process.env.FRONTEND_URL || '*' } 
   });
@@ -30,8 +30,10 @@ exports.initSocket = (server) => {
   return io;
 };
 
-exports.emitToUser = (userId, event, data) => {
+export const emitToUser = (userId, event, data) => {
   if (io) {
     io.to(`user:${userId}`).emit(event, data);
   }
 };
+
+export default { initSocket, emitToUser };

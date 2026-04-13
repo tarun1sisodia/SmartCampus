@@ -1,8 +1,8 @@
-const AttendanceSummary = require('../models/AttendanceSummary.model');
-const Session = require('../models/Session.model');
-const Attendance = require('../models/Attendance.model');
-const Student = require('../models/Student.model');
-exports.getClassAttendance = async (courseId, semesterId, sectionId, organisationId, isSuperAdmin) => {
+import AttendanceSummary from '../models/AttendanceSummary.model.js';
+import Session from '../models/Session.model.js';
+import Attendance from '../models/Attendance.model.js';
+import Student from '../models/Student.model.js';
+export const getClassAttendance = async (courseId, semesterId, sectionId, organisationId, isSuperAdmin) => {
   const query = {};
   if (!isSuperAdmin) query.organisation = organisationId;
   if (courseId) query.course = courseId;
@@ -41,7 +41,7 @@ exports.getClassAttendance = async (courseId, semesterId, sectionId, organisatio
   return { overall, studentList };
 };
 
-exports.getTeacherPerformance = async (teacherId, startDate, endDate, organisationId, isSuperAdmin) => {
+export const getTeacherPerformance = async (teacherId, startDate, endDate, organisationId, isSuperAdmin) => {
   const match = { teacher: teacherId };
   if (!isSuperAdmin) match.organisation = organisationId;
   if (startDate) match.date = { $gte: new Date(startDate) };
@@ -66,3 +66,5 @@ exports.getTeacherPerformance = async (teacherId, startDate, endDate, organisati
   const overallAttendance = subjectSummary.reduce((acc, s) => acc + s.avgAttendance, 0) / (subjectSummary.length || 1);
   return { overallAttendance, subjectWise: subjectSummary, totalSessions };
 };
+
+export default { getClassAttendance, getTeacherPerformance };

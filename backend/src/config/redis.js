@@ -1,5 +1,5 @@
-const Redis = require('ioredis');
-const logger = require('./logger');
+import Redis from 'ioredis';
+import logger from './logger.js';
 
 const urls = [process.env.REDIS_URL, process.env.REDIS_URL2].filter(Boolean);
 
@@ -36,4 +36,4 @@ redisClient.on('error', (err) => {
   logger.error(`Redis connection error: ${err.message}`);
 });
 
-module.exports = redisClient;
+export default redisClient;

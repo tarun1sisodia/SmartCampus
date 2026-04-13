@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const attendanceSchema = new Schema({
@@ -16,4 +16,4 @@ const attendanceSchema = new Schema({
 attendanceSchema.index({ session: 1, student: 1 }, { unique: true });
 attendanceSchema.index({ organisation: 1, student: 1 });
 
-module.exports = mongoose.model('Attendance', attendanceSchema);
+export default mongoose.model('Attendance', attendanceSchema);

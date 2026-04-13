@@ -1,9 +1,9 @@
-const studentService = require('../services/student.service');
-const csvParser = require('../utils/csvParser');
-const { sendSuccess } = require('../utils/apiResponse');
-const fs = require('fs');
+import studentService from '../services/student.service.js';
+import csvParser from '../utils/csvParser.js';
+import {  sendSuccess  } from '../utils/apiResponse.js';
+import fs from 'fs';
 
-exports.bulkImportStudents = async (req, res, next) => {
+export const bulkImportStudents = async (req, res, next) => {
   try {
     if (!req.file) throw Object.assign(new Error('No file uploaded'), { status: 400 });
     
@@ -17,3 +17,5 @@ exports.bulkImportStudents = async (req, res, next) => {
     next(err);
   }
 };
+
+export default { bulkImportStudents };

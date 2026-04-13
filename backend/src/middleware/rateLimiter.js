@@ -1,8 +1,8 @@
-const rateLimit = require('express-rate-limit');
-const RedisStore = require('rate-limit-redis').default;
-const redisClient = require('../config/redis');
+import rateLimit from 'express-rate-limit';
+import RedisStore from 'rate-limit-redis';
+import redisClient from '../config/redis.js';
 
-exports.strictLimiter = rateLimit({
+export const strictLimiter = rateLimit({
   store: new RedisStore({ 
     sendCommand: (...args) => redisClient.call(...args) 
   }),
@@ -12,7 +12,7 @@ exports.strictLimiter = rateLimit({
   message: { success: false, message: 'Too many requests, please try again later.' }
 });
 
-exports.standardLimiter = rateLimit({
+export const standardLimiter = rateLimit({
   store: new RedisStore({ 
     sendCommand: (...args) => redisClient.call(...args) 
   }),
@@ -21,3 +21,5 @@ exports.standardLimiter = rateLimit({
   keyGenerator: (req) => req.user?.id || req.ip || 'global',
   message: { success: false, message: 'Rate limit exceeded.' }
 });
+
+export default { strictLimiter, standardLimiter };

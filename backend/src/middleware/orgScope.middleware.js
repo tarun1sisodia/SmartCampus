@@ -1,4 +1,4 @@
-module.exports = (req, res, next) => {
+export default (req, res, next) => {
   if (req.user.role === 'super_admin') {
     req.scope = { isSuperAdmin: true };
     return next();

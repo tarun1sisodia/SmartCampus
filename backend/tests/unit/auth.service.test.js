@@ -1,7 +1,7 @@
-const authService = require('../../src/services/auth.service');
-const User = require('../../src/models/User.model');
-const RefreshToken = require('../../src/models/RefreshToken.model');
-const bcrypt = require('bcrypt');
+import authService from '../../src/services/auth.service.js';
+import User from '../../src/models/User.model.js';
+import RefreshToken from '../../src/models/RefreshToken.model.js';
+import bcrypt from 'bcrypt';
 
 jest.mock('../../src/models/User.model');
 jest.mock('../../src/models/RefreshToken.model');

@@ -1,7 +1,7 @@
-const eventBus = require('../../services/eventBus.service');
-const { emitToUser } = require('../../socket');
-const { sendPushNotification } = require('../../services/notification.service');
-exports.setup = () => {
+import eventBus from '../../services/eventBus.service.js';
+import {  emitToUser  } from '../../socket/index.js';
+import {  sendPushNotification  } from '../../services/notification.service.js';
+export const setup = () => {
   eventBus.registerHandler('attendance.marked', async (data) => {
     const { newStatus, oldStatus, studentId, sessionId, teacherId } = data;
     
@@ -20,3 +20,5 @@ exports.setup = () => {
     }
   });
 };
+
+export default { setup };

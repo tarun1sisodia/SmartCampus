@@ -1,7 +1,7 @@
-const request = require('supertest');
-const app = require('../../src/app');
-const authService = require('../../src/services/auth.service');
-const { createStudentSchema } = require('../../src/validators/student.validator');
+import request from 'supertest';
+import app from '../../src/app.js';
+import authService from '../../src/services/auth.service.js';
+import {  createStudentSchema  } from '../../src/validators/student.validator.js';
 
 // We intercept the internal core business logic directly so we don't connect to Mongoose,
 // keeping our Supertest API endpoints fast and resilient.

@@ -1,5 +1,5 @@
-const Queue = require('bull');
-const redisClient = require('./redis');
+import Queue from 'bull';
+import redisClient from './redis.js';
 
 const defaultOptions = {
   redis: process.env.REDIS_URL || 'redis://localhost:6379',
@@ -14,12 +14,6 @@ const defaultOptions = {
 };
 
 // Create Specific Queues
-const emailQueue = new Queue('emailQueue', defaultOptions);
-const backupQueue = new Queue('backupQueue', defaultOptions);
-const analyticsQueue = new Queue('analyticsQueue', defaultOptions);
-
-module.exports = {
-  emailQueue,
-  backupQueue,
-  analyticsQueue
-};
+export const emailQueue = new Queue('emailQueue', defaultOptions);
+export const backupQueue = new Queue('backupQueue', defaultOptions);
+export const analyticsQueue = new Queue('analyticsQueue', defaultOptions);

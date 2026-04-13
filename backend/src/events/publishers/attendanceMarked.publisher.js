@@ -1,6 +1,8 @@
-const eventBus = require('../../services/eventBus.service');
+import eventBus from '../../services/eventBus.service.js';
 
-exports.publishAttendanceMarked = async (data) => {
+export const publishAttendanceMarked = async (data) => {
   // data = { sessionId, studentId, newStatus, oldStatus }
   await eventBus.publish('attendance.marked', data);
 };
+
+export default { publishAttendanceMarked };

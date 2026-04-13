@@ -1,9 +1,9 @@
-const AttendanceSummary = require('../../models/AttendanceSummary.model');
-const Attendance = require('../../models/Attendance.model');
-const Session = require('../../models/Session.model');
-const Student = require('../../models/Student.model');
+import AttendanceSummary from '../../models/AttendanceSummary.model.js';
+import Attendance from '../../models/Attendance.model.js';
+import Session from '../../models/Session.model.js';
+import Student from '../../models/Student.model.js';
 
-exports.refreshAttendanceSummary = async (eventData) => {
+export const refreshAttendanceSummary = async (eventData) => {
   const { sessionId, studentId, newStatus } = eventData;
 
   const session = await Session.findById(sessionId);
@@ -28,3 +28,5 @@ exports.refreshAttendanceSummary = async (eventData) => {
     { upsert: true, new: true }
   );
 };
+
+export default { refreshAttendanceSummary };

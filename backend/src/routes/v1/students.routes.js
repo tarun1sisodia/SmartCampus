@@ -1,13 +1,13 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const studentController = require('../../controllers/student.controller');
-const importExportController = require('../../controllers/importExport.controller');
-const auth = require('../../middleware/auth.middleware');
-const orgScope = require('../../middleware/orgScope.middleware');
-const rbac = require('../../middleware/rbac.middleware');
-const upload = require('../../config/multer');
-const validate = require('../../middleware/validation.middleware');
-const { createStudentSchema } = require('../../validators/student.validator');
+import studentController from '../../controllers/student.controller.js';
+import importExportController from '../../controllers/importExport.controller.js';
+import auth from '../../middleware/auth.middleware.js';
+import orgScope from '../../middleware/orgScope.middleware.js';
+import rbac from '../../middleware/rbac.middleware.js';
+import upload from '../../config/multer.js';
+import validate from '../../middleware/validation.middleware.js';
+import {  createStudentSchema  } from '../../validators/student.validator.js';
 
 router.get('/', auth, orgScope, studentController.list);
 router.post('/', auth, rbac('super_admin', 'org_admin'), orgScope, validate(createStudentSchema), studentController.create);
@@ -19,4 +19,4 @@ router.delete('/:id', auth, rbac('super_admin', 'org_admin'), orgScope, studentC
 router.post('/:id/photo', auth, rbac('super_admin', 'org_admin', 'teacher'), upload.single('photo'), studentController.uploadPhoto);
 router.delete('/:id/photo', auth, rbac('super_admin', 'org_admin', 'teacher'), studentController.deletePhoto);
 
-module.exports = router;
+export default router;

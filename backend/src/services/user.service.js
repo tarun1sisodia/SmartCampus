@@ -1,9 +1,9 @@
-const User = require('../models/User.model');
-const AuditLog = require('../models/AuditLog.model');
-const bcrypt = require('bcrypt');
-const s3Client = require('../utils/s3.util');
+import User from '../models/User.model.js';
+import AuditLog from '../models/AuditLog.model.js';
+import bcrypt from 'bcrypt';
+import s3Client from '../utils/s3.util.js';
 
-exports.listTeachers = async (organisationId, page, limit, isSuperAdmin) => {
+export const listTeachers = async (organisationId, page, limit, isSuperAdmin) => {
   const query = { role: 'teacher' };
   if (!isSuperAdmin) {
     query.organisation = organisationId;
@@ -16,7 +16,7 @@ exports.listTeachers = async (organisationId, page, limit, isSuperAdmin) => {
   return { data, total, page, limit };
 };
 
-exports.deactivateUser = async (userId, requesterOrgId, isSuperAdmin, requesterId) => {
+export const deactivateUser = async (userId, requesterOrgId, isSuperAdmin, requesterId) => {
   const user = await User.findById(userId);
   if (!user) throw new Error('User not found');
 
@@ -39,7 +39,7 @@ exports.deactivateUser = async (userId, requesterOrgId, isSuperAdmin, requesterI
   return user;
 };
 
-exports.changePassword = async (userId, oldPassword, newPassword) => {
+export const changePassword = async (userId, oldPassword, newPassword) => {
   const user = await User.findById(userId).select('+password');
   if (!(await bcrypt.compare(oldPassword, user.password))) {
     throw new Error('Current password is incorrect');
@@ -49,14 +49,14 @@ exports.changePassword = async (userId, oldPassword, newPassword) => {
   return { message: 'Password changed' };
 };
 
-exports.uploadProfilePhoto = async (userId, fileBuffer, mimetype) => {
+export const uploadProfilePhoto = async (userId, fileBuffer, mimetype) => {
   const key = `users/${userId}/profile-${Date.now()}.jpg`;
   const url = await s3Client.uploadFile(process.env.S3_PHOTO_BUCKET || 'smartcampus-photos', key, fileBuffer, mimetype);
   await User.findByIdAndUpdate(userId, { avatar: url });
   return { url };
 };
 
-exports.deleteProfilePhoto = async (userId) => {
+export const deleteProfilePhoto = async (userId) => {
   const user = await User.findById(userId);
   if (user && user.avatar) {
     const keyMatch = user.avatar.match(/amazonaws\.com\/(.+)$/);
@@ -68,3 +68,5 @@ exports.deleteProfilePhoto = async (userId) => {
   }
   return { message: 'Photo deleted' };
 };
+
+export default { listTeachers, deactivateUser, changePassword, uploadProfilePhoto, deleteProfilePhoto };

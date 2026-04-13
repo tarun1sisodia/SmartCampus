@@ -1,6 +1,7 @@
-const admin = require('firebase-admin');
-const User = require('../models/User.model');
-const path = require('path');
+import admin from 'firebase-admin';
+import User from '../models/User.model.js';
+import path from 'path';
+import fs from 'fs';
 
 // Make sure to load credentials properly, typically from a file linked by FCM_SERVICE_ACCOUNT_PATH
 let isInitialized = false;
@@ -8,8 +9,9 @@ let isInitialized = false;
 if (process.env.FCM_SERVICE_ACCOUNT_PATH) {
   try {
     const certPath = path.resolve(process.cwd(), process.env.FCM_SERVICE_ACCOUNT_PATH.endsWith('.json') ? process.env.FCM_SERVICE_ACCOUNT_PATH : `${process.env.FCM_SERVICE_ACCOUNT_PATH}.json`);
+    const serviceAccount = JSON.parse(fs.readFileSync(certPath, 'utf8'));
     admin.initializeApp({
-      credential: admin.credential.cert(require(certPath))
+      credential: admin.credential.cert(serviceAccount)
     });
     isInitialized = true;
   } catch (error) {
@@ -27,7 +29,7 @@ if (process.env.FCM_SERVICE_ACCOUNT_PATH) {
   }
 }
 
-exports.registerToken = async (userId, fcmToken, deviceId) => {
+export const registerToken = async (userId, fcmToken, deviceId) => {
   await User.findByIdAndUpdate(userId, {
     $addToSet: {
       fcmTokens: { token: fcmToken, deviceId, createdAt: new Date() }
@@ -35,7 +37,7 @@ exports.registerToken = async (userId, fcmToken, deviceId) => {
   });
 };
 
-exports.sendPushNotification = async (userId, title, body, data = {}) => {
+export const sendPushNotification = async (userId, title, body, data = {}) => {
   if (!isInitialized) return;
   const user = await User.findById(userId);
   if (!user || !user.fcmTokens || !user.fcmTokens.length) return;
@@ -48,3 +50,5 @@ exports.sendPushNotification = async (userId, title, body, data = {}) => {
     data
   });
 };
+
+export default { registerToken, sendPushNotification };

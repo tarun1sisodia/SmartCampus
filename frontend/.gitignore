@@ -51,6 +51,7 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 prod-ca-2021.crt
+/android/app/google-services.json
 # Environment variables
 .env
 .env copy

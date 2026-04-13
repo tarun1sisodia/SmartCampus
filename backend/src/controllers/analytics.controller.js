@@ -1,9 +1,9 @@
-const analyticsService = require('../services/analytics.service');
-const { sendSuccess } = require('../utils/apiResponse');
-const AttendanceSummary = require('../models/AttendanceSummary.model');
-const Session = require('../models/Session.model');
+import analyticsService from '../services/analytics.service.js';
+import {  sendSuccess  } from '../utils/apiResponse.js';
+import AttendanceSummary from '../models/AttendanceSummary.model.js';
+import Session from '../models/Session.model.js';
 
-exports.classReport = async (req, res, next) => {
+export const classReport = async (req, res, next) => {
   try {
     const isSuperAdmin = req.user.role === 'super_admin';
     const { semester, section } = req.query;
@@ -21,7 +21,7 @@ exports.classReport = async (req, res, next) => {
   }
 };
 
-exports.studentTrend = async (req, res, next) => {
+export const studentTrend = async (req, res, next) => {
   try {
     const isSuperAdmin = req.user.role === 'super_admin';
     const query = { student: req.params.studentId };
@@ -34,7 +34,7 @@ exports.studentTrend = async (req, res, next) => {
   }
 };
 
-exports.teacherPerformance = async (req, res, next) => {
+export const teacherPerformance = async (req, res, next) => {
   try {
     const isSuperAdmin = req.user.role === 'super_admin';
     const { startDate, endDate } = req.query;
@@ -53,3 +53,5 @@ exports.teacherPerformance = async (req, res, next) => {
     next(err);
   }
 };
+
+export default { classReport, studentTrend, teacherPerformance };

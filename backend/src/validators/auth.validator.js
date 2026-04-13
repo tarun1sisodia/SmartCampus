@@ -1,32 +1,34 @@
-const { z } = require('zod');
+import {  z  } from 'zod';
 
-exports.loginSchema = z.object({
+export const loginSchema = z.object({
   email: z.string().email(),
   password: z.string().min(6)
 });
 
-exports.inviteSchema = z.object({
+export const inviteSchema = z.object({
   email: z.string().email(),
   role: z.enum(['super_admin', 'org_admin', 'teacher']),
   name: z.string().optional()
 });
 
-exports.acceptInviteSchema = z.object({
+export const acceptInviteSchema = z.object({
   token: z.string().min(10),
   password: z.string().min(6),
   name: z.string().optional()
 });
 
-exports.forgotSchema = z.object({
+export const forgotSchema = z.object({
   email: z.string().email()
 });
 
-exports.resetSchema = z.object({
+export const resetSchema = z.object({
   token: z.string(),
   newPassword: z.string().min(6)
 });
 
-exports.changePasswordSchema = z.object({
+export const changePasswordSchema = z.object({
   oldPassword: z.string(),
   newPassword: z.string().min(6)
 });
+
+export default { loginSchema, inviteSchema, acceptInviteSchema, forgotSchema, resetSchema, changePasswordSchema };

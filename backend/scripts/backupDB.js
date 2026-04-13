@@ -1,7 +1,8 @@
-require('dotenv').config();
-const backupService = require('../src/services/backup.service');
-const connectDB = require('../src/config/database');
-const mongoose = require('mongoose');
+import dotenv from 'dotenv';
+dotenv.config();
+import backupService from '../src/services/backup.service.js';
+import connectDB from '../src/config/database.js';
+import mongoose from 'mongoose';
 
 async function runBackup() {
   await connectDB();

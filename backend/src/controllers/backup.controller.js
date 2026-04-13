@@ -1,8 +1,8 @@
-const backupService = require('../services/backup.service');
-const BackupRecord = require('../models/BackupRecord.model');
-const { sendSuccess } = require('../utils/apiResponse');
+import backupService from '../services/backup.service.js';
+import BackupRecord from '../models/BackupRecord.model.js';
+import {  sendSuccess  } from '../utils/apiResponse.js';
 
-exports.create = async (req, res, next) => {
+export const create = async (req, res, next) => {
   try {
     const record = await backupService.createFullBackup(req.user.id, req.body.organisationId);
     sendSuccess(res, record, 201);
@@ -11,7 +11,7 @@ exports.create = async (req, res, next) => {
   }
 };
 
-exports.list = async (req, res, next) => {
+export const list = async (req, res, next) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
@@ -26,7 +26,7 @@ exports.list = async (req, res, next) => {
   }
 };
 
-exports.restore = async (req, res, next) => {
+export const restore = async (req, res, next) => {
   try {
     // Only stub logic.
     // await backupService.restoreBackup(req.params.backupId);
@@ -35,3 +35,5 @@ exports.restore = async (req, res, next) => {
     next(err);
   }
 };
+
+export default { create, list, restore };
