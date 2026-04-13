@@ -5,10 +5,11 @@ import 'package:flutter/foundation.dart';
 class ConnectivityService {
   final Connectivity _connectivity = Connectivity();
   final StreamController<bool> _controller = StreamController<bool>.broadcast();
+  StreamSubscription<List<ConnectivityResult>>? _subscription;
   bool _isOnline = true;
 
   ConnectivityService() {
-    _connectivity.onConnectivityChanged.listen(_updateStatus);
+    _subscription = _connectivity.onConnectivityChanged.listen(_updateStatus);
     checkCurrentStatus();
   }
 
@@ -16,8 +17,8 @@ class ConnectivityService {
   bool get isOnline => _isOnline;
 
   Future<void> checkCurrentStatus() async {
-    final result = await _connectivity.checkConnectivity();
-    _updateStatus(result);
+    final results = await _connectivity.checkConnectivity();
+    _updateStatus(results);
   }
 
   void _updateStatus(List<ConnectivityResult> results) {
@@ -30,6 +31,7 @@ class ConnectivityService {
   }
 
   void dispose() {
+    _subscription?.cancel();
     _controller.close();
   }
 }

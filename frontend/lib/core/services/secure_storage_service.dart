@@ -1,16 +1,40 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class SecureStorageService {
-  static const _storage = FlutterSecureStorage();
-  static const _accessTokenKey = 'access_token';
-  static const _refreshTokenKey = 'refresh_token';
+  SecureStorageService({FlutterSecureStorage? storage})
+      : _storage = storage ?? const FlutterSecureStorage();
 
-  static Future<void> saveTokens(String access, String refresh) async {
-    await _storage.write(key: _accessTokenKey, value: access);
-    await _storage.write(key: _refreshTokenKey, value: refresh);
+  static const String accessTokenKey = 'access_token';
+  static const String refreshTokenKey = 'refresh_token';
+
+  final FlutterSecureStorage _storage;
+
+  Future<void> writeTokens({
+    required String accessToken,
+    required String refreshToken,
+  }) async {
+    await _storage.write(key: accessTokenKey, value: accessToken);
+    await _storage.write(key: refreshTokenKey, value: refreshToken);
   }
 
-  static Future<String?> getAccessToken() async => await _storage.read(key: _accessTokenKey);
-  static Future<String?> getRefreshToken() async => await _storage.read(key: _refreshTokenKey);
-  static Future<void> clearTokens() async => await _storage.deleteAll();
+  Future<String?> readAccessToken() => _storage.read(key: accessTokenKey);
+
+  Future<String?> readRefreshToken() => _storage.read(key: refreshTokenKey);
+
+  Future<void> deleteTokens() => _storage.deleteAll();
+
+  // Backward-compatible static helpers while legacy modules are migrated.
+  static final SecureStorageService _compat = SecureStorageService();
+  static Future<void> saveTokensStatic(String access, String refresh) =>
+      _compat.writeTokens(accessToken: access, refreshToken: refresh);
+  static Future<String?> getAccessTokenStatic() => _compat.readAccessToken();
+  static Future<String?> getRefreshTokenStatic() => _compat.readRefreshToken();
+  static Future<void> clearTokensStatic() => _compat.deleteTokens();
+
+  // Preserve existing method names used across legacy modules.
+  static Future<void> saveTokens(String access, String refresh) =>
+      saveTokensStatic(access, refresh);
+  static Future<String?> getAccessToken() => getAccessTokenStatic();
+  static Future<String?> getRefreshToken() => getRefreshTokenStatic();
+  static Future<void> clearTokens() => clearTokensStatic();
 }

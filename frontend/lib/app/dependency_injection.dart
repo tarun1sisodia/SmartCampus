@@ -9,10 +9,15 @@ import 'package:smart_campus/features/home/bloc/home_bloc.dart';
 import 'package:smart_campus/features/home/bloc/home_repository.dart';
 import '../core/api/api_client.dart';
 import '../core/database/app_database.dart';
+import '../core/database/dao/pending_attendance_dao.dart';
+import '../core/database/dao/session_cache_dao.dart';
 import '../core/cache/hive_service.dart';
 import '../core/services/connectivity_service.dart';
 import '../core/services/sync_service.dart';
 import '../core/services/biometric_service.dart';
+import '../core/services/push_notification_service.dart';
+import '../core/services/secure_storage_service.dart';
+import '../core/services/background_task_service.dart';
 import '../features/session/bloc/session_bloc.dart';
 import '../features/session/bloc/session_repository.dart';
 
@@ -22,6 +27,12 @@ Future<void> initDependencyInjection() async {
   // Core
   final db = AppDatabase();
   getIt.registerSingleton<AppDatabase>(db);
+  getIt.registerLazySingleton<PendingAttendanceDao>(
+    () => PendingAttendanceDao(getIt<AppDatabase>()),
+  );
+  getIt.registerLazySingleton<SessionCacheDao>(
+    () => SessionCacheDao(getIt<AppDatabase>()),
+  );
   
   final hiveService = HiveService();
   await hiveService.init();
@@ -32,6 +43,11 @@ Future<void> initDependencyInjection() async {
   // Services
   getIt.registerLazySingleton<ConnectivityService>(() => ConnectivityService());
   getIt.registerLazySingleton<BiometricService>(() => BiometricService());
+  getIt.registerLazySingleton<PushNotificationService>(
+    () => PushNotificationService(apiClient: getIt<ApiClient>()),
+  );
+  getIt.registerLazySingleton<SecureStorageService>(() => SecureStorageService());
+  getIt.registerLazySingleton<BackgroundTaskService>(() => BackgroundTaskService());
   
   // Sync Service (Requires ApiClient and Database)
   getIt.registerLazySingleton<SyncService>(() => SyncService(
@@ -53,7 +69,7 @@ Future<void> initDependencyInjection() async {
   getIt.registerLazySingleton<SessionRepository>(() => SessionRepository(getIt<ApiClient>()));
 
   // Blocs
-  getIt.registerLazySingleton<AuthBloc>(() => AuthBloc(getIt<AuthRepository>()));
+  getIt.registerFactory(() => AuthBloc(getIt<AuthRepository>()));
   getIt.registerFactory(() => HomeBloc(getIt<HomeRepository>()));
   getIt.registerFactory(() => AttendanceBloc(
     getIt<AttendanceRepository>(),
