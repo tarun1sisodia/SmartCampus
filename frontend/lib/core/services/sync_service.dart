@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import '../api/api_client.dart';
+import '../api/endpoints.dart';
 import '../database/app_database.dart';
 
 class SyncService {
@@ -36,7 +37,7 @@ class SyncService {
         final batch = pending.sublist(i, end);
 
         try {
-          final response = await _apiClient.dio.post('/attendance/sync', data: {
+          final response = await _apiClient.dio.post(Endpoints.syncAttendance, data: {
             'records': batch.map((r) => {
               'sessionId': r['sessionId'],
               'studentId': r['studentId'],

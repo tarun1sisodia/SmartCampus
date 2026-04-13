@@ -21,8 +21,9 @@ class AppDatabase {
 
     return await openDatabase(
       path,
-      version: 1,
+      version: 2,
       onCreate: _onCreate,
+      onUpgrade: _onUpgrade,
     );
   }
 
@@ -39,14 +40,24 @@ class AppDatabase {
       )
     ''');
 
-    await db.execute('''
-      CREATE TABLE cached_sessions (
-        sessionId TEXT PRIMARY KEY,
-        jsonData TEXT NOT NULL,
-        expiry TEXT NOT NULL
-      )
-    ''');
+    await db.execute(_createSessionCacheTableQuery);
   }
+
+  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      await db.execute('DROP TABLE IF EXISTS cached_sessions');
+      await db.execute(_createSessionCacheTableQuery);
+    }
+  }
+
+  static const String _createSessionCacheTableQuery = '''
+      CREATE TABLE session_cache (
+        cacheKey TEXT PRIMARY KEY,
+        jsonData TEXT NOT NULL,
+        expiresAt TEXT NOT NULL,
+        updatedAt TEXT NOT NULL
+      )
+    ''';
 
   // Generic methods
   Future<int> insert(String table, Map<String, dynamic> data) async {

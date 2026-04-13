@@ -1,26 +1,44 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import '../../env/env_config.dart';
+import 'endpoints.dart';
+import '../services/secure_storage_service.dart';
 
 class RefreshTokenInterceptor extends Interceptor {
-  final Dio _dio;
-  final FlutterSecureStorage _storage = const FlutterSecureStorage();
+  RefreshTokenInterceptor(
+    this._dio, {
+    SecureStorageService? storageService,
+    void Function()? onSessionExpired,
+  })  : _storageService = storageService ?? SecureStorageService(),
+        _onSessionExpired = onSessionExpired;
 
-  RefreshTokenInterceptor(this._dio);
+  final Dio _dio;
+  final SecureStorageService _storageService;
+  final void Function()? _onSessionExpired;
+  bool _isRefreshing = false;
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
     if (err.response?.statusCode == 401) {
-      // Check if it's already a refresh attempt or logout attempt to avoid loops
-      if (err.requestOptions.path.contains('/auth/refresh') || 
-          err.requestOptions.path.contains('/auth/logout')) {
+      if (_isRefreshOrLogout(err.requestOptions.path) || _isRefreshing) {
         return handler.next(err);
       }
 
-      final refreshToken = await _storage.read(key: 'refresh_token');
+      final refreshToken = await _storageService.readRefreshToken();
       if (refreshToken != null) {
         try {
-          // Attempt to refresh token
-          final response = await _dio.post('/auth/refresh', data: {
+          _isRefreshing = true;
+          final refreshDio = Dio(
+            BaseOptions(
+              baseUrl: _dio.options.baseUrl.isEmpty
+                  ? EnvConfig.apiBaseUrl
+                  : _dio.options.baseUrl,
+              connectTimeout: _dio.options.connectTimeout,
+              receiveTimeout: _dio.options.receiveTimeout,
+              headers: _dio.options.headers,
+            ),
+          );
+
+          final response = await refreshDio.post(Endpoints.refresh, data: {
             'refreshToken': refreshToken,
           });
 
@@ -28,21 +46,21 @@ class RefreshTokenInterceptor extends Interceptor {
             final newAccessToken = response.data['data']['accessToken'];
             final newRefreshToken = response.data['data']['refreshToken'];
 
-            await _storage.write(key: 'access_token', value: newAccessToken);
-            if (newRefreshToken != null) {
-              await _storage.write(key: 'refresh_token', value: newRefreshToken);
-            }
+            await _storageService.writeTokens(
+              accessToken: newAccessToken,
+              refreshToken: newRefreshToken ?? refreshToken,
+            );
 
-            // Retry the original request with the new token
             final opts = err.requestOptions;
             opts.headers['Authorization'] = 'Bearer $newAccessToken';
-            
             final retryResponse = await _dio.fetch(opts);
             return handler.resolve(retryResponse);
           }
-        } catch (e) {
-          // If refresh fails, logout
           await _clearTokensAndLogout();
+        } catch (_) {
+          await _clearTokensAndLogout();
+        } finally {
+          _isRefreshing = false;
         }
       } else {
         await _clearTokensAndLogout();
@@ -51,9 +69,12 @@ class RefreshTokenInterceptor extends Interceptor {
     super.onError(err, handler);
   }
 
+  bool _isRefreshOrLogout(String path) {
+    return path.contains(Endpoints.refresh) || path.contains(Endpoints.logout);
+  }
+
   Future<void> _clearTokensAndLogout() async {
-    await _storage.deleteAll();
-    // TODO: Emit global logout event or navigate to login
-    // One way is using a global stream or event bus
+    await _storageService.deleteTokens();
+    _onSessionExpired?.call();
   }
 }
