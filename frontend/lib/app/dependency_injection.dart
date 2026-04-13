@@ -7,6 +7,10 @@ import 'package:smart_campus/features/auth/bloc/auth_bloc.dart';
 import 'package:smart_campus/features/auth/bloc/auth_repository.dart';
 import 'package:smart_campus/features/home/bloc/home_bloc.dart';
 import 'package:smart_campus/features/home/bloc/home_repository.dart';
+import 'package:smart_campus/features/calendar/bloc/calendar_bloc.dart';
+import 'package:smart_campus/features/calendar/repositories/calendar_repository.dart';
+import 'package:smart_campus/features/student/bloc/student_profile_bloc.dart';
+import 'package:smart_campus/features/student/repositories/student_repository.dart';
 import '../core/api/api_client.dart';
 import '../core/database/app_database.dart';
 import '../core/database/dao/pending_attendance_dao.dart';
@@ -67,6 +71,8 @@ Future<void> initDependencyInjection() async {
     getIt<HiveService>(),
   ));
   getIt.registerLazySingleton<SessionRepository>(() => SessionRepository(getIt<ApiClient>()));
+  getIt.registerLazySingleton<CalendarRepository>(() => CalendarRepository(getIt<ApiClient>()));
+  getIt.registerLazySingleton<StudentRepository>(() => StudentRepository(getIt<ApiClient>()));
 
   // Blocs
   getIt.registerFactory(() => AuthBloc(getIt<AuthRepository>()));
@@ -78,6 +84,8 @@ Future<void> initDependencyInjection() async {
   ));
   getIt.registerFactory(() => AnalyticsBloc(getIt<AnalyticsRepository>()));
   getIt.registerFactory(() => SessionBloc(getIt<SessionRepository>()));
+  getIt.registerFactory(() => CalendarBloc(getIt<CalendarRepository>()));
+  getIt.registerFactory(() => StudentProfileBloc(getIt<StudentRepository>()));
 
 
 }

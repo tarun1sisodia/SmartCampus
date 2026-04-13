@@ -10,9 +10,17 @@ class SessionRepository {
 
   Future<List<SessionModel>> fetchSessionHistory() async {
     try {
-      final response = await _apiClient.dio.get(ApiEndpoints.sessions);
+      final now = DateTime.now().toUtc();
+      final startDate = now.subtract(const Duration(days: 30));
+      final response = await _apiClient.dio.get(
+        ApiEndpoints.sessions,
+        queryParameters: {
+          'startDate': startDate.toIso8601String().split('T').first,
+          'endDate': now.toIso8601String().split('T').first,
+        },
+      );
       if (response.statusCode == 200) {
-        final List data = response.data['sessions'] ?? response.data ?? [];
+        final List data = response.data['data'] ?? response.data['sessions'] ?? response.data ?? [];
         return data.map((json) => SessionModel.fromJson(json)).toList();
       }
       return [];
