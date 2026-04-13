@@ -60,3 +60,23 @@ exports.registerSuperAdmin = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.forgotPassword = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    const result = await authService.forgotPassword(email);
+    sendSuccess(res, result);
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.resetPassword = async (req, res, next) => {
+  try {
+    const { token, newPassword } = req.body;
+    const result = await authService.resetPassword(token, newPassword);
+    sendSuccess(res, result);
+  } catch (err) {
+    next(err);
+  }
+};

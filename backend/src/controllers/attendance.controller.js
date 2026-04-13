@@ -78,3 +78,29 @@ exports.studentSummary = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.syncOffline = async (req, res, next) => {
+  try {
+    const { records } = req.body;
+    const isSuperAdmin = req.user.role === 'super_admin'; // though unlikely for teacher
+    const orgId = req.scope.organisationId || req.body.organisationId;
+    
+    const result = await attendanceService.syncOffline(req.user.id, records, orgId);
+    sendSuccess(res, result);
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.listSessionsByMonth = async (req, res, next) => {
+  try {
+    const { month } = req.query; // Format YYYY-MM
+    const isSuperAdmin = req.user.role === 'super_admin';
+    const orgId = req.scope.organisationId || req.body.organisationId;
+    
+    const result = await attendanceService.getSessionsByMonth(req.user.id, month, orgId, isSuperAdmin);
+    sendSuccess(res, result);
+  } catch (err) {
+    next(err);
+  }
+};

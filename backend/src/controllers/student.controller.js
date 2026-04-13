@@ -89,3 +89,22 @@ exports.delete = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.uploadPhoto = async (req, res, next) => {
+  try {
+    if (!req.file) throw new Error('No photo uploaded');
+    const result = await studentService.uploadPhoto(req.params.id, req.file.buffer, req.file.mimetype);
+    sendSuccess(res, result);
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.deletePhoto = async (req, res, next) => {
+  try {
+    const result = await studentService.deletePhoto(req.params.id);
+    sendSuccess(res, result);
+  } catch (err) {
+    next(err);
+  }
+};

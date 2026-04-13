@@ -8,6 +8,7 @@ dotenv.config({ path: path.join(__dirname, envFile) });
 const app = require('./src/app');
 const connectDB = require('./src/config/database');
 const logger = require('./src/config/logger');
+const { initSocket } = require('./src/socket');
 
 // Subscriptions & background routines
 const updateAnalyticsSubscriber = require('./src/events/subscribers/updateAnalytics.subscriber');
@@ -29,6 +30,8 @@ const startServer = async () => {
   const server = app.listen(PORT, () => {
     logger.info(`Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
   });
+
+  initSocket(server);
 
   process.on('SIGTERM', () => {
     logger.info('SIGTERM received. Shutting down gracefully.');

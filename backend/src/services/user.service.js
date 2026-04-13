@@ -1,5 +1,7 @@
 const User = require('../models/User.model');
 const AuditLog = require('../models/AuditLog.model');
+const bcrypt = require('bcrypt');
+const s3Client = require('../utils/s3.util');
 
 exports.listTeachers = async (organisationId, page, limit, isSuperAdmin) => {
   const query = { role: 'teacher' };
@@ -35,4 +37,34 @@ exports.deactivateUser = async (userId, requesterOrgId, isSuperAdmin, requesterI
   });
 
   return user;
+};
+
+exports.changePassword = async (userId, oldPassword, newPassword) => {
+  const user = await User.findById(userId).select('+password');
+  if (!(await bcrypt.compare(oldPassword, user.password))) {
+    throw new Error('Current password is incorrect');
+  }
+  user.password = await bcrypt.hash(newPassword, 10);
+  await user.save();
+  return { message: 'Password changed' };
+};
+
+exports.uploadProfilePhoto = async (userId, fileBuffer, mimetype) => {
+  const key = `users/${userId}/profile-${Date.now()}.jpg`;
+  const url = await s3Client.uploadFile(process.env.S3_PHOTO_BUCKET || 'smartcampus-photos', key, fileBuffer, mimetype);
+  await User.findByIdAndUpdate(userId, { avatar: url });
+  return { url };
+};
+
+exports.deleteProfilePhoto = async (userId) => {
+  const user = await User.findById(userId);
+  if (user && user.avatar) {
+    const keyMatch = user.avatar.match(/amazonaws\.com\/(.+)$/);
+    if (keyMatch) {
+      await s3Client.deleteFile(process.env.S3_PHOTO_BUCKET || 'smartcampus-photos', keyMatch[1]);
+    }
+    user.avatar = null;
+    await user.save();
+  }
+  return { message: 'Photo deleted' };
 };

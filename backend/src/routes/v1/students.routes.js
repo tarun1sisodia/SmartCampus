@@ -16,4 +16,7 @@ router.get('/:id', auth, orgScope, studentController.getById);
 router.put('/:id', auth, rbac('super_admin', 'org_admin'), orgScope, studentController.update);
 router.delete('/:id', auth, rbac('super_admin', 'org_admin'), orgScope, studentController.delete);
 
+router.post('/:id/photo', auth, rbac('super_admin', 'org_admin', 'teacher'), upload.single('photo'), studentController.uploadPhoto);
+router.delete('/:id/photo', auth, rbac('super_admin', 'org_admin', 'teacher'), studentController.deletePhoto);
+
 module.exports = router;

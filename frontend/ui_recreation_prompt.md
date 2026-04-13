@@ -281,6 +281,3 @@ There are **19 specialized GetX Controllers** covering all backend interactions 
 
 **First Action Required by AI:** 
 Please design the screens(UI) as per my controllers and their functions.(e.g,onboarding_controller.dart and this controller has functions like updatePageIndicator(index), dotNavigationClick(index),nextPage(),skipPage(),checkIfOnboardingCompleted(),, functions name are clearly tell what they do, so per this controllers create UI for each controller. and also use the same color scheme and design aesthetics as per the design_aesthetics.md file for whole app. )
-
-
-1,2,4,6,7,9,10,13,15,18,20,21,23,25,29,30 these are final for me , now tell me as i mention screens with their number tell me what color excatly and where you added, or create a md file so i can use it to redesign the app , mention everything , which colors, font, shapas,icons and their color and text colors, everything,

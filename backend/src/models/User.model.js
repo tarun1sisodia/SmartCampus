@@ -12,6 +12,14 @@ const userSchema = new Schema({
   invitedBy: { type: Schema.Types.ObjectId, ref: 'User' },
   inviteToken: { type: String },
   inviteExpires: { type: Date },
+  resetPasswordToken: { type: String },
+  resetPasswordExpires: { type: Date },
+  avatar: { type: String },
+  fcmTokens: [{
+    token: { type: String },
+    deviceId: { type: String },
+    createdAt: { type: Date, default: Date.now }
+  }],
   isActive: { type: Boolean, default: false },
   lastLogin: { type: Date },
   permissions: [{ type: String }],

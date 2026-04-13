@@ -1,14 +1,14 @@
 const request = require('supertest');
-const app = require('../../../src/app');
+const app = require('../../src/app');
 const mongoose = require('mongoose');
 
 // We use jest.mock to mock out the underlying service rather than hitting a real DB in this layer, 
 // to ensure rapid integration testing of the API boundaries.
-jest.mock('../../../src/services/attendance.service');
-const attendanceService = require('../../../src/services/attendance.service');
+jest.mock('../../src/services/attendance.service');
+const attendanceService = require('../../src/services/attendance.service');
 
 // Mock Auth middleware to bypass real JWT checking and inject a valid req.user
-jest.mock('../../../src/middleware/auth.middleware', () => {
+jest.mock('../../src/middleware/auth.middleware', () => {
   return (req, res, next) => {
     req.user = { id: 'teacher123', role: 'teacher', organisation: 'org123' };
     next();

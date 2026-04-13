@@ -37,12 +37,18 @@ exports.studentTrend = async (req, res, next) => {
 exports.teacherPerformance = async (req, res, next) => {
   try {
     const isSuperAdmin = req.user.role === 'super_admin';
-    const query = { teacher: req.params.teacherId };
-    if (!isSuperAdmin) query.organisation = req.scope.organisationId;
-
-    // Simple teacher session count
-    const sessionCount = await Session.countDocuments(query);
-    sendSuccess(res, { sessionCount });
+    const { startDate, endDate } = req.query;
+    const teacherId = req.params.teacherId;
+    
+    const result = await analyticsService.getTeacherPerformance(
+      teacherId,
+      startDate,
+      endDate,
+      req.scope.organisationId,
+      isSuperAdmin
+    );
+    
+    sendSuccess(res, result);
   } catch (err) {
     next(err);
   }

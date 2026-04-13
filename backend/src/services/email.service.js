@@ -29,3 +29,22 @@ exports.sendBulkEmail = async (recipients, subject, html) => {
     });
   }
 };
+
+exports.sendPasswordResetEmail = async (to, token) => {
+  const resetLink = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/reset-password?token=${token}`;
+  
+  const htmlContent = `
+    <h2>Password Reset Request</h2>
+    <p>You requested to reset your password.</p>
+    <p>Please click the link below to set a new password:</p>
+    <a href="${resetLink}">Reset Password</a>
+  `;
+
+  const job = await emailQueue.add({
+    to,
+    subject: 'Password Reset - SmartCampus',
+    html: htmlContent
+  });
+
+  return job.id;
+};

@@ -1,5 +1,7 @@
 const AttendanceSummary = require('../models/AttendanceSummary.model');
-
+const Session = require('../models/Session.model');
+const Attendance = require('../models/Attendance.model');
+const Student = require('../models/Student.model');
 exports.getClassAttendance = async (courseId, semesterId, sectionId, organisationId, isSuperAdmin) => {
   const query = {};
   if (!isSuperAdmin) query.organisation = organisationId;
@@ -37,4 +39,30 @@ exports.getClassAttendance = async (courseId, semesterId, sectionId, organisatio
   const overall = globalTotalSessions > 0 ? (globalPresentCount / globalTotalSessions) * 100 : 0;
 
   return { overall, studentList };
+};
+
+exports.getTeacherPerformance = async (teacherId, startDate, endDate, organisationId, isSuperAdmin) => {
+  const match = { teacher: teacherId };
+  if (!isSuperAdmin) match.organisation = organisationId;
+  if (startDate) match.date = { $gte: new Date(startDate) };
+  if (endDate) match.date = { ...match.date, $lte: new Date(endDate) };
+  
+  const sessions = await Session.find(match).populate('subject');
+  const totalSessions = sessions.length;
+  const subjectWise = {};
+  
+  for (const session of sessions) {
+    const subjectId = session.subject._id.toString();
+    const attendanceCount = await Attendance.countDocuments({ session: session._id, status: { $in: ['present','late'] } });
+    const totalStudents = await Student.countDocuments({ organisation: session.organisation, course: session.course, semester: session.semester, section: session.section });
+    const percentage = totalStudents ? (attendanceCount / totalStudents) * 100 : 0;
+    
+    if (!subjectWise[subjectId]) subjectWise[subjectId] = { subjectName: session.subject.name, total: 0, sumPercentage: 0 };
+    subjectWise[subjectId].total++;
+    subjectWise[subjectId].sumPercentage += percentage;
+  }
+  
+  const subjectSummary = Object.values(subjectWise).map(s => ({ subject: s.subjectName, avgAttendance: s.sumPercentage / s.total }));
+  const overallAttendance = subjectSummary.reduce((acc, s) => acc + s.avgAttendance, 0) / (subjectSummary.length || 1);
+  return { overallAttendance, subjectWise: subjectSummary, totalSessions };
 };

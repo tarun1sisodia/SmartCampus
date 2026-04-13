@@ -16,3 +16,17 @@ exports.acceptInviteSchema = z.object({
   password: z.string().min(6),
   name: z.string().optional()
 });
+
+exports.forgotSchema = z.object({
+  email: z.string().email()
+});
+
+exports.resetSchema = z.object({
+  token: z.string(),
+  newPassword: z.string().min(6)
+});
+
+exports.changePasswordSchema = z.object({
+  oldPassword: z.string(),
+  newPassword: z.string().min(6)
+});

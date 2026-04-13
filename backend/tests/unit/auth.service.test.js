@@ -1,10 +1,10 @@
-const authService = require('../../../src/services/auth.service');
-const User = require('../../../src/models/User.model');
-const RefreshToken = require('../../../src/models/RefreshToken.model');
+const authService = require('../../src/services/auth.service');
+const User = require('../../src/models/User.model');
+const RefreshToken = require('../../src/models/RefreshToken.model');
 const bcrypt = require('bcrypt');
 
-jest.mock('../../../src/models/User.model');
-jest.mock('../../../src/models/RefreshToken.model');
+jest.mock('../../src/models/User.model');
+jest.mock('../../src/models/RefreshToken.model');
 jest.mock('bcrypt');
 
 describe('Auth Service Unit Tests', () => {

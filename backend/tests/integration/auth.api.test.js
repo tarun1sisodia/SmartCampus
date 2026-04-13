@@ -1,11 +1,11 @@
 const request = require('supertest');
-const app = require('../../../src/app');
-const authService = require('../../../src/services/auth.service');
-const { createStudentSchema } = require('../../../src/validators/student.validator');
+const app = require('../../src/app');
+const authService = require('../../src/services/auth.service');
+const { createStudentSchema } = require('../../src/validators/student.validator');
 
 // We intercept the internal core business logic directly so we don't connect to Mongoose,
 // keeping our Supertest API endpoints fast and resilient.
-jest.mock('../../../src/services/auth.service');
+jest.mock('../../src/services/auth.service');
 
 describe('Auth API JWT Issuance Tests', () => {
 

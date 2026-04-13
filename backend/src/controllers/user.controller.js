@@ -82,3 +82,32 @@ exports.resendInvite = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.changePassword = async (req, res, next) => {
+  try {
+    const { oldPassword, newPassword } = req.body;
+    const result = await userService.changePassword(req.user.id, oldPassword, newPassword);
+    sendSuccess(res, result);
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.uploadProfilePhoto = async (req, res, next) => {
+  try {
+    if (!req.file) throw new Error('No photo uploaded');
+    const result = await userService.uploadProfilePhoto(req.user.id, req.file.buffer, req.file.mimetype);
+    sendSuccess(res, result);
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.deleteProfilePhoto = async (req, res, next) => {
+  try {
+    const result = await userService.deleteProfilePhoto(req.user.id);
+    sendSuccess(res, result);
+  } catch (err) {
+    next(err);
+  }
+};

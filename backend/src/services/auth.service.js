@@ -4,6 +4,8 @@ const { comparePassword } = require('../utils/hashPassword');
 const { generateAccessToken, generateRefreshToken } = require('../utils/generateToken');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
+const emailService = require('./email.service');
 
 const REFRESH_TOKEN_SECRET = process.env.JWT_REFRESH_SECRET || 'refresh-secret-key';
 
@@ -84,4 +86,28 @@ exports.logout = async (refreshToken) => {
       break;
     }
   }
+};
+
+exports.forgotPassword = async (email) => {
+  const user = await User.findOne({ email, isActive: true });
+  if (!user) throw new Error('No user found with this email');
+  const resetToken = crypto.randomBytes(32).toString('hex');
+  user.resetPasswordToken = resetToken;
+  user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+  await user.save();
+  await emailService.sendPasswordResetEmail(user.email, resetToken);
+  return { message: 'Reset link sent' };
+};
+
+exports.resetPassword = async (token, newPassword) => {
+  const user = await User.findOne({
+    resetPasswordToken: token,
+    resetPasswordExpires: { $gt: Date.now() }
+  });
+  if (!user) throw new Error('Invalid or expired token');
+  user.password = await bcrypt.hash(newPassword, 10);
+  user.resetPasswordToken = null;
+  user.resetPasswordExpires = null;
+  await user.save();
+  return { message: 'Password updated' };
 };

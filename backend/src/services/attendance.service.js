@@ -71,3 +71,41 @@ exports.getStudentSummary = async (studentId, organisationId, isSuperAdmin, seme
 
   return { result, total, percentage: total > 0 ? (present / total) * 100 : 0 };
 };
+
+exports.syncOffline = async (teacherId, offlineRecords, organisationId) => {
+  const results = [];
+  for (const record of offlineRecords) {
+    try {
+      // Check if session exists and belongs to teacher
+      const session = await Session.findOne({ _id: record.sessionId, teacher: teacherId });
+      if (!session) throw new Error('Session not found');
+      
+      // Check if attendance already exists (last write wins by timestamp)
+      const existing = await Attendance.findOne({ session: record.sessionId, student: record.studentId });
+      if (existing && existing.timestamp > new Date(record.timestamp)) {
+        results.push({ studentId: record.studentId, status: 'skipped', reason: 'Server has newer data' });
+        continue;
+      }
+      
+      // Upsert
+      await Attendance.findOneAndUpdate(
+        { session: record.sessionId, student: record.studentId },
+        { status: record.status, markedBy: teacherId, timestamp: new Date(record.timestamp), remarks: record.remarks, organisation: organisationId },
+        { upsert: true }
+      );
+      results.push({ studentId: record.studentId, status: record.status, synced: true });
+    } catch (err) {
+      results.push({ studentId: record.studentId, error: err.message });
+    }
+  }
+  return results;
+};
+
+exports.getSessionsByMonth = async (teacherId, yearMonth, organisationId, isSuperAdmin) => {
+  const [year, month] = yearMonth.split('-');
+  const start = new Date(year, month - 1, 1);
+  const end = new Date(year, month, 0, 23, 59, 59);
+  const query = { teacher: teacherId, date: { $gte: start, $lte: end } };
+  if (!isSuperAdmin) query.organisation = organisationId;
+  return await Session.find(query).populate('subject course semester section').sort('date');
+};

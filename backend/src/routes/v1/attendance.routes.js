@@ -13,4 +13,7 @@ router.post('/mark', auth, rbac('teacher', 'super_admin'), orgScope, validate(ma
 router.get('/session/:sessionId', auth, orgScope, attendanceController.getBySession);
 router.get('/student/:studentId', auth, orgScope, attendanceController.studentSummary);
 
+router.post('/sync', auth, rbac('teacher'), attendanceController.syncOffline);
+router.get('/sessions/month', auth, attendanceController.listSessionsByMonth);
+
 module.exports = router;
