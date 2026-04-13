@@ -17,6 +17,15 @@ class LoginController extends GetxController {
   final passwordVisible = false.obs;
   final isGoogleLoading = false.obs;
 
+  // --- UI Facade Getters ---
+  GlobalKey<FormState> get loginFormKey => formKey;
+  TextEditingController get email => emailController;
+  TextEditingController get password => passwordController;
+  RxBool get hidePassword => passwordVisible;
+
+  // --- UI Facade Methods ---
+  void emailAndPasswordSignIn() => login();
+
   @override
   void onInit() {
     super.onInit();

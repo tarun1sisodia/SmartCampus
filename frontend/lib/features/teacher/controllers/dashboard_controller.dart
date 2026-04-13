@@ -15,7 +15,7 @@ import '../../../services/subject_service.dart';
 import 'dart:async';
 
 import '../../../services/student_service.dart';
-import '../../../services/local_db_service.dart';
+import '../../../services/local_storage_service.dart';
 import '../../authentication/controllers/supabase_auth_controller.dart';
 
 class DashboardController extends GetxController {
@@ -66,17 +66,16 @@ class DashboardController extends GetxController {
     loadDashboardData();
   }
 
-  final localDb = LocalDbService();
+  final _localStorage = LocalStorageService();
 
   Future<void> _loadCachedData() async {
     try {
-      final cached = await localDb.getCachedClasses();
-      if (cached.isNotEmpty) {
-        final cachedClasses = cached.map((c) => ClassModel.fromJson(c)).toList();
+      final cachedClasses = await _localStorage.getOfflineClasses();
+      if (cachedClasses.isNotEmpty) {
         classes.assignAll(cachedClasses);
         filteredClasses.assignAll(cachedClasses);
         totalClasses.value = cachedClasses.length;
-        debugPrint('Loaded ${cached.length} classes from local cache');
+        debugPrint('Loaded ${cachedClasses.length} classes from local cache');
       }
     } catch (e) {
       debugPrint('Error loading cached data: $e');
@@ -468,7 +467,9 @@ class DashboardController extends GetxController {
       totalClasses.value = teacherClasses.length;
       
       // Save for offline access
-      await localDb.saveClasses(teacherClasses.map((c) => c.toJson()).toList());
+      for (final classModel in teacherClasses) {
+        await _localStorage.saveClassOffline(classModel);
+      }
 
       if (teacherClasses.isEmpty) {
         totalStudents.value = 0;

@@ -6,7 +6,7 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 import '../models/attendance_record_model.dart';
 import '../models/attendance_session_model.dart';
 import '../models/class_model.dart';
-import 'local_db_service.dart';
+import 'local_storage_service.dart';
 import 'connectivity_service.dart';
 
 class AttendanceService {
@@ -767,15 +767,21 @@ class AttendanceService {
        final connectivity = Get.find<ConnectivityService>();
        if (!connectivity.isOnline.value) {
          debugPrint('Offline: Queuing ${records.length} records locally');
-         final localDb = LocalDbService();
-         for (var record in records) {
-           await localDb.queueAttendance({
-             'session_id': sessionId,
-             'student_id': record['student_id'],
-             'status': record['status'],
-             'remarks': record['remarks'],
-           });
-         }
+         final localStorage = Get.find<LocalStorageService>();
+         
+         final List<AttendanceRecordModel> modelRecords = records.map((record) {
+           return AttendanceRecordModel(
+             id: 'off_${DateTime.now().millisecondsSinceEpoch}_${record['student_id']}',
+             sessionId: sessionId,
+             studentId: record['student_id'],
+             status: record['status'],
+             remarks: record['remarks'] ?? '',
+             createdAt: DateTime.now(),
+             updatedAt: DateTime.now(),
+           );
+         }).toList();
+
+         await localStorage.saveMultipleAttendanceRecordsOffline(modelRecords);
          return;
        }
 

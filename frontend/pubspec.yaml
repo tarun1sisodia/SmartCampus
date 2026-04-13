@@ -70,6 +70,7 @@ dependencies:
   flutter_dotenv: ^6.0.0
   sentry_flutter: ^9.16.0
   connectivity_plus: ^6.1.1
+  flutter_inset_shadow: ^2.0.3
 
 dependency_overrides:
   image: ^4.2.0
