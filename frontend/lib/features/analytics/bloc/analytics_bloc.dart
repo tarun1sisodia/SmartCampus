@@ -25,6 +25,19 @@ class AnalyticsLoadRequested extends AnalyticsEvent {
   List<Object?> get props => [teacherId, startDate, endDate];
 }
 
+class LoadStats extends AnalyticsEvent {
+  final String teacherId;
+  final DateTimeRange range;
+
+  const LoadStats({
+    required this.teacherId,
+    required this.range,
+  });
+
+  @override
+  List<Object?> get props => [teacherId, range.start, range.end];
+}
+
 // States
 abstract class AnalyticsState extends Equatable {
   const AnalyticsState();
@@ -36,9 +49,10 @@ class AnalyticsInitial extends AnalyticsState {}
 class AnalyticsLoading extends AnalyticsState {}
 class AnalyticsLoaded extends AnalyticsState {
   final TeacherStatsModel stats;
-  const AnalyticsLoaded(this.stats);
+  final DateTimeRange range;
+  const AnalyticsLoaded(this.stats, this.range);
   @override
-  List<Object?> get props => [stats];
+  List<Object?> get props => [stats, range.start, range.end];
 }
 class AnalyticsError extends AnalyticsState {
   final String message;
@@ -53,6 +67,7 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
 
   AnalyticsBloc(this._repository) : super(AnalyticsInitial()) {
     on<AnalyticsLoadRequested>(_onLoadRequested);
+    on<LoadStats>(_onLoadStats);
   }
 
   Future<void> _onLoadRequested(AnalyticsLoadRequested event, Emitter<AnalyticsState> emit) async {
@@ -70,11 +85,31 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
         startDate: event.startDate ?? now.subtract(const Duration(days: 30)),
         endDate: event.endDate ?? now,
       );
-      emit(AnalyticsLoaded(stats));
+      emit(AnalyticsLoaded(
+        stats,
+        DateTimeRange(
+          start: event.startDate ?? now.subtract(const Duration(days: 30)),
+          end: event.endDate ?? now,
+        ),
+      ));
     } catch (e) {
       if (state is! AnalyticsLoaded) {
         emit(AnalyticsError('Failed to load stats: ${e.toString()}'));
       }
+    }
+  }
+
+  Future<void> _onLoadStats(LoadStats event, Emitter<AnalyticsState> emit) async {
+    emit(AnalyticsLoading());
+    try {
+      final stats = await _repository.fetchTeacherStats(
+        teacherId: event.teacherId,
+        startDate: event.range.start,
+        endDate: event.range.end,
+      );
+      emit(AnalyticsLoaded(stats, event.range));
+    } catch (e) {
+      emit(AnalyticsError('Failed to load stats: ${e.toString()}'));
     }
   }
 }

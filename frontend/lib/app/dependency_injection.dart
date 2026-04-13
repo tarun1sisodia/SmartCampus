@@ -11,6 +11,8 @@ import 'package:smart_campus/features/calendar/bloc/calendar_bloc.dart';
 import 'package:smart_campus/features/calendar/repositories/calendar_repository.dart';
 import 'package:smart_campus/features/student/bloc/student_profile_bloc.dart';
 import 'package:smart_campus/features/student/repositories/student_repository.dart';
+import 'package:smart_campus/features/profile/bloc/profile_bloc.dart';
+import 'package:smart_campus/features/profile/repositories/profile_repository.dart';
 import '../core/api/api_client.dart';
 import '../core/database/app_database.dart';
 import '../core/database/dao/pending_attendance_dao.dart';
@@ -57,6 +59,7 @@ Future<void> initDependencyInjection() async {
   getIt.registerLazySingleton<SyncService>(() => SyncService(
     getIt<ApiClient>(),
     getIt<AppDatabase>(),
+    getIt<HiveService>(),
   ));
 
   // Repositories
@@ -73,6 +76,7 @@ Future<void> initDependencyInjection() async {
   getIt.registerLazySingleton<SessionRepository>(() => SessionRepository(getIt<ApiClient>()));
   getIt.registerLazySingleton<CalendarRepository>(() => CalendarRepository(getIt<ApiClient>()));
   getIt.registerLazySingleton<StudentRepository>(() => StudentRepository(getIt<ApiClient>()));
+  getIt.registerLazySingleton<ProfileRepository>(() => ProfileRepository(getIt<ApiClient>()));
 
   // Blocs
   getIt.registerFactory(() => AuthBloc(getIt<AuthRepository>()));
@@ -86,6 +90,7 @@ Future<void> initDependencyInjection() async {
   getIt.registerFactory(() => SessionBloc(getIt<SessionRepository>()));
   getIt.registerFactory(() => CalendarBloc(getIt<CalendarRepository>()));
   getIt.registerFactory(() => StudentProfileBloc(getIt<StudentRepository>()));
+  getIt.registerFactory(() => ProfileBloc(getIt<ProfileRepository>()));
 
 
 }

@@ -1,4 +1,5 @@
 import '../../../core/api/api_client.dart';
+import '../../../core/api/endpoints.dart';
 import '../../../core/cache/hive_service.dart';
 import '../models/teacher_stats_model.dart';
 import 'dart:convert';
@@ -16,10 +17,10 @@ class AnalyticsRepository {
   }) async {
     try {
       final response = await _apiClient.dio.get(
-        '/analytics/teacher/$teacherId',
+        '${Endpoints.teacherAnalytics}/$teacherId',
         queryParameters: {
-          'start': startDate.toIso8601String(),
-          'end': endDate.toIso8601String(),
+          'startDate': startDate.toIso8601String().split('T').first,
+          'endDate': endDate.toIso8601String().split('T').first,
         },
       );
 

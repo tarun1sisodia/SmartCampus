@@ -75,7 +75,7 @@ class PushNotificationService {
 
         if (message.notification != null) {
           _logger.i('Message also contained a notification: ${message.notification}');
-          _showForegroundNotification(message.notification!, channel);
+          _showForegroundNotification(message, channel);
         }
       });
 
@@ -104,7 +104,10 @@ class PushNotificationService {
     }
   }
 
-  void _showForegroundNotification(RemoteNotification notification, AndroidNotificationChannel channel) {
+  void _showForegroundNotification(RemoteMessage message, AndroidNotificationChannel channel) {
+    final notification = message.notification;
+    if (notification == null) return;
+    final sessionId = message.data['sessionId']?.toString();
     _localNotificationsPlugin.show(
       notification.hashCode,
       notification.title,
@@ -118,7 +121,7 @@ class PushNotificationService {
           color: const Color(0xFF3B82F6),
         ),
       ),
-      payload: notification.body,
+      payload: sessionId,
     );
   }
 
@@ -146,5 +149,9 @@ class PushNotificationService {
 
   void _onNotificationTapped(NotificationResponse response) {
     _logger.i('Notification tapped with payload: ${response.payload}');
+    final sessionId = response.payload;
+    if (sessionId != null && sessionId.isNotEmpty) {
+      lastOpenedSessionId.value = sessionId;
+    }
   }
 }

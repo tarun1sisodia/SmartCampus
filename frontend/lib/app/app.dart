@@ -7,6 +7,7 @@ import '../features/auth/bloc/auth_bloc.dart';
 import '../features/home/bloc/home_bloc.dart';
 import '../features/attendance/bloc/attendance_bloc.dart';
 import '../features/analytics/bloc/analytics_bloc.dart';
+import '../core/services/push_notification_service.dart';
 
 
 class App extends StatefulWidget {
@@ -19,12 +20,31 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   late final AuthBloc _authBloc;
   late final AppRouter _appRouter;
+  late final PushNotificationService _pushNotificationService;
 
   @override
   void initState() {
     super.initState();
     _authBloc = getIt<AuthBloc>();
+    _authBloc.add(AuthAppStarted());
     _appRouter = AppRouter(_authBloc);
+    _pushNotificationService = getIt<PushNotificationService>();
+    _pushNotificationService.lastOpenedSessionId.addListener(_onSessionNotificationOpened);
+  }
+
+  @override
+  void dispose() {
+    _pushNotificationService.lastOpenedSessionId.removeListener(_onSessionNotificationOpened);
+    super.dispose();
+  }
+
+  void _onSessionNotificationOpened() {
+    final sessionId = _pushNotificationService.lastOpenedSessionId.value;
+    if (sessionId == null || sessionId.isEmpty) {
+      return;
+    }
+    _appRouter.goToSessionDetail(sessionId);
+    _pushNotificationService.lastOpenedSessionId.value = null;
   }
 
   @override

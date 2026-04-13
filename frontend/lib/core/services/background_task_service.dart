@@ -45,7 +45,7 @@ class BackgroundTaskService {
           stopOnTerminate: false,
           enableHeadless: true,
           startOnBoot: true,
-          requiresBatteryNotLow: false,
+          requiresBatteryNotLow: true,
           requiredNetworkType: NetworkType.ANY,
         ),
         (String taskId) async {
