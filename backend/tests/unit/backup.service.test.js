@@ -1,20 +1,36 @@
-import backupService from '../../src/services/backup.service.js';
-import BackupRecord from '../../src/models/BackupRecord.model.js';
-import {  uploadFile  } from '../../src/utils/s3Client.js';
-import child_process from 'child_process';
-import fs from 'fs';
+import { jest } from '@jest/globals';
 
-jest.mock('../../src/models/BackupRecord.model');
-jest.mock('../../src/utils/s3Client');
-jest.mock('child_process');
-jest.mock('fs');
+jest.unstable_mockModule('../../src/models/BackupRecord.model.js', () => ({
+  default: { create: jest.fn() }
+}));
+
+jest.unstable_mockModule('../../src/utils/s3Client.js', () => ({
+  uploadFile: jest.fn()
+}));
+
+jest.unstable_mockModule('child_process', () => ({
+  default: { exec: jest.fn() },
+  exec: jest.fn((cmd, cb) => cb(null, 'stdout', 'stderr'))
+}));
+
+jest.unstable_mockModule('fs', () => ({
+  default: { statSync: jest.fn(), unlinkSync: jest.fn() },
+  statSync: jest.fn(),
+  unlinkSync: jest.fn()
+}));
+
+const BackupRecord = (await import('../../src/models/BackupRecord.model.js')).default;
+const { uploadFile } = await import('../../src/utils/s3Client.js');
+const child_process = await import('child_process');
+const fs = await import('fs');
+const backupService = (await import('../../src/services/backup.service.js')).default;
 
 describe('Backup Service Logic Tests', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    fs.statSync.mockReturnValue({ size: 1024 });
-    fs.unlinkSync.mockReturnValue();
+    fs.default.statSync.mockReturnValue({ size: 1024 });
+    fs.default.unlinkSync.mockReturnValue();
   });
 
   describe('createFullBackup()', () => {
@@ -22,7 +38,6 @@ describe('Backup Service Logic Tests', () => {
     it('Successfully invokes mongodump, pipes to s3 client, and logs a successful database status update', async () => {
       
       // Arrange Mocks
-      // Fake child process shell sequence resolving correctly.
       child_process.exec.mockImplementation((cmd, callback) => callback(null, 'stdout', 'stderr'));
       uploadFile.mockResolvedValue('s3-url-to-payload-archive');
       

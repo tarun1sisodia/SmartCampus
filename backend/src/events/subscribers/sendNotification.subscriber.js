@@ -15,8 +15,12 @@ export const setup = () => {
     }
 
     if (oldStatus === 'absent' && newStatus === 'present') {
-      // Mock push notification or SMS logic
-      // console.log(`Sending notification to parents of student ${studentId}: Marked present.`);
+      // Notify parent or student via FCM
+      await sendPushNotification(
+        studentId, 
+        "Attendance Marked", 
+        "Status updated: You have been marked present."
+      );
     }
   });
 };

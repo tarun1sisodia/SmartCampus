@@ -1,0 +1,6 @@
+{
+  "watch": ["src", "server.js", "app.js", ".env", ".env.development"],
+  "ext": "js,mjs,json",
+  "ignore": ["logs/*", "node_modules/*", "tests/*", "scripts/*", "uploads/*"],
+  "exec": "node server.js"
+}

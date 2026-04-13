@@ -9,9 +9,9 @@
     "start:dev": "cross-env NODE_ENV=development nodemon server.js",
     "start:staging": "cross-env NODE_ENV=staging node server.js",
     "start:prod": "cross-env NODE_ENV=production node server.js",
-    "test:unit": "cross-env NODE_ENV=test jest --testPathPattern=tests/unit",
-    "test:integration": "cross-env NODE_ENV=test jest --testPathPattern=tests/integration",
-    "test:e2e": "cross-env NODE_ENV=test jest --testPathPattern=tests/e2e",
+    "test:unit": "cross-env NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest --testPathPattern=tests/unit",
+    "test:integration": "cross-env NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest --testPathPattern=tests/integration",
+    "test:e2e": "cross-env NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest --testPathPattern=tests/e2e",
     "lint": "eslint ."
   },
   "dependencies": {
@@ -19,6 +19,7 @@
     "@sentry/node": "^8.0.0",
     "bcrypt": "^6.0.0",
     "bull": "^4.12.0",
+    "cloudinary": "^2.9.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "csv-parser": "^3.0.0",
@@ -36,6 +37,8 @@
     "opossum": "^7.1.0",
     "rate-limit-redis": "^4.0.0",
     "socket.io": "^4.8.3",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
     "winston": "^3.11.0",
     "zod": "^3.22.4"
   },

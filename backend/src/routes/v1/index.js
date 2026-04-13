@@ -10,6 +10,7 @@ import analyticsRoutes from './analytics.routes.js';
 import backupRoutes from './backup.routes.js';
 import notificationRoutes from './notifications.routes.js';
 import feedbackRoutes from './feedback.routes.js';
+import healthRoutes from './health.routes.js';
 
 router.use('/auth', authRoutes);
 router.use('/orgs', orgsRoutes);
@@ -20,5 +21,6 @@ router.use('/analytics', analyticsRoutes);
 router.use('/backup', backupRoutes);
 router.use('/notifications', notificationRoutes);
 router.use('/feedback', feedbackRoutes);
+router.use('/health', healthRoutes);
 
 export default router;

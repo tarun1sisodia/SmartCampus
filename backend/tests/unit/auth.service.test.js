@@ -1,11 +1,21 @@
-import authService from '../../src/services/auth.service.js';
-import User from '../../src/models/User.model.js';
-import RefreshToken from '../../src/models/RefreshToken.model.js';
-import bcrypt from 'bcrypt';
+import { jest } from '@jest/globals';
 
-jest.mock('../../src/models/User.model');
-jest.mock('../../src/models/RefreshToken.model');
-jest.mock('bcrypt');
+jest.unstable_mockModule('../../src/models/User.model.js', () => ({
+  default: { findOne: jest.fn() }
+}));
+
+jest.unstable_mockModule('../../src/models/RefreshToken.model.js', () => ({
+  default: { create: jest.fn(), findOne: jest.fn(), deleteMany: jest.fn() }
+}));
+
+jest.unstable_mockModule('bcrypt', () => ({
+  default: { compare: jest.fn(), hash: jest.fn() }
+}));
+
+const User = (await import('../../src/models/User.model.js')).default;
+const RefreshToken = (await import('../../src/models/RefreshToken.model.js')).default;
+const bcrypt = (await import('bcrypt')).default;
+const authService = (await import('../../src/services/auth.service.js')).default;
 
 describe('Auth Service Unit Tests', () => {
   beforeEach(() => {

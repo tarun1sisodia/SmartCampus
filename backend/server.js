@@ -19,27 +19,37 @@ import {  setupSendReminders  } from './src/jobs/sendReminders.job.js';
 const PORT = process.env.PORT || 5000;
 
 const startServer = async () => {
-  await connectDB();
+  try {
+    await connectDB();
 
-  updateAnalyticsSubscriber.setup();
-  sendNotificationSubscriber.setup();
-  
-  setupDailyBackup();
-  setupSendReminders();
-
-  const server = app.listen(PORT, () => {
-    logger.info(`Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
-  });
-
-  initSocket(server);
-
-  process.on('SIGTERM', () => {
-    logger.info('SIGTERM received. Shutting down gracefully.');
-    server.close(() => {
-      logger.info('Process terminated.');
-      process.exit(0);
+    const server = app.listen(PORT, () => {
+      logger.info(`Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
+      
+      // Initialize background routines AFTER server is up
+      try {
+        updateAnalyticsSubscriber.setup();
+        sendNotificationSubscriber.setup();
+        setupDailyBackup();
+        setupSendReminders();
+        logger.info('Background jobs and event subscribers successfully initialized.');
+      } catch (bgError) {
+        logger.error(`Error initializing background routines: ${bgError.message}`);
+      }
     });
-  });
+
+    initSocket(server);
+
+    process.on('SIGTERM', () => {
+      logger.info('SIGTERM received. Shutting down gracefully.');
+      server.close(() => {
+        logger.info('Process terminated.');
+        process.exit(0);
+      });
+    });
+  } catch (err) {
+    logger.error(`Failed to start server: ${err.message}`);
+    process.exit(1);
+  }
 };
 
 startServer();

@@ -3,10 +3,16 @@ import redisClient from '../config/redis.js';
 
 export const startLeaderElection = () => {
   setInterval(async () => {
-    const lock = await redisClient.set('leader:backup', 'node', 'NX', 'EX', 60);
-    if (lock) {
-      // This instance is leader
-      // Can safely run singleton scheduling logic here
+    try {
+      const lockKey = 'leader:singleton-tasks';
+      const isLeader = await redisClient.set(lockKey, 'active', 'NX', 'EX', 60);
+      
+      if (isLeader) {
+        // This node is currently the leader. 
+        // Unique singleton logic (cleanup, report triggers) can happen here.
+      }
+    } catch (err) {
+      // Slient fail, will retry in next interval
     }
   }, 30000);
 };

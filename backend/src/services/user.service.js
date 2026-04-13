@@ -1,7 +1,7 @@
 import User from '../models/User.model.js';
 import AuditLog from '../models/AuditLog.model.js';
 import bcrypt from 'bcrypt';
-import s3Client from '../utils/s3.util.js';
+import { uploadImage, deleteImage } from './cloudinary.service.js';
 
 export const listTeachers = async (organisationId, page, limit, isSuperAdmin) => {
   const query = { role: 'teacher' };
@@ -50,8 +50,8 @@ export const changePassword = async (userId, oldPassword, newPassword) => {
 };
 
 export const uploadProfilePhoto = async (userId, fileBuffer, mimetype) => {
-  const key = `users/${userId}/profile-${Date.now()}.jpg`;
-  const url = await s3Client.uploadFile(process.env.S3_PHOTO_BUCKET || 'smartcampus-photos', key, fileBuffer, mimetype);
+  const publicId = `users/${userId}/profile`;
+  const url = await uploadImage(fileBuffer, 'smartcampus/profiles', publicId);
   await User.findByIdAndUpdate(userId, { avatar: url });
   return { url };
 };
@@ -59,10 +59,9 @@ export const uploadProfilePhoto = async (userId, fileBuffer, mimetype) => {
 export const deleteProfilePhoto = async (userId) => {
   const user = await User.findById(userId);
   if (user && user.avatar) {
-    const keyMatch = user.avatar.match(/amazonaws\.com\/(.+)$/);
-    if (keyMatch) {
-      await s3Client.deleteFile(process.env.S3_PHOTO_BUCKET || 'smartcampus-photos', keyMatch[1]);
-    }
+    // Assuming Cloudinary public ID is derived or stored
+    const publicId = `smartcampus/profiles/users/${userId}/profile`;
+    await deleteImage(publicId);
     user.avatar = null;
     await user.save();
   }
