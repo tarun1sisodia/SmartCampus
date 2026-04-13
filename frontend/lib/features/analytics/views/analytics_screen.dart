@@ -16,12 +16,24 @@ class AnalyticsScreen extends StatefulWidget {
 }
 
 class _AnalyticsScreenState extends State<AnalyticsScreen> {
+  String? _teacherId;
+
   @override
   void initState() {
     super.initState();
     final authState = context.read<AuthBloc>().state;
     if (authState is AuthAuthenticated) {
-      context.read<AnalyticsBloc>().add(AnalyticsLoadRequested(teacherId: authState.user.id));
+      _teacherId = authState.user.id;
+      final now = DateTime.now();
+      context.read<AnalyticsBloc>().add(
+            LoadStats(
+              teacherId: authState.user.id,
+              range: DateTimeRange(
+                start: now.subtract(const Duration(days: 7)),
+                end: now,
+              ),
+            ),
+          );
     }
   }
 
@@ -37,9 +49,17 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
             return shared.ErrorWidget(
               message: state.message,
               onRetry: () {
-                final authState = context.read<AuthBloc>().state;
-                if (authState is AuthAuthenticated) {
-                   context.read<AnalyticsBloc>().add(AnalyticsLoadRequested(teacherId: authState.user.id));
+                if (_teacherId != null) {
+                  final now = DateTime.now();
+                  context.read<AnalyticsBloc>().add(
+                        LoadStats(
+                          teacherId: _teacherId!,
+                          range: DateTimeRange(
+                            start: now.subtract(const Duration(days: 7)),
+                            end: now,
+                          ),
+                        ),
+                      );
                 }
               },
             );
@@ -50,6 +70,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  _buildRangeSelector(context, state.range),
+                  const SizedBox(height: 24),
                   Center(
                     child: CircularPercentIndicator(
                       radius: 80.0,
@@ -128,5 +150,59 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
     if (percent >= 0.8) return Colors.green;
     if (percent >= 0.6) return Colors.orange;
     return Colors.red;
+  }
+
+  Widget _buildRangeSelector(BuildContext context, DateTimeRange currentRange) {
+    Future<void> loadRange(DateTimeRange range) async {
+      if (_teacherId == null) return;
+      context.read<AnalyticsBloc>().add(LoadStats(teacherId: _teacherId!, range: range));
+    }
+
+    final now = DateTime.now();
+    final last7 = DateTimeRange(start: now.subtract(const Duration(days: 7)), end: now);
+    final thisMonth = DateTimeRange(
+      start: DateTime(now.year, now.month, 1),
+      end: now,
+    );
+
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: [
+        ChoiceChip(
+          label: const Text('Last 7 days'),
+          selected: _isSameRange(currentRange, last7),
+          onSelected: (_) => loadRange(last7),
+        ),
+        ChoiceChip(
+          label: const Text('This month'),
+          selected: _isSameRange(currentRange, thisMonth),
+          onSelected: (_) => loadRange(thisMonth),
+        ),
+        ActionChip(
+          label: const Text('Custom'),
+          onPressed: () async {
+            final picked = await showDateRangePicker(
+              context: context,
+              firstDate: DateTime(now.year - 1),
+              lastDate: now,
+              initialDateRange: currentRange,
+            );
+            if (picked != null) {
+              await loadRange(picked);
+            }
+          },
+        ),
+      ],
+    );
+  }
+
+  bool _isSameRange(DateTimeRange a, DateTimeRange b) {
+    return a.start.year == b.start.year &&
+        a.start.month == b.start.month &&
+        a.start.day == b.start.day &&
+        a.end.year == b.end.year &&
+        a.end.month == b.end.month &&
+        a.end.day == b.end.day;
   }
 }

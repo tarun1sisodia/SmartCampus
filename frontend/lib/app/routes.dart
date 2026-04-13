@@ -11,6 +11,8 @@ import '../features/profile/views/profile_screen.dart';
 import '../features/session/views/session_history_screen.dart';
 import '../features/session/views/session_detail_screen.dart';
 import '../features/attendance/views/attendance_summary_screen.dart';
+import '../features/calendar/views/calendar_screen.dart';
+import '../features/student/views/student_profile_screen.dart';
 
 class AppRouter {
   final AuthBloc authBloc;
@@ -68,8 +70,12 @@ class AppRouter {
         builder: (context, state) => const ProfileScreen(),
       ),
       GoRoute(
-        path: '/sessions/history',
+        path: '/history',
         builder: (context, state) => const SessionHistoryScreen(),
+      ),
+      GoRoute(
+        path: '/sessions/history',
+        redirect: (context, state) => '/history',
       ),
       GoRoute(
         path: '/session/:sessionId',
@@ -77,8 +83,22 @@ class AppRouter {
           sessionId: state.pathParameters['sessionId']!,
         ),
       ),
+      GoRoute(
+        path: '/calendar',
+        builder: (context, state) => const CalendarScreen(),
+      ),
+      GoRoute(
+        path: '/student/:studentId',
+        builder: (context, state) => StudentProfileScreen(
+          studentId: state.pathParameters['studentId']!,
+        ),
+      ),
     ],
   );
+
+  void goToSessionDetail(String sessionId) {
+    router.go('/session/$sessionId');
+  }
 }
 
 // Utility to make GoRouter react to BLoC state changes

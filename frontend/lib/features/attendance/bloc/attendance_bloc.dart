@@ -126,6 +126,9 @@ class AttendanceBloc extends Bloc<AttendanceEvent, AttendanceState> {
             'remarks': null,
             'timestamp': DateTime.now().toUtc().toIso8601String(),
             'synced': 0,
+            'retryCount': 0,
+            'nextRetryAt': null,
+            'lastError': null,
           });
         }
         emit(const AttendanceOfflineSaved('Attendance saved offline. It will sync automatically when online.'));

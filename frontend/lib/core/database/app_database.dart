@@ -21,7 +21,7 @@ class AppDatabase {
 
     return await openDatabase(
       path,
-      version: 2,
+      version: 3,
       onCreate: _onCreate,
       onUpgrade: _onUpgrade,
     );
@@ -36,7 +36,10 @@ class AppDatabase {
         status TEXT NOT NULL,
         remarks TEXT,
         timestamp TEXT NOT NULL,
-        synced INTEGER DEFAULT 0
+        synced INTEGER DEFAULT 0,
+        retryCount INTEGER DEFAULT 0,
+        nextRetryAt TEXT,
+        lastError TEXT
       )
     ''');
 
@@ -47,6 +50,11 @@ class AppDatabase {
     if (oldVersion < 2) {
       await db.execute('DROP TABLE IF EXISTS cached_sessions');
       await db.execute(_createSessionCacheTableQuery);
+    }
+    if (oldVersion < 3) {
+      await db.execute('ALTER TABLE pending_attendance ADD COLUMN retryCount INTEGER DEFAULT 0');
+      await db.execute('ALTER TABLE pending_attendance ADD COLUMN nextRetryAt TEXT');
+      await db.execute('ALTER TABLE pending_attendance ADD COLUMN lastError TEXT');
     }
   }
 
