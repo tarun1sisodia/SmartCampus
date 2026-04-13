@@ -85,7 +85,7 @@ class _CarouselAttendanceScreenState extends State<CarouselAttendanceScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   child: Text(
-                    'Student ${_currentIndex + 1} of ${state.students.length}',
+                    'Student ${_currentIndex + 1} of ${state.students.length} • Marked ${_draftStatuses.length}/${state.students.length}',
                     style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                 ),

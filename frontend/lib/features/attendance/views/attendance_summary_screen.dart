@@ -20,36 +20,50 @@ class AttendanceSummaryScreen extends StatelessWidget {
         builder: (context, state) {
           if (state is AttendanceLoading) {
             return const Center(child: CircularProgressIndicator());
+          } else if (state is AttendanceMarked) {
+            final students = state.records;
+            final present = students.where((s) => s.status == 'present').length;
+            final absent = students.where((s) => s.status == 'absent').length;
+            final late_ = students.where((s) => s.status == 'late').length;
+            final pending = students.where((s) => s.status == 'pending').length;
+            return _buildSummaryBody(context, students, present, absent, late_, pending);
           } else if (state is AttendanceLoaded) {
             final students = state.students;
             final present = students.where((s) => s.status == 'present').length;
             final absent = students.where((s) => s.status == 'absent').length;
             final late_ = students.where((s) => s.status == 'late').length;
             final pending = students.where((s) => s.status == 'pending').length;
-
-            return Column(
-              children: [
-                _buildSummaryHeader(present, absent, late_, pending),
-                const Divider(height: 1),
-                Expanded(
-                  child: ListView.builder(
-                    padding: const EdgeInsets.all(8),
-                    itemCount: students.length,
-                    itemBuilder: (context, index) {
-                      final student = students[index];
-                      return _buildStudentTile(student);
-                    },
-                  ),
-                ),
-                _buildBottomActions(context, pending),
-              ],
-            );
+            return _buildSummaryBody(context, students, present, absent, late_, pending);
           } else if (state is AttendanceError) {
             return Center(child: Text('Error: ${state.message}'));
           }
           return const Center(child: Text('No data found'));
         },
       ),
+    );
+  }
+
+  Widget _buildSummaryBody(
+    BuildContext context,
+    List<AttendanceRecordModel> students,
+    int present,
+    int absent,
+    int late_,
+    int pending,
+  ) {
+    return Column(
+      children: [
+        _buildSummaryHeader(present, absent, late_, pending),
+        const Divider(height: 1),
+        Expanded(
+          child: ListView.builder(
+            padding: const EdgeInsets.all(8),
+            itemCount: students.length,
+            itemBuilder: (context, index) => _buildStudentTile(students[index]),
+          ),
+        ),
+        _buildBottomActions(context, pending),
+      ],
     );
   }
 
