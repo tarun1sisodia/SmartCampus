@@ -5,10 +5,20 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ForgotPasswordController extends GetxController {
+  static ForgotPasswordController get instance => Get.find();
+
+  final forgotPasswordFormKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final isLoading = false.obs;
   final errorMessage = ''.obs;
   final supabase = Supabase.instance.client;
+
+  // --- UI Facade Getters ---
+  TextEditingController get email => emailController;
+
+  // --- UI Facade Methods ---
+  void sendPasswordResetEmail() => resetPassword();
+  void resendPasswordResetEmail([String? email]) => resetPassword();
 
   @override
   void onClose() {

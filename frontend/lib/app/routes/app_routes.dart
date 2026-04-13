@@ -7,21 +7,21 @@ import '../../features/authentication/screens/forgot_password/reset_password_con
 import '../../features/authentication/screens/login/login.dart';
 import '../../features/authentication/screens/onboarding/onboarding.dart';
 import '../../features/authentication/screens/signup/signup.dart';
-import '../../features/authentication/screens/signup/singup_widgets/verify_email_screen.dart';
-import '../../features/teacher/screens/about_screen.dart';
-import '../../features/teacher/screens/all_sessions_screen.dart';
-import '../../features/teacher/screens/attendance_reports_screen.dart';
-import '../../features/teacher/screens/calendar_screen.dart';
-import '../../features/teacher/screens/carousel_attendance_screen.dart';
-import '../../features/teacher/screens/feedback_screen.dart';
-import '../../features/teacher/screens/help_screen.dart';
-import '../../features/teacher/screens/import_data_screen.dart';
-import '../../features/teacher/screens/legal_screen.dart';
-import '../../features/teacher/screens/reports_screen.dart';
-import '../../features/teacher/screens/splash_screen.dart';
-import '../../features/teacher/screens/student_detail_screen.dart';
-import '../../features/teacher/screens/teacher_messages_screen.dart';
-import '../../features/teacher/screens/teacher_settings_screen.dart';
+import '../../features/authentication/screens/verify_email/verify_email.dart';
+import '../../features/teacher/screens/about/about_screen.dart';
+import '../../features/teacher/screens/all_sessions/all_sessions_screen.dart';
+import '../../features/teacher/screens/attendance_reports/attendance_reports_screen.dart';
+import '../../features/teacher/screens/calendar/calendar_screen.dart';
+import '../../features/teacher/screens/carousel_attendance/carousel_attendance_screen.dart';
+import '../../features/teacher/screens/feedback/feedback_screen.dart';
+import '../../features/teacher/screens/help/help_screen.dart';
+import '../../features/teacher/screens/import_data/import_data_screen.dart';
+import '../../features/teacher/screens/legal/legal_screen.dart';
+import '../../features/teacher/screens/reports/reports_screen.dart';
+import '../../features/teacher/screens/splash/splash_screen.dart';
+import '../../features/teacher/screens/student_detail/student_detail_screen.dart';
+import '../../features/teacher/screens/teacher_messages/teacher_messages_screen.dart';
+import '../../features/teacher/screens/teacher_settings/teacher_settings_screen.dart';
 import '../../features/authentication/screens/oauth_consent/oauth_consent_screen.dart';
 import '../../navigation_menu.dart';
 import 'package:get/get.dart';
@@ -107,7 +107,7 @@ class AppRoutes {
       name: signup,
       page: () {
         //print('Navigating to Signup Screen');
-        return Signup();
+        return SignupScreen();
       },
       binding: SignupBinding(),
       transition: Transition.rightToLeft,
@@ -116,7 +116,7 @@ class AppRoutes {
       name: forgotPassword,
       page: () {
         //print('Navigating to Forgot Password Screen');
-        return ForgotPasswordScreen();
+        return ForgotPassword();
       },
       binding: ForgotPasswordBinding(),
       transition: Transition.rightToLeft,
@@ -126,7 +126,7 @@ class AppRoutes {
       page: () {
         //print('Navigating to Reset Password Confirmation Screen');
         final email = Get.arguments as String;
-        return ResetPasswordConfirmationScreen(email: email);
+        return ResetPasswordConfirmation(email: email);
       },
       binding: ForgotPasswordBinding(),
       transition: Transition.rightToLeft,
@@ -275,7 +275,13 @@ class AppRoutes {
     ),
     GetPage(
       name: oauthConsent,
-      page: () => const OAuthConsentScreen(),
+      page: () {
+        final args = Get.arguments as Map<String, dynamic>;
+        return OAuthConsentScreen(
+          appName: args['appName'] ?? 'Third-party App',
+          scopes: List<String>.from(args['scopes'] ?? []),
+        );
+      },
       transition: Transition.fadeIn,
     ),
   ];

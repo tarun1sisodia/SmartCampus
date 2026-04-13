@@ -15,7 +15,7 @@ import '../../../models/user_model.dart';
 import '../../../services/attendance_service.dart';
 import '../../../services/auth_service.dart';
 import '../../../services/class_service.dart';
-import '../screens/profile_image_view_screen.dart';
+import 'package:smart_campus/features/teacher/screens/profile_image_view/profile_image_view_screen.dart';
 
 // Consolidated TeacherProfileController
 class TeacherProfileController extends GetxController {

@@ -18,6 +18,21 @@ class SignupController extends GetxController {
   final isLoading = false.obs;
   final errorMessage = ''.obs;
   final passwordVisible = false.obs;
+  final privacyPolicy = true.obs;
+
+  // --- UI Facade Getters ---
+  GlobalKey<FormState> get signupFormKey => formKey;
+  TextEditingController get firstName => nameController;
+  TextEditingController get lastName => TextEditingController(); // Placeholder for variants expecting split name
+  TextEditingController get username => nameController; // Placeholder if variants expect username
+  TextEditingController get email => emailController;
+  TextEditingController get phoneNumber => phoneController;
+  TextEditingController get password => passwordController;
+  RxBool get hidePassword => passwordVisible;
+
+  // --- UI Facade Methods ---
+  void signup() => signUpWithEmail();
+  void signInWithGoogle() => signUpWithGoogle();
 
   // Supabase client
   final supabase = Supabase.instance.client;
@@ -182,6 +197,33 @@ class SignupController extends GetxController {
       rethrow;
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  // --- UI Facade Compatibility Methods ---
+  Future<void> sendEmailVerification() => resendVerificationEmail();
+
+  Future<void> checkEmailVerificationStatus() async {
+    try {
+      // In a real implementation:
+      // await supabase.auth.refreshSession();
+      // Then check if the user is confirmed.
+      
+      await Future.delayed(const Duration(seconds: 1));
+      
+      // Simulating a check - if confirm redirect is handled by Supabase, 
+      // the app will usually be notified via Auth State Changes.
+      
+      final session = supabase.auth.currentSession;
+      if (session != null && session.user.confirmedAt != null) {
+        TSnackBar.showSuccess(
+          message: 'Email verified successfully!',
+          title: 'Success',
+        );
+        Get.offAllNamed('/dashboard');
+      }
+    } catch (e) {
+      //printnt('Error checking verification status: $e');
     }
   }
 }

@@ -12,6 +12,7 @@ class TColors {
   static const Color executiveNavy = Color(0xFF1E3A8A); // blue-900
   static const Color deepOceanCyan = Color(0xFF22D3EE); // cyan-400
   static const Color slate50 = Color(0xFFF8FAFC);
+  static const Color slate100 = Color(0xFFF1F5F9);
   static const Color slate200 = Color(0xFFE2E8F0);
   static const Color slate300 = Color(0xFFCBD5E1);
   static const Color slate400 = Color(0xFF94A3B8);
