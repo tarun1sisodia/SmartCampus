@@ -7,6 +7,7 @@ class SessionDetailModel extends SessionModel {
   const SessionDetailModel({
     required super.id,
     required super.subjectName,
+    required super.section,
     required super.courseId,
     required super.startTime,
     super.endTime,
@@ -33,6 +34,7 @@ class SessionDetailModel extends SessionModel {
     return SessionDetailModel(
       id: session.id,
       subjectName: session.subjectName,
+      section: session.section,
       courseId: session.courseId,
       startTime: session.startTime,
       endTime: session.endTime,

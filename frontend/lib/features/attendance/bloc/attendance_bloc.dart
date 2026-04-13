@@ -61,7 +61,13 @@ class AttendanceLoaded extends AttendanceState {
   @override
   List<Object?> get props => [students, markedCount];
 }
-class AttendanceMarked extends AttendanceState {}
+class AttendanceMarked extends AttendanceState {
+  final List<AttendanceRecordModel> records;
+  const AttendanceMarked(this.records);
+
+  @override
+  List<Object?> get props => [records];
+}
 class AttendanceOfflineSaved extends AttendanceState {
   final String message;
   const AttendanceOfflineSaved(this.message);
@@ -105,7 +111,7 @@ class AttendanceBloc extends Bloc<AttendanceEvent, AttendanceState> {
           sessionId: event.sessionId,
           records: event.records,
         );
-        emit(AttendanceMarked());
+        emit(AttendanceMarked(event.records));
         add(AttendanceLoadRequested(event.sessionId));
       } catch (e) {
         emit(AttendanceError('Failed to mark attendance: ${e.toString()}'));
@@ -123,7 +129,7 @@ class AttendanceBloc extends Bloc<AttendanceEvent, AttendanceState> {
           });
         }
         emit(const AttendanceOfflineSaved('Attendance saved offline. It will sync automatically when online.'));
-        emit(AttendanceMarked());
+        emit(AttendanceMarked(event.records));
         add(AttendanceLoadRequested(event.sessionId));
       } catch (e) {
         emit(AttendanceError('Database error: ${e.toString()}'));
