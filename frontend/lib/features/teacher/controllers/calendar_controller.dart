@@ -1,13 +1,14 @@
 import 'package:get/get.dart';
+import 'package:dio/dio.dart';
+import '../../../../core/api/api_client.dart';
 import '../../../models/attendance_session_model.dart';
 import '../../../models/class_model.dart';
-import '../../../services/attendance_service.dart';
 import '../../../common/utils/helpers/snackbar_helper.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 class CalendarController extends GetxController {
-  final AttendanceService attendanceService = AttendanceService();
+  // Removed AttendanceService dependency
 
   // Calendar related variables
   final selectedDay = DateTime.now().obs;
@@ -33,7 +34,6 @@ class CalendarController extends GetxController {
     super.onInit();
     loadData();
 
-    // Listen to filter changes
     ever(showAllSessions, (_) => applyFilters());
     ever(showOnlyMyClasses, (_) => applyFilters());
     ever(selectedCourse, (_) => applyFilters());
@@ -354,41 +354,17 @@ class CalendarController extends GetxController {
   Future<void> loadData() async {
     try {
       isLoading.value = true;
-
-      //printnt('Loading calendar data...');
-
-      // Load all sessions and user's classes in parallel
-      final results = await Future.wait([
-        attendanceService.getAllAttendanceSessions(),
-        attendanceService.getTeacherClasses(),
-      ]);
-
-      allSessions.value = results[0] as List<AttendanceSessionModel>;
-      userClasses.value = results[1] as List<ClassModel>;
-
-      //print('Loaded ${allSessions.length} sessions and ${userClasses.length} classes');
-
-      // Sample the first session to check data
-      if (allSessions.isNotEmpty) {
-        allSessions.first;
-        //print('Sample session - ID: ${sample.id}, Subject: ${sample.subjectName}, Course: ${sample.courseName}');
-      }
-
-      // Fetch teacher names
-      await fetchTeacherNames();
-
-      // Count active sessions (sessions happening today)
+      
+      final response = await ApiClient.dio.get('/attendance/sessions');
+      final List data = response.data['data'];
+      
+      allSessions.assignAll(data.map((s) => AttendanceSessionModel.fromJson(s)).toList());
+      
       _updateActiveSessionsCount();
-      //printnt('Active sessions count: ${activeSessionsCount.value}');
-
-      // Apply initial filters
       applyFilters();
-      //printnt('Applied filters, filtered sessions: ${filteredSessions.length}');
-    } catch (e) {
-      //printnt('Error loading calendar data: $e');
-      TSnackBar.showError(
-        message: 'Failed to load calendar data: ${e.toString()}',
-      );
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
+      TSnackBar.showError(message: 'Failed to load calendar: $e');
     } finally {
       isLoading.value = false;
     }

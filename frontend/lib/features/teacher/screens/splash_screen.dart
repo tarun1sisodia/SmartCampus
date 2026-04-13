@@ -8,9 +8,9 @@ import '../../../common/utils/constants/text_strings.dart';
 import '../../../common/utils/helpers/helper_function.dart';
 import '../../../app/routes/app_routes.dart';
 import '../../../navigation_menu.dart';
-import '../../../services/auth_service.dart';
 import '../../../services/storage_service.dart';
-import '../../authentication/controllers/supabase_auth_controller.dart';
+import '../../../services/biometric_auth_service.dart';
+import '../../../core/services/auth_controller.dart';
 import 'dart:io';
 
 import '../controllers/dashboard_controller.dart';
@@ -63,23 +63,20 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> _checkAuthAndNavigate() async {
-    // Check if user is logged in
-    final supabaseAuthController = Get.put(SupabaseAuthController());
+    final authController = Get.put(AuthController());
     final storageService = Get.find<StorageService>();
     final biometricAuthService = Get.put(BiometricAuthService());
 
-    // Check onboarding status first
     final bool onboardingCompleted = storageService.getOnboardingStatus();
     if (!onboardingCompleted) {
       Get.offAllNamed(AppRoutes.onboarding);
       return;
     }
 
-    // Check if session is valid
-    final bool isSessionValid = await supabaseAuthController.isSessionValid();
+    await authController.checkAuthStatus();
+    final bool isSessionValid = authController.isLoggedIn.value;
 
     if (isSessionValid) {
-      // User is authenticated
       final dashboardController = Get.put(DashboardController());
       await dashboardController.initializeAfterSplash();
 

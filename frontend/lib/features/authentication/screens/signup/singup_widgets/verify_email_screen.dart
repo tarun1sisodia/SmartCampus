@@ -7,7 +7,6 @@ import '../../../../../common/utils/constants/image_strings.dart';
 import '../../../../../common/utils/constants/sized.dart';
 import '../../../../../common/utils/constants/text_strings.dart';
 import '../../../../../common/utils/helpers/helper_function.dart';
-import '../../../controllers/supabase_auth_controller.dart';
 import '../../login/login.dart';
 import 'email_success.dart';
 

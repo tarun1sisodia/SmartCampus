@@ -6,6 +6,9 @@ import '../../../common/utils/constants/text_strings.dart';
 import '../../../common/utils/helpers/snackbar_helper.dart';
 import '../../../services/google_sign_in_service.dart';
 import '../../../services/storage_service.dart';
+import 'package:dio/dio.dart';
+import '../../../../core/api/api_client.dart';
+import '../../../../core/services/secure_storage_service.dart';
 
 class LoginController extends GetxController {
   static LoginController get instance => Get.find();
@@ -102,10 +105,19 @@ class LoginController extends GetxController {
   void login() async {
     //printnt('Attempting to log in...');
     try {
-      // Your login logic here
+      final response = await ApiClient.dio.post('/auth/login', data: {
+        'email': emailController.text.trim(),
+        'password': passwordController.text.trim(),
+      });
+
+      final data = response.data['data'];
+      await SecureStorageService.saveTokens(
+        data['accessToken'],
+        data['refreshToken'],
+      );
+
       if (rememberMe.value) {
         StorageService.instance.saveUserCredentials(emailController.text.trim());
-        //printnt('Credentials saved during login: email=${emailController.text}');
       }
 
       // Show success message
@@ -113,19 +125,14 @@ class LoginController extends GetxController {
         message: TTexts.loginSuccess,
         title: TTexts.welcomeback,
       );
-      //printnt('Login successful');
+      
+      Get.offAllNamed('/navigation'); // Navigate to main layout
     } catch (e, stackTrace) {
       await Sentry.captureException(e, stackTrace: stackTrace);
-      //printnt('Login failed: $e');
-      // Determine if it's a server error or client error
-      if (e.toString().contains('network') ||
-          e.toString().contains('connection')) {
-        TSnackBar.showNetworkError();
-      } else if (e.toString().contains('auth') ||
-          e.toString().contains('credentials')) {
-        TSnackBar.showAuthError(
-          message: TTexts.accountNotFound,
-        );
+      
+      if (e is DioException) {
+        final message = e.response?.data['message'] ?? e.toString();
+        TSnackBar.showError(message: message, title: 'Login Failed');
       } else {
         TSnackBar.showServerError(message: e.toString());
       }

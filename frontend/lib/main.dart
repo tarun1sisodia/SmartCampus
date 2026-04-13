@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:sentry_flutter/sentry_flutter.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'core/api/api_client.dart';
+import 'core/services/offline_sync_service.dart';
 import 'package:get_storage/get_storage.dart';
 import 'app/bindings/app_bindings.dart';
 import 'common/utils/constants/colors.dart';
@@ -56,13 +57,12 @@ Future<void> main() async {
     await GetStorage.init();
     //print('GetStorage initialized.');
 
-    // Initialize Supabase
-    //print('Initializing Supabase...');
-    await Supabase.initialize(
-      url: ApiConstants.url,
-      anonKey: ApiConstants.anonKey,
-    );
-    //print('Supabase initialized.');
+    // Initialize Firebase
+    await Firebase.initializeApp();
+
+    // Initialize New Backend Layer
+    ApiClient.init();
+    await OfflineSyncService.init();
 
     // Initialize services
     await _initializeServices();

@@ -5,10 +5,8 @@ import 'package:iconsax/iconsax.dart';
 import '../../../../../common/utils/constants/colors.dart';
 import '../../../../../common/utils/constants/sized.dart';
 import '../../../../../common/utils/constants/text_strings.dart';
-import '../../../../../common/utils/helpers/helper_function.dart';
 import '../../../controllers/login_controller.dart';
 import '../../../controllers/signup_controller.dart';
-import '../../../controllers/supabase_auth_controller.dart';
 import '../../signup/signup.dart';
 import '../../signup/singup_widgets/textfields.dart';
 import 'remember_checkbox.dart';
@@ -16,13 +14,10 @@ import 'remember_checkbox.dart';
 class LoginForm extends StatelessWidget {
   LoginForm({super.key});
 
-  final controller = Get.put(SupabaseAuthController());
   final loginController = Get.find<LoginController>();
 
   @override
   Widget build(BuildContext context) {
-    // final dark = THelperFunction.isDarkMode(context);
-
     return Form(
       key: loginController.formKey,
       child: Padding(
@@ -34,7 +29,7 @@ class LoginForm extends StatelessWidget {
           children: [
             // Email field
             Textfields(
-              controller: controller.emailController,
+              controller: loginController.email,
               iconColor: TColors.executiveNavy,
               prefixIcon: const Icon(Iconsax.direct_right),
               labelText: TTexts.email,
@@ -54,7 +49,7 @@ class LoginForm extends StatelessWidget {
             // Password field
             Obx(
               () => Textfields(
-                controller: controller.passwordController,
+                controller: loginController.password,
                 iconColor: TColors.executiveNavy,
                 prefixIcon: const Icon(Iconsax.password_check),
                 labelText: TTexts.password,
@@ -82,8 +77,8 @@ class LoginForm extends StatelessWidget {
             const SizedBox(height: TSizes.spaceBtwInputFields / 2),
             Obx(
               () => RememberAndForget(
-                value: controller.rememberMe.value,
-                onRememberChanged: controller.setRememberMe,
+                value: loginController.rememberMe.value,
+                onRememberChanged: (val) => loginController.rememberMe.value = val ?? false,
               ),
             ),
 
@@ -95,43 +90,33 @@ class LoginForm extends StatelessWidget {
                 width: double.infinity,
                 height: TSizes.buttonHeight,
                 child: ElevatedButton(
-                  onPressed: controller.isLoading.value
+                  onPressed: loginController.isLoading.value
                       ? null
-                      : () {
-                          if (loginController.formKey.currentState!.validate()) {
-                            if (controller.emailController.text.isNotEmpty &&
-                                controller.passwordController.text.isNotEmpty) {
-                              controller.signInWithEmail();
-                            }
-                          }
-                        },
-                  child: controller.isLoading.value
-                      ? const CircularProgressIndicator(
-                          color: Colors.white,
+                      : () => loginController.login(),
+                  child: loginController.isLoading.value
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
                         )
-                      : Text(
-                          TTexts.signIn.toUpperCase(),
-                        ),
+                      : Text(TTexts.signIn.toUpperCase()),
                 ),
               ),
             ),
 
             const SizedBox(height: TSizes.spaceBtwItems),
-            // Create account button
+            // Create account button (Commented out if it's teacher-only but keeping for UI)
             SizedBox(
               width: double.infinity,
               height: TSizes.buttonHeight,
               child: OutlinedButton(
                 onPressed: () {
-                  // Clean up any existing SignupController
                   if (Get.isRegistered<SignupController>()) {
                     Get.delete<SignupController>(force: true);
                   }
                   Get.to(Signup());
                 },
-                child: Text(
-                  TTexts.createAccount.toUpperCase(),
-                ),
+                child: Text(TTexts.createAccount.toUpperCase()),
               ),
             ),
           ],
