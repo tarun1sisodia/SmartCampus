@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import '../bloc/attendance_bloc.dart';
+import '../models/attendance_record_model.dart';
 import 'widgets/student_carousel_card.dart';
 import '../../../shared/widgets/loading_indicator.dart';
 import '../../../shared/widgets/error_widget.dart' as shared;
@@ -17,11 +19,12 @@ class CarouselAttendanceScreen extends StatefulWidget {
 class _CarouselAttendanceScreenState extends State<CarouselAttendanceScreen> {
   final PageController _pageController = PageController();
   int _currentIndex = 0;
+  final Map<String, String> _draftStatuses = {};
 
   @override
   void initState() {
     super.initState();
-    context.read<AttendanceBloc>().add(AttendanceLoadRequested(widget.sessionId));
+    context.read<AttendanceBloc>().add(LoadStudents(widget.sessionId));
   }
 
   @override
@@ -54,6 +57,10 @@ class _CarouselAttendanceScreenState extends State<CarouselAttendanceScreen> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(state.message)),
             );
+          } else if (state is AttendanceMarked) {
+            if (mounted) {
+              context.push('/attendance/summary/${widget.sessionId}');
+            }
           } else if (state is AttendanceError) {
              ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(state.message), backgroundColor: Colors.red),
@@ -66,7 +73,7 @@ class _CarouselAttendanceScreenState extends State<CarouselAttendanceScreen> {
           } else if (state is AttendanceError && state is! AttendanceLoaded) {
             return shared.ErrorWidget(
               message: state.message,
-              onRetry: () => context.read<AttendanceBloc>().add(AttendanceLoadRequested(widget.sessionId)),
+              onRetry: () => context.read<AttendanceBloc>().add(LoadStudents(widget.sessionId)),
             );
           } else if (state is AttendanceLoaded) {
             if (state.students.isEmpty) {
@@ -89,16 +96,13 @@ class _CarouselAttendanceScreenState extends State<CarouselAttendanceScreen> {
                     itemCount: state.students.length,
                     itemBuilder: (context, index) {
                       final student = state.students[index];
+                      final currentStatus = _draftStatuses[student.studentId] ?? student.status;
                       return StudentCarouselCard(
-                        student: student,
+                        student: student.copyWith(status: currentStatus),
                         onStatusSelected: (status) {
-                          context.read<AttendanceBloc>().add(
-                            AttendanceMarkRequested(
-                              sessionId: widget.sessionId,
-                              studentId: student.studentId,
-                              status: status,
-                            ),
-                          );
+                          setState(() {
+                            _draftStatuses[student.studentId] = status;
+                          });
                           // Auto move to next after a delay if not last
                           if (_currentIndex < state.students.length - 1) {
                             Future.delayed(const Duration(milliseconds: 300), () {
@@ -126,10 +130,20 @@ class _CarouselAttendanceScreenState extends State<CarouselAttendanceScreen> {
                             : null,
                         icon: const Icon(Icons.arrow_back_ios),
                       ),
-                        ElevatedButton(
-                          onPressed: () => context.push('/attendance/summary/${widget.sessionId}'),
-                          child: const Text('FINISH'),
-                        ),
+                      ElevatedButton(
+                        onPressed: () {
+                          final records = state.students
+                              .map((s) => s.copyWith(status: _draftStatuses[s.studentId] ?? s.status))
+                              .toList();
+                          context.read<AttendanceBloc>().add(
+                                MarkAttendance(
+                                  sessionId: widget.sessionId,
+                                  records: records,
+                                ),
+                              );
+                        },
+                        child: const Text('SUBMIT ALL'),
+                      ),
                       IconButton(
                         onPressed: _currentIndex < state.students.length - 1
                             ? () => _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut)

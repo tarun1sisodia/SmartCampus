@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 class SessionModel extends Equatable {
   final String id;
   final String subjectName;
+  final String section;
   final String courseId;
   final DateTime startTime;
   final DateTime? endTime;
@@ -13,6 +14,7 @@ class SessionModel extends Equatable {
   const SessionModel({
     required this.id,
     required this.subjectName,
+    required this.section,
     required this.courseId,
     required this.startTime,
     this.endTime,
@@ -25,6 +27,7 @@ class SessionModel extends Equatable {
     return SessionModel(
       id: json['id'] ?? json['sessionId'] ?? '',
       subjectName: json['subjectName'] ?? json['subject']?['name'] ?? 'Unknown Subject',
+      section: json['section']?.toString() ?? json['classSection']?.toString() ?? 'A',
       courseId: json['courseId'] ?? json['course']?['id'] ?? '',
       startTime: DateTime.parse(json['startTime'] ?? DateTime.now().toIso8601String()),
       endTime: json['endTime'] != null ? DateTime.parse(json['endTime']) : null,
@@ -35,5 +38,5 @@ class SessionModel extends Equatable {
   }
 
   @override
-  List<Object?> get props => [id, subjectName, courseId, startTime, endTime, totalStudents, presentCount, status];
+  List<Object?> get props => [id, subjectName, section, courseId, startTime, endTime, totalStudents, presentCount, status];
 }

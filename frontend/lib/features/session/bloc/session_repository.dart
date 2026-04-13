@@ -23,12 +23,9 @@ class SessionRepository {
 
   Future<SessionDetailModel> fetchSessionDetails(String sessionId) async {
     try {
-      final response = await _apiClient.dio.get(
-        ApiEndpoints.sessionDetail,
-        queryParameters: {'id': sessionId},
-      );
+      final response = await _apiClient.dio.get('${ApiEndpoints.sessions}/$sessionId');
       if (response.statusCode == 200) {
-        final data = response.data['session'] ?? response.data;
+        final data = response.data['data'] ?? response.data['session'] ?? response.data;
         return SessionDetailModel.fromJson(data);
       }
       throw Exception('Failed to load session details');

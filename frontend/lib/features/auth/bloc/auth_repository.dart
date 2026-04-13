@@ -18,10 +18,14 @@ class AuthRepository {
       });
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        final data = response.data['data'];
-        final accessToken = data['accessToken'];
-        final refreshToken = data['refreshToken'];
+        final data = _extractPayload(response.data);
+        final accessToken = data['accessToken']?.toString();
+        final refreshToken = data['refreshToken']?.toString();
         final userJson = data['user'];
+
+        if (accessToken == null || refreshToken == null || userJson is! Map<String, dynamic>) {
+          throw Exception('Invalid login response payload');
+        }
 
         // Store tokens
         await _storageService.writeTokens(
@@ -35,6 +39,17 @@ class AuthRepository {
       rethrow;
     }
     return null;
+  }
+
+  Map<String, dynamic> _extractPayload(dynamic raw) {
+    if (raw is Map<String, dynamic>) {
+      final nested = raw['data'];
+      if (nested is Map<String, dynamic>) {
+        return nested;
+      }
+      return raw;
+    }
+    throw Exception('Unexpected API response format');
   }
 
   Future<void> logout() async {
