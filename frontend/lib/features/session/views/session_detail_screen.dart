@@ -96,9 +96,13 @@ class SessionDetailScreen extends StatelessWidget {
                                 borderRadius: 4,
                               ),
                             ),
-                            title: Text(record.name.toUpperCase(), style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 14, color: TColors.slate900)),
+                            title: GestureDetector(
+                              onTap: () => context.push('/student/${record.studentId}'),
+                              child: Text(record.name.toUpperCase(), style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 14, color: TColors.slate900)),
+                            ),
                             subtitle: Text((record.rollNumber ?? 'N/A').toUpperCase(), style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 11, color: TColors.slate600)),
                             trailing: _buildStatusChip(record.status),
+                            onTap: () => context.push('/student/${record.studentId}'),
                           ),
                         );
                       },

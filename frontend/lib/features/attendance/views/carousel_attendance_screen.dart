@@ -99,6 +99,7 @@ class _CarouselAttendanceScreenState extends State<CarouselAttendanceScreen> {
                       final currentStatus = _draftStatuses[student.studentId] ?? student.status;
                       return StudentCarouselCard(
                         student: student.copyWith(status: currentStatus),
+                        onStudentTap: () => context.push('/student/${student.studentId}'),
                         onStatusSelected: (status) {
                           setState(() {
                             _draftStatuses[student.studentId] = status;
