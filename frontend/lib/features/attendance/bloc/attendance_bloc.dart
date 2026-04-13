@@ -19,22 +19,31 @@ class AttendanceLoadRequested extends AttendanceEvent {
   List<Object?> get props => [sessionId];
 }
 
+class LoadStudents extends AttendanceLoadRequested {
+  const LoadStudents(super.sessionId);
+}
+
 class AttendanceMarkRequested extends AttendanceEvent {
   final String sessionId;
-  final String studentId;
-  final String status;
-  final String? remarks;
+  final List<AttendanceRecordModel> records;
 
   const AttendanceMarkRequested({
     required this.sessionId,
-    required this.studentId,
-    required this.status,
-    this.remarks,
+    required this.records,
   });
 
   @override
-  List<Object?> get props => [sessionId, studentId, status, remarks];
+  List<Object?> get props => [sessionId, records];
 }
+
+class MarkAttendance extends AttendanceMarkRequested {
+  const MarkAttendance({
+    required super.sessionId,
+    required super.records,
+  });
+}
+
+class SyncPending extends AttendanceEvent {}
 
 // States
 abstract class AttendanceState extends Equatable {
@@ -52,7 +61,7 @@ class AttendanceLoaded extends AttendanceState {
   @override
   List<Object?> get props => [students, markedCount];
 }
-class AttendanceMarkSuccess extends AttendanceState {}
+class AttendanceMarked extends AttendanceState {}
 class AttendanceOfflineSaved extends AttendanceState {
   final String message;
   const AttendanceOfflineSaved(this.message);
@@ -75,6 +84,7 @@ class AttendanceBloc extends Bloc<AttendanceEvent, AttendanceState> {
   AttendanceBloc(this._repository, this._connectivityService, this._db) : super(AttendanceInitial()) {
     on<AttendanceLoadRequested>(_onLoadRequested);
     on<AttendanceMarkRequested>(_onMarkRequested);
+    on<SyncPending>(_onSyncPending);
   }
 
   Future<void> _onLoadRequested(AttendanceLoadRequested event, Emitter<AttendanceState> emit) async {
@@ -93,42 +103,52 @@ class AttendanceBloc extends Bloc<AttendanceEvent, AttendanceState> {
       try {
         await _repository.markAttendance(
           sessionId: event.sessionId,
-          studentId: event.studentId,
-          status: event.status,
-          remarks: event.remarks,
+          records: event.records,
         );
-        emit(AttendanceMarkSuccess());
-        // Refresh list
+        emit(AttendanceMarked());
         add(AttendanceLoadRequested(event.sessionId));
       } catch (e) {
         emit(AttendanceError('Failed to mark attendance: ${e.toString()}'));
       }
     } else {
       try {
-        await _db.insert('pending_attendance', {
-          'sessionId': event.sessionId,
-          'studentId': event.studentId,
-          'status': event.status,
-          'remarks': event.remarks,
-          'timestamp': DateTime.now().toIso8601String(),
-          'synced': 0,
-        });
-        emit(const AttendanceOfflineSaved('Attendance saved offline. It will sync automatically when online.'));
-        // Local refresh
-        if (state is AttendanceLoaded) {
-          final currentStudents = (state as AttendanceLoaded).students;
-          final updatedStudents = currentStudents.map((s) {
-            if (s.studentId == event.studentId) {
-              return s.copyWith(status: event.status);
-            }
-            return s;
-          }).toList();
-          final markedCount = updatedStudents.where((s) => s.status != 'pending').length;
-          emit(AttendanceLoaded(updatedStudents, markedCount));
+        for (final record in event.records.where((r) => r.status != 'pending')) {
+          await _db.insert('pending_attendance', {
+            'sessionId': event.sessionId,
+            'studentId': record.studentId,
+            'status': record.status,
+            'remarks': null,
+            'timestamp': DateTime.now().toUtc().toIso8601String(),
+            'synced': 0,
+          });
         }
+        emit(const AttendanceOfflineSaved('Attendance saved offline. It will sync automatically when online.'));
+        emit(AttendanceMarked());
+        add(AttendanceLoadRequested(event.sessionId));
       } catch (e) {
         emit(AttendanceError('Database error: ${e.toString()}'));
       }
+    }
+  }
+
+  Future<void> _onSyncPending(SyncPending event, Emitter<AttendanceState> emit) async {
+    final pending = await _db.query(
+      'pending_attendance',
+      where: 'synced = ?',
+      whereArgs: [0],
+    );
+    if (pending.isEmpty) return;
+    try {
+      await _repository.syncOffline(pending);
+      for (final record in pending) {
+        await _db.delete(
+          'pending_attendance',
+          where: 'id = ?',
+          whereArgs: [record['id']],
+        );
+      }
+    } catch (_) {
+      // keep pending rows for next attempt
     }
   }
 }

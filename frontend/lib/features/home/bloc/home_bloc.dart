@@ -11,10 +11,11 @@ abstract class HomeEvent extends Equatable {
 }
 
 class HomeLoadRequested extends HomeEvent {
-  final String teacherId;
-  const HomeLoadRequested(this.teacherId);
-  @override
-  List<Object?> get props => [teacherId];
+  const HomeLoadRequested();
+}
+
+class LoadTodaySessions extends HomeLoadRequested {
+  const LoadTodaySessions();
 }
 
 // States
@@ -48,8 +49,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   Future<void> _onLoadRequested(HomeLoadRequested event, Emitter<HomeState> emit) async {
-    // Try cache first
-    final cached = _homeRepository.getCachedSessions(event.teacherId);
+    final cached = _homeRepository.getCachedTodaySessions();
     if (cached != null && cached.isNotEmpty) {
       emit(HomeLoaded(cached));
     } else {
@@ -57,7 +57,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
 
     try {
-      final sessions = await _homeRepository.fetchTodaySessions(event.teacherId);
+      final sessions = await _homeRepository.fetchTodaySessions();
       emit(HomeLoaded(sessions));
     } catch (e) {
       if (state is! HomeLoaded) {
