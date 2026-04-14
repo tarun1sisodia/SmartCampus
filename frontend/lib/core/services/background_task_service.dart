@@ -1,12 +1,12 @@
-import 'package:background_fetch/background_fetch.dart';
+import 'package:background_fetch/background_fetch.dart' as bf;
 import 'package:flutter/foundation.dart';
-import 'package:workmanager/workmanager.dart';
+import 'package:workmanager/workmanager.dart' as wm;
 import '../../app/dependency_injection.dart';
 import 'sync_service.dart';
 
 @pragma('vm:entry-point')
 void callbackDispatcher() {
-  Workmanager().executeTask((task, inputData) async {
+  wm.Workmanager().executeTask((task, inputData) async {
     try {
       // Initialize DI in the background process
       await initDependencyInjection();
@@ -31,7 +31,7 @@ class BackgroundTaskService {
     }
 
     if (defaultTargetPlatform == TargetPlatform.android) {
-      await Workmanager().initialize(
+      await wm.Workmanager().initialize(
         callbackDispatcher,
         isInDebugMode: false,
       );
@@ -39,22 +39,22 @@ class BackgroundTaskService {
     }
 
     if (defaultTargetPlatform == TargetPlatform.iOS) {
-      await BackgroundFetch.configure(
-        BackgroundFetchConfig(
+      await bf.BackgroundFetch.configure(
+        bf.BackgroundFetchConfig(
           minimumFetchInterval: 15,
           stopOnTerminate: false,
           enableHeadless: true,
           startOnBoot: true,
           requiresBatteryNotLow: true,
-          requiredNetworkType: NetworkType.ANY,
+          requiredNetworkType: bf.NetworkType.ANY,
         ),
         (String taskId) async {
           await initDependencyInjection();
           await getIt<SyncService>().syncPendingAttendance();
-          BackgroundFetch.finish(taskId);
+          bf.BackgroundFetch.finish(taskId);
         },
         (String taskId) async {
-          BackgroundFetch.finish(taskId);
+          bf.BackgroundFetch.finish(taskId);
         },
       );
     }
@@ -66,12 +66,12 @@ class BackgroundTaskService {
     }
 
     if (defaultTargetPlatform == TargetPlatform.android) {
-      await Workmanager().registerPeriodicTask(
+      await wm.Workmanager().registerPeriodicTask(
         'smart-campus-sync',
         syncTaskName,
         frequency: const Duration(minutes: 15),
-        constraints: Constraints(
-          networkType: NetworkType.connected,
+        constraints: wm.Constraints(
+          networkType: wm.NetworkType.connected,
           requiresBatteryNotLow: true,
         ),
       );
@@ -79,14 +79,14 @@ class BackgroundTaskService {
     }
 
     if (defaultTargetPlatform == TargetPlatform.iOS) {
-      await BackgroundFetch.scheduleTask(
-        TaskConfig(
+      await bf.BackgroundFetch.scheduleTask(
+        bf.TaskConfig(
           taskId: iosTaskId,
           delay: 15 * 60 * 1000,
           periodic: true,
           stopOnTerminate: false,
           enableHeadless: true,
-          requiredNetworkType: NetworkType.ANY,
+          requiredNetworkType: bf.NetworkType.ANY,
         ),
       );
     }
