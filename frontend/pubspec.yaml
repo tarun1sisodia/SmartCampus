@@ -135,11 +135,9 @@ flutter:
     - assets/images/emailsuccess.json
     - assets/images/images.png
     - assets/images/searchi.json
-    - assets/logos/applogo.png
-    - assets/logos/logo-transparent.png
+    - assets/logos/applogo.webp
     - assets/animations/hello_robo.json
     - assets/images/onboarding_images/
-    - shorebird.yaml
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 
@@ -170,15 +168,15 @@ flutter:
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: assets/logos/applogo.png
+  image_path: assets/logos/applogo.webp
   adaptive_icon_background: "#3B82F6"
-  adaptive_icon_foreground: assets/logos/logo-transparent.png
+  adaptive_icon_foreground: assets/logos/applogo.webp
 
 flutter_native_splash:
   color: "#3B82F6"
-  image: assets/logos/logo-transparent.png
+  image: assets/images/onboarding_images/roll-call.png
   android: true
   ios: true
   android_12:
     color: "#3B82F6"
-    image: assets/logos/logo-transparent.png
+    image: assets/images/onboarding_images/roll-call.png

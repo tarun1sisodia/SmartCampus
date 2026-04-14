@@ -14,10 +14,7 @@ class BiometricService {
     try {
       final bool didAuthenticate = await _auth.authenticate(
         localizedReason: 'Please authenticate to access SmartCampus',
-        options: const AuthenticationOptions(
-          biometricOnly: true,
-          stickyAuth: true,
-        ),
+        biometricOnly: true,
       );
       return didAuthenticate;
     } on PlatformException catch (e) {

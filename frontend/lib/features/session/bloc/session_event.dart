@@ -7,7 +7,20 @@ abstract class SessionEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class SessionHistoryRequested extends SessionEvent {}
+class SessionHistoryRequested extends SessionEvent {
+  const SessionHistoryRequested({
+    required this.teacherId,
+    this.startDate,
+    this.endDate,
+  });
+
+  final String teacherId;
+  final DateTime? startDate;
+  final DateTime? endDate;
+
+  @override
+  List<Object?> get props => [teacherId, startDate, endDate];
+}
 
 class SessionDetailsRequested extends SessionEvent {
   final String sessionId;

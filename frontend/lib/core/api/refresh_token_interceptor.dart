@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 import '../../env/env_config.dart';
+import '../../app/dependency_injection.dart';
+import '../../features/auth/bloc/auth_bloc.dart';
 import 'endpoints.dart';
 import '../services/secure_storage_service.dart';
 
@@ -75,6 +77,9 @@ class RefreshTokenInterceptor extends Interceptor {
 
   Future<void> _clearTokensAndLogout() async {
     await _storageService.deleteTokens();
+    if (getIt.isRegistered<AuthBloc>()) {
+      getIt<AuthBloc>().add(AuthLogoutRequested());
+    }
     _onSessionExpired?.call();
   }
 }

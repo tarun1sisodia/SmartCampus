@@ -7,6 +7,7 @@ import 'package:smart_campus/features/session/bloc/session_event.dart';
 import 'package:smart_campus/features/session/bloc/session_state.dart';
 import 'package:smart_campus/features/home/views/widgets/session_card.dart';
 import 'package:smart_campus/features/home/models/session_model.dart';
+import 'package:smart_campus/features/auth/bloc/auth_bloc.dart';
 import 'package:smart_campus/app/dependency_injection.dart';
 
 class SessionHistoryScreen extends StatelessWidget {
@@ -14,11 +15,15 @@ class SessionHistoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authState = context.read<AuthBloc>().state;
+    final teacherId = authState is AuthAuthenticated ? authState.user.id : '';
     return BlocProvider(
-      create: (context) => getIt<SessionBloc>()..add(SessionHistoryRequested()),
+      create: (context) => getIt<SessionBloc>()
+        ..add(SessionHistoryRequested(teacherId: teacherId)),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Session History', style: TextStyle(fontWeight: FontWeight.bold)),
+          title: const Text('Session History',
+              style: TextStyle(fontWeight: FontWeight.bold)),
           elevation: 0,
           backgroundColor: Colors.transparent,
           foregroundColor: Colors.black,
@@ -34,7 +39,8 @@ class SessionHistoryScreen extends StatelessWidget {
 
               final grouped = <String, List<SessionModel>>{};
               for (final session in state.sessions) {
-                final key = DateFormat('EEEE, MMM d, yyyy').format(session.startTime);
+                final key =
+                    DateFormat('EEEE, MMM d, yyyy').format(session.startTime);
                 grouped.putIfAbsent(key, () => []).add(session);
               }
               final dates = grouped.keys.toList();

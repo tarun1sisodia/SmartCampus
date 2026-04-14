@@ -13,6 +13,7 @@ import 'package:smart_campus/features/student/bloc/student_profile_bloc.dart';
 import 'package:smart_campus/features/student/repositories/student_repository.dart';
 import 'package:smart_campus/features/profile/bloc/profile_bloc.dart';
 import 'package:smart_campus/features/profile/repositories/profile_repository.dart';
+import 'package:smart_campus/features/settings/bloc/settings_bloc.dart';
 import '../core/api/api_client.dart';
 import '../core/database/app_database.dart';
 import '../core/database/dao/pending_attendance_dao.dart';
@@ -24,6 +25,7 @@ import '../core/services/biometric_service.dart';
 import '../core/services/push_notification_service.dart';
 import '../core/services/secure_storage_service.dart';
 import '../core/services/background_task_service.dart';
+import '../core/services/app_feedback_service.dart';
 import '../features/session/bloc/session_bloc.dart';
 import '../features/session/bloc/session_repository.dart';
 
@@ -39,58 +41,69 @@ Future<void> initDependencyInjection() async {
   getIt.registerLazySingleton<SessionCacheDao>(
     () => SessionCacheDao(getIt<AppDatabase>()),
   );
-  
+
   final hiveService = HiveService();
   await hiveService.init();
   getIt.registerSingleton<HiveService>(hiveService);
-  
+
   getIt.registerLazySingleton<ApiClient>(() => ApiClient());
-  
+
   // Services
   getIt.registerLazySingleton<ConnectivityService>(() => ConnectivityService());
   getIt.registerLazySingleton<BiometricService>(() => BiometricService());
   getIt.registerLazySingleton<PushNotificationService>(
     () => PushNotificationService(apiClient: getIt<ApiClient>()),
   );
-  getIt.registerLazySingleton<SecureStorageService>(() => SecureStorageService());
-  getIt.registerLazySingleton<BackgroundTaskService>(() => BackgroundTaskService());
-  
+  getIt.registerLazySingleton<SecureStorageService>(
+      () => SecureStorageService());
+  getIt.registerLazySingleton<BackgroundTaskService>(
+      () => BackgroundTaskService());
+  getIt.registerLazySingleton<AppFeedbackService>(() => AppFeedbackService());
+
   // Sync Service (Requires ApiClient and Database)
   getIt.registerLazySingleton<SyncService>(() => SyncService(
-    getIt<ApiClient>(),
-    getIt<AppDatabase>(),
-    getIt<HiveService>(),
-  ));
+        getIt<ApiClient>(),
+        getIt<AppDatabase>(),
+        getIt<HiveService>(),
+        getIt<AppFeedbackService>(),
+      ));
 
   // Repositories
-  getIt.registerLazySingleton<AuthRepository>(() => AuthRepository(getIt<ApiClient>()));
+  getIt.registerLazySingleton<AuthRepository>(
+      () => AuthRepository(getIt<ApiClient>()));
   getIt.registerLazySingleton<HomeRepository>(() => HomeRepository(
-    getIt<ApiClient>(),
-    getIt<HiveService>(),
-  ));
-  getIt.registerLazySingleton<AttendanceRepository>(() => AttendanceRepository(getIt<ApiClient>()));
+        getIt<ApiClient>(),
+        getIt<HiveService>(),
+      ));
+  getIt.registerLazySingleton<AttendanceRepository>(
+      () => AttendanceRepository(getIt<ApiClient>()));
   getIt.registerLazySingleton<AnalyticsRepository>(() => AnalyticsRepository(
-    getIt<ApiClient>(),
-    getIt<HiveService>(),
-  ));
-  getIt.registerLazySingleton<SessionRepository>(() => SessionRepository(getIt<ApiClient>()));
-  getIt.registerLazySingleton<CalendarRepository>(() => CalendarRepository(getIt<ApiClient>()));
-  getIt.registerLazySingleton<StudentRepository>(() => StudentRepository(getIt<ApiClient>()));
-  getIt.registerLazySingleton<ProfileRepository>(() => ProfileRepository(getIt<ApiClient>()));
+        getIt<ApiClient>(),
+        getIt<HiveService>(),
+      ));
+  getIt.registerLazySingleton<SessionRepository>(
+      () => SessionRepository(getIt<ApiClient>()));
+  getIt.registerLazySingleton<CalendarRepository>(
+      () => CalendarRepository(getIt<ApiClient>()));
+  getIt.registerLazySingleton<StudentRepository>(
+      () => StudentRepository(getIt<ApiClient>()));
+  getIt.registerLazySingleton<ProfileRepository>(
+      () => ProfileRepository(getIt<ApiClient>()));
 
   // Blocs
-  getIt.registerFactory(() => AuthBloc(getIt<AuthRepository>()));
+  getIt
+      .registerLazySingleton<AuthBloc>(() => AuthBloc(getIt<AuthRepository>()));
   getIt.registerFactory(() => HomeBloc(getIt<HomeRepository>()));
   getIt.registerFactory(() => AttendanceBloc(
-    getIt<AttendanceRepository>(),
-    getIt<ConnectivityService>(),
-    getIt<AppDatabase>(),
-  ));
+        getIt<AttendanceRepository>(),
+        getIt<ConnectivityService>(),
+        getIt<AppDatabase>(),
+      ));
   getIt.registerFactory(() => AnalyticsBloc(getIt<AnalyticsRepository>()));
   getIt.registerFactory(() => SessionBloc(getIt<SessionRepository>()));
   getIt.registerFactory(() => CalendarBloc(getIt<CalendarRepository>()));
   getIt.registerFactory(() => StudentProfileBloc(getIt<StudentRepository>()));
   getIt.registerFactory(() => ProfileBloc(getIt<ProfileRepository>()));
-
-
+  getIt.registerLazySingleton<SettingsBloc>(
+      () => SettingsBloc(getIt<HiveService>()));
 }

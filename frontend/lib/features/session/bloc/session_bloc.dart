@@ -17,7 +17,11 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
   ) async {
     emit(SessionLoading());
     try {
-      final sessions = await _repository.fetchSessionHistory();
+      final sessions = await _repository.fetchSessionHistory(
+        teacherId: event.teacherId,
+        startDate: event.startDate,
+        endDate: event.endDate,
+      );
       emit(SessionHistoryLoaded(sessions));
     } catch (e) {
       emit(SessionError(e.toString()));
@@ -30,7 +34,8 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
   ) async {
     emit(SessionLoading());
     try {
-      final sessionDetail = await _repository.fetchSessionDetails(event.sessionId);
+      final sessionDetail =
+          await _repository.fetchSessionDetails(event.sessionId);
       emit(SessionDetailsLoaded(sessionDetail));
     } catch (e) {
       emit(SessionError(e.toString()));

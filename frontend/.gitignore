@@ -17,7 +17,6 @@ react_native_app/
 *.iws
 .idea/
 node_modules/
-server/
 server/.env
 .github/workflows/snyk-security.yml
 .github/dependabot.yml

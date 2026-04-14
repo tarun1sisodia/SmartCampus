@@ -7,8 +7,9 @@ import '../features/auth/bloc/auth_bloc.dart';
 import '../features/home/bloc/home_bloc.dart';
 import '../features/attendance/bloc/attendance_bloc.dart';
 import '../features/analytics/bloc/analytics_bloc.dart';
+import '../features/settings/bloc/settings_bloc.dart';
+import '../core/services/app_feedback_service.dart';
 import '../core/services/push_notification_service.dart';
-
 
 class App extends StatefulWidget {
   const App({super.key});
@@ -21,6 +22,7 @@ class _AppState extends State<App> {
   late final AuthBloc _authBloc;
   late final AppRouter _appRouter;
   late final PushNotificationService _pushNotificationService;
+  late final AppFeedbackService _appFeedbackService;
 
   @override
   void initState() {
@@ -29,12 +31,16 @@ class _AppState extends State<App> {
     _authBloc.add(AuthAppStarted());
     _appRouter = AppRouter(_authBloc);
     _pushNotificationService = getIt<PushNotificationService>();
-    _pushNotificationService.lastOpenedSessionId.addListener(_onSessionNotificationOpened);
+    _appFeedbackService = getIt<AppFeedbackService>();
+    _pushNotificationService.lastOpenedSessionId
+        .addListener(_onSessionNotificationOpened);
+    getIt<SettingsBloc>().add(LoadSettings());
   }
 
   @override
   void dispose() {
-    _pushNotificationService.lastOpenedSessionId.removeListener(_onSessionNotificationOpened);
+    _pushNotificationService.lastOpenedSessionId
+        .removeListener(_onSessionNotificationOpened);
     super.dispose();
   }
 
@@ -53,16 +59,25 @@ class _AppState extends State<App> {
       providers: [
         BlocProvider<AuthBloc>.value(value: _authBloc),
         BlocProvider<HomeBloc>(create: (context) => getIt<HomeBloc>()),
-        BlocProvider<AttendanceBloc>(create: (context) => getIt<AttendanceBloc>()),
-        BlocProvider<AnalyticsBloc>(create: (context) => getIt<AnalyticsBloc>()),
+        BlocProvider<AttendanceBloc>(
+            create: (context) => getIt<AttendanceBloc>()),
+        BlocProvider<AnalyticsBloc>(
+            create: (context) => getIt<AnalyticsBloc>()),
+        BlocProvider<SettingsBloc>.value(value: getIt<SettingsBloc>()),
       ],
-
-      child: MaterialApp.router(
-        title: 'SmartCampus Teacher',
-        theme: AppTheme.light,
-        darkTheme: AppTheme.dark,
-        routerConfig: _appRouter.router,
-        debugShowCheckedModeBanner: false,
+      child: BlocBuilder<SettingsBloc, SettingsState>(
+        builder: (context, settingsState) {
+          return MaterialApp.router(
+            title: 'SmartCampus Teacher',
+            scaffoldMessengerKey: _appFeedbackService.messengerKey,
+            theme: AppTheme.light,
+            darkTheme: AppTheme.dark,
+            themeMode: settingsState.themeMode,
+            locale: settingsState.locale,
+            routerConfig: _appRouter.router,
+            debugShowCheckedModeBanner: false,
+          );
+        },
       ),
     );
   }

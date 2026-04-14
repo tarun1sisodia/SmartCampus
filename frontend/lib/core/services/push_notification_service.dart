@@ -48,7 +48,7 @@ class PushNotificationService {
       );
 
       await _localNotificationsPlugin.initialize(
-        initializationSettings,
+        settings: initializationSettings,
         onDidReceiveNotificationResponse: _onNotificationTapped,
       );
 
@@ -109,10 +109,10 @@ class PushNotificationService {
     if (notification == null) return;
     final sessionId = message.data['sessionId']?.toString();
     _localNotificationsPlugin.show(
-      notification.hashCode,
-      notification.title,
-      notification.body,
-      NotificationDetails(
+      id: notification.hashCode,
+      title: notification.title,
+      body: notification.body,
+      notificationDetails: NotificationDetails(
         android: AndroidNotificationDetails(
           channel.id,
           channel.name,

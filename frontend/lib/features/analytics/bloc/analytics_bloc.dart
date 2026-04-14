@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import '../models/teacher_stats_model.dart';
@@ -71,27 +72,25 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
   }
 
   Future<void> _onLoadRequested(AnalyticsLoadRequested event, Emitter<AnalyticsState> emit) async {
+    final now = DateTime.now();
+    final range = DateTimeRange(
+      start: event.startDate ?? now.subtract(const Duration(days: 30)),
+      end: event.endDate ?? now,
+    );
     final cached = _repository.getCachedStats(event.teacherId);
     if (cached != null && event.startDate == null) {
-      emit(AnalyticsLoaded(cached));
+      emit(AnalyticsLoaded(cached, range));
     } else {
       emit(AnalyticsLoading());
     }
 
     try {
-      final now = DateTime.now();
       final stats = await _repository.fetchTeacherStats(
         teacherId: event.teacherId,
-        startDate: event.startDate ?? now.subtract(const Duration(days: 30)),
-        endDate: event.endDate ?? now,
+        startDate: range.start,
+        endDate: range.end,
       );
-      emit(AnalyticsLoaded(
-        stats,
-        DateTimeRange(
-          start: event.startDate ?? now.subtract(const Duration(days: 30)),
-          end: event.endDate ?? now,
-        ),
-      ));
+      emit(AnalyticsLoaded(stats, range));
     } catch (e) {
       if (state is! AnalyticsLoaded) {
         emit(AnalyticsError('Failed to load stats: ${e.toString()}'));
