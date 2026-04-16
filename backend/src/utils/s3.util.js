@@ -2,9 +2,10 @@ import {  S3Client, PutObjectCommand, DeleteObjectCommand  } from '@aws-sdk/clie
 
 let s3Client;
 
-if (process.env.AWS_REGION && process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY) {
+if (process.env.AWS_REGION_JURISDICTION && process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY) {
   s3Client = new S3Client({
-    region: process.env.AWS_REGION,
+    region: 'auto',
+    endpoint: process.env.AWS_REGION_JURISDICTION,
     credentials: {
       accessKeyId: process.env.AWS_ACCESS_KEY_ID,
       secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
@@ -26,7 +27,8 @@ export const uploadFile = async (bucket, key, fileBuffer, mimetype) => {
   });
 
   await s3Client.send(command);
-  return `https://${bucket}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
+  // Using the R2 endpoint as the base for the URL
+  return `${process.env.AWS_REGION_JURISDICTION}/${bucket}/${key}`;
 };
 
 export const deleteFile = async (bucket, key) => {

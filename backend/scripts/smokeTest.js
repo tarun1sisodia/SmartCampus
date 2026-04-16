@@ -1,14 +1,25 @@
 import '../src/config/env.js';
 import mongoose from 'mongoose';
 import redisClient from '../src/config/redis.js';
+import {  S3Client, ListBucketsCommand  } from '@aws-sdk/client-s3';
+import { v2 as cloudinary } from 'cloudinary';
+import { fileURLToPath } from 'url';
 
 const API_URL = 'http://localhost:5000/api/v1';
 
-async function verifyExternalConnections() {
+export async function verifyExternalConnections() {
   console.log('--- Checking External Bindings ---');
   
-  await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/smartcampus');
-  console.log('✅ MongoDB connected natively');
+  try {
+    if (mongoose.connection.readyState !== 1) {
+      await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/smartcampus');
+      console.log('✅ MongoDB connected natively');
+    } else {
+      console.log('✅ MongoDB already connected');
+    }
+  } catch (err) {
+    console.error(`❌ MongoDB connection failed: ${err.message}`);
+  }
 
   try {
     await redisClient.ping();
@@ -17,9 +28,45 @@ async function verifyExternalConnections() {
     console.error('❌ Redis offline');
   }
 
-  const cloudinaryCheck = !!process.env.CLOUDINARY_API_KEY;
-  if (cloudinaryCheck) console.log('✅ Cloudinary dynamically hooked');
-  else console.log('⚠️ Cloudinary environmental parameters pending');
+  // Cloudinary Check
+  try {
+    if (process.env.CLOUDINARY_URL || (process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY)) {
+      const config = process.env.CLOUDINARY_URL ? {} : {
+        cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+        api_key: process.env.CLOUDINARY_API_KEY,
+        api_secret: process.env.CLOUDINARY_API_SECRET
+      };
+      cloudinary.config(config);
+      await cloudinary.api.ping();
+      console.log('✅ Cloudinary dynamically hooked and responding');
+    } else {
+      console.log('⚠️ Cloudinary environmental parameters pending');
+    }
+  } catch (err) {
+    console.error(`❌ Cloudinary connection failed: ${err.message}`);
+  }
+
+  // Cloudflare R2 Check
+  console.log('--- Checking Cloudflare R2 Binding ---');
+  const r2Client = new S3Client({
+    region: 'auto',
+    endpoint: process.env.AWS_REGION_JURISDICTION,
+    credentials: {
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+    }
+  });
+
+  try {
+    const data = await r2Client.send(new ListBucketsCommand({}));
+    if (data.Buckets.some(b => b.Name === process.env.AWS_BUCKET)) {
+      console.log(`✅ Cloudflare R2 linked: Bucket "${process.env.AWS_BUCKET}" verified`);
+    } else {
+      console.log('⚠️ Cloudflare R2 linked but target bucket mismatch');
+    }
+  } catch(e) {
+    console.error(`❌ Cloudflare R2 offline: ${e.message}`);
+  }
 }
 
 async function runSmokeTests() {
@@ -36,7 +83,7 @@ async function runSmokeTests() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 
-        email: process.env.SUPER_ADMIN_EMAIL || 'super@smartcampus.com', 
+        email: process.env.SUPER_ADMIN_EMAIL || '@smartcampus.com', 
         password: process.env.SUPER_ADMIN_PASSWORD || 'SuperSecret123' 
       })
     });
@@ -59,4 +106,8 @@ async function runSmokeTests() {
   process.exit(0);
 }
 
-runSmokeTests();
+// Only run if executed directly
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  runSmokeTests();
+}
+
