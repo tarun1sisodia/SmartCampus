@@ -53,7 +53,7 @@ class StatsOverview extends StatelessWidget {
             ),
             circularStrokeCap: CircularStrokeCap.butt, //butt is sharp
             progressColor: TColors.cyan400,
-            backgroundColor: Colors.white.withOpacity(0.1),
+            backgroundColor: Colors.white.withValues(alpha: 0.1),
             animation: true,
           ),
         ],

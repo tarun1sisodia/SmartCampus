@@ -1,3 +1,5 @@
+import 'package:dio/dio.dart';
+
 import '../../../core/api/api_client.dart';
 import '../../../core/api/endpoints.dart';
 import '../../../core/services/secure_storage_service.dart';
@@ -12,10 +14,11 @@ class AuthRepository {
 
   Future<UserModel?> login(String email, String password) async {
     try {
-      final response = await _apiClient.dio.post(Endpoints.login, data: {
-        'email': email,
-        'password': password,
-      });
+      final response = await _apiClient.dio.post(
+        Endpoints.login,
+        data: {'email': email, 'password': password},
+        options: Options(connectTimeout: Duration(seconds: 10)),
+);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = _extractPayload(response.data);

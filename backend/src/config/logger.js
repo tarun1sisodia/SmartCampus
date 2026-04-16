@@ -27,16 +27,14 @@ const logger = winston.createLogger({
   ]
 });
 
-// If we're not in production then log to the `console` with the colorized format
-if (process.env.NODE_ENV !== 'production') {
-  logger.add(new winston.transports.Console({
-    format: winston.format.combine(
-      winston.format.colorize(),
-      winston.format.printf(({ level, message, timestamp, stack }) => {
-        return `${timestamp} ${level}: ${message} ${stack ? '\n' + stack : ''}`;
-      })
-    )
-  }));
-}
+// Always log to the console with colorized format for visibility during startup/dev
+logger.add(new winston.transports.Console({
+  format: winston.format.combine(
+    winston.format.colorize(),
+    winston.format.printf(({ level, message, timestamp, stack }) => {
+      return `${timestamp} ${level}: ${message} ${stack ? '\n' + stack : ''}`;
+    })
+  )
+}));
 
 export default logger;

@@ -1,5 +1,9 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'dart:io';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:flutter/foundation.dart';
+import '../utils/platform_helper.dart';
 
 class AppDatabase {
   static final AppDatabase _instance = AppDatabase._internal();
@@ -16,6 +20,19 @@ class AppDatabase {
   }
 
   Future<Database> _initDatabase() async {
+    if (!PlatformHelper.isMobile) {
+      debugPrint('⚠️ Non-mobile platform detected. Using in-memory SQLite (Dev mode).');
+      sqfliteFfiInit();
+      databaseFactory = databaseFactoryFfi;
+      
+      return await openDatabase(
+        inMemoryDatabasePath,
+        version: 3,
+        onCreate: _onCreate,
+        onUpgrade: _onUpgrade,
+      );
+    }
+
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, 'smart_campus.db');
 

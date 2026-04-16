@@ -245,7 +245,7 @@ All three consume the same \*\*backend API\*\* (documented separately) but have 
 | \`/api/v1/sessions?teacherId=...\&startDate=...\` | GET | Past sessions |  
 | \`/api/v1/attendance/mark\` | POST | Mark attendance |  
 | \`/api/v1/attendance/session/:sessionId\` | GET | Fetch attendance for a session (to edit) |  
-| \`/api/v1/students?sessionId=...\` | GET | List students for a session (with photos) |  
+| \`/api/v1/students?sessionId=...\` | GET | List students for a session (with photos) |    
 | \`/api/v1/students/:id\` | GET | Student profile |  
 | \`/api/v1/analytics/teacher/:teacherId\` | GET | Teacher’s attendance analytics |
 

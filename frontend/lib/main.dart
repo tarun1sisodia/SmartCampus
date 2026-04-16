@@ -8,34 +8,86 @@ import 'core/services/background_task_service.dart';
 import 'core/services/push_notification_service.dart';
 import 'core/services/sync_service.dart';
 
+import 'core/utils/platform_helper.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
-  // Initialize Firebase (picks up google-services.json automatically on Android)
-  await Firebase.initializeApp();
-
   // Validate and load environment
   EnvConfig.validate();
-  
-  // Initialize all dependencies (Hive, Database, Services, Repositories, Blocs)
+
+  // Initialize all dependencies (Core DB, Hive)
   await initDependencyInjection();
 
-  // Initialize background tasks
-  final backgroundService = getIt<BackgroundTaskService>();
-  await backgroundService.init();
-  await backgroundService.schedulePeriodicSync();
+  runApp(const App());
 
-  // Sync any pending offline attendance on startup.
-  await getIt<SyncService>().syncPendingAttendance();
-
-  // Initialize Push Notifications
-  await getIt<PushNotificationService>().init();
-  
-  await SentryFlutter.init(
-    (options) {
-      options.dsn = EnvConfig.sentryDsn;
-      options.tracesSampleRate = 0.1;
-    },
-    appRunner: () => runApp(const App()),
-  );
+  // After first frame, initialize non-critical services asynchronously
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    _initializeOptionalServices();
+  });
 }
+
+Future<void> _initializeOptionalServices() async {
+  const timeout = Duration(seconds: 4);
+  debugPrint('🚀 Starting optional services initialization...');
+
+  // 1. Firebase (Mobile only)
+  if (PlatformHelper.isMobile) {
+    try {
+      await Firebase.initializeApp().timeout(timeout);
+      debugPrint('✅ Firebase initialized');
+    } catch (e) {
+      debugPrint('⚠️ Firebase init failed or timed out: $e');
+    }
+  } else {
+    debugPrint('📵 Skipping Firebase on non-mobile platform');
+  }
+
+  // 2. Background Tasks (Android only)
+  if (PlatformHelper.isAndroid) {
+    try {
+      final backgroundService = getIt<BackgroundTaskService>();
+      await backgroundService.init().timeout(timeout);
+      await backgroundService.schedulePeriodicSync().timeout(timeout);
+      debugPrint('✅ Background tasks initialized');
+    } catch (e) {
+      debugPrint('⚠️ Background tasks init failed: $e');
+    }
+  }
+
+  // 3. Offline Sync (Android only for now)
+  if (PlatformHelper.isAndroid) {
+    try {
+      await getIt<SyncService>().syncPendingAttendance().timeout(timeout);
+      debugPrint('✅ Attendance sync completed');
+    } catch (e) {
+      debugPrint('⚠️ Initial sync failed: $e');
+    }
+  }
+
+  // 4. Push Notifications (Mobile only)
+  if (PlatformHelper.isMobile) {
+    try {
+      await getIt<PushNotificationService>().init().timeout(timeout);
+      debugPrint('✅ Push notifications initialized');
+    } catch (e) {
+      debugPrint('⚠️ Push notifications init failed: $e');
+    }
+  }
+
+  // 5. Sentry (Optional for local dev)
+  try {
+    await SentryFlutter.init(
+      (options) {
+        options.dsn = EnvConfig.sentryDsn;
+        options.tracesSampleRate = 0.1;
+      },
+    ).timeout(timeout);
+    debugPrint('✅ Sentry initialized');
+  } catch (e) {
+    debugPrint('⚠️ Sentry init failed: $e');
+  }
+
+  debugPrint('🏁 Async initialization routine finished');
+}
+

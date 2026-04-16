@@ -6,14 +6,15 @@ export const login = async (req, res, next) => {
     const { email, password } = req.body;
     const { accessToken, refreshToken, user } = await authService.login(email, password);
 
+    // Set cookie (for web)
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
-      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+      maxAge: 7 * 24 * 60 * 60 * 1000
     });
 
-    sendSuccess(res, { accessToken, user });
+    sendSuccess(res, { accessToken, refreshToken, user });
   } catch (err) {
     next(err);
   }
