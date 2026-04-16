@@ -174,7 +174,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   },
                 ),
                 DropdownButtonFormField<String>(
-                  value: _language,
+                  initialValue: _language,
                   decoration: const InputDecoration(labelText: 'Language'),
                   items: const [
                     DropdownMenuItem(value: 'en', child: Text('English')),
@@ -213,6 +213,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final picker = ImagePicker();
     final picked = await picker.pickImage(source: ImageSource.gallery);
     if (picked == null) return;
+    if (!context.mounted) return;
     context.read<ProfileBloc>().add(UploadPhoto(File(picked.path)));
   }
 

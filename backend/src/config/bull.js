@@ -1,27 +1,41 @@
 import Queue from 'bull';
-import redisClient from './redis.js';
+import Redis from 'ioredis';
+import redisClient from './redis.js';  // your existing redis client (if any)
 
 const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379';
 const isTls = redisUrl.startsWith('rediss://');
 
-const defaultOptions = {
-  // Bull optionally takes a redis string or an object. 
-  // For production Upstash/TLS, we pass the URL directly but ensure ioredis options are correct if needed.
-  redis: redisUrl,
-  ...(isTls && {
-    settings: {
-      lockDuration: 30000,
-      stalledInterval: 30000,
-      maxStalledCount: 1
+// Create a custom Redis client with reconnection strategy
+const customRedisClient = new Redis(redisUrl, {
+  maxRetriesPerRequest: null,          // prevents Bull from crashing on retry exhaustion
+  enableReadyCheck: false,
+  reconnectOnError: (err) => {
+    console.warn('Redis reconnect on error:', err.message);
+    return true;                       // always try to reconnect
+  },
+  retryStrategy: (times) => {
+    if (times > 10) {
+      console.error('Redis connection failed after 10 retries, giving up');
+      return null;                     // stop retrying
     }
-  }),
+    return Math.min(times * 100, 3000); // exponential backoff, max 3s
+  }
+});
+
+// Factory function for Bull to use the same client for all connections
+const createClient = (type) => {
+  if (type === 'client') return customRedisClient;
+  if (type === 'subscriber') return customRedisClient.duplicate();
+  return customRedisClient.duplicate();
+};
+
+const defaultOptions = {
+  createClient,
   defaultJobOptions: {
     attempts: 3,
-    backoff: {
-      type: 'exponential',
-      delay: 1000
-    },
+    backoff: { type: 'exponential', delay: 1000 },
     removeOnComplete: true,
+    timeout: 30000,    // 30 second job timeout
   }
 };
 

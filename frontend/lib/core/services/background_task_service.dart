@@ -4,6 +4,8 @@ import 'package:workmanager/workmanager.dart' as wm;
 import '../../app/dependency_injection.dart';
 import 'sync_service.dart';
 
+import '../utils/platform_helper.dart';
+
 @pragma('vm:entry-point')
 void callbackDispatcher() {
   wm.Workmanager().executeTask((task, inputData) async {
@@ -26,7 +28,8 @@ class BackgroundTaskService {
   static const String iosTaskId = 'com.smartcampus.ios.sync';
 
   Future<void> init() async {
-    if (kIsWeb) {
+    if (!PlatformHelper.isMobile) {
+      debugPrint('📵 BackgroundTaskService skipped on non-mobile platform');
       return;
     }
 
@@ -61,7 +64,7 @@ class BackgroundTaskService {
   }
 
   Future<void> schedulePeriodicSync() async {
-    if (kIsWeb) {
+    if (!PlatformHelper.isMobile) {
       return;
     }
 

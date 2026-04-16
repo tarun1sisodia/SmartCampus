@@ -2,7 +2,8 @@ import {  S3Client, PutObjectCommand, GetObjectCommand  } from '@aws-sdk/client-
 import fs from 'fs';
 
 const s3Client = new S3Client({
-  region: process.env.AWS_REGION || 'us-east-1',
+  region: 'auto',
+  endpoint: process.env.AWS_REGION_JURISDICTION,
   credentials: {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID || 'fakeAccessKey',
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || 'fakeSecretKey'

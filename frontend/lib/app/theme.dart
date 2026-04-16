@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../common/utils/constants/colors.dart';
-import '../common/utils/constants/sized.dart';
 
 class AppTheme {
   static ThemeData get light {
@@ -23,7 +22,7 @@ class AppTheme {
         titleTextStyle: TextStyle(color: TColors.slate900, fontSize: 18, fontWeight: FontWeight.w900, letterSpacing: 1.0),
         surfaceTintColor: Colors.transparent,
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: Colors.white,
         elevation: 0,
         shape: RoundedRectangleBorder(

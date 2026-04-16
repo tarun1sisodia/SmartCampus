@@ -5,12 +5,14 @@ import 'package:logger/logger.dart';
 import '../api/api_client.dart';
 import '../api/endpoints.dart';
 
+import '../utils/platform_helper.dart';
+
 // Top-level function for background message handling
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // If you're going to use other Firebase services in the background, such as Firestore,
   // make sure you call `initializeApp` before using other Firebase services.
-  print('Handling a background message: ${message.messageId}');
+  debugPrint('Handling a background message: ${message.messageId}');
 }
 
 class PushNotificationService {
@@ -20,15 +22,24 @@ class PushNotificationService {
 
   final ApiClient? _apiClient;
   final Logger _logger;
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-  final FlutterLocalNotificationsPlugin _localNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
   final ValueNotifier<String?> lastOpenedSessionId = ValueNotifier<String?>(null);
+  
+  // These will only be used if PlatformHelper.isMobile is true
+  FirebaseMessaging? _firebaseMessaging;
+  FlutterLocalNotificationsPlugin? _localNotificationsPlugin;
 
   Future<void> init() async {
+    if (!PlatformHelper.isMobile) {
+      _logger.i('📵 Push notifications skipped on non-mobile platform');
+      return;
+    }
+    
+    _firebaseMessaging = FirebaseMessaging.instance;
+    _localNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
     try {
       // 1. Request Permission
-      NotificationSettings settings = await _firebaseMessaging.requestPermission(
+      NotificationSettings settings = await _firebaseMessaging!.requestPermission(
         alert: true,
         announcement: false,
         badge: true,
@@ -47,9 +58,9 @@ class PushNotificationService {
         android: initializationSettingsAndroid,
       );
 
-      await _localNotificationsPlugin.initialize(
-        settings: initializationSettings,
+      await _localNotificationsPlugin!.initialize(
         onDidReceiveNotificationResponse: _onNotificationTapped,
+        settings: initializationSettings,
       );
 
       // Create a High Importance Android Channel
@@ -60,7 +71,7 @@ class PushNotificationService {
         importance: Importance.max,
       );
 
-      await _localNotificationsPlugin
+      await _localNotificationsPlugin!
           .resolvePlatformSpecificImplementation<
               AndroidFlutterLocalNotificationsPlugin>()
           ?.createNotificationChannel(channel);
@@ -80,21 +91,21 @@ class PushNotificationService {
       });
 
       // 5. Retrieve FCM Token
-      String? token = await _firebaseMessaging.getToken();
+      String? token = await _firebaseMessaging!.getToken();
       if (token != null) {
         _logger.i('FCM Device Token: $token');
         await _registerTokenWithBackend(token);
       }
 
       // 6. Handle token refresh
-      _firebaseMessaging.onTokenRefresh.listen((newToken) {
+      _firebaseMessaging!.onTokenRefresh.listen((newToken) {
         _logger.i('FCM Token Refreshed: $newToken');
         _registerTokenWithBackend(newToken);
       });
 
       FirebaseMessaging.onMessageOpenedApp.listen(_handleMessageOpenedApp);
 
-      final initialMessage = await _firebaseMessaging.getInitialMessage();
+      final initialMessage = await _firebaseMessaging!.getInitialMessage();
       if (initialMessage != null) {
         _handleMessageOpenedApp(initialMessage);
       }
@@ -105,10 +116,12 @@ class PushNotificationService {
   }
 
   void _showForegroundNotification(RemoteMessage message, AndroidNotificationChannel channel) {
+    if (_localNotificationsPlugin == null) return;
+    
     final notification = message.notification;
     if (notification == null) return;
     final sessionId = message.data['sessionId']?.toString();
-    _localNotificationsPlugin.show(
+    _localNotificationsPlugin!.show(
       id: notification.hashCode,
       title: notification.title,
       body: notification.body,
