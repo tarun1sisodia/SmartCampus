@@ -18,13 +18,18 @@ export const createSession = async (req, res, next) => {
 
 export const listSessions = async (req, res, next) => {
   try {
-    const query = {};
-    if (!req.scope.isSuperAdmin) query.organisation = req.scope.organisationId;
-    if (req.query.date) query.date = new Date(req.query.date);
-    if (req.query.teacher) query.teacher = req.query.teacher;
-    if (req.query.subject) query.subject = req.query.subject;
+    const { date, subjectId, courseId, startDate, endDate } = req.query;
+    const teacherId = req.user.id;
+    const organisationId = req.scope?.organisationId;
+    const isSuperAdmin = req.user.role === 'super_admin';
 
-    const sessions = await Session.find(query).sort('-date');
+    const sessions = await attendanceService.listSessions(
+      teacherId,
+      organisationId,
+      isSuperAdmin,
+      { date, subjectId, courseId, startDate, endDate }
+    );
+
     sendSuccess(res, sessions);
   } catch (err) {
     next(err);

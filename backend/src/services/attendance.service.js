@@ -2,6 +2,11 @@ import Session from '../models/Session.model.js';
 import AttendanceSummary from '../models/AttendanceSummary.model.js';
 import Attendance from '../models/Attendance.model.js';
 import Student from '../models/Student.model.js';
+import Subject from '../models/Subject.model.js';
+import Course from '../models/Course.model.js';
+import Semester from '../models/Semester.model.js';
+import Section from '../models/Section.model.js';
+import User from '../models/User.model.js';
 import eventBus from './eventBus.service.js';
 
 export const markBulk = async (sessionId, attendanceArray, teaciherId, organisationId, isSuperAdmin) => {
@@ -101,6 +106,39 @@ export const syncOffline = async (teacherId, offlineRecords, organisationId) => 
   return results;
 };
 
+export const listSessions = async (teacherId, organisationId, isSuperAdmin, filters = {}) => {
+  const { date, subjectId, courseId, startDate, endDate } = filters;
+
+  const query = { teacher: teacherId };
+  if (!isSuperAdmin) query.organisation = organisationId;
+
+  // Date filtering
+  if (date === 'today') {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    query.date = { $gte: today, $lt: tomorrow };
+  } else if (date && !isNaN(Date.parse(date))) {
+    const parsed = new Date(date);
+    parsed.setHours(0, 0, 0, 0);
+    const nextDay = new Date(parsed);
+    nextDay.setDate(nextDay.getDate() + 1);
+    query.date = { $gte: parsed, $lt: nextDay };
+  } else if (startDate || endDate) {
+    query.date = {};
+    if (startDate) query.date.$gte = new Date(startDate);
+    if (endDate) query.date.$lte = new Date(endDate);
+  }
+
+  if (subjectId) query.subject = subjectId;
+  if (courseId) query.course = courseId;
+
+  return await Session.find(query)
+    .populate('subject course semester section teacher', 'name code title')
+    .sort({ date: 1, startTime: 1 });
+};
+
 export const getSessionsByMonth = async (teacherId, yearMonth, organisationId, isSuperAdmin) => {
   const [year, month] = yearMonth.split('-');
   const start = new Date(year, month - 1, 1);
@@ -110,4 +148,4 @@ export const getSessionsByMonth = async (teacherId, yearMonth, organisationId, i
   return await Session.find(query).populate('subject course semester section').sort('date');
 };
 
-export default { markBulk, getStudentSummary, syncOffline, getSessionsByMonth };
+export default { markBulk, getStudentSummary, syncOffline, getSessionsByMonth, listSessions };

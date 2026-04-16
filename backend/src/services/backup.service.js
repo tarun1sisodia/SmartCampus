@@ -27,7 +27,7 @@ export const createFullBackup = async (triggeredBy, organisationId = null) => {
     await execPromise(dumpCmd);
 
     const s3Key = `backups/${filename}`;
-    await uploadFile(process.env.AWS_BACKUP_BUCKET || 'smartcampus-backups', s3Key, localFilePath);
+    await uploadFile(process.env.AWS_BUCKET || 'smartcampus-bucket', s3Key, localFilePath);
 
     const stats = fs.statSync(localFilePath);
     

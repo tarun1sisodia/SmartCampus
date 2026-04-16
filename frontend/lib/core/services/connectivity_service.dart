@@ -17,8 +17,13 @@ class ConnectivityService {
   bool get isOnline => _isOnline;
 
   Future<void> checkCurrentStatus() async {
-    final results = await _connectivity.checkConnectivity();
-    _updateStatus(results);
+    try {
+      final results = await _connectivity.checkConnectivity().timeout(const Duration(seconds: 2));
+      _updateStatus(results);
+    } catch (e) {
+      debugPrint('Connectivity check timed out, assuming ONLINE. Error: $e');
+      _updateStatus([ConnectivityResult.wifi]); // Assume online
+    }
   }
 
   void _updateStatus(List<ConnectivityResult> results) {

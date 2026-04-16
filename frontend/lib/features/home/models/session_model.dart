@@ -24,13 +24,30 @@ class SessionModel extends Equatable {
   });
 
   factory SessionModel.fromJson(Map<String, dynamic> json) {
+    // Parse the base date
+    final dateStr = json['date']?.toString();
+    final baseDate = dateStr != null ? DateTime.parse(dateStr).toLocal() : DateTime.now();
+
+    // Helper to combine date with "HH:mm" time string
+    DateTime combineDateTime(DateTime date, String? timeStr) {
+      if (timeStr == null || !timeStr.contains(':')) return date;
+      try {
+        final parts = timeStr.split(':');
+        final hours = int.parse(parts[0]);
+        final minutes = int.parse(parts[1]);
+        return DateTime(date.year, date.month, date.day, hours, minutes);
+      } catch (_) {
+        return date;
+      }
+    }
+
     return SessionModel(
-      id: json['id'] ?? json['sessionId'] ?? '',
+      id: json['_id'] ?? json['id'] ?? json['sessionId'] ?? '',
       subjectName: json['subjectName'] ?? json['subject']?['name'] ?? 'Unknown Subject',
-      section: json['section']?.toString() ?? json['classSection']?.toString() ?? 'A',
-      courseId: json['courseId'] ?? json['course']?['id'] ?? '',
-      startTime: DateTime.parse(json['startTime'] ?? DateTime.now().toIso8601String()),
-      endTime: json['endTime'] != null ? DateTime.parse(json['endTime']) : null,
+      section: json['section']?['name']?.toString() ?? json['section']?.toString() ?? 'A',
+      courseId: json['courseId'] ?? json['course']?['id'] ?? json['course']?['_id'] ?? '',
+      startTime: combineDateTime(baseDate, json['startTime']?.toString()),
+      endTime: json['endTime'] != null ? combineDateTime(baseDate, json['endTime']?.toString()) : null,
       totalStudents: json['totalStudents'] ?? 0,
       presentCount: json['presentCount'],
       status: json['status'] ?? 'scheduled',
