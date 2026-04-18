@@ -44,13 +44,13 @@ class ApiConstants {
     return uri.replace(queryParameters: query).toString();
   }
 
-  static String _requireEnv(String key) {
-    final value = dotenv.env[key]?.trim();
-    if (value == null || value.isEmpty) {
-      throw StateError(
-        'Missing required environment variable: $key. Update .env before launching the app.',
-      );
-    }
-    return value;
-  }
+  // static String _requireEnv(String key) {
+  //   final value = dotenv.env[key]?.trim();
+  //   if (value == null || value.isEmpty) {
+  //     throw StateError(
+  //       'Missing required environment variable: $key. Update .env before launching the app.',
+  //     );
+  //   }
+  //   return value;
+  // }
 }
