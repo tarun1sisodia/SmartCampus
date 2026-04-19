@@ -7,6 +7,6 @@ import rbac from '../../middleware/rbac.middleware.js';
 
 router.get('/class/:courseId', auth, orgScope, analyticsController.classReport);
 router.get('/student/:studentId', auth, orgScope, analyticsController.studentTrend);
-router.get('/teacher/:teacherId', auth, rbac('super_admin', 'org_admin'), orgScope, analyticsController.teacherPerformance);
+router.get('/teacher/:teacherId', auth, rbac('super_admin', 'org_admin', 'teacher'), orgScope, analyticsController.teacherPerformance);
 
 export default router;

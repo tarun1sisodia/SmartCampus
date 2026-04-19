@@ -144,14 +144,14 @@ class OfflineAttendanceSession {
 
   factory OfflineAttendanceSession.fromMap(Map<String, dynamic> map) {
     return OfflineAttendanceSession(
-      id: map['id'],
-      classId: map['class_id'],
-      date: DateTime.parse(map['date']),
+      id: map['id'] ?? '',
+      classId: map['class_id'] ?? '',
+      date: DateTime.parse(map['date'] ?? DateTime.now().toIso8601String()),
       startTime: map['start_time'],
       endTime: map['end_time'],
       status: map['status'] ?? 'open',
-      createdBy: map['created_by'],
-      createdAt: DateTime.parse(map['created_at']),
+      createdBy: map['created_by'] ?? '',
+      createdAt: DateTime.parse(map['created_at'] ?? DateTime.now().toIso8601String()),
       updatedAt: map['updated_at'] != null ? DateTime.parse(map['updated_at']) : null,
       isSynced: map['is_synced'] == 1,
     );
@@ -194,12 +194,12 @@ class OfflineAttendanceRecord {
 
   factory OfflineAttendanceRecord.fromMap(Map<String, dynamic> map) {
     return OfflineAttendanceRecord(
-      id: map['id'],
-      sessionId: map['session_id'],
-      studentId: map['student_id'],
-      status: map['status'],
+      id: map['id'] ?? '',
+      sessionId: map['session_id'] ?? '',
+      studentId: map['student_id'] ?? '',
+      status: map['status'] ?? '',
       remarks: map['remarks'],
-      createdAt: DateTime.parse(map['created_at']),
+      createdAt: DateTime.parse(map['created_at'] ?? DateTime.now().toIso8601String()),
       updatedAt: map['updated_at'] != null ? DateTime.parse(map['updated_at']) : null,
       isSynced: map['is_synced'] == 1,
     );

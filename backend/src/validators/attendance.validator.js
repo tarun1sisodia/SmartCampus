@@ -8,7 +8,8 @@ export const markAttendanceSchema = z.object({
   attendance: z.array(z.object({
     studentId: objectIdSchema,
     status: z.enum(['present', 'absent', 'late', 'excused']),
-    remarks: z.string().optional()
+    remarks: z.string().optional(),
+    timestamp: z.string().optional()
   }))
 });
 

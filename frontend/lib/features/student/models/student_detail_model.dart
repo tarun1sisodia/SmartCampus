@@ -6,8 +6,12 @@ class StudentDetailModel extends Equatable {
     required this.name,
     required this.rollNumber,
     this.photoUrl,
+    this.email,
     this.contact,
     this.parentContact,
+    this.address,
+    this.enrollmentYear,
+    this.isActive = true,
     this.course,
     this.semester,
     this.section,
@@ -17,26 +21,48 @@ class StudentDetailModel extends Equatable {
   final String name;
   final String rollNumber;
   final String? photoUrl;
+  final String? email;
   final String? contact;
   final String? parentContact;
+  final String? address;
+  final int? enrollmentYear;
+  final bool isActive;
   final String? course;
-  final int? semester;
+  final String? semester;
   final String? section;
 
   factory StudentDetailModel.fromJson(Map<String, dynamic> json) {
+    final normalized = _normalizeJson(json);
     return StudentDetailModel(
-      id: (json['id'] ?? json['_id'] ?? '').toString(),
-      name: (json['name'] ?? '').toString(),
-      rollNumber: (json['rollNumber'] ?? '').toString(),
-      photoUrl: (json['photoUrl'] ?? json['avatarUrl'])?.toString(),
-      contact: json['contact']?.toString(),
-      parentContact: json['parentContact']?.toString(),
-      course: (json['courseName'] ?? json['course']?['name'])?.toString(),
-      semester: json['semester'] is int
-          ? json['semester'] as int
-          : int.tryParse((json['semester'] ?? '').toString()),
-      section: json['section']?.toString(),
+      id: normalized['id'] as String,
+      name: normalized['name'] as String,
+      rollNumber: normalized['rollNumber'] as String,
+      photoUrl: normalized['photoUrl'] as String?,
+      email: normalized['email'] as String?,
+      contact: normalized['contact'] as String?,
+      parentContact: normalized['parentContact'] as String?,
+      address: normalized['address'] as String?,
+      enrollmentYear: normalized['enrollmentYear'] as int?,
+      isActive: normalized['isActive'] as bool? ?? true,
+      course: normalized['course']?.toString(),
+      semester: normalized['semester']?.toString(),
+      section: normalized['section']?.toString(),
     );
+  }
+
+  static Map<String, dynamic> _normalizeJson(Map<String, dynamic> json) {
+    return {
+      ...json,
+      'id': (json['id'] ?? json['_id'] ?? '').toString(),
+      'rollNumber': (json['rollNumber'] ?? json['roll_number'] ?? '').toString(),
+      'photoUrl': json['photoUrl'] ?? json['photo'] ?? json['avatarUrl'] ?? json['image_url'],
+      'enrollmentYear': json['enrollmentYear'] ?? json['enrollment_year'],
+      'parentContact': json['parentContact'] ?? json['parent_contact'],
+      'isActive': json['isActive'] ?? json['is_active'] ?? true,
+      'course': json['courseName'] ?? (json['course'] is Map ? json['course']['name'] : json['course']),
+      'semester': json['semesterName'] ?? (json['semester'] is Map ? json['semester']['name'] : json['semester']),
+      'section': json['sectionName'] ?? (json['section'] is Map ? json['section']['name'] : json['section']),
+    };
   }
 
   @override
@@ -45,8 +71,12 @@ class StudentDetailModel extends Equatable {
         name,
         rollNumber,
         photoUrl,
+        email,
         contact,
         parentContact,
+        address,
+        enrollmentYear,
+        isActive,
         course,
         semester,
         section,

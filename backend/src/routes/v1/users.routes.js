@@ -15,6 +15,7 @@ router.post('/:userId/resend', auth, rbac('super_admin', 'org_admin'), orgScope,
 router.get('/teachers', auth, rbac('super_admin', 'org_admin'), orgScope, userController.listTeachers);
 router.delete('/:userId', auth, rbac('super_admin', 'org_admin'), orgScope, userController.deactivate);
 
+router.get('/me', auth, userController.getMe);
 router.post('/change-password', auth, validate(changePasswordSchema), userController.changePassword);
 router.post('/me/photo', auth, upload.single('photo'), userController.uploadProfilePhoto);
 router.delete('/me/photo', auth, userController.deleteProfilePhoto);

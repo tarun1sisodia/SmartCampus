@@ -2,6 +2,7 @@ import studentService from '../services/student.service.js';
 import csvParser from '../utils/csvParser.js';
 import {  sendSuccess  } from '../utils/apiResponse.js';
 import Student from '../models/Student.model.js';
+import Session from '../models/Session.model.js';
 import fs from 'fs';
 
 export const bulkImport = async (req, res, next) => {
@@ -35,6 +36,15 @@ export const list = async (req, res, next) => {
       section: req.query.section,
       search: req.query.search
     };
+
+    if (req.query.sessionId) {
+      const session = await Session.findById(req.query.sessionId);
+      if (session) {
+        filters.course = session.course;
+        filters.semester = session.semester;
+        filters.section = session.section;
+      }
+    }
     
     const isSuperAdmin = req.user.role === 'super_admin';
     const orgId = isSuperAdmin ? req.query.organisationId : req.scope.organisationId;

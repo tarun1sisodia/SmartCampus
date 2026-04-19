@@ -112,4 +112,13 @@ export const deleteProfilePhoto = async (req, res, next) => {
   }
 };
 
-export default { listTeachers, deactivate, sendInvite, acceptInvite, resendInvite, changePassword, uploadProfilePhoto, deleteProfilePhoto };
+export const getMe = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user.id).populate('organisation');
+    sendSuccess(res, { user });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export default { listTeachers, deactivate, sendInvite, acceptInvite, resendInvite, changePassword, uploadProfilePhoto, deleteProfilePhoto, getMe };

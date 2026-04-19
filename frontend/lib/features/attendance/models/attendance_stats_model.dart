@@ -28,4 +28,14 @@ class AttendanceStatsModel {
       
   double get unmarkedPercentage => 
       totalStudents > 0 ? (unmarkedCount / totalStudents) * 100 : 0;
+
+  factory AttendanceStatsModel.fromJson(Map<String, dynamic> json) {
+    return AttendanceStatsModel(
+      totalStudents: json['totalStudents'] ?? 0,
+      presentCount: json['presentCount'] ?? 0,
+      absentCount: json['absentCount'] ?? 0,
+      lateCount: json['lateCount'] ?? 0,
+      excusedCount: json['excusedCount'] ?? 0,
+    );
+  }
 }
