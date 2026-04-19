@@ -1,12 +1,12 @@
 import 'package:get_it/get_it.dart';
 import 'package:smart_campus/features/analytics/bloc/analytics_bloc.dart';
-import 'package:smart_campus/features/analytics/bloc/analytics_repository.dart';
+import 'package:smart_campus/features/analytics/repositories/analytics_repository.dart';
 import 'package:smart_campus/features/attendance/bloc/attendance_bloc.dart';
-import 'package:smart_campus/features/attendance/bloc/attendance_repository.dart';
+import 'package:smart_campus/features/attendance/repositories/attendance_repository.dart';
 import 'package:smart_campus/features/auth/bloc/auth_bloc.dart';
-import 'package:smart_campus/features/auth/bloc/auth_repository.dart';
+import 'package:smart_campus/features/auth/repositories/auth_repository.dart';
 import 'package:smart_campus/features/home/bloc/home_bloc.dart';
-import 'package:smart_campus/features/home/bloc/home_repository.dart';
+import 'package:smart_campus/features/home/repositories/home_repository.dart';
 import 'package:smart_campus/features/calendar/bloc/calendar_bloc.dart';
 import 'package:smart_campus/features/calendar/repositories/calendar_repository.dart';
 import 'package:smart_campus/features/student/bloc/student_profile_bloc.dart';
@@ -27,7 +27,7 @@ import '../core/services/secure_storage_service.dart';
 import '../core/services/background_task_service.dart';
 import '../core/services/app_feedback_service.dart';
 import '../features/session/bloc/session_bloc.dart';
-import '../features/session/bloc/session_repository.dart';
+import '../features/session/repositories/session_repository.dart';
 
 final getIt = GetIt.instance;
 

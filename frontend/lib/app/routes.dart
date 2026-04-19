@@ -14,13 +14,16 @@ import '../features/attendance/views/attendance_summary_screen.dart';
 import '../features/calendar/views/calendar_screen.dart';
 import '../features/student/views/student_profile_screen.dart';
 
+import '../features/settings/views/settings_screen.dart';
+import '../features/home/views/main_screen.dart';
+
 class AppRouter {
   final AuthBloc authBloc;
 
   AppRouter(this.authBloc);
 
   late final router = GoRouter(
-    initialLocation: '/login',
+    initialLocation: '/home',
     refreshListenable: GoRouterRefreshBloc(authBloc),
     redirect: (context, state) {
       final authState = authBloc.state;
@@ -45,10 +48,50 @@ class AppRouter {
         path: '/forgot-password',
         builder: (context, state) => const ForgotPasswordScreen(),
       ),
-      GoRoute(
-        path: '/home',
-        builder: (context, state) => const HomeScreen(),
+      
+      // Main Application Shell
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) {
+          return MainScreen(navigationShell: navigationShell);
+        },
+        branches: [
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/home',
+                builder: (context, state) => const HomeScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/calendar',
+                builder: (context, state) => const CalendarScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/analytics',
+                builder: (context, state) => const AnalyticsScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/settings',
+                builder: (context, state) => const SettingsScreen(),
+              ),
+            ],
+          ),
+        ],
       ),
+
+      // Detail Routes (outside shell or inside, depending on UX preference)
+      // Keeping them outside for "full-screen" detail experience
       GoRoute(
         path: '/attendance/:sessionId',
         builder: (context, state) => CarouselAttendanceScreen(
@@ -60,14 +103,6 @@ class AppRouter {
         builder: (context, state) => AttendanceSummaryScreen(
           sessionId: state.pathParameters['sessionId']!,
         ),
-      ),
-      GoRoute(
-        path: '/analytics',
-        builder: (context, state) => const AnalyticsScreen(),
-      ),
-      GoRoute(
-        path: '/profile',
-        builder: (context, state) => const ProfileScreen(),
       ),
       GoRoute(
         path: '/history',
@@ -82,10 +117,6 @@ class AppRouter {
         builder: (context, state) => SessionDetailScreen(
           sessionId: state.pathParameters['sessionId']!,
         ),
-      ),
-      GoRoute(
-        path: '/calendar',
-        builder: (context, state) => const CalendarScreen(),
       ),
       GoRoute(
         path: '/student/:studentId',

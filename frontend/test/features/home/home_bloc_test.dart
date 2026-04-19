@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:smart_campus/core/api/api_client.dart';
 import 'package:smart_campus/core/cache/hive_service.dart';
 import 'package:smart_campus/features/home/bloc/home_bloc.dart';
-import 'package:smart_campus/features/home/bloc/home_repository.dart';
+import 'package:smart_campus/features/home/repositories/home_repository.dart';
 import 'package:smart_campus/features/home/models/session_model.dart';
 
 class _FakeHomeRepository extends HomeRepository {

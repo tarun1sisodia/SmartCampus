@@ -521,15 +521,19 @@ lib/
 │       ├── sync\_service.dart      \# Offline-to-Online bridge
 │       └── background\_task\_service.dart \# WorkManager setup
 ├── features/
-│   ├── auth/                      \# Login, Logout, Forgot Password
-│   ├── home/                      # Dashboard & Session list
-│   ├── attendance/                \# Carousel Marking & UI
-│   └── analytics/                 \# fl_chart visualizations
+│   ├── auth/                      # Auth module
+│   ├── home/                      # Home (Main Shell)
+│   ├── analytics/                 # Analytics
+│   ├── attendance/                # Attendance
+│   ├── settings/                  # User Settings, Theme
+│   ├── hive/                      # Debug Tools
+│   └── mixins/                    # Shared Mixins
 ├── shared/
-│   └── widgets/                   \# CustomButton, CustomTextField, etc.
+│   ├── models/                    # Global models
+│   └── widgets/                   # Shared UI components
 └── env/
-    └── env_config.dart            \# Dotenv wrapper
-\`\`\`
+    └── env_config.dart            # Dotenv wrapper
+```
 
 \---
 

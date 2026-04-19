@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:smart_campus/features/analytics/repositories/analytics_repository.dart';
 import '../models/teacher_stats_model.dart';
-import 'analytics_repository.dart';
 
 // Events
 abstract class AnalyticsEvent extends Equatable {
