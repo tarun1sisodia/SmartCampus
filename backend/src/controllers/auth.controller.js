@@ -34,7 +34,7 @@ export const refresh = async (req, res, next) => {
       maxAge: 7 * 24 * 60 * 60 * 1000
     });
 
-    sendSuccess(res, { accessToken });
+    sendSuccess(res, { accessToken, refreshToken });
   } catch (err) {
     next(err);
   }

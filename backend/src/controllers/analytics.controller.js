@@ -40,6 +40,11 @@ export const teacherPerformance = async (req, res, next) => {
     const { startDate, endDate } = req.query;
     const teacherId = req.params.teacherId;
     
+    // Check if teacher is requesting their own data
+    if (req.user.role === 'teacher' && String(req.user.id) !== String(teacherId)) {
+      throw Object.assign(new Error('Forbidden: You can only view your own performance'), { status: 403 });
+    }
+    
     const result = await analyticsService.getTeacherPerformance(
       teacherId,
       startDate,
