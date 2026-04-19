@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:smart_campus/core/api/api_client.dart';
 import 'package:smart_campus/features/auth/bloc/auth_bloc.dart';
-import 'package:smart_campus/features/auth/bloc/auth_repository.dart';
+import 'package:smart_campus/features/auth/repositories/auth_repository.dart';
 import 'package:smart_campus/features/auth/models/user_model.dart';
 
 class _FakeAuthRepository extends AuthRepository {

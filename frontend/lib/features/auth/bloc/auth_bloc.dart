@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'auth_bloc.dart';
-import 'auth_repository.dart';
+import '../repositories/auth_repository.dart';
 
 export 'auth_event.dart';
 export 'auth_state.dart';

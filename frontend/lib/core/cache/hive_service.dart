@@ -26,6 +26,22 @@ class HiveService {
     await Hive.openBox(sessionCacheBoxName);
   }
 
+  // Generic methods
+  T? getData<T>(String boxName, String key, {T? defaultValue}) {
+    final box = Hive.box(boxName);
+    return box.get(key, defaultValue: defaultValue) as T?;
+  }
+
+  Future<void> putData<T>(String boxName, String key, T value) async {
+    final box = Hive.box(boxName);
+    await box.put(key, value);
+  }
+
+  Future<void> deleteData(String boxName, String key) async {
+    final box = Hive.box(boxName);
+    await box.delete(key);
+  }
+
   Box get authBox => Hive.box(authBoxName);
   Box get settingsBox => Hive.box(settingsBoxName);
   Box get cacheBox => Hive.box(cacheBoxName);
@@ -34,11 +50,12 @@ class HiveService {
   Box get sessionCacheBox => Hive.box(sessionCacheBoxName);
 
   Future<void> clearAll() async {
-    await authBox.clear();
-    await settingsBox.clear();
-    await cacheBox.clear();
-    await teacherProfileBox.clear();
-    await organisationBox.clear();
-    await sessionCacheBox.clear();
+    await Hive.box(authBoxName).clear();
+    await Hive.box(settingsBoxName).clear();
+    await Hive.box(cacheBoxName).clear();
+    await Hive.box(teacherProfileBoxName).clear();
+    await Hive.box(organisationBoxName).clear();
+    await Hive.box(sessionCacheBoxName).clear();
   }
 }
+

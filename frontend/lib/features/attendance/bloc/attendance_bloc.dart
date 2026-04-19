@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import '../models/attendance_record_model.dart';
-import 'attendance_repository.dart';
+import '../repositories/attendance_repository.dart';
 import '../../../core/services/connectivity_service.dart';
 import '../../../core/database/app_database.dart';
 

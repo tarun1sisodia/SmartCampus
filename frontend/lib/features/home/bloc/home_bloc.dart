@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import '../models/session_model.dart';
-import 'home_repository.dart';
+import '../repositories/home_repository.dart';
 
 // Events
 abstract class HomeEvent extends Equatable {

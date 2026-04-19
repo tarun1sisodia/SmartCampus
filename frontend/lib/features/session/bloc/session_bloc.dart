@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smart_campus/features/session/bloc/session_event.dart';
 import 'package:smart_campus/features/session/bloc/session_state.dart';
-import 'package:smart_campus/features/session/bloc/session_repository.dart';
+import 'package:smart_campus/features/session/repositories/session_repository.dart';
 
 class SessionBloc extends Bloc<SessionEvent, SessionState> {
   final SessionRepository _repository;
