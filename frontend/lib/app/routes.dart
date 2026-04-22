@@ -25,10 +25,33 @@ class AppRouter {
   late final router = GoRouter(
     initialLocation: '/home',
     refreshListenable: GoRouterRefreshBloc(authBloc),
+    errorBuilder: (context, state) => Scaffold(
+      appBar: AppBar(title: const Text('Navigation Error')),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'We could not open this page. Please return to Home.',
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () => context.go('/home'),
+                child: const Text('Go to Home'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
     redirect: (context, state) {
       final authState = authBloc.state;
-      final isLoggingIn = state.uri.toString() == '/login';
-      final isForgot = state.uri.toString() == '/forgot-password';
+      final currentPath = state.uri.path;
+      final isLoggingIn = currentPath == '/login';
+      final isForgot = currentPath == '/forgot-password';
 
       if (authState is! AuthAuthenticated) {
         if (isLoggingIn || isForgot) return null;
@@ -100,13 +123,13 @@ class AppRouter {
       GoRoute(
         path: '/attendance/:sessionId',
         builder: (context, state) => CarouselAttendanceScreen(
-          sessionId: state.pathParameters['sessionId']!,
+          sessionId: _requiredPathParam(state, 'sessionId'),
         ),
       ),
       GoRoute(
         path: '/attendance/summary/:sessionId',
         builder: (context, state) => AttendanceSummaryScreen(
-          sessionId: state.pathParameters['sessionId']!,
+          sessionId: _requiredPathParam(state, 'sessionId'),
         ),
       ),
       GoRoute(
@@ -120,13 +143,13 @@ class AppRouter {
       GoRoute(
         path: '/session/:sessionId',
         builder: (context, state) => SessionDetailScreen(
-          sessionId: state.pathParameters['sessionId']!,
+          sessionId: _requiredPathParam(state, 'sessionId'),
         ),
       ),
       GoRoute(
         path: '/student/:studentId',
         builder: (context, state) => StudentProfileScreen(
-          studentId: state.pathParameters['studentId']!,
+          studentId: _requiredPathParam(state, 'studentId'),
         ),
       ),
     ],
@@ -134,6 +157,14 @@ class AppRouter {
 
   void goToSessionDetail(String sessionId) {
     router.go('/session/$sessionId');
+  }
+
+  String _requiredPathParam(GoRouterState state, String key) {
+    final value = state.pathParameters[key];
+    if (value == null || value.trim().isEmpty) {
+      throw Exception('Missing required route parameter: $key');
+    }
+    return value;
   }
 }
 

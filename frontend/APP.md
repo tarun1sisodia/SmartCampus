@@ -1,25 +1,25 @@
 SmartCampus Flutter Teacher App – Complete File‑by‑File Structure & Algorithms
 This document defines every file needed for the Flutter teacher app, with step‑by‑step algorithms in plain English. An AI can use this to generate the actual code with minimal hallucination.
 
-1. Project Folder Tree (Complete)
+1. Project Folder Tree (Standardized - Implemented)
 text
 lib/
-├── main.dart
-├── app/
-│   ├── app.dart
-│   ├── routes.dart
-│   ├── theme.dart
-│   └── dependency_injection.dart
-├── core/
-│   ├── api/
-│   │   ├── api_client.dart
-│   │   ├── endpoints.dart
-│   │   ├── token_interceptor.dart
-│   │   └── refresh_token_interceptor.dart
-│   ├── cache/
-│   │   ├── hive_service.dart
-│   │   ├── hive_adapters.dart
-│   │   └── cache_keys.dart
+├── main.dart (Done)
+├── app/ (Done)
+│   ├── app.dart (Done)
+│   ├── routes.dart (Refactored - Done)
+│   ├── theme.dart (Done)
+│   └── dependency_injection.dart (Done)
+├── core/ (Done)
+│   ├── api/ (Done)
+│   │   ├── api_client.dart (Done)
+│   │   ├── endpoints.dart (Done)
+│   │   ├── token_interceptor.dart (Done)
+│   │   └── refresh_token_interceptor.dart (Done)
+│   ├── cache/ (Done)
+│   │   ├── hive_service.dart (Done)
+│   │   ├── hive_adapters.dart (Done)
+│   │   └── cache_keys.dart (Done)
 │   ├── database/
 │   │   ├── app_database.dart
 │   │   ├── dao/
@@ -41,7 +41,7 @@ lib/
 │   └── constants/
 │       ├── app_constants.dart
 │       └── api_constants.dart
-├── features/
+├── features/ (Standardized - Implemented)
 │   ├── auth/
 │   │   ├── bloc/
 │   │   │   ├── auth_bloc.dart
@@ -122,7 +122,7 @@ lib/
 │       │       └── change_password_form.dart
 │       └── models/
 │           └── profile_model.dart
-├── shared/
+├── shared/ (Implemented)
 │   ├── widgets/
 │   │   ├── custom_button.dart
 │   │   ├── custom_text_field.dart
@@ -134,11 +134,11 @@ lib/
 │   └── mixins/
 │       ├── connectivity_mixin.dart
 │       └── keyboard_dismiss_mixin.dart
-└── env/
+└── env/ (Implemented)
     ├── env_config.dart
     └── env_dev.dart / env_prod.dart (generated via --dart-define)
 2. Core File Algorithms (Plain English)
-2.1 lib/main.dart
+2.1 lib/main.dart (Implemented - Done)
 Algorithm:
 
 Call WidgetsFlutterBinding.ensureInitialized().
@@ -155,7 +155,7 @@ Register dependency injection (GetIt or injectable) with all repositories, servi
 
 Run App() widget.
 
-2.2 lib/app/app.dart
+2.2 lib/app/app.dart (Implemented - Done)
 Algorithm:
 
 Build MaterialApp.router (or MaterialApp with named routes).
@@ -172,7 +172,7 @@ Set navigatorKey for global navigation (e.g., from sync service).
 
 Add Sentry or FirebaseCrashlytics observers.
 
-2.3 lib/app/routes.dart
+2.3 lib/app/routes.dart (Implemented - Done)
 Algorithm:
 
 Define GoRouter with initialLocation = '/login'.
@@ -197,7 +197,7 @@ Add redirect guard: if user is not authenticated and not on /login, redirect to 
 
 Use refreshListenable (AuthBloc stream) to rebuild redirect when auth state changes.
 
-2.4 lib/core/api/api_client.dart
+2.4 lib/core/api/api_client.dart (Implemented - Done)
 Algorithm:
 
 Create a Dio singleton.
@@ -262,7 +262,7 @@ On failure, keep and retry on next sync attempt (exponential backoff).
 
 Expose startPeriodicSync() to schedule background task via BackgroundTaskService.
 
-2.9 lib/features/auth/bloc/auth_bloc.dart
+2.9 lib/features/auth/bloc/auth_bloc.dart (Implemented - Done)
 Algorithm – State transitions:
 
 AuthInitial → AuthLoading on AuthLoginRequested
@@ -273,7 +273,7 @@ On failure → AuthError
 
 On AuthLogoutRequested → clear tokens, emit AuthUnauthenticated
 
-2.10 lib/features/attendance/bloc/attendance_bloc.dart
+2.10 lib/features/attendance/bloc/attendance_bloc.dart (Implemented - Done)
 Algorithm – Mark attendance:
 
 AttendanceMarkRequested event contains sessionId, studentId, status.

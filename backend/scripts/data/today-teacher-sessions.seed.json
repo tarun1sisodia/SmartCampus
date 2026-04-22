@@ -1,0 +1,95 @@
+{
+  "organisation": {
+    "name": "Demo School",
+    "type": "school",
+    "status": "active",
+    "subscription": {
+      "plan": "premium",
+      "maxTeachers": 50,
+      "maxStudents": 1000
+    }
+  },
+  "course": {
+    "name": "Computer Science",
+    "code": "CS101",
+    "durationYears": 4
+  },
+  "semester": {
+    "name": "Current Semester",
+    "startDateOffsetDays": -30,
+    "endDateOffsetDays": 120,
+    "isActive": true
+  },
+  "section": {
+    "name": "Section A"
+  },
+  "subjects": [
+    {
+      "name": "Data Structures",
+      "code": "DS101",
+      "semesterNumber": 1
+    },
+    {
+      "name": "Operating Systems",
+      "code": "OS201",
+      "semesterNumber": 1
+    }
+  ],
+  "teachers": [
+    {
+      "name": "John Teacher",
+      "email": "teacher@demo.com",
+      "password": "TeacherPass123"
+    },
+    {
+      "name": "John Teacher",
+      "email": "teacher1@demo.com",
+      "password": "TeacherPass123"
+    },
+    {
+      "name": "Jane Teacher",
+      "email": "teacher2@demo.com",
+      "password": "TeacherPass123"
+    },
+    {
+      "name": "Alex Teacher",
+      "email": "teacher3@demo.com",
+      "password": "TeacherPass123"
+    }
+  ],
+  "students": [
+    {
+      "rollNumber": "S001",
+      "name": "Alice Smith",
+      "enrollmentYear": 2024
+    },
+    {
+      "rollNumber": "S002",
+      "name": "Bob Johnson",
+      "enrollmentYear": 2024
+    },
+    {
+      "rollNumber": "S003",
+      "name": "Charlie Brown",
+      "enrollmentYear": 2024
+    }
+  ],
+  "sessionSlots": [
+    {
+      "startTime": "09:00",
+      "endTime": "10:00",
+      "topicPrefix": "Lecture"
+    },
+    {
+      "startTime": "11:00",
+      "endTime": "12:00",
+      "topicPrefix": "Practice"
+    },
+    {
+      "startTime": "14:00",
+      "endTime": "15:00",
+      "topicPrefix": "Lab"
+    }
+  ],
+  "sessionDays": 5
+}

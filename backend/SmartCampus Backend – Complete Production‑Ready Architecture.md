@@ -72,7 +72,7 @@ This document is the **single source of truth** for building, deploying, and sca
 
 ---
 
-## 2. Project Structure (Complete)
+## 2. Project Structure (Implemented)
 
 ```  
 smartcampus-backend/  
@@ -437,7 +437,7 @@ Add `AuditLog` and `BackupRecord`.
 
 We separate **commands** (writes) from **queries** (reads) using CQRS pattern (see section 11). Below is the flow for each major feature.
 
-### 7.1 Authentication & Invitation Flow
+### 7.1 Authentication & Invitation Flow (Implemented)
 
 **Controller**: `auth.controller.js`    
 **Services**: `auth.service.js`, `invitation.service.js`, `email.service.js`
@@ -472,7 +472,7 @@ We separate **commands** (writes) from **queries** (reads) using CQRS pattern (s
    - Return tokens + user info  
 ```
 
-### 7.2 Student Management
+### 7.2 Student Management (Implemented)
 
 **Controller**: `student.controller.js`    
 **Service**: `student.service.js`
@@ -494,7 +494,7 @@ We separate **commands** (writes) from **queries** (reads) using CQRS pattern (s
 4. Return { total: X, succeeded: Y, failed: Z, errors: [...] }  
 ```
 
-### 7.3 Attendance Marking (Carousel)
+### 7.3 Attendance Marking (Carousel) (Implemented)
 
 **Controller**: `attendance.controller.js`    
 **Service**: `attendance.service.js`    
@@ -519,7 +519,7 @@ We separate **commands** (writes) from **queries** (reads) using CQRS pattern (s
 5. Return { updatedCount: X }  
 ```
 
-### 7.4 Analytics & Reporting (CQRS Read Side)
+### 7.4 Analytics & Reporting (CQRS Read Side) (Implemented)
 
 **Controller**: `analytics.controller.js`    
 **Query Service**: `analytics.service.js` (reads from materialized views)
@@ -562,7 +562,7 @@ We separate **commands** (writes) from **queries** (reads) using CQRS pattern (s
 
 ---
 
-## 8. API Routes (Complete Mapping)
+## 8. API Routes (Implemented)
 
 All routes under `/api/v1`.    
 Full list with method, path, middleware, controller, and description.

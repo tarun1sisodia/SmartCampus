@@ -13,15 +13,15 @@ import Student from '../src/models/Student.model.js';
 async function addSampleData() {
   await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/smartcampus');
 
-  const org = await Organisation.findOne({ name: 'Demo School' });
+  const org = await Organisation.findOne({ name: 'Rakshith School' });
   if (!org) throw new Error('No organisation found. Run seed.js first.');
 
   // Create a course
-  let course = await Course.findOne({ code: 'CS101', organisation: org._id });
+  let course = await Course.findOne({ code: 'ML101', organisation: org._id });
   if (!course) {
     course = await Course.create({
-      name: 'Computer Science',
-      code: 'CS101',
+      name: 'Machine Learning',
+      code: 'ML101',
       organisation: org._id,
       durationYears: 4,
     });
@@ -32,19 +32,19 @@ async function addSampleData() {
   if (!semester) {
     semester = await Semester.create({
       name: 'Fall 2025',
-      startDate: new Date('2025-09-01'),
-      endDate: new Date('2025-12-20'),
+      startDate: new Date('2025-01-01'),
+      endDate: new Date('2026-12-20'),
       isActive: true,
       organisation: org._id,
     });
   }
 
   // Create a subject
-  let subject = await Subject.findOne({ code: 'CS201', organisation: org._id });
+  let subject = await Subject.findOne({ code: 'ML201', organisation: org._id });
   if (!subject) {
     subject = await Subject.create({
-      name: 'Data Structures',
-      code: 'CS201',
+      name: 'Machine Learning',
+      code: 'ML201',
       credits: 4,
       course: course._id,
       semester: semester._id,
@@ -56,7 +56,7 @@ async function addSampleData() {
   let section = await Section.findOne({ name: 'A', organisation: org._id });
   if (!section) {
     section = await Section.create({
-      name: 'A',
+      name: 'B',
       course: course._id,
       semester: semester._id,
       organisation: org._id,
@@ -64,12 +64,12 @@ async function addSampleData() {
   }
 
   // Create a teacher (invited, then accept)
-  let teacher = await User.findOne({ email: 'teacher@demo.com' });
+  let teacher = await User.findOne({ email: 'tarun@demo.com' });
   if (!teacher) {
     teacher = await User.create({
-      name: 'John Teacher',
-      email: 'teacher@demo.com',
-      password: 'Teacher123!',
+      name: 'Tarun Teacher',
+      email: 'tarun@demo.com',
+      password: 'Tarun123!',
       role: 'teacher',
       organisation: org._id,
       isActive: true,
