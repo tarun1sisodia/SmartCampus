@@ -1,7 +1,7 @@
 import request from 'supertest';
 import app from '../../src/app.js';
 import authService from '../../src/services/auth.service.js';
-import {  createStudentSchema  } from '../../src/validators/student.validator.js';
+import { createStudentSchema } from '../../src/validators/student.validator.js';
 
 // We intercept the internal core business logic directly so we don't connect to Mongoose,
 // keeping our Supertest API endpoints fast and resilient.
@@ -14,7 +14,7 @@ describe('Auth API JWT Issuance Tests', () => {
   });
 
   describe('POST /api/v1/auth/login', () => {
-    
+
     it('Should return 200 and issue strict HTTP-Only secure cookies alongside JWT access tokens', async () => {
       // Mocking the successful service resolving to fake auth keys
       authService.login.mockResolvedValue({
@@ -34,7 +34,7 @@ describe('Auth API JWT Issuance Tests', () => {
       expect(response.body.success).toBe(true);
       expect(response.body.data.accessToken).toBe('mock_jwt_access_super_secure');
       expect(response.body.data.user.role).toBe('super_admin');
-      
+
       // Confirm that the Set-Cookie HTTP header was formulated directly by the Auth Controller
       const cookieHeader = response.headers['set-cookie'][0];
       expect(cookieHeader).toMatch(/refreshToken=mock_jwt_refresh_cookie_hash/);
@@ -47,14 +47,14 @@ describe('Auth API JWT Issuance Tests', () => {
       const response = await request(app)
         .post('/api/v1/auth/login')
         .send({
-          email: 'not-a-valid-email', 
+          email: 'not-a-valid-email',
           password: 'p' // too short
         })
         .expect(400);
-      
+
       expect(response.body.success).toBe(false);
       expect(authService.login).not.toHaveBeenCalled(); // We caught the intruder at the API boundary!
     });
-    
+
   });
 });
