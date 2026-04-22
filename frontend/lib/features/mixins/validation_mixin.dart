@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+// No imports needed for mixin-only validation logic
 
 mixin ValidationMixin {
   String? validateEmail(String? value) {

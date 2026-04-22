@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../../models/session_model.dart';
+import 'package:smart_campus/features/home/models/session_model.dart';
 import '../../../../common/utils/constants/colors.dart';
 
 class SessionCard extends StatelessWidget {

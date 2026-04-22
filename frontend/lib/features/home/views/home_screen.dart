@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../auth/bloc/auth_bloc.dart';
 import '../bloc/home_bloc.dart';
-import 'widgets/stats_overview.dart';
-import 'widgets/session_card.dart';
+import '../widgets/stats_overview.dart';
+import '../widgets/session_card.dart';
 import '../../../shared/widgets/shimmer_loading.dart';
 import '../../../shared/widgets/error_widget.dart' as shared;
 

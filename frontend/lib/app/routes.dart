@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smart_campus/features/profile/views/profile_screen.dart';
 import '../features/auth/bloc/auth_bloc.dart';
 import '../features/auth/views/login_screen.dart';
 import '../features/auth/views/forgot_password_screen.dart';
 import '../features/home/views/home_screen.dart';
 import '../features/attendance/views/carousel_attendance_screen.dart';
+import '../features/attendance/views/attendance_summary_screen.dart';
 import '../features/analytics/views/analytics_screen.dart';
-import '../features/profile/views/profile_screen.dart';
 import '../features/session/views/session_history_screen.dart';
 import '../features/session/views/session_detail_screen.dart';
-import '../features/attendance/views/attendance_summary_screen.dart';
 import '../features/calendar/views/calendar_screen.dart';
 import '../features/student/views/student_profile_screen.dart';
 
@@ -48,7 +48,7 @@ class AppRouter {
         path: '/forgot-password',
         builder: (context, state) => const ForgotPasswordScreen(),
       ),
-      
+
       // Main Application Shell
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
@@ -63,6 +63,7 @@ class AppRouter {
               ),
             ],
           ),
+         
           StatefulShellBranch(
             routes: [
               GoRoute(
@@ -92,6 +93,10 @@ class AppRouter {
 
       // Detail Routes (outside shell or inside, depending on UX preference)
       // Keeping them outside for "full-screen" detail experience
+      GoRoute(
+        path: '/profile',
+        builder: (context, state) => const ProfileScreen(),
+      ),
       GoRoute(
         path: '/attendance/:sessionId',
         builder: (context, state) => CarouselAttendanceScreen(
