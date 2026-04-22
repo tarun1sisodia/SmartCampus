@@ -22,7 +22,7 @@ describe('Attendance API Integration Tests', () => {
 
   it('POST /api/v1/attendance/mark -> marks attendance securely', async () => {
     attendanceService.markBulk.mockResolvedValue({ updatedCount: 2 });
-    
+
     // We send an Object that matches Zod's markAttendanceSchema constraints
     const payload = {
       sessionId: new mongoose.Types.ObjectId().toHexString(),
@@ -42,8 +42,8 @@ describe('Attendance API Integration Tests', () => {
     expect(attendanceService.markBulk).toHaveBeenCalledTimes(1);
     // Verifies req.user constraints were passed via router properly to the service
     expect(attendanceService.markBulk).toHaveBeenCalledWith(
-      payload.sessionId, 
-      payload.attendance, 
+      payload.sessionId,
+      payload.attendance,
       'teacher123', // teacher ID from mocked JWT
       'org123',     // org ID from mocked JWT scope translation
       false         // isSuperAdmin = false
