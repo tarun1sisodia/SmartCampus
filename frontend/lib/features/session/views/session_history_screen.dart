@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:smart_campus/features/session/bloc/session_bloc.dart';
 import 'package:smart_campus/features/session/bloc/session_event.dart';
 import 'package:smart_campus/features/session/bloc/session_state.dart';
-import 'package:smart_campus/features/home/views/widgets/session_card.dart';
+import 'package:smart_campus/features/home/widgets/session_card.dart';
 import 'package:smart_campus/features/home/models/session_model.dart';
 import 'package:smart_campus/features/auth/bloc/auth_bloc.dart';
 import 'package:smart_campus/app/dependency_injection.dart';

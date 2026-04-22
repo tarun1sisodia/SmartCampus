@@ -91,7 +91,7 @@ class _HiveInspectorScreenState extends State<HiveInspectorScreen> {
           TextButton(
             onPressed: () async {
               await _hiveService.clearAll();
-              if (mounted) Navigator.pop(context);
+              if (context.mounted) Navigator.pop(context);
             },
             child: const Text('CLEAR ALL', style: TextStyle(color: Colors.red)),
           ),
