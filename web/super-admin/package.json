@@ -1,0 +1,35 @@
+{
+  "name": "smartcampus-super-admin",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3000",
+    "build": "next build",
+    "start": "next start -p 3000",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^3.9.1",
+    "@reduxjs/toolkit": "^2.2.7",
+    "@tanstack/react-query": "^5.56.2",
+    "@tanstack/react-table": "^8.20.5",
+    "axios": "^1.7.7",
+    "next": "^14.2.7",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.53.0",
+    "react-redux": "^9.1.2",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20.16.5",
+    "@types/react": "^18.3.5",
+    "@types/react-dom": "^18.3.0",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "^14.2.7",
+    "postcss": "^8.4.45",
+    "tailwindcss": "^3.4.12",
+    "typescript": "^5.6.2"
+  }
+}
