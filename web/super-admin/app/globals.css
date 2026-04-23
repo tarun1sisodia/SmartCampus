@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-bg text-textPrimary antialiased;
+}
+
+.card {
+  @apply rounded-lg border border-slate-200 bg-surface p-4 shadow-sm;
+}
