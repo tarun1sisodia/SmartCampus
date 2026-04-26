@@ -4,7 +4,14 @@ let io;
 
 export const initSocket = (server) => {
   io = new Server(server, { 
-    cors: { origin: process.env.FRONTEND_URL || '*' } 
+    cors: { 
+      origin: [
+        'http://localhost:3000',
+        'http://localhost:3001',
+        process.env.FRONTEND_URL
+      ].filter(Boolean),
+      credentials: true
+    } 
   });
   
   io.use((socket, next) => {

@@ -16,6 +16,7 @@ import updateAnalyticsSubscriber from './src/events/subscribers/updateAnalytics.
 import sendNotificationSubscriber from './src/events/subscribers/sendNotification.subscriber.js';
 import {  setupDailyBackup  } from './src/jobs/dailyBackup.job.js';
 import {  setupSendReminders  } from './src/jobs/sendReminders.job.js';
+import { setupEmailWorker } from './src/workers/email.worker.js';
 
 const PORT = process.env.PORT || 5000;
 
@@ -35,6 +36,7 @@ const startServer = async () => {
         sendNotificationSubscriber.setup();
         setupDailyBackup();
         setupSendReminders();
+        setupEmailWorker();
         logger.info('Background jobs and event subscribers successfully initialized.');
       } catch (bgError) {
         logger.error(`Error initializing background routines: ${bgError.message}`);

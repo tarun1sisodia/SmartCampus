@@ -1,8 +1,6 @@
-"use client";
-
 import { configureStore } from "@reduxjs/toolkit";
-import authReducer from "@/lib/store/slices/authSlice";
-import { injectStore } from "@/lib/api/axios-client";
+import authReducer from "./slices/authSlice";
+import { injectStore } from "../api/axios-client";
 
 export const store = configureStore({
   reducer: {
