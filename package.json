@@ -1,0 +1,21 @@
+{
+  "name": "smartcampus",
+  "private": true,
+  "version": "1.0.0",
+  "workspaces": [
+    "backend",
+    "web/org-admin",
+    "web/super-admin",
+    "frontend"
+  ],
+  "scripts": {
+    "install:all": "npm install",
+    "dev:backend": "npm run start:dev --workspace=@smartcampus/backend",
+    "dev:org": "npm run dev --workspace=@smartcampus/org-admin",
+    "dev:super": "npm run dev --workspace=@smartcampus/super-admin",
+    "dev": "concurrently \"npm run dev:org\" \"npm run dev:super\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.1"
+  }
+}

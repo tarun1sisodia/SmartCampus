@@ -2,8 +2,8 @@ import { axiosClient } from "@/lib/api/axios-client";
 import { LoginRequest, LoginResponse } from "@/types/auth";
 
 export async function loginApi(payload: LoginRequest): Promise<LoginResponse> {
-  const { data } = await axiosClient.post<LoginResponse>("/auth/login", payload);
-  return data;
+  const { data } = await axiosClient.post<{ success: boolean; data: LoginResponse }>("/auth/login", payload);
+  return data.data;
 }
 
 export async function logoutApi(): Promise<void> {
@@ -11,8 +11,8 @@ export async function logoutApi(): Promise<void> {
 }
 
 export async function refreshTokenApi(refreshToken: string): Promise<{ accessToken: string }> {
-  const { data } = await axiosClient.post<{ accessToken: string }>("/auth/refresh-token", {
+  const { data } = await axiosClient.post<{ success: boolean; data: { accessToken: string } }>("/auth/refresh", {
     refreshToken
   });
-  return data;
+  return data.data;
 }

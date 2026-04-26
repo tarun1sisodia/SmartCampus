@@ -1,5 +1,5 @@
 {
-  "name": "smartcampus-backend",
+  "name": "@smartcampus/backend",
   "version": "1.0.0",
   "description": "SmartCampus Node.js Backend",
   "type": "module",
@@ -37,6 +37,7 @@
     "mongoose": "^8.1.0",
     "morgan": "^1.10.0",
     "multer": "^2.1.1",
+    "nodemailer": "^8.0.5",
     "opossum": "^7.1.0",
     "rate-limit-redis": "^4.0.0",
     "socket.io": "^4.8.3",

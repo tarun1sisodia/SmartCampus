@@ -1,5 +1,5 @@
 {
-  "name": "smartcampus-super-admin",
+  "name": "@smartcampus/super-admin",
   "version": "0.1.0",
   "private": true,
   "scripts": {
