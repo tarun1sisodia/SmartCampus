@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import '../../env/env_config.dart';
 import 'token_interceptor.dart';
 import 'refresh_token_interceptor.dart';
+import 'mock_interceptor.dart';
 import '../services/secure_storage_service.dart';
 
 class ApiClient {
@@ -21,15 +22,19 @@ class ApiClient {
             },
           ),
         ) {
-    _dio.interceptors.add(
-      TokenInterceptor(storageService: _secureStorageService),
-    );
-    _dio.interceptors.add(
-      RefreshTokenInterceptor(
-        _dio,
-        storageService: _secureStorageService,
-      ),
-    );
+    if (EnvConfig.useMockData) {
+      _dio.interceptors.add(MockInterceptor());
+    } else {
+      _dio.interceptors.add(
+        TokenInterceptor(storageService: _secureStorageService),
+      );
+      _dio.interceptors.add(
+        RefreshTokenInterceptor(
+          _dio,
+          storageService: _secureStorageService,
+        ),
+      );
+    }
     
     // LogInterceptor in debug mode only
     assert(() {
