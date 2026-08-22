@@ -13,6 +13,7 @@ void callbackDispatcher() {
       // Initialize DI in the background process
       await initDependencyInjection();
       
+      await Future.delayed(const Duration(seconds: 2));
       final syncService = getIt<SyncService>();
       await syncService.syncPendingAttendance();
       
