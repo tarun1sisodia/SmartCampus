@@ -1,4 +1,5 @@
 import express from 'express';
+import attendanceQrController from '../../controllers/attendanceQr.controller.js';
 const router = express.Router();
 import attendanceController from '../../controllers/attendance.controller.js';
 import auth from '../../middleware/auth.middleware.js';
@@ -15,5 +16,9 @@ router.get('/student/:studentId', auth, orgScope, attendanceController.studentSu
 
 router.post('/sync', auth, rbac('teacher'), attendanceController.syncOffline);
 router.get('/sessions/month', auth, attendanceController.listSessionsByMonth);
+
+// QR Attendance endpoints
+router.get('/qr/generate/:sessionId', auth, rbac('teacher', 'super_admin'), orgScope, attendanceQrController.generateDynamicQr);
+router.post('/qr/verify', auth, rbac('student'), orgScope, attendanceQrController.verifyQrAttendance);
 
 export default router;

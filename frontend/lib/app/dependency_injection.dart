@@ -28,6 +28,9 @@ import '../core/services/background_task_service.dart';
 import '../core/services/app_feedback_service.dart';
 import '../features/session/bloc/session_bloc.dart';
 import '../features/session/repositories/session_repository.dart';
+import '../features/attendance/bloc/qr_generator_bloc.dart';
+import '../features/attendance/bloc/qr_scanner_bloc.dart';
+import '../features/attendance/repositories/location_service.dart';
 
 final getIt = GetIt.instance;
 
@@ -106,4 +109,9 @@ Future<void> initDependencyInjection() async {
   getIt.registerFactory(() => ProfileBloc(getIt<ProfileRepository>()));
   getIt.registerLazySingleton<SettingsBloc>(
       () => SettingsBloc(getIt<HiveService>()));
+
+  // QR Features
+  getIt.registerLazySingleton<LocationService>(() => LocationService());
+  getIt.registerFactory(() => QrGeneratorBloc(getIt<AttendanceRepository>()));
+  getIt.registerFactory(() => QrScannerBloc(getIt<AttendanceRepository>(), getIt<LocationService>()));
 }

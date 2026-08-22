@@ -1,6 +1,8 @@
 import '../../../core/api/api_client.dart';
 import '../../../core/api/endpoints.dart';
 import '../models/attendance_record_model.dart';
+import '../models/qr_token_model.dart';
+import '../models/qr_verification_request.dart';
 
 class AttendanceRepository {
   final ApiClient _apiClient;
@@ -46,5 +48,25 @@ class AttendanceRepository {
       Endpoints.syncAttendance,
       data: {'records': records},
     );
+  }
+
+  Future<QrTokenResponse> generateQrToken(String sessionId) async {
+    try {
+      final response = await _apiClient.dio.get('${Endpoints.generateQr}/$sessionId');
+      return QrTokenResponse.fromJson(response.data['data']);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> verifyQrToken(QrVerificationRequest request) async {
+    try {
+      await _apiClient.dio.post(
+        Endpoints.verifyQr,
+        data: request.toJson(),
+      );
+    } catch (e) {
+      rethrow;
+    }
   }
 }

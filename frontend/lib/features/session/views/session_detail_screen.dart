@@ -37,12 +37,28 @@ class SessionDetailScreen extends StatelessWidget {
                   _builderHeader(session, startTime),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(24, 16, 24, 8),
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () => context.push('/attendance/$sessionId'),
-                        child: const Text('MARK ATTENDANCE'),
-                      ),
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: () => context.push('/attendance/$sessionId'),
+                            child: const Text('MARK ATTENDANCE'),
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        SizedBox(
+                          width: double.infinity,
+                          child: OutlinedButton.icon(
+                            onPressed: () => context.push('/attendance/qr/generate/$sessionId'),
+                            icon: const Icon(Icons.qr_code, size: 18),
+                            label: const Text('GENERATE QR CODE'),
+                            style: OutlinedButton.styleFrom(
+                              side: const BorderSide(color: TColors.primary, width: 2),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   const Divider(height: 1.5, thickness: 1.5),

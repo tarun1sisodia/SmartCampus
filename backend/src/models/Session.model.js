@@ -12,6 +12,8 @@ const sessionSchema = new Schema({
   endTime: { type: String }, // e.g. "10:00"
   topic: { type: String },
   isHoliday: { type: Boolean, default: false },
+  qrEnabled: { type: Boolean, default: false },
+  qrExpiresAt: { type: Date },
   organisation: { type: Schema.Types.ObjectId, ref: 'Organisation', required: true }
 }, {
   timestamps: true

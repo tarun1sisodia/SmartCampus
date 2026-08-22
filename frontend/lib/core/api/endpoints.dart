@@ -15,6 +15,8 @@ class Endpoints {
   static const String syncAttendance = '/attendance/sync';
   static const String attendanceBySession = '/attendance/session';
   static const String attendanceByStudent = '/attendance/student';
+  static const String generateQr = '/attendance/qr/generate';
+  static const String verifyQr = '/attendance/qr/verify';
 
   // Students
   static const String students = '/students';

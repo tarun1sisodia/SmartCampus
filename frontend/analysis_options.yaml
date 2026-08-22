@@ -16,6 +16,13 @@ analyzer:
     - "lib/app/bindings/**"
     - "lib/app/routes/app_routes.dart"
     - "lib/app/middleware/auth_middleware.dart"
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
   errors:
     depend_on_referenced_packages: ignore
 

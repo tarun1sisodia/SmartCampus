@@ -124,6 +124,12 @@ class _HomeScreenState extends State<HomeScreen> {
           return const Center(child: Text('Welcome!'));
         },
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => context.push('/attendance/qr/scan'),
+        icon: const Icon(Icons.qr_code_scanner),
+        label: const Text('Scan QR'),
+        backgroundColor: Colors.blue,
+      ),
     );
   }
 

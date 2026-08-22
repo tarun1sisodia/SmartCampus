@@ -13,6 +13,8 @@ import '../features/session/views/session_history_screen.dart';
 import '../features/session/views/session_detail_screen.dart';
 import '../features/calendar/views/calendar_screen.dart';
 import '../features/student/views/student_profile_screen.dart';
+import '../features/attendance/views/teacher_qr_display_screen.dart';
+import '../features/attendance/views/qr_scanner_screen.dart';
 
 import '../features/settings/views/settings_screen.dart';
 import '../features/home/views/main_screen.dart';
@@ -151,6 +153,16 @@ class AppRouter {
         builder: (context, state) => StudentProfileScreen(
           studentId: _requiredPathParam(state, 'studentId'),
         ),
+      ),
+      GoRoute(
+        path: '/attendance/qr/generate/:sessionId',
+        builder: (context, state) => TeacherQrDisplayScreen(
+          sessionId: _requiredPathParam(state, 'sessionId'),
+        ),
+      ),
+      GoRoute(
+        path: '/attendance/qr/scan',
+        builder: (context, state) => const QrScannerScreen(),
       ),
     ],
   );
