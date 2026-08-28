@@ -27,9 +27,9 @@ export default function ImportStudentsPage() {
 
   const mutation = useMutation({
     mutationFn: importStudents,
-    onSuccess: (result: any) => {
+    onSuccess: (result) => {
       showToast(
-        `Import completed. Success: ${result.successCount}, Failed: ${result.failureCount}`,
+        `Import completed. Success: ${result.succeeded}, Failed: ${result.failed}`,
         "success"
       );
     },

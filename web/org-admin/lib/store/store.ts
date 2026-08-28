@@ -1,10 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
-import authReducer from "./slices/authSlice";
+import authReducer, { hydrateAuth } from "./slices/authSlice";
 import { injectStore } from "../api/axios-client";
 
 export const store = configureStore({
   reducer: {
     auth: authReducer
+  },
+  preloadedState: {
+    auth: hydrateAuth()
   }
 });
 

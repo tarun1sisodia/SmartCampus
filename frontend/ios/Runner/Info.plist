@@ -8,6 +8,8 @@
 		<string>This app needs access to your photo library to upload profile pictures.</string>
 		<key>NSCameraUsageDescription</key>
 		<string>This app needs access to your camera to take profile pictures.</string>
+		<key>NSLocationWhenInUseUsageDescription</key>
+		<string>This app needs your location to verify you are on campus when marking attendance via QR code.</string>
 		<key>CFBundleDevelopmentRegion</key>
 		<string>$(DEVELOPMENT_LANGUAGE)</string>
 		<key>CFBundleDisplayName</key>

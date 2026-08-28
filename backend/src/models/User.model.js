@@ -4,8 +4,14 @@ import bcrypt from 'bcrypt';
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
-  name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
+  name: { type: String, required: true, trim: true },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    lowercase: true,
+    trim: true,
+  },
   password: { type: String, select: false },
   role: { type: String, enum: ['super_admin', 'org_admin', 'teacher'], required: true },
   organisation: { type: Schema.Types.ObjectId, ref: 'Organisation' },
@@ -36,8 +42,14 @@ userSchema.pre('save', async function(next) {
 
 userSchema.methods.toJSON = function() {
   const obj = this.toObject();
+  // Never serialize credentials, secrets or infrastructure details.
   delete obj.password;
   delete obj.inviteToken;
+  delete obj.inviteExpires;
+  delete obj.resetPasswordToken;
+  delete obj.resetPasswordExpires;
+  delete obj.fcmTokens;
+  delete obj.__v;
   return obj;
 };
 

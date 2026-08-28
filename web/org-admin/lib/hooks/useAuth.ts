@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "@/lib/store/store";
 import { logout as logoutAction } from "@/lib/store/slices/authSlice";
-import { clearAccessTokenCookie } from "@/lib/utils/authCookies";
+import { clearSessionFlagCookie } from "@/lib/utils/authCookies";
 
 export function useAuth() {
   const dispatch = useDispatch<AppDispatch>();
@@ -9,7 +9,7 @@ export function useAuth() {
 
   const logout = async () => {
     await dispatch(logoutAction());
-    clearAccessTokenCookie();
+    clearSessionFlagCookie();
   };
 
   return { user, isAuthenticated, logout };

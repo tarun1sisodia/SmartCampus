@@ -30,11 +30,23 @@ if (process.env.FCM_SERVICE_ACCOUNT_PATH) {
 }
 
 export const registerToken = async (userId, fcmToken, deviceId) => {
+  if (typeof fcmToken !== 'string' || fcmToken.length < 16 || fcmToken.length > 4096) {
+    throw Object.assign(new Error('Invalid fcmToken'), { status: 400 });
+  }
+  const safeDeviceId = typeof deviceId === 'string' ? deviceId.slice(0, 128) : undefined;
+
+  // Remove any previous entry for the same token (createdAt differs, so
+  // $addToSet alone used to grow the array without bound).
+  await User.findByIdAndUpdate(userId, { $pull: { fcmTokens: { token: fcmToken } } });
   await User.findByIdAndUpdate(userId, {
     $addToSet: {
-      fcmTokens: { token: fcmToken, deviceId, createdAt: new Date() }
+      fcmTokens: { token: fcmToken, deviceId: safeDeviceId, createdAt: new Date() }
     }
   });
+  // Cap stored tokens per user to bound the array.
+  await User.findByIdAndUpdate(userId, [
+    { $set: { fcmTokens: { $slice: ['$fcmTokens', -10] } } },
+  ]);
 };
 
 export const sendPushNotification = async (userId, title, body, data = {}) => {

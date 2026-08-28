@@ -1,5 +1,6 @@
 export type StudentImportResult = {
-  successCount: number;
-  failureCount: number;
-  errors: Array<{ row: number; message: string }>;
+  total: number;
+  succeeded: number;
+  failed: number;
+  errors: Array<{ rollNumber?: string; error: string }>;
 };

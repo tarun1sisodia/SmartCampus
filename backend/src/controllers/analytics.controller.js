@@ -27,7 +27,7 @@ export const studentTrend = async (req, res, next) => {
     const query = { student: req.params.studentId };
     if (!isSuperAdmin) query.organisation = req.scope.organisationId;
 
-    const trends = await AttendanceSummary.find(query).sort('date -1').limit(30);
+    const trends = await AttendanceSummary.find(query).sort({ date: -1 }).limit(30);
     sendSuccess(res, trends);
   } catch (err) {
     next(err);

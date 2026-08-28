@@ -1,32 +1,47 @@
 import User from '../models/User.model.js';
 import RefreshToken from '../models/RefreshToken.model.js';
-import {  comparePassword  } from '../utils/hashPassword.js';
-import {  generateAccessToken, generateRefreshToken  } from '../utils/generateToken.js';
-import jwt from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
+import { comparePassword } from '../utils/hashPassword.js';
+import {
+  generateAccessToken,
+  generateRefreshToken,
+  verifyRefreshToken,
+} from '../utils/generateToken.js';
 import crypto from 'crypto';
 import emailService from './email.service.js';
+import logger from '../config/logger.js';
 
-const REFRESH_TOKEN_SECRET = process.env.JWT_REFRESH_SECRET || 'refresh-secret-key';
+const REFRESH_TOKEN_TTL_DAYS = 7;
+
+/** Refresh/reset/invite tokens are stored hashed (sha256) so a DB leak
+ *  cannot be replayed, and lookups are O(1) instead of a bcrypt loop. */
+export const hashToken = (token) =>
+  crypto.createHash('sha256').update(token).digest('hex');
+
+const refreshExpiry = () => {
+  const d = new Date();
+  d.setDate(d.getDate() + REFRESH_TOKEN_TTL_DAYS);
+  return d;
+};
+
+export const revokeAllRefreshTokens = async (userId) => {
+  await RefreshToken.deleteMany({ user: userId });
+};
 
 export const login = async (email, password) => {
-  const user = await User.findOne({ email, isActive: true }).select('+password');
-  if (!user) throw new Error('Invalid credentials');
+  const normalizedEmail = String(email || '').trim().toLowerCase();
+  const user = await User.findOne({ email: normalizedEmail, isActive: true }).select('+password');
+  if (!user) throw new AuthError('Invalid credentials', 401);
 
   const isMatch = await comparePassword(password, user.password);
-  if (!isMatch) throw new Error('Invalid credentials');
+  if (!isMatch) throw new AuthError('Invalid credentials', 401);
 
   const accessToken = generateAccessToken(user);
   const refreshToken = generateRefreshToken(user);
 
-  const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
-  const expiresAt = new Date();
-  expiresAt.setDate(expiresAt.getDate() + 7);
-
   await RefreshToken.create({
-    token: hashedRefreshToken,
+    tokenHash: hashToken(refreshToken),
     user: user._id,
-    expiresAt
+    expiresAt: refreshExpiry(),
   });
 
   user.lastLogin = new Date();
@@ -37,79 +52,111 @@ export const login = async (email, password) => {
 };
 
 export const refreshAccessToken = async (oldRefreshToken) => {
-  const decoded = jwt.decode(oldRefreshToken);
-  if (!decoded || !decoded.sub) throw new Error('Invalid refresh token');
-
-  const tokens = await RefreshToken.find({ user: decoded.sub });
-  let matchedTokenDoc = null;
-
-  for (let doc of tokens) {
-    if (await bcrypt.compare(oldRefreshToken, doc.token)) {
-      matchedTokenDoc = doc;
-      break;
-    }
-  }
-
-  if (!matchedTokenDoc) throw new Error('Refresh token not found or invalid');
-  if (matchedTokenDoc.expiresAt < new Date()) throw new Error('Refresh token expired');
-
+  // 1. Verify signature first (cheap) before touching the DB.
+  let decoded;
   try {
-    jwt.verify(oldRefreshToken, REFRESH_TOKEN_SECRET);
+    decoded = verifyRefreshToken(oldRefreshToken);
   } catch (err) {
-    throw new Error('Refresh token invalid signature');
+    throw new AuthError('Refresh token invalid or expired', 401);
+  }
+  if (!decoded?.sub) throw new AuthError('Refresh token invalid', 401);
+
+  // 2. O(1) lookup of the stored hash.
+  const tokenHash = hashToken(oldRefreshToken);
+  const stored = await RefreshToken.findOne({ tokenHash });
+  const user = await User.findById(decoded.sub);
+
+  if (!user || (!user.isActive && user.role !== 'super_admin')) {
+    throw new AuthError('User inactive', 401);
   }
 
-  const user = await User.findById(decoded.sub);
-  if (!user || (!user.isActive && user.role !== 'super_admin')) throw new Error('User inactive');
+  if (!stored) {
+    // Signature is valid but the token was never issued (or was already
+    // rotated/revoked) => treat as token theft and revoke every session.
+    logger.warn(`Refresh token reuse detected for user ${decoded.sub}; revoking all sessions`);
+    await revokeAllRefreshTokens(user._id);
+    throw new AuthError('Refresh token invalid', 401);
+  }
 
+  if (stored.expiresAt < new Date()) {
+    await stored.deleteOne();
+    throw new AuthError('Refresh token expired', 401);
+  }
+
+  // 3. Rotate: replace stored hash, return fresh pair.
   const newAccessToken = generateAccessToken(user);
   const newRefreshToken = generateRefreshToken(user);
-
-  const newHashedRefresh = await bcrypt.hash(newRefreshToken, 10);
-  matchedTokenDoc.token = newHashedRefresh;
-  const newExpiresAt = new Date();
-  newExpiresAt.setDate(newExpiresAt.getDate() + 7);
-  matchedTokenDoc.expiresAt = newExpiresAt;
-  await matchedTokenDoc.save();
+  stored.tokenHash = hashToken(newRefreshToken);
+  stored.expiresAt = refreshExpiry();
+  await stored.save();
 
   return { accessToken: newAccessToken, refreshToken: newRefreshToken };
 };
 
 export const logout = async (refreshToken) => {
-  const decoded = jwt.decode(refreshToken);
-  if (!decoded || !decoded.sub) return;
-
-  const tokens = await RefreshToken.find({ user: decoded.sub });
-  for (let doc of tokens) {
-    if (await bcrypt.compare(refreshToken, doc.token)) {
-      await RefreshToken.findByIdAndDelete(doc._id);
-      break;
-    }
+  if (!refreshToken) return;
+  try {
+    const decoded = verifyRefreshToken(refreshToken);
+    await RefreshToken.deleteOne({ tokenHash: hashToken(refreshToken), user: decoded.sub });
+  } catch (_) {
+    // Invalid/expired token — nothing to revoke.
   }
 };
 
 export const forgotPassword = async (email) => {
-  const user = await User.findOne({ email, isActive: true });
-  if (!user) throw new Error('No user found with this email');
+  // Uniform response regardless of account existence to prevent enumeration.
+  const genericMessage = 'If an account exists for this email, a reset link has been sent';
+
+  const normalizedEmail = String(email || '').trim().toLowerCase();
+  const user = await User.findOne({ email: normalizedEmail, isActive: true });
+  if (!user) return { message: genericMessage };
+
   const resetToken = crypto.randomBytes(32).toString('hex');
-  user.resetPasswordToken = resetToken;
-  user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+  // Store only the hash; the raw token only ever lives in the email link.
+  user.resetPasswordToken = hashToken(resetToken);
+  user.resetPasswordExpires = Date.now() + 60 * 60 * 1000; // 1 hour
   await user.save();
+
   await emailService.sendPasswordResetEmail(user.email, resetToken);
-  return { message: 'Reset link sent' };
+  return { message: genericMessage };
 };
 
 export const resetPassword = async (token, newPassword) => {
+  if (!token) throw new AuthError('Invalid or expired token', 400);
   const user = await User.findOne({
-    resetPasswordToken: token,
-    resetPasswordExpires: { $gt: Date.now() }
+    resetPasswordToken: hashToken(token),
+    resetPasswordExpires: { $gt: Date.now() },
   });
-  if (!user) throw new Error('Invalid or expired token');
-  user.password = await bcrypt.hash(newPassword, 10);
-  user.resetPasswordToken = null;
-  user.resetPasswordExpires = null;
+  if (!user) throw new AuthError('Invalid or expired token', 400);
+
+  // Assign the PLAINTEXT password: the User pre-save hook performs the
+  // single canonical bcrypt hash (assigning a pre-hashed value here used to
+  // double-hash and permanently lock the account out).
+  user.password = newPassword;
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpires = undefined;
   await user.save();
+
+  // Any stolen session dies immediately after a password reset.
+  await revokeAllRefreshTokens(user._id);
+
   return { message: 'Password updated' };
 };
 
-export default { login, refreshAccessToken, logout, forgotPassword, resetPassword };
+export default {
+  login,
+  refreshAccessToken,
+  logout,
+  forgotPassword,
+  resetPassword,
+  revokeAllRefreshTokens,
+  hashToken,
+};
+
+/** Minimal error carrying an HTTP status, understood by the global handler. */
+export class AuthError extends Error {
+  constructor(message, status = 400) {
+    super(message);
+    this.status = status;
+  }
+}
