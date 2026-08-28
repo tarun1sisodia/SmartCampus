@@ -1,14 +1,26 @@
 import jwt from 'jsonwebtoken';
+import { verifyAccessToken } from '../utils/generateToken.js';
 
+/**
+ * Bearer-token authentication middleware.
+ * Secrets are validated at boot; no insecure fallback is allowed here.
+ */
 export default (req, res, next) => {
-  const token = req.headers.authorization?.split(' ')[1];
-  if (!token) return res.status(401).json({ success: false, message: 'No token provided' });
+  const header = req.headers.authorization || '';
+  const token = header.startsWith('Bearer ') ? header.slice(7) : null;
+  if (!token) {
+    return res.status(401).json({ success: false, message: 'No token provided' });
+  }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_ACCESS_SECRET || 'access-secret-key');
-    req.user = { id: decoded.sub, role: decoded.role, organisation: decoded.org };
+    const decoded = verifyAccessToken(token);
+    req.user = {
+      id: decoded.sub,
+      role: decoded.role,
+      organisation: decoded.org,
+    };
     next();
   } catch (err) {
-    res.status(401).json({ success: false, message: 'Invalid token' });
+    return res.status(401).json({ success: false, message: 'Invalid or expired token' });
   }
 };

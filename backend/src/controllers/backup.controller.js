@@ -28,9 +28,12 @@ export const list = async (req, res, next) => {
 
 export const restore = async (req, res, next) => {
   try {
-    // Only stub logic.
-    // await backupService.restoreBackup(req.params.backupId);
-    sendSuccess(res, { message: 'Restore initiated successfully' });
+    // Restores are destructive and NOT implemented yet. Returning a fake
+    // success here previously let an operator believe data had been restored.
+    res.status(501).json({
+      success: false,
+      message: 'Backup restore is not implemented yet. Contact the platform team for manual restoration from S3.',
+    });
   } catch (err) {
     next(err);
   }

@@ -1,16 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const publicPaths = ["/login", "/forgot-password"];
-
 export function middleware(request: NextRequest) {
-  const token = request.cookies.get("accessToken")?.value;
-  const pathname = request.nextUrl.pathname;
-  const isPublic = publicPaths.some(path => pathname.startsWith(path));
-
-  if (!token && !isPublic) {
+  // Gate on the non-sensitive session flag cookie; the API still enforces
+  // real authentication on every request via the Authorization header.
+  const hasSession = request.cookies.get("sc_session")?.value === "1";
+  const isLogin = request.nextUrl.pathname.startsWith("/login");
+  if (!hasSession && !isLogin) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
-
   return NextResponse.next();
 }
 

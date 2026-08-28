@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/lib/store/store";
 import { login } from "@/lib/store/slices/authSlice";
-import { setAccessTokenCookie } from "@/lib/utils/authCookies";
+import { setSessionFlagCookie } from "@/lib/utils/authCookies";
 
 const loginSchema = z.object({
   email: z.string().trim().email("Enter a valid email"),
@@ -32,7 +32,7 @@ export default function LoginPage() {
   const onSubmit = async (values: LoginFormValues) => {
     const resultAction = await dispatch(login(values));
     if (login.fulfilled.match(resultAction)) {
-      setAccessTokenCookie(resultAction.payload.accessToken);
+      setSessionFlagCookie();
       router.push("/dashboard");
       return;
     }

@@ -1,9 +1,10 @@
 import BackupRecord from '../models/BackupRecord.model.js';
-// Actual system command runners like 'exec' to run mongodump
-import {  exec  } from 'child_process';
+// execFile (not exec) so the MONGO_URI is passed as a single argv element —
+// never interpolated into a shell command.
+import { execFile } from 'child_process';
 import util from 'util';
-const execPromise = util.promisify(exec);
-import {  uploadFile  } from '../utils/s3Client.js';
+const execFilePromise = util.promisify(execFile);
+import { uploadFile } from '../utils/s3Client.js';
 import path from 'path';
 import fs from 'fs';
 
@@ -12,8 +13,9 @@ export const createFullBackup = async (triggeredBy, organisationId = null) => {
   const filename = `backup_${timestamp}.gz`;
   const localFilePath = path.join('/tmp', filename);
 
-  let dumpCmd = `mongodump --archive=${localFilePath} --gzip --uri="${process.env.MONGO_URI || 'mongodb://localhost:27017/smartcampus'}"`;
-  
+  const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017/smartcampus';
+  const bucket = process.env.AWS_BACKUP_BUCKET || process.env.AWS_BUCKET || 'smartcampus-bucket';
+
   // Create an initial record
   const record = await BackupRecord.create({
     organisation: organisationId,
@@ -24,10 +26,12 @@ export const createFullBackup = async (triggeredBy, organisationId = null) => {
   });
 
   try {
-    await execPromise(dumpCmd);
+    await execFilePromise('mongodump', ['--archive=' + localFilePath, '--gzip', `--uri=${mongoUri}`], {
+      timeout: 10 * 60 * 1000,
+    });
 
     const s3Key = `backups/${filename}`;
-    await uploadFile(process.env.AWS_BUCKET || 'smartcampus-bucket', s3Key, localFilePath);
+    await uploadFile(bucket, s3Key, localFilePath);
 
     const stats = fs.statSync(localFilePath);
     

@@ -9,7 +9,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/lib/store/store";
 import { login } from "@/lib/store/slices/authSlice";
 import { useToast } from "@/components/ui/Toast";
-import { setAccessTokenCookie } from "@/lib/utils/authCookies";
+import { setSessionFlagCookie } from "@/lib/utils/authCookies";
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address."),
@@ -37,7 +37,7 @@ export default function OrgAdminLoginPage() {
     try {
       const resultAction = await dispatch(login(data));
       if (login.fulfilled.match(resultAction)) {
-        setAccessTokenCookie(resultAction.payload.accessToken);
+        setSessionFlagCookie();
         showToast("Login successful!", "success");
         router.push("/dashboard");
       } else {
