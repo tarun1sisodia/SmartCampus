@@ -1,0 +1,13 @@
+// =============================================================
+// package.json (repo root)  ->  ALGORITHM ONLY (source: package.json)
+// NOTE: comment-only documentation file — not valid JSON on purpose.
+// =============================================================
+
+// npm WORKSPACES monorepo: backend + web/org-admin + web/super-admin + frontend
+// scripts:
+//   install:all -> npm install (every workspace with one lockfile)
+//   dev:backend -> nodemon api (workspace @smartcampus/backend)
+//   dev:org     -> org-admin next dev
+//   dev:super   -> super-admin next dev
+//   dev         -> concurrently run BOTH web portals
+// overrides: pinned versions of transitive deps for security advisories

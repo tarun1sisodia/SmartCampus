@@ -1,0 +1,5 @@
+// =============================================================
+// vercel.json  ->  ALGORITHM ONLY (source: backend/vercel.json)
+// =============================================================
+
+// serverless deploy config: api entry = server.js, env vars mapped, builds for node runtime

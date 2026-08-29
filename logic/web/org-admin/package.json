@@ -1,0 +1,8 @@
+// =============================================================
+// package.json (org-admin)  ->  ALGORITHM ONLY (source: web/org-admin/package.json)
+// NOTE: comment-only documentation file — not valid JSON on purpose.
+// =============================================================
+
+// name @smartcampus/org-admin ; dev script 'next dev' (port 3000)
+// deps: next, react, reduxjs/toolkit, react-redux, @tanstack/react-query, axios, zod,
+//       react-hook-form, papaparse, tailwindcss — workspace of the root package

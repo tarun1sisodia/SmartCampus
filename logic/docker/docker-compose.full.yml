@@ -1,0 +1,6 @@
+// =============================================================
+// docker-compose.full.yml  ->  ALGORITHM ONLY (source: docker/docker-compose.full.yml)
+// =============================================================
+
+// SOURCE FILE IS EMPTY (placeholder only).
+// Intended purpose: whole-stack compose (api + mongo + redis + nginx + both portals).
