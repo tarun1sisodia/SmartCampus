@@ -1,0 +1,5 @@
+// =============================================================
+// nodemon.json  ->  ALGORITHM ONLY (source: backend/nodemon.json)
+// =============================================================
+
+// nodemon config: watch .js files, ignore logs/ + uploads/ + tests/, restart delay

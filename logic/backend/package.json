@@ -1,0 +1,13 @@
+// =============================================================
+// package.json (backend)  ->  ALGORITHM ONLY (source: backend/package.json)
+// NOTE: comment-only documentation file — not valid JSON on purpose.
+// =============================================================
+
+// scripts:
+//   start:dev -> nodemon server.js (auto-restart on change)
+//   start     -> node server.js
+//   test      -> jest (unit + integration)
+//   seed      -> run scripts/seed/main.js
+//   backup    -> run scripts/backupDB.js
+// deps: express, mongoose, ioredis, bull, socket.io, jwt, bcrypt, zod, helmet, cors, morgan,
+//   winston, sentry, firebase-admin, cloudinary, aws-sdk(s3), nodemailer, multer, swagger, dotenv...

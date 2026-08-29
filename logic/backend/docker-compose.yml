@@ -1,0 +1,7 @@
+// =============================================================
+// docker-compose.yml  ->  ALGORITHM ONLY (source: backend/docker-compose.yml)
+// =============================================================
+
+// services:
+//   api: build . , port 5000:5000, env from host (MONGO_URI, REDIS_URL/2, CLOUDINARY_URL), restart always
+//   redis-local: redis:alpine on 6380->6379 (local queue/rate-limit store)

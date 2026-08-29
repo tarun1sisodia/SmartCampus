@@ -1,0 +1,6 @@
+// =============================================================
+// today-teacher-sessions.seed.json  ->  ALGORITHM ONLY (source: backend/scripts/data/...)
+// =============================================================
+
+// pure DATA: json array of demo sessions (subject, section, times, status)
+//   consumed by seedTodayTeacherSessions.js — no logic inside

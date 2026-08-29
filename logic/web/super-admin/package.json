@@ -1,0 +1,7 @@
+// =============================================================
+// package.json (super-admin)  ->  ALGORITHM ONLY (source: web/super-admin/package.json)
+// NOTE: comment-only documentation file — not valid JSON on purpose.
+// =============================================================
+
+// name @smartcampus/super-admin ; dev on port 3001
+// deps: next, react, redux toolkit, react-query, axios, zod, react-hook-form, tailwind

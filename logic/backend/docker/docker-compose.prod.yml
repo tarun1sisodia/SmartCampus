@@ -1,0 +1,5 @@
+// =============================================================
+// docker-compose.prod.yml  ->  ALGORITHM ONLY (source: backend/docker/docker-compose.prod.yml)
+// =============================================================
+
+// prod variant: backend build with prod NODE_ENV + external mongo/redis urls + restart policies

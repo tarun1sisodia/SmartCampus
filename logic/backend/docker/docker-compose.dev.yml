@@ -1,0 +1,6 @@
+// =============================================================
+// docker-compose.dev.yml  ->  ALGORITHM ONLY (source: backend/docker/docker-compose.dev.yml)
+// =============================================================
+
+// dev stack: backend (port 5000, ./src bind-mounted for live reload) + mongo:6 (27017, named volume)
+//   + redis:7-alpine (6379) — one command local environment
