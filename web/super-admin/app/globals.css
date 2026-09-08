@@ -2,10 +2,56 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --background: 210 40% 98%;
+  --foreground: 222 47% 11%;
+  --card: 0 0% 100%;
+  --card-foreground: 222 47% 11%;
+  --primary: 239 84% 67%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 215 16% 47%;
+  --secondary-foreground: 0 0% 100%;
+  --muted: 210 40% 96%;
+  --muted-foreground: 215 16% 47%;
+  --accent: 214 32% 91%;
+  --accent-foreground: 222 47% 11%;
+  --border: 214 32% 91%;
+  --input: 214 32% 91%;
+  --ring: 239 84% 67%;
+  --destructive: 347 77% 50%;
+  --destructive-foreground: 0 0% 100%;
+  --success: 158 64% 42%;
+  --warning: 38 92% 50%;
+  --surface: 0 0% 100%;
+}
+
+.dark {
+  --background: 222 47% 11%;
+  --foreground: 210 40% 98%;
+  --card: 222 47% 14%;
+  --card-foreground: 210 40% 98%;
+  --primary: 199 89% 48%;
+  --primary-foreground: 222 47% 11%;
+  --secondary: 215 20% 65%;
+  --secondary-foreground: 222 47% 11%;
+  --muted: 217 33% 17%;
+  --muted-foreground: 215 20% 65%;
+  --accent: 217 33% 20%;
+  --accent-foreground: 210 40% 98%;
+  --border: 217 33% 20%;
+  --input: 217 33% 20%;
+  --ring: 199 89% 48%;
+  --destructive: 347 77% 50%;
+  --destructive-foreground: 0 0% 100%;
+  --success: 158 64% 42%;
+  --warning: 38 92% 50%;
+  --surface: 222 47% 15%;
+}
+
 body {
-  @apply bg-bg text-textPrimary antialiased;
+  @apply bg-background text-foreground antialiased;
 }
 
 .card {
-  @apply rounded-lg border border-slate-200 bg-surface p-4 shadow-sm;
+  @apply rounded-lg border border-border bg-card p-4 text-card-foreground shadow-sm;
 }

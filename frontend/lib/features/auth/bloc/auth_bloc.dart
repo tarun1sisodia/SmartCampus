@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'auth_bloc.dart';
 import '../repositories/auth_repository.dart';
 
 export 'auth_event.dart';
@@ -16,6 +15,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<LogoutRequested>(_onLogoutRequested);
     on<ForgotPasswordRequested>(_onForgotPasswordRequested);
     on<ResetPasswordRequested>(_onResetPasswordRequested);
+    on<AuthUserChanged>(_onUserChanged);
   }
 
   Future<void> _onAppStarted(
@@ -115,6 +115,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(AuthUnauthenticated());
     } catch (e) {
       emit(AuthError('Reset password error: ${e.toString()}'));
+    }
+  }
+
+  void _onUserChanged(AuthUserChanged event, Emitter<AuthState> emit) {
+    if (event.user is UserModel) {
+      emit(AuthAuthenticated(event.user as UserModel));
+    } else {
+      emit(AuthUnauthenticated());
     }
   }
 }

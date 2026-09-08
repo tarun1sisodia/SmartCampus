@@ -92,9 +92,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     Container(
                       padding: const EdgeInsets.all(24),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: Theme.of(context).colorScheme.surface,
                         borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: Colors.black12),
+                        border: Border.all(color: Theme.of(context).colorScheme.outline),
                       ),
                       child: const Column(
                         children: [
@@ -128,7 +128,7 @@ class _HomeScreenState extends State<HomeScreen> {
         onPressed: () => context.push('/attendance/qr/scan'),
         icon: const Icon(Icons.qr_code_scanner),
         label: const Text('Scan QR'),
-        backgroundColor: Colors.blue,
+        backgroundColor: Theme.of(context).colorScheme.primary,
       ),
     );
   }

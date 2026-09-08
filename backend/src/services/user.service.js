@@ -16,6 +16,51 @@ export const listTeachers = async (organisationId, page, limit, isSuperAdmin) =>
   return { data, total, page, limit };
 };
 
+export const listUsers = async (filters = {}, page, limit) => {
+  const query = {};
+  if (filters.role && filters.role !== 'all') {
+    query.role = filters.role;
+  }
+
+  const skip = (page - 1) * limit;
+  const data = await User.find(query)
+    .populate('organisation', 'name')
+    .skip(skip)
+    .limit(limit)
+    .sort('name');
+  const total = await User.countDocuments(query);
+
+  return { data, total, page, limit };
+};
+
+export const updateUser = async (userId, updates) => {
+  const allowed = {};
+  if (updates.role) allowed.role = updates.role;
+  if (typeof updates.isActive === 'boolean') allowed.isActive = updates.isActive;
+
+  if (Object.keys(allowed).length === 0) {
+    throw new Error('No allowed fields provided');
+  }
+
+  const user = await User.findByIdAndUpdate(userId, allowed, { new: true }).populate('organisation', 'name');
+  if (!user) {
+    const error = new Error('User not found');
+    error.status = 404;
+    throw error;
+  }
+  return user;
+};
+
+export const resetPasswordToken = async (userId) => {
+  const user = await User.findById(userId);
+  if (!user) {
+    const error = new Error('User not found');
+    error.status = 404;
+    throw error;
+  }
+  return user;
+};
+
 export const deactivateUser = async (userId, requesterOrgId, isSuperAdmin, requesterId) => {
   const user = await User.findById(userId);
   if (!user) throw new Error('User not found');

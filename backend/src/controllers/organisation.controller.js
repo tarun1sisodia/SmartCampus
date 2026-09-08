@@ -43,6 +43,11 @@ export const update = async (req, res, next) => {
     
     // Normal update operations
     const org = await Organisation.findByIdAndUpdate(req.params.orgId, req.body, { new: true });
+    if (!org) {
+      const error = new Error('Not found');
+      error.status = 404;
+      throw error;
+    }
     sendSuccess(res, org);
   } catch (err) {
     next(err);

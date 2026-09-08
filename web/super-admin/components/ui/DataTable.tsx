@@ -32,7 +32,7 @@ export function DataTable<T extends object>({ columns, data }: Props<T>) {
               {group.headers.map(header => (
                 <th
                   key={header.id}
-                  className="border-b border-slate-200 px-3 py-2 text-left font-semibold text-textSecondary"
+                  className="border-b border-border px-3 py-2 text-left font-semibold text-muted-foreground"
                 >
                   {header.isPlaceholder
                     ? null
@@ -46,7 +46,7 @@ export function DataTable<T extends object>({ columns, data }: Props<T>) {
           {table.getRowModel().rows.map(row => (
             <tr key={row.id}>
               {row.getVisibleCells().map(cell => (
-                <td key={cell.id} className="border-b border-slate-100 px-3 py-2">
+                <td key={cell.id} className="border-b border-border px-3 py-2">
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
               ))}
