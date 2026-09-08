@@ -12,14 +12,14 @@ export default function SuperAdminDashboardPage() {
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-4">
         {kpis.map(kpi => (
           <div className="card" key={kpi.label}>
-            <p className="text-sm text-textSecondary">{kpi.label}</p>
+            <p className="text-sm text-muted-foreground">{kpi.label}</p>
             <p className="text-2xl font-bold">{kpi.value}</p>
           </div>
         ))}
       </div>
       <div className="card">
         <p className="font-semibold">Attendance Trend (Last 6 Months)</p>
-        <p className="mt-2 text-sm text-textSecondary">
+        <p className="mt-2 text-sm text-muted-foreground">
           Chart integration placeholder (Recharts) ready for API wiring with React Query.
         </p>
       </div>

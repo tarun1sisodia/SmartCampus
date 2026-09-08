@@ -6,8 +6,8 @@ export async function loginApi(payload: LoginRequest): Promise<LoginResponse> {
   return data.data;
 }
 
-export async function logoutApi(): Promise<void> {
-  await axiosClient.post("/auth/logout");
+export async function logoutApi(refreshToken?: string | null): Promise<void> {
+  await axiosClient.post("/auth/logout", refreshToken ? { refreshToken } : undefined);
 }
 
 export async function refreshTokenApi(refreshToken: string): Promise<{ accessToken: string }> {

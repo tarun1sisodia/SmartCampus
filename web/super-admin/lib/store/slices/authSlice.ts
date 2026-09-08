@@ -27,9 +27,10 @@ export const login = createAsyncThunk(
   }
 );
 
-export const logout = createAsyncThunk("auth/logout", async () => {
+export const logout = createAsyncThunk("auth/logout", async (_, { getState }) => {
   try {
-    await logoutApi();
+    const { refreshToken } = (getState() as { auth: AuthState }).auth;
+    await logoutApi(refreshToken);
   } catch {
     // Keep logout resilient even when backend call fails.
   }

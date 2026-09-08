@@ -12,12 +12,22 @@ class TeacherStatsModel extends Equatable {
   });
 
   factory TeacherStatsModel.fromJson(Map<String, dynamic> json) {
+    // Backend v1 returns `{ overallAttendance, subjectWise, totalSessions }`.
+    // Normalize into the UI model while keeping forward compatibility.
+    final subjectWise = json['subjectWise'] ?? json['subjectBreakdown'] ?? [];
+    final trend = json['trend'] ?? [];
     return TeacherStatsModel(
       overallAttendance: (json['overallAttendance'] ?? 0.0).toDouble(),
-      subjectBreakdown: (json['subjectBreakdown'] as List? ?? [])
-          .map((item) => SubjectStats.fromJson(item))
-          .toList(),
-      trend: (json['trend'] as List? ?? [])
+      subjectBreakdown: (subjectWise as List).map((item) {
+        if (item is Map<String, dynamic>) {
+          return SubjectStats(
+            subjectName: (item['subject'] ?? item['subjectName'] ?? '').toString(),
+            attendance: (item['avgAttendance'] ?? item['attendance'] ?? 0.0).toDouble(),
+          );
+        }
+        return SubjectStats(subjectName: '', attendance: 0.0);
+      }).toList(),
+      trend: (trend as List)
           .map((item) => DailyStats.fromJson(item))
           .toList(),
     );

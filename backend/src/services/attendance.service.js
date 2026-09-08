@@ -134,9 +134,32 @@ export const listSessions = async (teacherId, organisationId, isSuperAdmin, filt
   if (subjectId) query.subject = subjectId;
   if (courseId) query.course = courseId;
 
-  return await Session.find(query)
+  const sessions = await Session.find(query)
     .populate('subject course semester section teacher', 'name code title')
     .sort({ date: 1, startTime: 1 });
+
+  // Enrich sessions with student/present counts so the mobile dashboard can
+  // render without extra round-trips. This is intentionally simple; move to an
+  // aggregation/materialized view when the dataset grows.
+  const enriched = [];
+  for (const session of sessions) {
+    const totalStudents = await Student.countDocuments({
+      organisation: session.organisation,
+      course: session.course,
+      semester: session.semester,
+      section: session.section,
+    });
+    const presentCount = await Attendance.countDocuments({
+      session: session._id,
+      status: { $in: ['present', 'late'] },
+    });
+    const sessionObject = session.toObject();
+    sessionObject.totalStudents = totalStudents;
+    sessionObject.presentCount = presentCount;
+    enriched.push(sessionObject);
+  }
+
+  return enriched;
 };
 
 export const getSessionsByMonth = async (teacherId, yearMonth, organisationId, isSuperAdmin) => {

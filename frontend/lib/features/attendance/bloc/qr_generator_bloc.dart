@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../repositories/attendance_repository.dart';
 import 'qr_generator_event.dart';
@@ -37,8 +38,9 @@ class QrGeneratorBloc extends Bloc<QrGeneratorEvent, QrGeneratorState> {
       emit(QrGeneratorSuccess(response.token, response.expiresIn));
       
       _timer?.cancel();
-      // Setup a timer to fetch a new token right before it expires
-      _timer = Timer(Duration(seconds: response.expiresIn), () {
+      // Setup a timer to fetch a new token a couple of seconds before it expires.
+      final refreshIn = math.max(1, response.expiresIn - 2);
+      _timer = Timer(Duration(seconds: refreshIn), () {
         if (!isClosed) {
           add(RefreshQrToken(sessionId));
         }

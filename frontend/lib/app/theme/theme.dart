@@ -57,7 +57,9 @@ class TAppTheme {
     );
   }
 
-  // Default themes: 7 (Executive Navy) and 11 (Deep Ocean Cyan)
-  static ThemeData lightTheme = createTheme(AppThemes.themes[7]); 
-  static ThemeData darkTheme = createTheme(AppThemes.themes[11]);
+  // Default themes: 21st.dev-inspired light + dark palettes (last two configs).
+  static ThemeData lightTheme =
+      createTheme(AppThemes.themes[AppThemes.themes.length - 2]);
+  static ThemeData darkTheme =
+      createTheme(AppThemes.themes[AppThemes.themes.length - 1]);
 }

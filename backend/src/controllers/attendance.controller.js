@@ -2,6 +2,7 @@ import attendanceService from '../services/attendance.service.js';
 import {  sendSuccess  } from '../utils/apiResponse.js';
 import Session from '../models/Session.model.js';
 import Attendance from '../models/Attendance.model.js';
+import Student from '../models/Student.model.js';
 
 export const createSession = async (req, res, next) => {
   try {
@@ -97,6 +98,42 @@ export const syncOffline = async (req, res, next) => {
   }
 };
 
+export const getSessionById = async (req, res, next) => {
+  try {
+    const q = { _id: req.params.sessionId };
+    if (!req.scope.isSuperAdmin) q.organisation = req.scope.organisationId;
+
+    const session = await Session.findOne(q)
+      .populate('subject course semester section teacher', 'name code title');
+    if (!session) {
+      const error = new Error('Session not found');
+      error.status = 404;
+      throw error;
+    }
+
+    const attendance = await Attendance.find({ session: session._id })
+      .populate('student', 'name rollNumber photo')
+      .sort('createdAt');
+
+    const sessionObject = session.toObject();
+    sessionObject.totalStudents = await Student.countDocuments({
+      organisation: session.organisation,
+      course: session.course,
+      semester: session.semester,
+      section: session.section,
+    });
+    sessionObject.presentCount = await Attendance.countDocuments({
+      session: session._id,
+      status: { $in: ['present', 'late'] },
+    });
+    sessionObject.attendance = attendance;
+
+    sendSuccess(res, sessionObject);
+  } catch (err) {
+    next(err);
+  }
+};
+
 export const listSessionsByMonth = async (req, res, next) => {
   try {
     const { month } = req.query; // Format YYYY-MM
@@ -110,4 +147,4 @@ export const listSessionsByMonth = async (req, res, next) => {
   }
 };
 
-export default { createSession, listSessions, markBulk, getBySession, studentSummary, syncOffline, listSessionsByMonth };
+export default { createSession, listSessions, getSessionById, markBulk, getBySession, studentSummary, syncOffline, listSessionsByMonth };

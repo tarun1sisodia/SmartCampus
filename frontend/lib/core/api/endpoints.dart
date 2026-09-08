@@ -11,6 +11,7 @@ class Endpoints {
 
   // Sessions & Attendance
   static const String sessions = '/sessions';
+  static const String sessionsByMonth = '/attendance/sessions/month';
   static const String markAttendance = '/attendance/mark';
   static const String syncAttendance = '/attendance/sync';
   static const String attendanceBySession = '/attendance/session';

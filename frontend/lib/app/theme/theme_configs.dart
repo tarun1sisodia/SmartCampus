@@ -225,5 +225,35 @@ class AppThemes {
       textSecondary: Color(0xFF525252),
       border: Color(0xFFE5E5E5),
     ),
+    // 21st.dev-inspired: shadcn neutral light
+    ThemeConfig(
+      name: '21st.dev Neutral Light',
+      isDark: false,
+      primary: Color(0xFF3B82F6),       // blue-500
+      background: Color(0xFFF8FAFC),    // slate-50
+      surface: Color(0xFFFFFFFF),
+      accent: Color(0xFFE2E8F0),        // slate-200
+      textPrimary: Color(0xFF0F172A),   // slate-900
+      textSecondary: Color(0xFF64748B), // slate-500
+      border: Color(0xFFE2E8F0),        // slate-200
+      success: Color(0xFF10B981),
+      error: Color(0xFFEF4444),
+      warning: Color(0xFFF59E0B),
+    ),
+    // 21st.dev-inspired: shadcn slate + cyan dark
+    ThemeConfig(
+      name: '21st.dev Slate Cyan Dark',
+      isDark: true,
+      primary: Color(0xFF22D3EE),       // cyan-400
+      background: Color(0xFF020617),    // slate-950
+      surface: Color(0xFF0F172A),       // slate-900
+      accent: Color(0xFF1E293B),        // slate-800
+      textPrimary: Color(0xFFF8FAFC),   // slate-50
+      textSecondary: Color(0xFF94A3B8), // slate-400
+      border: Color(0xFF334155),        // slate-700
+      success: Color(0xFF10B981),
+      error: Color(0xFFF43F5E),
+      warning: Color(0xFFF59E0B),
+    ),
   ];
 }
