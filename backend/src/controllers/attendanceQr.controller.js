@@ -1,26 +1,9 @@
-import crypto from 'crypto';
 import Session from '../models/Session.model.js';
 import Attendance from '../models/Attendance.model.js';
 import { sendSuccess, sendError } from '../utils/apiResponse.js';
+import qrService from '../services/qr.service.js';
 
-const SECRET_KEY = process.env.QR_SECRET_KEY || 'super_secret_attendance_salt';
-
-const generateCurrentToken = (sessionId) => {
-  const timeSlot = Math.floor(Date.now() / 15000);
-  const data = `${sessionId}:${timeSlot}`;
-  return crypto.createHmac('sha256', SECRET_KEY).update(data).digest('hex').substring(0, 12);
-};
-
-const isTokenValid = (token, sessionId) => {
-  const currentSlot = Math.floor(Date.now() / 15000);
-  const data1 = `${sessionId}:${currentSlot}`;
-  const data2 = `${sessionId}:${currentSlot - 1}`;
-  
-  const token1 = crypto.createHmac('sha256', SECRET_KEY).update(data1).digest('hex').substring(0, 12);
-  const token2 = crypto.createHmac('sha256', SECRET_KEY).update(data2).digest('hex').substring(0, 12);
-  
-  return token === token1 || token === token2;
-};
+const generateCurrentToken = qrService.generateToken;
 
 // Generate Dynamic QR Token for a specific session
 export const generateDynamicQr = async (req, res, next) => {
@@ -56,7 +39,7 @@ export const verifyQrAttendance = async (req, res, next) => {
       return sendError(res, 'Session ID and token are required', 400);
     }
 
-    if (!isTokenValid(token, sessionId)) {
+    if (!qrService.validateToken(token, sessionId)) {
       return sendError(res, 'QR code has expired or is invalid. Please scan again.', 400);
     }
 
@@ -73,6 +56,11 @@ export const verifyQrAttendance = async (req, res, next) => {
       } else {
         attendance.status = 'present';
         attendance.markedBy = studentId;
+        attendance.markedVia = 'qr';
+        attendance.qrTokenUsed = token;
+        if (req.body.lat != null && req.body.lon != null) {
+          attendance.locationData = { lat: req.body.lat, lon: req.body.lon };
+        }
         await attendance.save();
         return sendSuccess(res, { message: 'Attendance updated to present' });
       }
@@ -85,6 +73,11 @@ export const verifyQrAttendance = async (req, res, next) => {
       organisation: session.organisation,
       status: 'present',
       markedBy: studentId, // Indicates student marked their own via QR
+      markedVia: 'qr',
+      qrTokenUsed: token,
+      locationData: req.body.lat != null && req.body.lon != null
+        ? { lat: req.body.lat, lon: req.body.lon }
+        : undefined,
     });
 
     sendSuccess(res, { message: 'Attendance successfully marked via QR!', data: attendance });

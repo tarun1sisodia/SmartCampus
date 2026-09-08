@@ -50,7 +50,7 @@ export default function UsersPage() {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold">Users</h1>
         <select
-          className="rounded border border-slate-300 px-3 py-2 text-sm"
+          className="rounded border border-input px-3 py-2 text-sm"
           value={role}
           onChange={event => setRole(event.target.value as UserRole | "all")}
         >
@@ -63,7 +63,7 @@ export default function UsersPage() {
       <div className="card overflow-auto">
         <table className="min-w-full text-sm">
           <thead>
-            <tr className="border-b border-slate-200">
+            <tr className="border-b border-border">
               <th className="px-3 py-2 text-left">Name</th>
               <th className="px-3 py-2 text-left">Email</th>
               <th className="px-3 py-2 text-left">Role</th>
@@ -76,19 +76,19 @@ export default function UsersPage() {
           <tbody>
             {isLoading ? (
               <tr>
-                <td className="px-3 py-4 text-textSecondary" colSpan={7}>
+                <td className="px-3 py-4 text-muted-foreground" colSpan={7}>
                   Loading users...
                 </td>
               </tr>
             ) : !data?.items?.length ? (
               <tr>
-                <td className="px-3 py-4 text-textSecondary" colSpan={7}>
+                <td className="px-3 py-4 text-muted-foreground" colSpan={7}>
                   No users found.
                 </td>
               </tr>
             ) : (
               data.items.map(user => (
-                <tr key={user.id} className="border-b border-slate-100">
+                <tr key={user.id} className="border-b border-border">
                   <td className="px-3 py-2">{user.name}</td>
                   <td className="px-3 py-2">{user.email}</td>
                   <td className="px-3 py-2">{user.role}</td>

@@ -5,15 +5,43 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        primary: "#2563EB",
-        secondary: "#0D9488",
-        success: "#22C55E",
-        warning: "#F97316",
-        danger: "#EF4444",
-        bg: "#F1F5F9",
-        surface: "#FFFFFF",
-        textPrimary: "#1E293B",
-        textSecondary: "#64748B"
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        primary: {
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))"
+        },
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))"
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))"
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))"
+        },
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))"
+        },
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))"
+        },
+        success: "hsl(var(--success))",
+        warning: "hsl(var(--warning))",
+        // Backwards-compatible aliases used by the current UI.
+        bg: "hsl(var(--background))",
+        surface: "hsl(var(--surface))",
+        textPrimary: "hsl(var(--foreground))",
+        textSecondary: "hsl(var(--muted-foreground))",
+        danger: "hsl(var(--destructive))"
       }
     }
   },

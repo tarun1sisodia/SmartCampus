@@ -5,6 +5,9 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Load environment-specific .env file
-const envFile = process.env.NODE_ENV ? `.env.${process.env.NODE_ENV}` : '.env';
-dotenv.config({ path: path.join(__dirname, '../../', envFile) });
+// Always load the base .env first, then overlay environment-specific values.
+const envDir = path.join(__dirname, '../../');
+dotenv.config({ path: path.join(envDir, '.env') });
+if (process.env.NODE_ENV) {
+  dotenv.config({ path: path.join(envDir, `.env.${process.env.NODE_ENV}`), override: true });
+}

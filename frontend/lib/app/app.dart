@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dependency_injection.dart';
 import 'routes.dart';
-import 'theme.dart';
+import 'theme/theme.dart';
 import '../features/auth/bloc/auth_bloc.dart';
 import '../features/home/bloc/home_bloc.dart';
 import '../features/attendance/bloc/attendance_bloc.dart';
@@ -70,8 +70,8 @@ class _AppState extends State<App> {
           return MaterialApp.router(
             title: 'SmartCampus Teacher',
             scaffoldMessengerKey: _appFeedbackService.messengerKey,
-            theme: AppTheme.light,
-            darkTheme: AppTheme.dark,
+            theme: TAppTheme.lightTheme,
+            darkTheme: TAppTheme.darkTheme,
             themeMode: settingsState.themeMode,
             locale: settingsState.locale,
             routerConfig: _appRouter.router,

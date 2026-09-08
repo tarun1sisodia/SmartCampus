@@ -73,13 +73,13 @@ export default function ImportStudentsPage() {
     <div className="space-y-4">
       <h1 className="text-2xl font-semibold">Import Students</h1>
 
-      <div className="rounded-lg border border-dashed border-slate-300 bg-white p-4">
-        <p className="mb-2 text-sm text-textSecondary">Upload `.csv` or `.xlsx` file</p>
+      <div className="rounded-lg border border-dashed border-border bg-card p-4">
+        <p className="mb-2 text-sm text-muted-foreground">Upload `.csv` or `.xlsx` file</p>
         <input type="file" accept=".csv,.xlsx" onChange={handleFileSelect} />
         {parseError && <p className="mt-2 text-sm text-danger">{parseError}</p>}
       </div>
 
-      <div className="rounded-lg border border-slate-200 bg-white p-4">
+      <div className="rounded-lg border border-border bg-card p-4">
         <p className="mb-2 text-sm font-medium">Column Mapping (detected headers)</p>
         {mappedColumns.length ? (
           <div className="flex flex-wrap gap-2">
@@ -89,7 +89,7 @@ export default function ImportStudentsPage() {
                 className={`rounded px-2 py-1 text-xs ${
                   requiredFields.includes(column)
                     ? "bg-success/15 text-success"
-                    : "bg-slate-100 text-textSecondary"
+                    : "bg-muted text-textSecondary"
                 }`}
               >
                 {column}
@@ -97,19 +97,19 @@ export default function ImportStudentsPage() {
             ))}
           </div>
         ) : (
-          <p className="text-sm text-textSecondary">No headers detected yet.</p>
+          <p className="text-sm text-muted-foreground">No headers detected yet.</p>
         )}
       </div>
 
-      <div className="rounded-lg border border-slate-200 bg-white p-4">
+      <div className="rounded-lg border border-border bg-card p-4">
         <p className="mb-2 text-sm font-medium">Preview (first 5 rows)</p>
         {!rows.length ? (
-          <p className="text-sm text-textSecondary">No preview available.</p>
+          <p className="text-sm text-muted-foreground">No preview available.</p>
         ) : (
           <div className="overflow-auto">
             <table className="min-w-full text-sm">
               <thead>
-                <tr className="border-b border-slate-200">
+                <tr className="border-b border-border">
                   {Object.keys(rows[0]).map(column => (
                     <th key={column} className="px-3 py-2 text-left">
                       {column}
@@ -119,7 +119,7 @@ export default function ImportStudentsPage() {
               </thead>
               <tbody>
                 {rows.map((row, index) => (
-                  <tr key={`row-${index}`} className="border-b border-slate-100">
+                  <tr key={`row-${index}`} className="border-b border-border">
                     {Object.keys(rows[0]).map(column => (
                       <td key={`${index}-${column}`} className="px-3 py-2">
                         {row[column] ?? ""}
@@ -137,7 +137,7 @@ export default function ImportStudentsPage() {
         <button
           disabled={mutation.isPending}
           onClick={handleImport}
-          className="rounded bg-primary px-3 py-2 text-sm text-white disabled:opacity-70"
+          className="rounded bg-primary px-3 py-2 text-sm text-primary-foreground disabled:opacity-70"
         >
           {mutation.isPending ? "Importing..." : "Import Students"}
         </button>

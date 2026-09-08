@@ -36,7 +36,7 @@ export default function OrganisationsPage() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold">Organisations</h1>
-        <Link href="/organisations/create" className="rounded bg-primary px-3 py-2 text-sm text-white">
+        <Link href="/organisations/create" className="rounded-md bg-primary px-3 py-2 text-sm text-primary-foreground">
           Create Organisation
         </Link>
       </div>
@@ -44,12 +44,12 @@ export default function OrganisationsPage() {
       <div className="card flex flex-col gap-2 md:flex-row">
         <input
           placeholder="Search organisation name"
-          className="w-full rounded border border-slate-300 px-3 py-2"
+          className="w-full rounded border border-input px-3 py-2"
           value={search}
           onChange={event => setSearch(event.target.value)}
         />
         <select
-          className="rounded border border-slate-300 px-3 py-2"
+          className="rounded border border-input px-3 py-2"
           value={type}
           onChange={event => setType(event.target.value as "all" | "school" | "college")}
         >
@@ -62,7 +62,7 @@ export default function OrganisationsPage() {
       <div className="card overflow-auto">
         <table className="min-w-full text-sm">
           <thead>
-            <tr className="border-b border-slate-200">
+            <tr className="border-b border-border">
               <th className="px-3 py-2 text-left">Name</th>
               <th className="px-3 py-2 text-left">Type</th>
               <th className="px-3 py-2 text-left">Status</th>
@@ -73,19 +73,19 @@ export default function OrganisationsPage() {
           <tbody>
             {isLoading ? (
               <tr>
-                <td className="px-3 py-4 text-textSecondary" colSpan={5}>
+                <td className="px-3 py-4 text-muted-foreground" colSpan={5}>
                   Loading organisations...
                 </td>
               </tr>
             ) : items.length === 0 ? (
               <tr>
-                <td className="px-3 py-4 text-textSecondary" colSpan={5}>
+                <td className="px-3 py-4 text-muted-foreground" colSpan={5}>
                   No organisations found.
                 </td>
               </tr>
             ) : (
               items.map((org: Organisation) => (
-                <tr key={org.id} className="border-b border-slate-100">
+                <tr key={org.id} className="border-b border-border">
                   <td className="px-3 py-2">{org.name}</td>
                   <td className="px-3 py-2">{org.type}</td>
                   <td className="px-3 py-2">{org.status}</td>

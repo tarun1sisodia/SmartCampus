@@ -51,23 +51,23 @@ export default function OrgAdminLoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-bg p-4">
-      <div className="w-full max-w-md rounded-xl border border-slate-200 bg-surface p-8 shadow-lg">
+    <div className="flex min-h-screen items-center justify-center bg-background p-4">
+      <div className="w-full max-w-md rounded-xl border border-border bg-card p-8 text-card-foreground shadow-lg">
         <div className="mb-8 text-center">
-          <h1 className="text-2xl font-bold text-textPrimary">SmartCampus</h1>
-          <p className="mt-2 text-sm text-textSecondary">Organization Portal Login</p>
+          <h1 className="text-2xl font-bold">SmartCampus</h1>
+          <p className="mt-2 text-sm text-muted-foreground">Organization Portal Login</p>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div>
-            <label className="mb-2 block text-sm font-medium text-textPrimary" htmlFor="email">
+            <label className="mb-2 block text-sm font-medium" htmlFor="email">
               Email Address
             </label>
             <input
               id="email"
               type="email"
               placeholder="admin@school.edu"
-              className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
               {...register("email")}
             />
             {errors.email && (
@@ -77,7 +77,7 @@ export default function OrgAdminLoginPage() {
 
           <div>
             <div className="mb-2 flex items-center justify-between">
-              <label className="block text-sm font-medium text-textPrimary" htmlFor="password">
+              <label className="block text-sm font-medium" htmlFor="password">
                 Password
               </label>
               <a href="#" className="text-xs font-medium text-primary hover:underline">
@@ -88,7 +88,7 @@ export default function OrgAdminLoginPage() {
               id="password"
               type="password"
               placeholder="••••••••"
-              className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
               {...register("password")}
             />
             {errors.password && (
@@ -99,7 +99,7 @@ export default function OrgAdminLoginPage() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full rounded-md bg-primary py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-70"
+            className="w-full rounded-md bg-primary px-3 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-70"
           >
             {isLoading ? "Signing in..." : "Sign In"}
           </button>

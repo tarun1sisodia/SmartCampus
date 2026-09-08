@@ -16,8 +16,15 @@ router.get('/teachers', auth, rbac('super_admin', 'org_admin'), orgScope, userCo
 router.delete('/:userId', auth, rbac('super_admin', 'org_admin'), orgScope, userController.deactivate);
 
 router.get('/me', auth, userController.getMe);
+router.patch('/me', auth, userController.updateProfile);
+router.put('/me', auth, userController.updateProfile);
 router.post('/change-password', auth, validate(changePasswordSchema), userController.changePassword);
 router.post('/me/photo', auth, upload.single('photo'), userController.uploadProfilePhoto);
 router.delete('/me/photo', auth, userController.deleteProfilePhoto);
+
+// Super-admin user management (keep after /me routes so "me" is not captured by :userId)
+router.get('/', auth, rbac('super_admin'), userController.list);
+router.patch('/:userId', auth, rbac('super_admin'), userController.update);
+router.post('/:userId/reset-password', auth, rbac('super_admin'), userController.resetPassword);
 
 export default router;
