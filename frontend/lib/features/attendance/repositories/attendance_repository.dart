@@ -17,7 +17,20 @@ class AttendanceRepository {
       );
       if (response.statusCode == 200) {
         final payload = response.data;
-        final List<dynamic> data = (payload['data'] ?? payload['students'] ?? payload) as List<dynamic>;
+        final dynamic listPayload;
+        if (payload is Map) {
+          final wrapped = payload['data'];
+          if (wrapped is Map) {
+            listPayload = wrapped['data'] ?? wrapped['students'] ?? wrapped['items'];
+          } else if (wrapped is List) {
+            listPayload = wrapped;
+          } else {
+            listPayload = payload['students'] ?? payload;
+          }
+        } else {
+          listPayload = payload;
+        }
+        final List<dynamic> data = listPayload is List ? listPayload : const [];
         return data.map((json) => AttendanceRecordModel.fromJson(json)).toList();
       }
     } catch (e) {

@@ -29,7 +29,7 @@ export function ToastProvider({ children }: PropsWithChildren) {
         {toasts.map(toast => (
           <div
             key={toast.id}
-            className="rounded-md bg-slate-900 px-3 py-2 text-sm text-white shadow-lg"
+            className="rounded-md border border-border bg-card px-3 py-2 text-sm text-card-foreground shadow-lg"
           >
             {toast.type.toUpperCase()}: {toast.message}
           </div>

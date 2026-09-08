@@ -40,18 +40,18 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-bg">
+    <div className="flex min-h-screen items-center justify-center bg-background">
       <form onSubmit={handleSubmit(onSubmit)} className="card w-full max-w-sm space-y-3">
         <h1 className="text-xl font-semibold">Super Admin Login</h1>
         <input
-          className="w-full rounded border border-slate-300 px-3 py-2"
+          className="w-full rounded-md border border-input bg-background px-3 py-2"
           placeholder="Email"
           {...register("email")}
           required
         />
         {errors.email && <p className="text-xs text-danger">{errors.email.message}</p>}
         <input
-          className="w-full rounded border border-slate-300 px-3 py-2"
+          className="w-full rounded-md border border-input bg-background px-3 py-2"
           placeholder="Password"
           type="password"
           {...register("password")}
@@ -61,7 +61,7 @@ export default function LoginPage() {
         {errors.root?.message && <p className="text-xs text-danger">{errors.root.message}</p>}
         <button
           disabled={isSubmitting}
-          className="w-full rounded bg-primary px-3 py-2 text-white disabled:cursor-not-allowed disabled:opacity-70"
+          className="w-full rounded-md bg-primary px-3 py-2 text-primary-foreground disabled:cursor-not-allowed disabled:opacity-70"
         >
           {isSubmitting ? "Signing in..." : "Login"}
         </button>

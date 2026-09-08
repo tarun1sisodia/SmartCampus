@@ -9,7 +9,6 @@ import app from './src/app.js';
 import connectDB from './src/config/database.js';
 import logger from './src/config/logger.js';
 import {  initSocket  } from './src/socket/index.js';
-import {  verifyExternalConnections  } from './scripts/smokeTest.js';
 
 // Subscriptions & background routines
 import updateAnalyticsSubscriber from './src/events/subscribers/updateAnalytics.subscriber.js';
@@ -22,9 +21,6 @@ const PORT = process.env.PORT || 5000;
 
 const startServer = async () => {
   try {
-    // Run external binding checks before starting
-    await verifyExternalConnections();
-    
     await connectDB();
 
     const server = app.listen(PORT, () => {

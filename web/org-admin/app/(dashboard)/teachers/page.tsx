@@ -62,7 +62,7 @@ export default function TeachersPage() {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold">Teachers</h1>
         <button
-          className="rounded bg-primary px-3 py-2 text-sm text-white"
+          className="rounded-md bg-primary px-3 py-2 text-sm text-primary-foreground"
           onClick={() => setShowInviteForm(prev => !prev)}
         >
           Invite Teacher
@@ -70,17 +70,17 @@ export default function TeachersPage() {
       </div>
 
       {showInviteForm && (
-        <form onSubmit={onInviteSubmit} className="rounded-lg border border-slate-200 bg-white p-4">
+        <form onSubmit={onInviteSubmit} className="rounded-lg border border-border bg-card p-4">
           <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
             <input
-              className="rounded border border-slate-300 px-3 py-2"
+              className="rounded-md border border-input bg-background px-3 py-2"
               placeholder="Teacher name"
               value={name}
               onChange={event => setName(event.target.value)}
               required
             />
             <input
-              className="rounded border border-slate-300 px-3 py-2"
+              className="rounded-md border border-input bg-background px-3 py-2"
               placeholder="Teacher email"
               type="email"
               value={email}
@@ -91,7 +91,7 @@ export default function TeachersPage() {
           <div className="mt-3">
             <button
               disabled={inviteMutation.isPending}
-              className="rounded bg-secondary px-3 py-2 text-sm text-white disabled:opacity-70"
+              className="rounded-md bg-secondary px-3 py-2 text-sm text-secondary-foreground disabled:opacity-70"
             >
               {inviteMutation.isPending ? "Sending..." : "Send Invite"}
             </button>
@@ -100,15 +100,15 @@ export default function TeachersPage() {
       )}
 
       {!!pendingInvites.length && (
-        <div className="rounded-lg border border-warning/40 bg-warning/10 p-3 text-sm text-textPrimary">
+        <div className="rounded-lg border border-warning/40 bg-warning/10 p-3 text-sm">
           Pending invites: {pendingInvites.length}
         </div>
       )}
 
-      <div className="rounded-lg border border-slate-200 bg-white p-4">
+      <div className="rounded-lg border border-border bg-card p-4">
         <table className="min-w-full text-sm">
           <thead>
-            <tr className="border-b border-slate-200">
+            <tr className="border-b border-border">
               <th className="px-3 py-2 text-left">Name</th>
               <th className="px-3 py-2 text-left">Email</th>
               <th className="px-3 py-2 text-left">Status</th>
@@ -119,19 +119,19 @@ export default function TeachersPage() {
           <tbody>
             {isLoading ? (
               <tr>
-                <td className="px-3 py-4 text-textSecondary" colSpan={5}>
+                <td className="px-3 py-4 text-muted-foreground" colSpan={5}>
                   Loading teachers...
                 </td>
               </tr>
             ) : !teachers.length ? (
               <tr>
-                <td className="px-3 py-4 text-textSecondary" colSpan={5}>
+                <td className="px-3 py-4 text-muted-foreground" colSpan={5}>
                   No teachers found.
                 </td>
               </tr>
             ) : (
               teachers.map(teacher => (
-                <tr key={teacher.id} className="border-b border-slate-100">
+                <tr key={teacher.id} className="border-b border-border">
                   <td className="px-3 py-2">{teacher.name}</td>
                   <td className="px-3 py-2">{teacher.email}</td>
                   <td className="px-3 py-2">{teacher.isActive ? "Active" : "Invited"}</td>

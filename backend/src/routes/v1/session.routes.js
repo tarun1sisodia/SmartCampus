@@ -6,5 +6,6 @@ import orgScope from '../../middleware/orgScope.middleware.js';
 
 // This file specifically maps to /api/v1/sessions to satisfy the teacher app dashboard
 router.get('/', auth, orgScope, attendanceController.listSessions);
+router.get('/:sessionId', auth, orgScope, attendanceController.getSessionById);
 
 export default router;

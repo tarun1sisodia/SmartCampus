@@ -10,7 +10,7 @@ class CalendarRepository {
   Future<List<CalendarSessionModel>> fetchSessionsForMonth(int year, int month) async {
     final monthString = '${year.toString().padLeft(4, '0')}-${month.toString().padLeft(2, '0')}';
     final response = await _apiClient.dio.get(
-      Endpoints.sessions,
+      Endpoints.sessionsByMonth,
       queryParameters: {'month': monthString},
     );
 

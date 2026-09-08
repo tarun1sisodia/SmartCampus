@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_campus/features/home/models/session_model.dart';
-import '../../../../common/utils/constants/colors.dart';
 
 class SessionCard extends StatelessWidget {
   final SessionModel session;
@@ -15,18 +14,19 @@ class SessionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
     final startTime = DateFormat('hh:mm a').format(session.startTime).toUpperCase();
     final endTime = session.endTime == null
         ? null
         : DateFormat('hh:mm a').format(session.endTime!).toUpperCase();
     final timeLabel = endTime == null ? startTime : '$startTime - $endTime';
-    
+
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: scheme.surface,
         borderRadius: BorderRadius.circular(4),
-        border: Border.all(color: TColors.slate400, width: 1.5),
+        border: Border.all(color: scheme.outline, width: 1.5),
       ),
       child: ListTile(
         onTap: onTap,
@@ -35,15 +35,20 @@ class SessionCard extends StatelessWidget {
           width: 48,
           height: 48,
           decoration: BoxDecoration(
-            color: TColors.blue100,
+            color: scheme.primaryContainer,
             borderRadius: BorderRadius.circular(4),
-            border: Border.all(color: TColors.executiveNavy, width: 1.5),
+            border: Border.all(color: scheme.primary, width: 1.5),
           ),
-          child: const Icon(Icons.class_outlined, color: TColors.executiveNavy, size: 24),
+          child: Icon(Icons.class_outlined, color: scheme.primary, size: 24),
         ),
         title: Text(
           session.subjectName.toUpperCase(),
-          style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16, color: TColors.slate900, letterSpacing: -0.5),
+          style: TextStyle(
+            fontWeight: FontWeight.w900,
+            fontSize: 16,
+            color: scheme.onSurface,
+            letterSpacing: -0.5,
+          ),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
@@ -53,20 +58,36 @@ class SessionCard extends StatelessWidget {
             const SizedBox(height: 8),
             Row(
               children: [
-                const Icon(Icons.access_time, size: 14, color: TColors.slate600),
+                Icon(Icons.access_time, size: 14, color: scheme.onSurfaceVariant),
                 const SizedBox(width: 8),
-                Text(timeLabel, style: const TextStyle(color: TColors.slate600, fontWeight: FontWeight.w800, fontSize: 11, letterSpacing: 0.5)),
+                Text(
+                  timeLabel,
+                  style: TextStyle(
+                    color: scheme.onSurfaceVariant,
+                    fontWeight: FontWeight.w800,
+                    fontSize: 11,
+                    letterSpacing: 0.5,
+                  ),
+                ),
                 const SizedBox(width: 16),
-                const Icon(Icons.people_outline, size: 14, color: TColors.slate600),
+                Icon(Icons.people_outline, size: 14, color: scheme.onSurfaceVariant),
                 const SizedBox(width: 8),
-                Text('${session.totalStudents} STUDENTS', style: const TextStyle(color: TColors.slate600, fontWeight: FontWeight.w800, fontSize: 11, letterSpacing: 0.5)),
+                Text(
+                  '${session.totalStudents} STUDENTS',
+                  style: TextStyle(
+                    color: scheme.onSurfaceVariant,
+                    fontWeight: FontWeight.w800,
+                    fontSize: 11,
+                    letterSpacing: 0.5,
+                  ),
+                ),
               ],
             ),
             const SizedBox(height: 6),
             Text(
               'SECTION ${session.section}'.toUpperCase(),
-              style: const TextStyle(
-                color: TColors.slate500,
+              style: TextStyle(
+                color: scheme.onSurfaceVariant,
                 fontWeight: FontWeight.w800,
                 fontSize: 10,
                 letterSpacing: 0.6,
@@ -74,7 +95,7 @@ class SessionCard extends StatelessWidget {
             ),
           ],
         ),
-        trailing: const Icon(Icons.chevron_right, color: TColors.slate900),
+        trailing: Icon(Icons.chevron_right, color: scheme.onSurface),
       ),
     );
   }

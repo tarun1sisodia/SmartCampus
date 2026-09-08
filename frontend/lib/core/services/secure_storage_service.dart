@@ -21,7 +21,10 @@ class SecureStorageService {
 
   Future<String?> readRefreshToken() => _storage.read(key: refreshTokenKey);
 
-  Future<void> deleteTokens() => _storage.deleteAll();
+  Future<void> deleteTokens() async {
+    await _storage.delete(key: accessTokenKey);
+    await _storage.delete(key: refreshTokenKey);
+  }
 
   // Backward-compatible static helpers while legacy modules are migrated.
   static final SecureStorageService _compat = SecureStorageService();
