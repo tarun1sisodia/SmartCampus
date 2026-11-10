@@ -1,3 +1,5 @@
+// SECURITY NOTICE (2026-11-10): Any secrets previously committed to this file have been REVOKED by the developer and are NO LONGER VALID. Do not use them.
+
 import dotenv from 'dotenv';
 dotenv.config();
 
